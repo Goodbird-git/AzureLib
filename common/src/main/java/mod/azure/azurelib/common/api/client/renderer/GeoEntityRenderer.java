@@ -197,7 +197,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         if (!shouldSit && animatable.isAlive() && livingEntity != null) {
             limbSwingAmount = Mth.lerp(partialTick, livingEntity.walkAnimation.speedOld,
                     livingEntity.walkAnimation.speed());
-            limbSwing = livingEntity.walkAnimation.position() - livingEntity.walkAnimation.speed() * (1 - partialTick);
+            limbSwing = livingEntity.walkAnimation.position(partialTick);
 
             if (livingEntity.isBaby()) limbSwing *= 3f;
 
