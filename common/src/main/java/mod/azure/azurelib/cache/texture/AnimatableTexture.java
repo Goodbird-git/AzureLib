@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Wrapper for {@link SimpleTexture SimpleTexture} implementation allowing for casual use of animated non-atlas textures
@@ -37,46 +38,48 @@ public class AnimatableTexture extends SimpleTexture {
 
     @Override
     public void load(ResourceManager manager) throws IOException {
-        Resource resource = manager.getResourceOrThrow(this.location);
+        Optional<Resource> resource = manager.getResource(this.location);
 
         NativeImage nativeImage;
         TextureMetadataSection simpleTextureMeta = new TextureMetadataSection(false, false);
 
-        try (InputStream inputstream = resource.open()) {
-            nativeImage = NativeImage.read(inputstream);
-        }
+        if (resource.isPresent()) {
+            try (InputStream inputstream = resource.get().open()) {
+                nativeImage = NativeImage.read(inputstream);
+            }
 
-        try {
-            ResourceMetadata meta = resource.metadata();
+            try {
+                ResourceMetadata meta = resource.get().metadata();
 
-            simpleTextureMeta = meta.getSection(TextureMetadataSection.SERIALIZER).orElse(simpleTextureMeta);
-            this.animationContents = meta.getSection(AnimationMetadataSection.SERIALIZER).map(
-                    animMeta -> new AnimationContents(nativeImage, animMeta)).orElse(null);
+                simpleTextureMeta = meta.getSection(TextureMetadataSection.SERIALIZER).orElse(simpleTextureMeta);
+                this.animationContents = meta.getSection(AnimationMetadataSection.SERIALIZER).map(
+                        animMeta -> new AnimationContents(nativeImage, animMeta)).orElse(null);
 
-            if (this.animationContents != null) {
-                if (!this.animationContents.isValid()) {
-                    nativeImage.close();
+                if (this.animationContents != null) {
+                    if (!this.animationContents.isValid()) {
+                        nativeImage.close();
+
+                        return;
+                    }
+
+                    onRenderThread(() -> {
+                        TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.width(),
+                                this.animationContents.frameSize.height());
+                        nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.width(),
+                                this.animationContents.frameSize.height(), false, false);
+                    });
 
                     return;
                 }
-
-                onRenderThread(() -> {
-                    TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.width(),
-                            this.animationContents.frameSize.height());
-                    nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.width(),
-                            this.animationContents.frameSize.height(), false, false);
-                });
-
-                return;
+            } catch (RuntimeException exception) {
+                AzureLib.LOGGER.warn("Failed reading metadata of: {}", this.location, exception);
             }
-        } catch (RuntimeException exception) {
-            AzureLib.LOGGER.warn("Failed reading metadata of: {}", this.location, exception);
+
+            boolean blur = simpleTextureMeta.isBlur();
+            boolean clamp = simpleTextureMeta.isClamp();
+
+            onRenderThread(() -> GeoAbstractTexture.uploadSimple(getId(), nativeImage, blur, clamp));
         }
-
-        boolean blur = simpleTextureMeta.isBlur();
-        boolean clamp = simpleTextureMeta.isClamp();
-
-        onRenderThread(() -> GeoAbstractTexture.uploadSimple(getId(), nativeImage, blur, clamp));
     }
 
     public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
