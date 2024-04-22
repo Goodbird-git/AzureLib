@@ -87,6 +87,7 @@ processResources {
             "mod_issues": mod_issues,
             "mod_sources": mod_sources,
             "mod_url": mod_url,
+            "neo_loader_version_range": neo_loader_version_range,
             "neo_version": neo_version,
             "neo_version_range": neo_version_range,
             "mod_credits": mod_credits,
