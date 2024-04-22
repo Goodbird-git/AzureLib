@@ -1,3 +1,4 @@
-v2.1.6
+v2.1.7
 
-- Fixes missing Fabric packet registration
+- Fixes error message about armor missing textures.
+- Started releasing common source for Mulitloader setups.
