@@ -17,14 +17,15 @@ repositories {
 }
 
 dependencies {
+
+        //Common 1.20.1+ Latest Only
+       compileOnly "mod.azure.azurelib:azurelib-common-MCVERSION:MODVERSION"
+	   
         //Fabric or Quilt
        modImplementation "mod.azure.azurelib:azurelib-fabric-MCVERSION:MODVERSION"
-
-        //Forge
-       implementation fg.deobf("mod.azure.azurelib:azurelib-forge-MCVERSION:MODVERSION")
 		
         //NeoForge
-       implementation fg.deobf("mod.azure.azurelib:azurelib-neo-MCVERSION:MODVERSION")
+       implementation "mod.azure.azurelib:azurelib-neo-MCVERSION:MODVERSION"
 }
 ```
 
