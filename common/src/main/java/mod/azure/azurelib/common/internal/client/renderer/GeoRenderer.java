@@ -85,18 +85,8 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      * Mostly just used for the red tint when an entity is hurt, but can be used for other things like the
      * {@link net.minecraft.world.entity.monster.Creeper} white tint when exploding.
      */
-    @Deprecated(forRemoval = true)
-    default int getPackedOverlay(T animatable, float u) {
-        return OverlayTexture.NO_OVERLAY;
-    }
-
-    /**
-     * Gets a packed overlay coordinate pair for rendering.<br>
-     * Mostly just used for the red tint when an entity is hurt, but can be used for other things like the
-     * {@link net.minecraft.world.entity.monster.Creeper} white tint when exploding.
-     */
     default int getPackedOverlay(T animatable, float u, float partialTick) {
-        return getPackedOverlay(animatable, u);
+        return OverlayTexture.NO_OVERLAY;
     }
 
     /**
