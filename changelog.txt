@@ -1,3 +1,4 @@
-v2.0.20
+v2.0.21
 
-- Fixes name rendering on non-living entities such as projectiles
+- Fixes error message about armor missing textures.
+- Started releasing common source for Mulitloader setups.
