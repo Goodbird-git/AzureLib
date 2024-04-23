@@ -13,3 +13,14 @@ dependencies {
     implementation 'org.jetbrains:annotations:24.1.0'
     implementation 'org.slf4j:slf4j-api:2.0.9'
 }
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+}
