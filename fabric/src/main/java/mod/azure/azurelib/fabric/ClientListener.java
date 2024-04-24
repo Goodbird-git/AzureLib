@@ -16,7 +16,6 @@ public final class ClientListener implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientLifecycleEvents.CLIENT_STARTED.register(IncompatibleModsCheck::warnings);
         ClientUtils.RELOAD = new KeyMapping(
             "key.azurelib.reload",
             InputConstants.Type.KEYSYM,
