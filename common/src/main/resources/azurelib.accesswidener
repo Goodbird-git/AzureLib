@@ -27,3 +27,5 @@ accessible field net/minecraft/client/model/AgeableListModel bodyYOffset F
 
 accessible field net/minecraft/client/renderer/LevelRenderer renderBuffers Lnet/minecraft/client/renderer/RenderBuffers;
 mutable field net/minecraft/client/renderer/LevelRenderer renderBuffers Lnet/minecraft/client/renderer/RenderBuffers;
+
+accessible field net/minecraft/world/level/pathfinder/NodeEvaluator currentContext Lnet/minecraft/world/level/pathfinder/PathfindingContext;
