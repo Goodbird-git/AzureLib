@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.api.common.helper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -41,7 +42,7 @@ public record CommonUtils() {
         int duration,
         float radius,
         boolean hasEffect,
-        @Nullable MobEffect effect,
+        @Nullable Holder<MobEffect> effect,
         int effectTime
     ) {
         var areaEffectCloudEntity = new AreaEffectCloud(

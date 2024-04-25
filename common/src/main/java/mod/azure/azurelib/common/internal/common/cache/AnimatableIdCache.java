@@ -1,11 +1,12 @@
 package mod.azure.azurelib.common.internal.common.cache;
 
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
-
-import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Storage class that keeps track of the last animatable id used, and provides new ones on request.<br>
@@ -19,18 +20,17 @@ public final class AnimatableIdCache extends SavedData {
     private long lastId;
 
     private AnimatableIdCache() {
-        this(new CompoundTag());
     }
 
-    private AnimatableIdCache(CompoundTag tag) {
+    private AnimatableIdCache(CompoundTag tag, HolderLookup.Provider registryLookup) {
         this.lastId = tag.getLong("last_id");
     }
 
     public static SavedData.Factory<AnimatableIdCache> factory() {
         return new SavedData.Factory<>(
-            AnimatableIdCache::new,
-            AnimatableIdCache::new,
-            DataFixTypes.SAVED_DATA_MAP_DATA
+                AnimatableIdCache::new,
+                AnimatableIdCache::new,
+                null
         );
     }
 
@@ -50,7 +50,7 @@ public final class AnimatableIdCache extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.@NotNull Provider var2) {
         tag.putLong("last_id", this.lastId);
         return tag;
     }
