@@ -36,7 +36,7 @@ runs {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
+    implementation "net.neoforged:neoforge:20.5.3-beta"
 }
 
 if (file('key.properties').exists()) {
