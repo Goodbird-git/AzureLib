@@ -1,19 +1,8 @@
 package mod.azure.azurelib.common.api.common.animatable;
 
 import com.google.common.base.Suppliers;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
-
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
 import mod.azure.azurelib.common.internal.common.cache.AnimatableIdCache;
 import mod.azure.azurelib.common.internal.common.constant.DataTickets;
@@ -23,6 +12,17 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.ContextAwareAnimatableManager;
+import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * The {@link GeoAnimatable GeoAnimatable} interface specific to {@link net.minecraft.world.item.Item Items}. This also
@@ -52,12 +52,10 @@ public interface GeoItem extends SingletonGeoAnimatable {
      * {@link Long#MAX_VALUE} if one hasn't been assigned
      */
     static long getId(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-
-        if (tag == null)
-            return Long.MAX_VALUE;
-
-        return tag.getLong(ID_NBT_KEY);
+        return Optional.ofNullable(stack.getComponentsPatch().get(AzureLib.STACK_ANIMATABLE_ID_COMPONENT.get()))
+                .filter(Optional::isPresent)
+                .<Long>map(Optional::get)
+                .orElse(Long.MAX_VALUE);
     }
 
     /**
@@ -65,16 +63,13 @@ public interface GeoItem extends SingletonGeoAnimatable {
      * If no ID has been reserved for this stack yet, it will reserve a new id and assign it
      */
     static long getOrAssignId(ItemStack stack, ServerLevel level) {
-        CompoundTag tag = stack.getOrCreateTag();
-        long id = tag.getLong(ID_NBT_KEY);
+        if (!(stack.getComponents() instanceof PatchedDataComponentMap components))
+            return Long.MAX_VALUE;
 
-        if (tag.contains(ID_NBT_KEY, Tag.TAG_ANY_NUMERIC))
-            return id;
+        Long id = components.get(AzureLib.STACK_ANIMATABLE_ID_COMPONENT.get());
 
-        id = AnimatableIdCache.getFreeId(level);
-
-        tag.putLong(ID_NBT_KEY, id);
-
+        if (id == null)
+            components.set(AzureLib.STACK_ANIMATABLE_ID_COMPONENT.get(), id = AnimatableIdCache.getFreeId(level));
         return id;
     }
 
@@ -131,31 +126,31 @@ public interface GeoItem extends SingletonGeoAnimatable {
         public AnimatableManager<?> getManagerForId(long uniqueId) {
             if (!this.managers.containsKey(uniqueId))
                 this.managers.put(
-                    uniqueId,
-                    new ContextAwareAnimatableManager<GeoItem, ItemDisplayContext>(this.animatable) {
+                        uniqueId,
+                        new ContextAwareAnimatableManager<GeoItem, ItemDisplayContext>(this.animatable) {
 
-                        @Override
-                        protected Map<ItemDisplayContext, AnimatableManager<GeoItem>> buildContextOptions(
-                            GeoAnimatable animatable
-                        ) {
-                            Map<ItemDisplayContext, AnimatableManager<GeoItem>> map = new EnumMap<>(
-                                ItemDisplayContext.class
-                            );
+                            @Override
+                            protected Map<ItemDisplayContext, AnimatableManager<GeoItem>> buildContextOptions(
+                                    GeoAnimatable animatable
+                            ) {
+                                Map<ItemDisplayContext, AnimatableManager<GeoItem>> map = new EnumMap<>(
+                                        ItemDisplayContext.class
+                                );
 
-                            for (ItemDisplayContext context : ItemDisplayContext.values()) {
-                                map.put(context, new AnimatableManager<>(animatable));
+                                for (ItemDisplayContext context : ItemDisplayContext.values()) {
+                                    map.put(context, new AnimatableManager<>(animatable));
+                                }
+
+                                return map;
                             }
 
-                            return map;
-                        }
+                            @Override
+                            public ItemDisplayContext getCurrentContext() {
+                                ItemDisplayContext context = getData(DataTickets.ITEM_RENDER_PERSPECTIVE);
 
-                        @Override
-                        public ItemDisplayContext getCurrentContext() {
-                            ItemDisplayContext context = getData(DataTickets.ITEM_RENDER_PERSPECTIVE);
-
-                            return context == null ? ItemDisplayContext.NONE : context;
+                                return context == null ? ItemDisplayContext.NONE : context;
+                            }
                         }
-                    }
                 );
 
             return this.managers.get(uniqueId);
