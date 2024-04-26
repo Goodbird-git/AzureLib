@@ -11,8 +11,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -34,6 +32,7 @@ import mod.azure.azurelib.neoforge.platform.NeoForgeAzureLibNetwork;
 public final class NeoForgeAzureLibMod {
 
     public static NeoForgeAzureLibMod instance;
+    public static final DeferredRegister.DataComponents DATA_COMPONENTS_REGISTER = DeferredRegister.createDataComponents(AzureLib.MOD_ID);
 
     public NeoForgeAzureLibMod(IEventBus modEventBus) {
         instance = this;
