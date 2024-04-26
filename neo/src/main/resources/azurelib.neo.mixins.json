@@ -11,8 +11,8 @@
   "client": [
     "ItemRendererAccessor",
     "MinecraftMixin",
+    "MixinHumanoidArmorLayer",
     "MixinItemRenderer",
-    "NeoMixinHumanoidArmorLayer",
     "TextureManagerMixin"
   ]
 }

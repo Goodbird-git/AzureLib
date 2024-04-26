@@ -9,9 +9,9 @@
     "PlayerListMixin"
   ],
   "client": [
-    "FabricMixinHumanoidArmorLayer",
     "ItemRendererAccessor",
     "MinecraftMixin",
+    "MixinHumanoidArmorLayer",
     "MixinItemRenderer",
     "TextureManagerMixin"
   ]
