@@ -56,6 +56,7 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
         } else {
             EntityAnimDataSyncPacket<D> entityAnimDataSyncPacket = new EntityAnimDataSyncPacket<>(
                 relatedEntity.getId(),
+                true,
                 dataTicket,
                 data
             );
@@ -80,6 +81,7 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
         } else {
             EntityAnimTriggerPacket entityAnimTriggerPacket = new EntityAnimTriggerPacket(
                 relatedEntity.getId(),
+                true,
                 controllerName,
                 animName
             );

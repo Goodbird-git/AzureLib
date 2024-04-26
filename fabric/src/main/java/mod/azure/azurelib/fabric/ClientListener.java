@@ -2,8 +2,7 @@ package mod.azure.azurelib.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import mod.azure.azurelib.common.api.client.helper.ClientUtils;
-import mod.azure.azurelib.common.platform.Services;
-import mod.azure.azurelib.fabric.network.Networking;
+import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
@@ -34,7 +33,6 @@ public final class ClientListener implements ClientModInitializer {
                 "category.azurelib.binds"
         );
         KeyBindingHelper.registerKeyBinding(ClientUtils.FIRE_WEAPON);
-        Networking.PacketRegistry.registerClient();
-        Services.NETWORK.registerClientReceiverPackets();
+        AzureLibNetwork.init();
     }
 }

@@ -1,80 +1,51 @@
 package mod.azure.azurelib.common.internal.common.network.packet;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
-
 import mod.azure.azurelib.common.api.client.helper.ClientUtils;
 import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
 import mod.azure.azurelib.common.api.common.animatable.GeoReplacedEntity;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Packet for syncing user-definable animations that can be triggered from the server for
  * {@link net.minecraft.world.entity.Entity Entities}
  */
-public class EntityAnimTriggerPacket extends AbstractPacket {
-
-    private final int entityId;
-
-    private final boolean isReplacedEntity;
-
-    private final String controllerName;
-
-    private final String animName;
-
-    public EntityAnimTriggerPacket(int entityId, @Nullable String controllerName, String animName) {
-        this(entityId, false, controllerName, animName);
-    }
-
-    public EntityAnimTriggerPacket(
-        int entityId,
-        boolean isReplacedEntity,
-        @Nullable String controllerName,
-        String animName
-    ) {
-        this.entityId = entityId;
-        this.isReplacedEntity = isReplacedEntity;
-        this.controllerName = controllerName == null ? "" : controllerName;
-        this.animName = animName;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeVarInt(this.entityId);
-        buf.writeBoolean(this.isReplacedEntity);
-
-        buf.writeUtf(this.controllerName);
-        buf.writeUtf(this.animName);
-    }
-
-    @Override
-    public ResourceLocation id() {
-        return AzureLibNetwork.ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID;
-    }
-
-    public static EntityAnimTriggerPacket receive(FriendlyByteBuf buf) {
-        return new EntityAnimTriggerPacket(buf.readVarInt(), buf.readBoolean(), buf.readUtf(), buf.readUtf());
-    }
+public record EntityAnimTriggerPacket(int entityId, boolean isReplacedEntity, String controllerName, String animName) implements AbstractPacket {
+    public static final CustomPacketPayload.Type<EntityAnimTriggerPacket> TYPE = new Type<>(
+            AzureLibNetwork.ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID);
+    public static final StreamCodec<FriendlyByteBuf, EntityAnimTriggerPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT,
+            EntityAnimTriggerPacket::entityId,
+            ByteBufCodecs.BOOL,
+            EntityAnimTriggerPacket::isReplacedEntity,
+            ByteBufCodecs.STRING_UTF8,
+            EntityAnimTriggerPacket::controllerName,
+            ByteBufCodecs.STRING_UTF8,
+            EntityAnimTriggerPacket::animName,
+            EntityAnimTriggerPacket::new);
 
     public void handle() {
-        Entity entity = ClientUtils.getLevel().getEntity(entityId);
+        Entity entity = ClientUtils.getLevel().getEntity(this.entityId);
         if (entity == null)
             return;
-
-        if (!isReplacedEntity) {
-            if (entity instanceof GeoEntity geoEntity) {
-                geoEntity.triggerAnim(controllerName.isEmpty() ? null : controllerName, animName);
-            }
+        if (!this.isReplacedEntity) {
+            if (entity instanceof GeoEntity geoEntity)
+                geoEntity.triggerAnim(this.controllerName.isEmpty() ? null : this.controllerName, this.animName);
             return;
         }
+        if (RenderUtils.getReplacedAnimatable(entity.getType()) instanceof GeoReplacedEntity replacedEntity)
+            replacedEntity.triggerAnim(entity, this.controllerName.isEmpty() ? null : this.controllerName, this.animName);
+    }
 
-        GeoAnimatable animatable = RenderUtils.getReplacedAnimatable(entity.getType());
-        if (animatable instanceof GeoReplacedEntity replacedEntity)
-            replacedEntity.triggerAnim(entity, controllerName.isEmpty() ? null : controllerName, animName);
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

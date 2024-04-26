@@ -71,4 +71,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
         return () -> componentType;
     }
+
+    @Override
+    public boolean isEnvironmentClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
 }

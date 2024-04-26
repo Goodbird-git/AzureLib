@@ -1,8 +1,17 @@
 package mod.azure.azurelib.common.platform.services;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
+import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.*;
+import mod.azure.azurelib.common.platform.Services;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,11 +19,6 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
-import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public interface AzureLibNetwork {
 
@@ -32,11 +36,23 @@ public interface AzureLibNetwork {
 
     ResourceLocation CONFIG_PACKET_ID = AzureLib.modResource("config_packet");
 
-    ResourceLocation CUSTOM_ENTITY_ID = AzureLib.modResource("spawn_entity");
-
-    ResourceLocation RELOAD = AzureLib.modResource("reload");
-
     Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
+
+    static void init() {
+        registerPacket(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
+        registerPacket(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
+        registerPacket(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
+        registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
+        registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
+        registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
+        registerPacket(S2C_NeoSendConfigData.TYPE, S2C_NeoSendConfigData.CODEC);
+    }
+
+    private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec) {
+        Services.NETWORK.registerPacketInternal(payloadType, codec, true);
+    }
+
+    <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacketInternal(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean isClientBound);
 
     /**
      * Registers a synced {@link GeoAnimatable} object for networking support.<br>
@@ -53,11 +69,6 @@ public interface AzureLibNetwork {
     }
 
     Packet<?> createPacket(Entity entity);
-
-    /**
-     * Used to register packets that the server sends
-     **/
-    void registerClientReceiverPackets();
 
     void sendToTrackingEntityAndSelf(AbstractPacket packet, Entity entityToTrack);
 
@@ -88,4 +99,6 @@ public interface AzureLibNetwork {
 
         return animatable;
     }
+
+    void sendToPlayer(AbstractPacket packet, ServerPlayer player);
 }

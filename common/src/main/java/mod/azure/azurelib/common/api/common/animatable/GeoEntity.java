@@ -49,6 +49,7 @@ public interface GeoEntity extends GeoAnimatable {
         } else {
             EntityAnimDataSyncPacket<D> entityAnimDataSyncPacket = new EntityAnimDataSyncPacket<>(
                 entity.getId(),
+                false,
                 dataTicket,
                 data
             );
@@ -73,6 +74,7 @@ public interface GeoEntity extends GeoAnimatable {
         } else {
             EntityAnimTriggerPacket entityAnimTriggerPacket = new EntityAnimTriggerPacket(
                 entity.getId(),
+                false,
                 controllerName,
                 animName
             );
