@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 /**
  * Helper class for segregating client-side code
  */
-public final class ClientUtils {
+public record ClientUtils() {
 
     /**
      * Translates the provided {@link PoseStack} to face towards the given {@link Entity}'s rotation.<br>
