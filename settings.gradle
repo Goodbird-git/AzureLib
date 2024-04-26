@@ -59,6 +59,6 @@ plugins {
 rootProject.name = mod_name
 include("common")
 include("fabric")
-include("neoforge")
+include("neo")
 include("core")
 
