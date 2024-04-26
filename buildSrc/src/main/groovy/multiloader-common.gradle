@@ -35,7 +35,6 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains:annotations:24.1.0'
-	api project(":core")
 }
 
 // Declare capabilities on the outgoing configurations.

@@ -60,5 +60,4 @@ rootProject.name = mod_name
 include("common")
 include("fabric")
 include("neo")
-include("core")
 
