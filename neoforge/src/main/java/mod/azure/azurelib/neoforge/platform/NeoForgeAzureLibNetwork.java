@@ -28,8 +28,6 @@ public class NeoForgeAzureLibNetwork implements AzureLibNetwork {
         modBus.addListener((Consumer<RegisterPayloadHandlersEvent>) event -> {
             registrar = event.registrar(AzureLib.MOD_ID);
             AzureLibNetwork.init();
-            registrar.playToClient(S2C_NeoSendConfigData.TYPE, S2C_NeoSendConfigData.CODEC,
-                    (packet, context) -> packet.handle());
             registrar = null;
         });
     }
