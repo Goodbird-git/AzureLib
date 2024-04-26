@@ -1,14 +1,5 @@
 package mod.azure.azurelib.common.internal.common.util;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-
-import mod.azure.azurelib.common.api.common.items.AzureBaseGunItem;
 import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.common.internal.common.loading.object.BakedModelFactory;
 import mod.azure.azurelib.common.internal.common.network.SerializableDataTicket;
@@ -20,6 +11,11 @@ import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCa
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.object.DataTicket;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Helper class for various AzureLib-specific functions.
@@ -35,11 +31,11 @@ public final record AzureLibUtil() {
         AnimatableInstanceCache cache = animatable.animatableCacheOverride();
 
         return cache != null
-            ? cache
-            : createInstanceCache(
+                ? cache
+                : createInstanceCache(
                 animatable,
                 !(animatable instanceof Entity) && !(animatable instanceof BlockEntity)
-            );
+        );
     }
 
     /**
@@ -57,10 +53,10 @@ public final record AzureLibUtil() {
             return cache;
 
         return singletonObject
-            ? new SingletonAnimatableInstanceCache(
+                ? new SingletonAnimatableInstanceCache(
                 animatable
-            )
-            : new InstancedAnimatableInstanceCache(animatable);
+        )
+                : new InstancedAnimatableInstanceCache(animatable);
     }
 
     /**
@@ -112,9 +108,9 @@ public final record AzureLibUtil() {
 
     public static boolean checkDistance(BlockPos blockPosA, BlockPos blockPosB, int distance) {
         return Math.abs(blockPosA.getX() - blockPosB.getX()) <= distance && Math.abs(
-            blockPosA.getY() - blockPosB.getY()
+                blockPosA.getY() - blockPosB.getY()
         ) <= distance && Math.abs(
-            blockPosA.getZ() - blockPosB.getZ()
+                blockPosA.getZ() - blockPosB.getZ()
         ) <= distance;
     }
 
@@ -137,32 +133,5 @@ public final record AzureLibUtil() {
                         return offsetPos;
                 }
         return null;
-    }
-
-    /**
-     * Removes matching item from offhand first then checks inventory for item
-     *
-     * @param ammo         Item you want to be used as ammo
-     * @param playerEntity Player whose inventory is being checked.
-     */
-    public static void removeAmmo(Item ammo, Player playerEntity) {
-        if (
-            (playerEntity.getItemInHand(
-                playerEntity.getUsedItemHand()
-            ).getItem() instanceof AzureBaseGunItem) && !playerEntity.isCreative()
-        ) { // Creative mode reloading breaks things
-            for (var item : playerEntity.getInventory().offhand) {
-                if (item.getItem() == ammo) {
-                    item.shrink(1);
-                    break;
-                }
-                for (var item1 : playerEntity.getInventory().items) {
-                    if (item1.getItem() == ammo) {
-                        item1.shrink(1);
-                        break;
-                    }
-                }
-            }
-        }
     }
 }
