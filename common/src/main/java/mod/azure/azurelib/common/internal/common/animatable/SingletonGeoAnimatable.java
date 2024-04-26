@@ -1,5 +1,6 @@
 package mod.azure.azurelib.common.internal.common.animatable;
 
+import mod.azure.azurelib.common.internal.client.RenderProvider;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
@@ -158,7 +159,7 @@ public interface SingletonGeoAnimatable extends GeoAnimatable {
      *
      * @param consumer
      */
-    void createRenderer(Consumer<Object> consumer);
+    void createRenderer(Consumer<RenderProvider> consumer);
 
     /**
      * Getter for the cached RenderProvider in your class

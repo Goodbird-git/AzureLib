@@ -1,5 +1,6 @@
 package mod.azure.azurelib.common.api.common.animatable;
 
+import mod.azure.azurelib.common.internal.client.RenderProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
@@ -104,7 +105,7 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 
     // These methods aren't used for GeoReplacedEntity
     @Override
-    default void createRenderer(Consumer<Object> consumer) {}
+    default void createRenderer(Consumer<RenderProvider> consumer) {}
 
     // These methods aren't used for GeoReplacedEntity
     @Override
