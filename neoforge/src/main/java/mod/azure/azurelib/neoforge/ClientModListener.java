@@ -55,6 +55,5 @@ public class ClientModListener {
                 });
             });
         }
-        AzureLibNetwork.init();
     }
 }
