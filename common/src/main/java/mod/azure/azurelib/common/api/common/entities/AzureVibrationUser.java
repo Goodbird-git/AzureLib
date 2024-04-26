@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.api.common.entities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.GameEventTags;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -42,12 +44,12 @@ public class AzureVibrationUser implements VibrationSystem.User {
     }
 
     @Override
-    public PositionSource getPositionSource() {
+    public @NotNull PositionSource getPositionSource() {
         return this.positionSource;
     }
 
     @Override
-    public TagKey<GameEvent> getListenableEvents() {
+    public @NotNull TagKey<GameEvent> getListenableEvents() {
         return GameEventTags.WARDEN_CAN_LISTEN;
     }
 
@@ -57,7 +59,7 @@ public class AzureVibrationUser implements VibrationSystem.User {
     }
 
     @Override
-    public boolean isValidVibration(GameEvent gameEvent, Context context) {
+    public boolean isValidVibration(Holder<GameEvent> gameEvent, @NotNull Context context) {
         if (!gameEvent.is(this.getListenableEvents()))
             return false;
 
@@ -77,10 +79,10 @@ public class AzureVibrationUser implements VibrationSystem.User {
 
     @Override
     public boolean canReceiveVibration(
-        ServerLevel serverLevel,
-        BlockPos blockPos,
-        GameEvent gameEvent,
-        GameEvent.Context context
+            @NotNull ServerLevel serverLevel,
+            @NotNull BlockPos blockPos,
+            @NotNull Holder<GameEvent> gameEvent,
+            GameEvent.@NotNull Context context
     ) {
         if (
             mob.isNoAi() || mob.isDeadOrDying() || !mob.level().getWorldBorder().isWithinBounds(blockPos) || mob
@@ -93,21 +95,20 @@ public class AzureVibrationUser implements VibrationSystem.User {
 
     @Override
     public void onReceiveVibration(
-        ServerLevel serverLevel,
-        BlockPos blockPos,
-        GameEvent gameEvent,
-        @Nullable Entity entity,
-        @Nullable Entity entity2,
-        float f
+            @NotNull ServerLevel serverLevel,
+            @NotNull BlockPos blockPos,
+            @NotNull Holder<GameEvent> gameEvent,
+            @Nullable Entity entity,
+            @Nullable Entity entity2,
+            float f
     ) {
         // Do nothing.
     }
 
     @Contract(value = "null->false")
     public boolean canTargetEntity(@Nullable Entity entity) {
-        if (!(entity instanceof LivingEntity))
+        if (!(entity instanceof LivingEntity livingEntity))
             return false;
-        var livingEntity = (LivingEntity) entity;
         if (this.mob.level() != entity.level())
             return false;
         if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity))
@@ -116,17 +117,11 @@ public class AzureVibrationUser implements VibrationSystem.User {
             return false;
         if (this.mob.isAlliedTo(entity))
             return false;
-        if (livingEntity.getMobType() == MobType.UNDEAD)
-            return false;
         if (livingEntity.getType() == EntityType.ARMOR_STAND)
             return false;
         if (livingEntity.getType() == EntityType.WARDEN)
             return false;
         if (livingEntity instanceof Bat)
-            return false;
-        if (entity instanceof Marker)
-            return false;
-        if (entity instanceof AreaEffectCloud)
             return false;
         if (livingEntity.isInvulnerable())
             return false;
