@@ -2,6 +2,7 @@ package mod.azure.azurelib.common.api.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.core.object.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -10,10 +11,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -315,16 +319,26 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
             applyBoneVisibilityBySlot(this.currentSlot);
     }
 
+    /**
+     * Gets a tint-applying color to render the given animatable with
+     * <p>
+     * Returns {@link Color#WHITE} by default
+     */
+    @Override
+    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+        return this.currentStack.is(ItemTags.DYEABLE) ? Color.ofOpaque(DyedItemColor.getOrDefault(this.currentStack, -6265536)) : Color.WHITE;
+    }
+
     @Override
     public void renderToBuffer(
-        PoseStack poseStack,
-        VertexConsumer buffer,
-        int packedLight,
-        int packedOverlay,
-        float red,
-        float green,
-        float blue,
-        float alpha
+            @NotNull PoseStack poseStack,
+            VertexConsumer buffer,
+            int packedLight,
+            int packedOverlay,
+            float red,
+            float green,
+            float blue,
+            float alpha
     ) {
         Minecraft mc = Minecraft.getInstance();
         MultiBufferSource bufferSource = Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
