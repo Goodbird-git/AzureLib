@@ -1,9 +1,12 @@
 package mod.azure.azurelib.common.platform.services;
 
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.nio.file.Path;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import mod.azure.azurelib.common.internal.common.blocks.TickingLightBlock;
 import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
@@ -56,4 +59,6 @@ public interface IPlatformHelper {
     Enchantment getIncendairyenchament();
 
     Path modsDir();
+
+    <T> Supplier<DataComponentType<T>> registerDataComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builder);
 }
