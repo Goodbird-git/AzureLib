@@ -4,10 +4,6 @@ plugins {
     id 'me.modmuss50.mod-publish-plugin' version "${modmuss50_mod_publish_version}"
 }
 
-base {
-    archivesName = "${mod_id}-fabric-${minecraft_version}"
-}
-
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.officialMojangMappings()
