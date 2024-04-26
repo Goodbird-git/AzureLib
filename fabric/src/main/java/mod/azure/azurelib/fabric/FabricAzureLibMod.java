@@ -34,7 +34,6 @@ public final class FabricAzureLibMod implements ModInitializer {
     );
 
     public static final Enchantment INCENDIARYENCHANTMENT = new IncendiaryEnchantment(
-        Enchantment.Rarity.RARE,
         EquipmentSlot.MAINHAND
     );
 
