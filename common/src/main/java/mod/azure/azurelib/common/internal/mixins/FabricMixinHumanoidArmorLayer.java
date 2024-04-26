@@ -50,8 +50,8 @@ public abstract class FabricMixinHumanoidArmorLayer<T extends LivingEntity, A ex
     @ModifyArg(
         method = "renderArmorPiece", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/entity/layers/HumanoidArmorLayer;renderModel(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/item/ArmorItem;Lnet/minecraft/client/model/HumanoidModel;ZFFFLjava/lang/String;)V"
-        ), index = 4
+            target = "Lnet/minecraft/client/renderer/entity/layers/HumanoidArmorLayer;renderModel(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/model/HumanoidModel;FFFLnet/minecraft/resources/ResourceLocation;)V"
+        ), index = 3
     )
     public A injectArmor(A humanoidModel) {
         return this.gl_storedItemStack.getItem() instanceof GeoItem
