@@ -1,5 +1,6 @@
 package mod.azure.azurelib.core.math;
 
+import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.core.math.functions.Function;
 import mod.azure.azurelib.core.math.functions.classic.*;
 import mod.azure.azurelib.core.math.functions.limit.Clamp;
@@ -96,7 +97,7 @@ public class MathBuilder {
     public String[] breakdown(String expression) throws Exception {
         /* If given string have illegal characters, then it can't be parsed */
         if (!expression.matches("^[\\w\\d\\s_+-/*%^&|<>=!?:.,()]+$")) {
-            throw new Exception("Given expression '" + expression + "' contains illegal characters!");
+            throw new AzureLibException("Given expression '" + expression + "' contains illegal characters!");
         }
 
         /* Remove all spaces, and leading and trailing parenthesis */
@@ -117,7 +118,7 @@ public class MathBuilder {
 
         /* Amount of left and right brackets should be the same */
         if (left != right) {
-            throw new Exception(
+            throw new AzureLibException(
                     "Given expression '" + expression
                             + "' has more uneven amount of parenthesis, there are " + left + " open and " + right + " closed!"
             );
@@ -392,7 +393,7 @@ public class MathBuilder {
         }
 
         if (!this.functions.containsKey(first)) {
-            throw new Exception("Function '" + first + "' couldn't be found!");
+            throw new AzureLibException("Function '" + first + "' couldn't be found!");
         }
 
         List<IValue> values = new ArrayList<>();
@@ -453,7 +454,7 @@ public class MathBuilder {
             }
         }
 
-        throw new Exception("Given object couldn't be converted to value! " + object);
+        throw new AzureLibException("Given object couldn't be converted to value! " + object);
     }
 
     /**
@@ -473,7 +474,7 @@ public class MathBuilder {
             }
         }
 
-        throw new Exception("There is no such operator '" + op + "'!");
+        throw new AzureLibException("There is no such operator '" + op + "'!");
     }
 
     /**
