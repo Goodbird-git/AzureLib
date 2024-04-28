@@ -665,7 +665,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
         float xDif = (float) (ropeGripPosition.x - lerpOriginX);
         float yDif = (float) (ropeGripPosition.y - lerpOriginY);
         float zDif = (float) (ropeGripPosition.z - lerpOriginZ);
-        float offsetMod = (float) (Mth.fastInvSqrt(xDif * xDif + zDif * zDif) * 0.025f / 2f);
+        float offsetMod = Mth.invSqrt(xDif * xDif + zDif * zDif) * 0.025f / 2f;
         float xOffset = zDif * offsetMod;
         float zOffset = xDif * offsetMod;
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.leash());
