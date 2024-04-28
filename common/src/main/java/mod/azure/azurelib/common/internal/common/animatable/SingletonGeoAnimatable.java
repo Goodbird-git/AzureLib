@@ -164,5 +164,7 @@ public interface SingletonGeoAnimatable extends GeoAnimatable {
     /**
      * Getter for the cached RenderProvider in your class
      */
-    Supplier<Object> getRenderProvider();
+    default Supplier<RenderProvider> getRenderProvider(){
+        return getAnimatableInstanceCache().getRenderProvider();
+    }
 }

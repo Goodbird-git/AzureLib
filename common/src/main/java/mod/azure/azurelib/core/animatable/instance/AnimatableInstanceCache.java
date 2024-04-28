@@ -1,8 +1,15 @@
 package mod.azure.azurelib.core.animatable.instance;
 
+import com.google.common.base.Suppliers;
+import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
+import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.object.DataTicket;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * The base cache class responsible for returning the {@link AnimatableManager} for a given instanceof of a
@@ -12,9 +19,20 @@ import mod.azure.azurelib.core.object.DataTicket;
 public abstract class AnimatableInstanceCache {
 
     protected final GeoAnimatable animatable;
+    protected final Supplier<RenderProvider> renderProvider;
 
     protected AnimatableInstanceCache(GeoAnimatable animatable) {
         this.animatable = animatable;
+        this.renderProvider = Suppliers.memoize(() -> {
+            if (!(this.animatable instanceof SingletonGeoAnimatable singleton) || !Services.PLATFORM.isEnvironmentClient())
+                return null;
+
+            final AtomicReference<RenderProvider> consumer = new AtomicReference<>(RenderProvider.DEFAULT);
+
+            singleton.createRenderer(consumer::set);
+
+            return consumer.get();
+        });
     }
 
     /**
@@ -45,5 +63,18 @@ public abstract class AnimatableInstanceCache {
      */
     public <D> D getDataPoint(long uniqueId, DataTicket<D> dataTicket) {
         return getManagerForId(uniqueId).getData(dataTicket);
+    }
+
+    /**
+     * Get the {@link RenderProvider} for this animatable
+     * <p>
+     * Because only {@link SingletonGeoAnimatable}s use this functionality, it this method should not be used and will always return null for anything other than a SingletonGeoAnimatable
+     * <p>
+     * The returned object is upcast to Object for side-safety
+     *
+     * @return The cached GeoRenderProvider instance for this animatable, or null if one does not exist
+     */
+    public Supplier<RenderProvider> getRenderProvider() {
+        return this.renderProvider;
     }
 }
