@@ -1,5 +1,6 @@
 package mod.azure.azurelib.common.internal.common;
 
+import com.mojang.serialization.Codec;
 import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.common.platform.Services;
 import net.minecraft.core.component.DataComponentType;
@@ -27,7 +28,7 @@ public final class AzureLib {
 
     public static final Marker MAIN_MARKER = MarkerManager.getMarker("main");
     public static final Supplier<DataComponentType<Long>> STACK_ANIMATABLE_ID_COMPONENT = Services.PLATFORM.registerDataComponent(
-            "stack_animatable_id", builder -> builder.networkSynchronized(
+            "stack_animatable_id", builder -> builder.persistent(Codec.LONG).networkSynchronized(
                     ByteBufCodecs.VAR_LONG));
     public static boolean hasInitialized;
 
