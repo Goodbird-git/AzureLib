@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 /**
@@ -96,13 +97,10 @@ public record DefaultAnimations() {
             T animatable,
             RawAnimation optionA,
             RawAnimation optionB,
-            BiFunction<T, AnimationState<T>, Boolean> predicate
+            BiPredicate<T, AnimationState<?>> predicate
     ) {
         return new AnimationController<>(animatable, "Generic", 10, state -> {
-            Boolean result = predicate.apply(animatable, state);
-
-            if (result == null)
-                return PlayState.STOP;
+            var result = predicate.test(animatable, state);
 
             return state.setAndContinue(result ? optionA : optionB);
         });
