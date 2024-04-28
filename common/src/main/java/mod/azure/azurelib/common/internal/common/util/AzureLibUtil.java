@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * Helper class for various AzureLib-specific functions.
  */
-public final record AzureLibUtil() {
+public record AzureLibUtil() {
 
     /**
      * Creates a new AnimatableInstanceCache for the given animatable object
