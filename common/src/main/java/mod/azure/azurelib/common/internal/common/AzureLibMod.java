@@ -27,20 +27,20 @@ public final class AzureLibMod {
      * {@link ConfigHolder#getConfigInstance()} method.
      */
     public static <C> ConfigHolder<C> registerConfig(Class<C> configClass, IConfigFormatHandler formatFactory) {
-        Config config = configClass.getAnnotation(Config.class);
+        var config = configClass.getAnnotation(Config.class);
         if (config == null) {
             throw new IllegalArgumentException("Config class must be annotated with '@Config' annotation");
         }
-        String id = config.id();
-        String filename = config.filename();
+        var id = config.id();
+        var filename = config.filename();
         if (filename.isEmpty()) {
             filename = id;
         }
-        String group = config.group();
+        var group = config.group();
         if (group.isEmpty()) {
             group = id;
         }
-        ConfigHolder<C> holder = new ConfigHolder<>(configClass, id, filename, group, formatFactory);
+        var holder = new ConfigHolder<>(configClass, id, filename, group, formatFactory);
         ConfigHolderRegistry.registerConfig(holder);
         if (configClass.getAnnotation(Config.NoAutoSync.class) == null) {
             ConfigIO.FILE_WATCH_MANAGER.addTrackedConfig(holder);
