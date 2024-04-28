@@ -10,7 +10,6 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -46,7 +45,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         FabricAzureLibMod.TICKING_LIGHT_ENTITY = Registry.register(
                 BuiltInRegistries.BLOCK_ENTITY_TYPE,
                 AzureLib.MOD_ID + ":lightblock",
-                FabricBlockEntityTypeBuilder.create(TickingLightEntity::new, FabricAzureLibMod.TICKING_LIGHT_BLOCK)
+                BlockEntityType.Builder.of(TickingLightEntity::new, FabricAzureLibMod.TICKING_LIGHT_BLOCK)
                         .build(null)
         );
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
