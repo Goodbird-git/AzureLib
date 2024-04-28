@@ -1,34 +1,19 @@
 package mod.azure.azurelib.common.internal.common.config.io;
 
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.config.ConfigHolder;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.config.ConfigHolder;
 
 public final class FileWatchManager {
 
@@ -51,9 +36,9 @@ public final class FileWatchManager {
             watchService = FileSystems.getDefault().newWatchService();
         } catch (IOException e) {
             AzureLib.LOGGER.error(
-                MARKER,
-                "Failed to initialize file watch service due to error, configs won't be automatically refreshed",
-                e
+                    MARKER,
+                    "Failed to initialize file watch service due to error, configs won't be automatically refreshed",
+                    e
             );
         } finally {
             this.service = watchService;
@@ -106,9 +91,9 @@ public final class FileWatchManager {
             }, 0L, 1000L, TimeUnit.MILLISECONDS);
         } catch (IOException e) {
             AzureLib.LOGGER.error(
-                MARKER,
-                "Unable to create watch key for config directory, disabling auto-sync function",
-                e
+                    MARKER,
+                    "Unable to create watch key for config directory, disabling auto-sync function",
+                    e
             );
         }
     }

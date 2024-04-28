@@ -1,5 +1,6 @@
 package mod.azure.azurelib.common.internal.mixins;
 
+import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
@@ -12,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
-
 @Mixin(TextureManager.class)
 public abstract class TextureManagerMixin {
 
@@ -25,8 +24,8 @@ public abstract class TextureManagerMixin {
     public abstract void register(ResourceLocation resourceLocation, AbstractTexture abstractTexture);
 
     @Inject(
-        method = "getTexture(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/texture/AbstractTexture;",
-        at = @At("HEAD")
+            method = "getTexture(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/texture/AbstractTexture;",
+            at = @At("HEAD")
     )
     private void wrapAnimatableTexture(ResourceLocation path, CallbackInfoReturnable<AbstractTexture> callback) {
         AbstractTexture existing = this.byPath.get(path);

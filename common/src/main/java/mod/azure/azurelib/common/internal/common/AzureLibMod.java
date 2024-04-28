@@ -12,6 +12,10 @@ public final class AzureLibMod {
 
     public static AzureLibConfig config;
 
+    private AzureLibMod() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Registers your config class. Config will be immediately loaded upon calling.
      *
@@ -20,7 +24,7 @@ public final class AzureLibMod {
      *                      for example.
      * @param <C>           Config type
      * @return Config holder containing your config instance. You obtain it by calling
-     *         {@link ConfigHolder#getConfigInstance()} method.
+     * {@link ConfigHolder#getConfigInstance()} method.
      */
     public static <C> ConfigHolder<C> registerConfig(Class<C> configClass, IConfigFormatHandler formatFactory) {
         Config config = configClass.getAnnotation(Config.class);
@@ -42,9 +46,5 @@ public final class AzureLibMod {
             ConfigIO.FILE_WATCH_MANAGER.addTrackedConfig(holder);
         }
         return holder;
-    }
-
-    private AzureLibMod() {
-        throw new UnsupportedOperationException();
     }
 }

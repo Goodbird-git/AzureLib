@@ -1,8 +1,8 @@
 package mod.azure.azurelib.core.keyframe.event.data;
 
-import java.util.Objects;
-
 import mod.azure.azurelib.core.keyframe.Keyframe;
+
+import java.util.Objects;
 
 /**
  * Particle {@link Keyframe} instruction holder

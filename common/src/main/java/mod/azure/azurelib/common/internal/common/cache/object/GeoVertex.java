@@ -10,9 +10,9 @@ import org.joml.Vector3f;
  * @param texV     The texture V coordinate
  */
 public record GeoVertex(
-    Vector3f position,
-    float texU,
-    float texV
+        Vector3f position,
+        float texU,
+        float texV
 ) {
 
     public GeoVertex(double x, double y, double z) {

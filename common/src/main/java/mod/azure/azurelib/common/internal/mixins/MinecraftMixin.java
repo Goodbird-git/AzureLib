@@ -1,6 +1,8 @@
 package mod.azure.azurelib.common.internal.mixins;
 
 import com.mojang.blaze3d.platform.WindowEventHandler;
+import mod.azure.azurelib.common.internal.common.config.ConfigHolderRegistry;
+import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
@@ -10,9 +12,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
-
-import mod.azure.azurelib.common.internal.common.config.ConfigHolderRegistry;
-import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnable> implements WindowEventHandler {

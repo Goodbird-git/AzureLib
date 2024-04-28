@@ -6,6 +6,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.api.client.renderer.GeoArmorRenderer;
+import mod.azure.azurelib.common.api.client.renderer.GeoReplacedEntityRenderer;
+import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
+import mod.azure.azurelib.common.internal.common.cache.object.GeoQuad;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -25,21 +35,14 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import mod.azure.azurelib.common.api.client.model.GeoModel;
-import mod.azure.azurelib.common.api.client.renderer.GeoArmorRenderer;
-import mod.azure.azurelib.common.api.client.renderer.GeoReplacedEntityRenderer;
-import mod.azure.azurelib.common.internal.client.RenderProvider;
-import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
-import mod.azure.azurelib.common.internal.common.cache.object.GeoQuad;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
-
 /**
  * Helper class for various methods and functions useful while rendering
  */
 public final class RenderUtils {
+
+    private RenderUtils() {
+        throw new UnsupportedOperationException();
+    }
 
     public static void translateMatrixToBone(PoseStack poseStack, CoreGeoBone bone) {
         poseStack.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
@@ -146,8 +149,8 @@ public final class RenderUtils {
 
         try {
             image = originalTexture instanceof DynamicTexture dynamicTexture
-                ? dynamicTexture.getPixels()
-                : NativeImage.read(mc.getResourceManager().getResource(texture).get().open());
+                    ? dynamicTexture.getPixels()
+                    : NativeImage.read(mc.getResourceManager().getResource(texture).get().open());
         } catch (Exception e) {
             AzureLib.LOGGER.error("Failed to read image for id {}", texture);
             e.printStackTrace();
@@ -250,8 +253,8 @@ public final class RenderUtils {
         EntityRenderer<?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(entityType);
 
         return renderer instanceof GeoReplacedEntityRenderer<?, ?> replacedEntityRenderer
-            ? replacedEntityRenderer.getAnimatable()
-            : null;
+                ? replacedEntityRenderer.getAnimatable()
+                : null;
     }
 
     /**
@@ -299,8 +302,8 @@ public final class RenderUtils {
     @Nullable
     public static GeoModel<?> getGeoModelForBlock(BlockEntity blockEntity) {
         BlockEntityRenderer<?> renderer = Minecraft.getInstance()
-            .getBlockEntityRenderDispatcher()
-            .getRenderer(blockEntity);
+                .getBlockEntityRenderDispatcher()
+                .getRenderer(blockEntity);
 
         return renderer instanceof GeoRenderer<?> geoRenderer ? geoRenderer.getGeoModel() : null;
     }
@@ -317,15 +320,11 @@ public final class RenderUtils {
     @Nullable
     public static GeoModel<?> getGeoModelForArmor(ItemStack stack) {
         if (
-            RenderProvider.of(stack)
-                .getHumanoidArmorModel(null, stack, null, null) instanceof GeoArmorRenderer<?> armorRenderer
+                RenderProvider.of(stack)
+                        .getHumanoidArmorModel(null, stack, null, null) instanceof GeoArmorRenderer<?> armorRenderer
         )
             return armorRenderer.getGeoModel();
 
         return null;
-    }
-
-    private RenderUtils() {
-        throw new UnsupportedOperationException();
     }
 }

@@ -1,8 +1,8 @@
 package mod.azure.azurelib.core.molang;
 
-import java.util.function.DoubleSupplier;
-
 import mod.azure.azurelib.core.math.Variable;
+
+import java.util.function.DoubleSupplier;
 
 /**
  * Lazy override of Variable, to allow for deferred value calculation. <br>
@@ -20,6 +20,13 @@ public class LazyVariable extends Variable {
         super(name, 0);
 
         this.valueSupplier = valueSupplier;
+    }
+
+    /**
+     * Instantiates a copy of this variable from this variable's current value and name
+     */
+    public static LazyVariable from(Variable variable) {
+        return new LazyVariable(variable.getName(), variable.get());
     }
 
     /**
@@ -43,12 +50,5 @@ public class LazyVariable extends Variable {
     @Override
     public double get() {
         return this.valueSupplier.getAsDouble();
-    }
-
-    /**
-     * Instantiates a copy of this variable from this variable's current value and name
-     */
-    public static LazyVariable from(Variable variable) {
-        return new LazyVariable(variable.getName(), variable.get());
     }
 }

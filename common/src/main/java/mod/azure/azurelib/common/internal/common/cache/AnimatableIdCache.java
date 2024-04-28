@@ -4,7 +4,6 @@ import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCa
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +43,10 @@ public final class AnimatableIdCache extends SavedData {
         return getCache(level).getNextId();
     }
 
+    private static AnimatableIdCache getCache(ServerLevel level) {
+        return level.getServer().overworld().getDataStorage().computeIfAbsent(AnimatableIdCache.factory(), DATA_KEY);
+    }
+
     private long getNextId() {
         setDirty();
         return ++this.lastId;
@@ -53,9 +56,5 @@ public final class AnimatableIdCache extends SavedData {
     public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.@NotNull Provider var2) {
         tag.putLong("last_id", this.lastId);
         return tag;
-    }
-
-    private static AnimatableIdCache getCache(ServerLevel level) {
-        return level.getServer().overworld().getDataStorage().computeIfAbsent(AnimatableIdCache.factory(), DATA_KEY);
     }
 }

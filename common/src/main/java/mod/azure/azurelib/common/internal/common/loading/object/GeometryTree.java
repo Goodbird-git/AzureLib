@@ -2,21 +2,20 @@ package mod.azure.azurelib.common.internal.common.loading.object;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import java.util.List;
-import java.util.Map;
-
 import mod.azure.azurelib.common.internal.common.loading.json.raw.Bone;
 import mod.azure.azurelib.common.internal.common.loading.json.raw.MinecraftGeometry;
 import mod.azure.azurelib.common.internal.common.loading.json.raw.Model;
 import mod.azure.azurelib.common.internal.common.loading.json.raw.ModelProperties;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Container class for a {@link Bone} structure, used at startup during deserialization
  */
 public record GeometryTree(
-    Map<String, BoneStructure> topLevelBones,
-    ModelProperties properties
+        Map<String, BoneStructure> topLevelBones,
+        ModelProperties properties
 ) {
 
     public static GeometryTree fromModel(Model model) {

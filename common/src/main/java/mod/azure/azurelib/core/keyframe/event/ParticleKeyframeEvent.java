@@ -11,10 +11,10 @@ import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
 public class ParticleKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T, ParticleKeyframeData> {
 
     public ParticleKeyframeEvent(
-        T animatable,
-        double animationTick,
-        AnimationController<T> controller,
-        ParticleKeyframeData particleKeyFrameData
+            T animatable,
+            double animationTick,
+            AnimationController<T> controller,
+            ParticleKeyframeData particleKeyFrameData
     ) {
         super(animatable, animationTick, controller, particleKeyFrameData);
     }

@@ -4,6 +4,20 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
+import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayersContainer;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+import mod.azure.azurelib.common.api.common.event.GeoRenderItemEvent;
+import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
+import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
+import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
+import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
+import mod.azure.azurelib.common.internal.common.constant.DataTickets;
+import mod.azure.azurelib.common.platform.Services;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animation.AnimationState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -20,21 +34,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 import java.util.List;
-
-import mod.azure.azurelib.common.api.client.model.GeoModel;
-import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
-import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayersContainer;
-import mod.azure.azurelib.common.api.common.animatable.GeoItem;
-import mod.azure.azurelib.common.api.common.event.GeoRenderItemEvent;
-import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
-import mod.azure.azurelib.common.internal.client.util.RenderUtils;
-import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
-import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
-import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
-import mod.azure.azurelib.common.internal.common.constant.DataTickets;
-import mod.azure.azurelib.common.platform.Services;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animation.AnimationState;
 
 /**
  * Base {@link GeoRenderer} class for rendering {@link Item Items} specifically.<br>
@@ -62,9 +61,9 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 
     public GeoItemRenderer(GeoModel<T> model) {
         this(
-            Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-            Minecraft.getInstance().getEntityModels(),
-            model
+                Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+                Minecraft.getInstance().getEntityModels(),
+                model
         );
     }
 
@@ -156,32 +155,32 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
      */
     @Override
     public void preRender(
-        PoseStack poseStack,
-        T animatable,
-        BakedGeoModel model,
-        MultiBufferSource bufferSource,
-        VertexConsumer buffer,
-        boolean isReRender,
-        float partialTick,
-        int packedLight,
-        int packedOverlay,
-        float red,
-        float green,
-        float blue,
-        float alpha
+            PoseStack poseStack,
+            T animatable,
+            BakedGeoModel model,
+            MultiBufferSource bufferSource,
+            VertexConsumer buffer,
+            boolean isReRender,
+            float partialTick,
+            int packedLight,
+            int packedOverlay,
+            float red,
+            float green,
+            float blue,
+            float alpha
     ) {
         this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         scaleModelForRender(
-            this.scaleWidth,
-            this.scaleHeight,
-            poseStack,
-            animatable,
-            model,
-            isReRender,
-            partialTick,
-            packedLight,
-            packedOverlay
+                this.scaleWidth,
+                this.scaleHeight,
+                poseStack,
+                animatable,
+                model,
+                isReRender,
+                partialTick,
+                packedLight,
+                packedOverlay
         );
 
         if (!isReRender)
@@ -190,12 +189,12 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 
     @Override
     public void renderByItem(
-        ItemStack stack,
-        ItemDisplayContext transformType,
-        PoseStack poseStack,
-        MultiBufferSource bufferSource,
-        int packedLight,
-        int packedOverlay
+            ItemStack stack,
+            ItemDisplayContext transformType,
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            int packedLight,
+            int packedOverlay
     ) {
         this.animatable = (T) stack.getItem();
         this.currentItemStack = stack;
@@ -205,27 +204,27 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
             renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
         } else {
             RenderType renderType = getRenderType(
-                this.animatable,
-                getTextureLocation(this.animatable),
-                bufferSource,
-                Minecraft.getInstance().getFrameTime()
+                    this.animatable,
+                    getTextureLocation(this.animatable),
+                    bufferSource,
+                    Minecraft.getInstance().getFrameTime()
             );
             VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(
-                bufferSource,
-                renderType,
-                false,
-                this.currentItemStack != null && this.currentItemStack.hasFoil()
+                    bufferSource,
+                    renderType,
+                    false,
+                    this.currentItemStack != null && this.currentItemStack.hasFoil()
             );
 
             defaultRender(
-                poseStack,
-                this.animatable,
-                bufferSource,
-                renderType,
-                buffer,
-                0,
-                Minecraft.getInstance().getFrameTime(),
-                packedLight
+                    poseStack,
+                    this.animatable,
+                    bufferSource,
+                    renderType,
+                    buffer,
+                    0,
+                    Minecraft.getInstance().getFrameTime(),
+                    packedLight
             );
         }
     }
@@ -236,40 +235,40 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
      * Just includes some additional required transformations and settings.
      */
     protected void renderInGui(
-        ItemDisplayContext transformType,
-        PoseStack poseStack,
-        MultiBufferSource bufferSource,
-        int packedLight,
-        int packedOverlay
+            ItemDisplayContext transformType,
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            int packedLight,
+            int packedOverlay
     ) {
         MultiBufferSource.BufferSource defaultBufferSource =
-            bufferSource instanceof MultiBufferSource.BufferSource bufferSource2
-                ? bufferSource2
-                : Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
+                bufferSource instanceof MultiBufferSource.BufferSource bufferSource2
+                        ? bufferSource2
+                        : Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
         RenderType renderType = getRenderType(
-            this.animatable,
-            getTextureLocation(this.animatable),
-            defaultBufferSource,
-            Minecraft.getInstance().getFrameTime()
+                this.animatable,
+                getTextureLocation(this.animatable),
+                defaultBufferSource,
+                Minecraft.getInstance().getFrameTime()
         );
         VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(
-            bufferSource,
-            renderType,
-            true,
-            this.currentItemStack != null && this.currentItemStack.hasFoil()
+                bufferSource,
+                renderType,
+                true,
+                this.currentItemStack != null && this.currentItemStack.hasFoil()
         );
 
         poseStack.pushPose();
         Lighting.setupForFlatItems();
         defaultRender(
-            poseStack,
-            this.animatable,
-            defaultBufferSource,
-            renderType,
-            buffer,
-            0,
-            Minecraft.getInstance().getFrameTime(),
-            packedLight
+                poseStack,
+                this.animatable,
+                defaultBufferSource,
+                renderType,
+                buffer,
+                0,
+                Minecraft.getInstance().getFrameTime(),
+                packedLight
         );
         defaultBufferSource.endBatch();
         RenderSystem.enableDepthTest();
@@ -284,20 +283,20 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
      */
     @Override
     public void actuallyRender(
-        PoseStack poseStack,
-        T animatable,
-        BakedGeoModel model,
-        RenderType renderType,
-        MultiBufferSource bufferSource,
-        VertexConsumer buffer,
-        boolean isReRender,
-        float partialTick,
-        int packedLight,
-        int packedOverlay,
-        float red,
-        float green,
-        float blue,
-        float alpha
+            PoseStack poseStack,
+            T animatable,
+            BakedGeoModel model,
+            RenderType renderType,
+            MultiBufferSource bufferSource,
+            VertexConsumer buffer,
+            boolean isReRender,
+            float partialTick,
+            int packedLight,
+            int packedOverlay,
+            float red,
+            float green,
+            float blue,
+            float alpha
     ) {
         if (!isReRender) {
             AnimationState<T> animationState = new AnimationState<>(animatable, 0, 0, partialTick, false);
@@ -307,8 +306,8 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
             animationState.setData(DataTickets.ITEM_RENDER_PERSPECTIVE, this.renderPerspective);
             animationState.setData(DataTickets.ITEMSTACK, this.currentItemStack);
             animatable.getAnimatableInstanceCache()
-                .getManagerForId(instanceId)
-                .setData(DataTickets.ITEM_RENDER_PERSPECTIVE, this.renderPerspective);
+                    .getManagerForId(instanceId)
+                    .setData(DataTickets.ITEM_RENDER_PERSPECTIVE, this.renderPerspective);
             this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
             this.model.handleAnimations(animatable, instanceId, animationState);
         }
@@ -316,20 +315,20 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
         this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         GeoRenderer.super.actuallyRender(
-            poseStack,
-            animatable,
-            model,
-            renderType,
-            bufferSource,
-            buffer,
-            isReRender,
-            partialTick,
-            packedLight,
-            packedOverlay,
-            red,
-            green,
-            blue,
-            alpha
+                poseStack,
+                animatable,
+                model,
+                renderType,
+                bufferSource,
+                buffer,
+                isReRender,
+                partialTick,
+                packedLight,
+                packedOverlay,
+                red,
+                green,
+                blue,
+                alpha
         );
     }
 
@@ -338,20 +337,20 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
      */
     @Override
     public void renderRecursively(
-        PoseStack poseStack,
-        T animatable,
-        GeoBone bone,
-        RenderType renderType,
-        MultiBufferSource bufferSource,
-        VertexConsumer buffer,
-        boolean isReRender,
-        float partialTick,
-        int packedLight,
-        int packedOverlay,
-        float red,
-        float green,
-        float blue,
-        float alpha
+            PoseStack poseStack,
+            T animatable,
+            GeoBone bone,
+            RenderType renderType,
+            MultiBufferSource bufferSource,
+            VertexConsumer buffer,
+            boolean isReRender,
+            float partialTick,
+            int packedLight,
+            int packedOverlay,
+            float red,
+            float green,
+            float blue,
+            float alpha
     ) {
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -359,25 +358,25 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(
-                RenderUtils.translateMatrix(localMatrix, getRenderOffset(this.animatable, 1).toVector3f())
+                    RenderUtils.translateMatrix(localMatrix, getRenderOffset(this.animatable, 1).toVector3f())
             );
         }
 
         GeoRenderer.super.renderRecursively(
-            poseStack,
-            animatable,
-            bone,
-            renderType,
-            bufferSource,
-            buffer,
-            isReRender,
-            partialTick,
-            packedLight,
-            packedOverlay,
-            red,
-            green,
-            blue,
-            alpha
+                poseStack,
+                animatable,
+                bone,
+                renderType,
+                bufferSource,
+                buffer,
+                isReRender,
+                partialTick,
+                packedLight,
+                packedOverlay,
+                red,
+                green,
+                blue,
+                alpha
         );
     }
 
@@ -395,8 +394,8 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
     @Override
     public void updateAnimatedTextureFrame(T animatable) {
         AnimatableTexture.setAndUpdate(
-            getTextureLocation(animatable),
-            Item.getId(animatable) + (int) animatable.getTick(animatable)
+                getTextureLocation(animatable),
+                Item.getId(animatable) + (int) animatable.getTick(animatable)
         );
     }
 
@@ -415,14 +414,14 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
      */
     @Override
     public boolean firePreRenderEvent(
-        PoseStack poseStack,
-        BakedGeoModel model,
-        MultiBufferSource bufferSource,
-        float partialTick,
-        int packedLight
+            PoseStack poseStack,
+            BakedGeoModel model,
+            MultiBufferSource bufferSource,
+            float partialTick,
+            int packedLight
     ) {
         var event = GeoRenderItemEvent.Pre.EVENT.handle(
-            new GeoRenderItemEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight)
+                new GeoRenderItemEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight)
         );
         return Services.PLATFORM.getPlatformName().equalsIgnoreCase("forge") ? !event : event;
     }
@@ -432,14 +431,14 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
      */
     @Override
     public void firePostRenderEvent(
-        PoseStack poseStack,
-        BakedGeoModel model,
-        MultiBufferSource bufferSource,
-        float partialTick,
-        int packedLight
+            PoseStack poseStack,
+            BakedGeoModel model,
+            MultiBufferSource bufferSource,
+            float partialTick,
+            int packedLight
     ) {
         GeoRenderItemEvent.Post.EVENT.handle(
-            new GeoRenderItemEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight)
+                new GeoRenderItemEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight)
         );
     }
 }

@@ -1,8 +1,6 @@
 package mod.azure.azurelib.common.api.common.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-
 import mod.azure.azurelib.common.api.client.renderer.DynamicGeoEntityRenderer;
 import mod.azure.azurelib.common.api.client.renderer.GeoEntityRenderer;
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
@@ -11,6 +9,7 @@ import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.azurelib.common.internal.common.event.GeoRenderEvent;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.common.platform.services.GeoRenderPhaseEventFactory;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 /**
  * Renderer events for {@link net.minecraft.world.entity.Entity Entities} being rendered by {@link GeoEntityRenderer},
@@ -50,7 +49,7 @@ public abstract class GeoRenderEntityEvent implements GeoRenderEvent {
     public static class Pre extends GeoRenderEntityEvent {
 
         public static final GeoRenderPhaseEventFactory.GeoRenderPhaseEvent EVENT =
-            Services.GEO_RENDER_PHASE_EVENT_FACTORY.create();
+                Services.GEO_RENDER_PHASE_EVENT_FACTORY.create();
 
         private final PoseStack poseStack;
 
@@ -63,12 +62,12 @@ public abstract class GeoRenderEntityEvent implements GeoRenderEvent {
         private final int packedLight;
 
         public Pre(
-            GeoEntityRenderer<?> renderer,
-            PoseStack poseStack,
-            BakedGeoModel model,
-            MultiBufferSource bufferSource,
-            float partialTick,
-            int packedLight
+                GeoEntityRenderer<?> renderer,
+                PoseStack poseStack,
+                BakedGeoModel model,
+                MultiBufferSource bufferSource,
+                float partialTick,
+                int packedLight
         ) {
             super(renderer);
 
@@ -117,7 +116,7 @@ public abstract class GeoRenderEntityEvent implements GeoRenderEvent {
     public static class Post extends GeoRenderEntityEvent {
 
         public static final GeoRenderPhaseEventFactory.GeoRenderPhaseEvent EVENT =
-            Services.GEO_RENDER_PHASE_EVENT_FACTORY.create();
+                Services.GEO_RENDER_PHASE_EVENT_FACTORY.create();
 
         private final PoseStack poseStack;
 
@@ -130,12 +129,12 @@ public abstract class GeoRenderEntityEvent implements GeoRenderEvent {
         private final int packedLight;
 
         public Post(
-            GeoEntityRenderer<?> renderer,
-            PoseStack poseStack,
-            BakedGeoModel model,
-            MultiBufferSource bufferSource,
-            float partialTick,
-            int packedLight
+                GeoEntityRenderer<?> renderer,
+                PoseStack poseStack,
+                BakedGeoModel model,
+                MultiBufferSource bufferSource,
+                float partialTick,
+                int packedLight
         ) {
             super(renderer);
 
@@ -183,7 +182,7 @@ public abstract class GeoRenderEntityEvent implements GeoRenderEvent {
     public static class CompileRenderLayers extends GeoRenderEntityEvent {
 
         public static final GeoRenderPhaseEventFactory.GeoRenderPhaseEvent EVENT =
-            Services.GEO_RENDER_PHASE_EVENT_FACTORY.create();
+                Services.GEO_RENDER_PHASE_EVENT_FACTORY.create();
 
         public CompileRenderLayers(GeoEntityRenderer<?> renderer) {
             super(renderer);

@@ -5,12 +5,11 @@
 package mod.azure.azurelib.core.keyframe;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.core.animation.EasingType;
+import mod.azure.azurelib.core.math.IValue;
 
 import java.util.List;
 import java.util.Objects;
-
-import mod.azure.azurelib.core.animation.EasingType;
-import mod.azure.azurelib.core.math.IValue;
 
 /**
  * Animation keyframe data
@@ -22,11 +21,11 @@ import mod.azure.azurelib.core.math.IValue;
  * @param easingArgs The arguments to provide to the easing calculation
  */
 public record Keyframe<T extends IValue>(
-    double length,
-    T startValue,
-    T endValue,
-    EasingType easingType,
-    List<T> easingArgs
+        double length,
+        T startValue,
+        T endValue,
+        EasingType easingType,
+        List<T> easingArgs
 ) {
 
     public Keyframe(double length, T startValue, T endValue) {

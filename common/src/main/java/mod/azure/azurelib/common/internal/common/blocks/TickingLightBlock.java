@@ -1,10 +1,13 @@
 package mod.azure.azurelib.common.internal.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mod.azure.azurelib.common.platform.Services;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,8 +21,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.ToIntFunction;
-
-import mod.azure.azurelib.common.platform.Services;
 
 public class TickingLightBlock extends BaseEntityBlock {
 
@@ -51,10 +52,10 @@ public class TickingLightBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(
-        BlockState p_60555_,
-        BlockGetter p_60556_,
-        BlockPos p_60557_,
-        CollisionContext p_60558_
+            BlockState p_60555_,
+            BlockGetter p_60556_,
+            BlockPos p_60557_,
+            CollisionContext p_60558_
     ) {
         return Shapes.empty();
     }
@@ -76,9 +77,9 @@ public class TickingLightBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-        Level world,
-        BlockState state,
-        BlockEntityType<T> type
+            Level world,
+            BlockState state,
+            BlockEntityType<T> type
     ) {
         return createTickerHelper(type, Services.PLATFORM.getTickingLightEntity(), TickingLightEntity::tick);
     }

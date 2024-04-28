@@ -1,11 +1,11 @@
 package mod.azure.azurelib.common.internal.common.config;
 
+import mod.azure.azurelib.common.internal.client.config.IValidationHandler;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import mod.azure.azurelib.common.internal.client.config.IValidationHandler;
 
 /**
  * Marker annotation for field to config serialization. Only public instance fields are allowed.
@@ -36,7 +36,8 @@ public @interface Configurable {
      */
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
-    @interface Synchronized {}
+    @interface Synchronized {
+    }
 
     /**
      * Allows you to specify number range for int or long values. This annotation is also applicable to int/long arrays
@@ -102,7 +103,7 @@ public @interface Configurable {
 
         /**
          * @return Flags used for {@link java.util.regex.Pattern} object. You can use for example value like
-         *         {@code flags = Pattern.CASE_INSENTITIVE | Pattern.LITERAL} for flag specification
+         * {@code flags = Pattern.CASE_INSENTITIVE | Pattern.LITERAL} for flag specification
          */
         int flags() default 0;
 
@@ -119,7 +120,8 @@ public @interface Configurable {
      */
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
-    @interface FixedSize {}
+    @interface FixedSize {
+    }
 
     /**
      * Allows you to map custom listener method to listen for value change. Could be useful for example when validating
@@ -143,7 +145,7 @@ public @interface Configurable {
          * Handles remapping of boxed java types to their primitive values
          *
          * @return Whether remapping is allowed, unless specific implementation is provided, this should always be set
-         *         to true
+         * to true
          */
         boolean allowPrimitivesMapping() default true;
     }

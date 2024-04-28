@@ -11,7 +11,8 @@ package mod.azure.azurelib.core.keyframe;
  * @param startTick The animation tick time at the start of this {@code Keyframe}
  */
 public record KeyframeLocation<T extends Keyframe<?>>(
-    T keyframe,
-    double startTick
-) {}
+        T keyframe,
+        double startTick
+) {
+}
 // TODO: public record KeyframeLocation<T extends IValue>(Keyframe<T> keyframe, double startTick) { }

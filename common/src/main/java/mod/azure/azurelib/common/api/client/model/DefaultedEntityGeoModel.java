@@ -1,13 +1,12 @@
 package mod.azure.azurelib.common.api.client.model;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-
 import mod.azure.azurelib.common.internal.client.model.data.EntityModelData;
 import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationState;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 /**
  * {@link DefaultedGeoModel} specific to {@link net.minecraft.world.entity.Entity Entities}. Using this class pre-sorts

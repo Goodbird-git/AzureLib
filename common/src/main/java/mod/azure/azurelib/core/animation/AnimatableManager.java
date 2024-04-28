@@ -7,14 +7,13 @@ package mod.azure.azurelib.core.animation;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.object.DataTicket;
+import mod.azure.azurelib.core.state.BoneSnapshot;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.object.DataTicket;
-import mod.azure.azurelib.core.state.BoneSnapshot;
 
 /**
  * The animation data collection for a given animatable instance.<br>
@@ -178,7 +177,7 @@ public class AnimatableManager<T extends GeoAnimatable> {
 
         private <T extends GeoAnimatable> Object2ObjectArrayMap<String, AnimationController<T>> build() {
             Object2ObjectArrayMap<String, AnimationController<?>> map = new Object2ObjectArrayMap<>(
-                this.controllers.size()
+                    this.controllers.size()
             );
 
             this.controllers.forEach(controller -> map.put(controller.getName(), controller));

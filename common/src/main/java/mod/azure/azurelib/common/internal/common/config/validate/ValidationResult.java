@@ -4,13 +4,13 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.MutableComponent;
 
 public record ValidationResult(
-    NotificationSeverity severity,
-    MutableComponent text
+        NotificationSeverity severity,
+        MutableComponent text
 ) {
 
     private static final ValidationResult OK = new ValidationResult(
-        NotificationSeverity.INFO,
-        (MutableComponent) CommonComponents.EMPTY
+            NotificationSeverity.INFO,
+            (MutableComponent) CommonComponents.EMPTY
     );
 
     public static ValidationResult ok() {

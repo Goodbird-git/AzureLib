@@ -1,8 +1,7 @@
 package mod.azure.azurelib.common.api.client.model;
 
-import net.minecraft.resources.ResourceLocation;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * {@link DefaultedGeoModel} specific to {@link net.minecraft.world.item.Item Items}. Using this class pre-sorts

@@ -25,12 +25,12 @@ public class AzurePathFinder extends PathFinder {
     @Nullable
     @Override
     public Path findPath(
-        PathNavigationRegion regionIn,
-        Mob mob,
-        Set<BlockPos> targetPositions,
-        float maxRange,
-        int accuracy,
-        float searchDepthMultiplier
+            PathNavigationRegion regionIn,
+            Mob mob,
+            Set<BlockPos> targetPositions,
+            float maxRange,
+            int accuracy,
+            float searchDepthMultiplier
     ) {
         Path path = super.findPath(regionIn, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
         return path == null ? null : new PatchedPath(path);
@@ -47,6 +47,14 @@ public class AzurePathFinder extends PathFinder {
             super(copyPathPoints(original), original.getTarget(), original.canReach());
         }
 
+        private static List<Node> copyPathPoints(Path original) {
+            List<Node> points = new ArrayList();
+            for (int i = 0; i < original.getNodeCount(); i++) {
+                points.add(original.getNode(i));
+            }
+            return points;
+        }
+
         @Override
         public Vec3 getEntityPosAtNode(Entity entity, int index) {
             Node point = this.getNode(index);
@@ -54,14 +62,6 @@ public class AzurePathFinder extends PathFinder {
             double d1 = point.y;
             double d2 = point.z + Mth.floor(entity.getBbWidth() + 1.0F) * 0.5D;
             return new Vec3(d0, d1, d2);
-        }
-
-        private static List<Node> copyPathPoints(Path original) {
-            List<Node> points = new ArrayList();
-            for (int i = 0; i < original.getNodeCount(); i++) {
-                points.add(original.getNode(i));
-            }
-            return points;
         }
     }
 }

@@ -16,6 +16,19 @@ import net.minecraft.world.level.Level;
 public record ClientUtils() {
 
     /**
+     * Common reload KeyMapping for my various mods
+     */
+    public static KeyMapping RELOAD;
+    /**
+     * Common scope KeyMapping for my various mods
+     */
+    public static KeyMapping SCOPE;
+    /**
+     * Common scope KeyMapping for my various mods
+     */
+    public static KeyMapping FIRE_WEAPON;
+
+    /**
      * Translates the provided {@link PoseStack} to face towards the given {@link Entity}'s rotation.<br>
      * Usually used for rotating projectiles towards their trajectory, in an {@link GeoRenderer#preRender} override.<br>
      */
@@ -37,19 +50,4 @@ public record ClientUtils() {
     public static Level getLevel() {
         return Minecraft.getInstance().level;
     }
-
-    /**
-     * Common reload KeyMapping for my various mods
-     */
-    public static KeyMapping RELOAD;
-
-    /**
-     * Common scope KeyMapping for my various mods
-     */
-    public static KeyMapping SCOPE;
-
-    /**
-     * Common scope KeyMapping for my various mods
-     */
-    public static KeyMapping FIRE_WEAPON;
 }

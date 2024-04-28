@@ -23,10 +23,10 @@ public class SoundKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T
      * @param controller    the controller
      */
     public SoundKeyframeEvent(
-        T entity,
-        double animationTick,
-        AnimationController<T> controller,
-        SoundKeyframeData keyFrameData
+            T entity,
+            double animationTick,
+            AnimationController<T> controller,
+            SoundKeyframeData keyFrameData
     ) {
         super(entity, animationTick, controller, keyFrameData);
     }

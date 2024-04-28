@@ -1,10 +1,9 @@
 package mod.azure.azurelib.common.internal.common.config.value;
 
+import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-
-import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
 
 public final class ValueData<T> implements IDescriptionProvider {
 
@@ -50,13 +49,13 @@ public final class ValueData<T> implements IDescriptionProvider {
         this.context.setFieldValue(value);
     }
 
-    public void setParent(@Nullable ConfigValue<?> parent) {
-        this.parent = parent;
-    }
-
     @Nullable
     public ConfigValue<?> getParent() {
         return parent;
+    }
+
+    public void setParent(@Nullable ConfigValue<?> parent) {
+        this.parent = parent;
     }
 
     public TypeAdapter.AdapterContext getContext() {

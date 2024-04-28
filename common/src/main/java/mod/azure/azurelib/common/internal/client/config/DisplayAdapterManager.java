@@ -1,30 +1,14 @@
 package mod.azure.azurelib.common.internal.client.config;
 
+import mod.azure.azurelib.common.internal.common.config.adapter.TypeMatcher;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import mod.azure.azurelib.common.internal.common.config.adapter.TypeMatcher;
-
 public final class DisplayAdapterManager {
 
     private static final Map<TypeMatcher, DisplayAdapter> ADAPTER_MAP = new HashMap<>();
-
-    public static DisplayAdapter forType(Class<?> type) {
-        return ADAPTER_MAP.entrySet()
-            .stream()
-            .filter(entry -> entry.getKey().test(type))
-            .sorted(Comparator.comparingInt(value -> value.getKey().priority()))
-            .map(Map.Entry::getValue)
-            .findFirst()
-            .orElse(null);
-    }
-
-    public static void registerDisplayAdapter(TypeMatcher matcher, DisplayAdapter adapter) {
-        if (ADAPTER_MAP.put(matcher, adapter) != null) {
-            throw new IllegalArgumentException("Duplicate type matcher with id: " + matcher.getIdentifier());
-        }
-    }
 
     static {
         registerDisplayAdapter(TypeMatcher.matchBoolean(), DisplayAdapter.booleanValue());
@@ -46,5 +30,21 @@ public final class DisplayAdapterManager {
 
     private DisplayAdapterManager() {
         throw new UnsupportedOperationException();
+    }
+
+    public static DisplayAdapter forType(Class<?> type) {
+        return ADAPTER_MAP.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().test(type))
+                .sorted(Comparator.comparingInt(value -> value.getKey().priority()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static void registerDisplayAdapter(TypeMatcher matcher, DisplayAdapter adapter) {
+        if (ADAPTER_MAP.put(matcher, adapter) != null) {
+            throw new IllegalArgumentException("Duplicate type matcher with id: " + matcher.getIdentifier());
+        }
     }
 }

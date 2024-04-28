@@ -11,6 +11,10 @@ import java.util.UUID;
 
 public class EntityPacketOnClient {
 
+    private EntityPacketOnClient() {
+        throw new UnsupportedOperationException();
+    }
+
     public static void onPacket(Minecraft context, FriendlyByteBuf byteBuf) {
         EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.byId(byteBuf.readVarInt());
         UUID entityUUID = byteBuf.readUUID();
@@ -33,9 +37,5 @@ public class EntityPacketOnClient {
                 world.addEntity(entity);
             }
         });
-    }
-
-    private EntityPacketOnClient() {
-        throw new UnsupportedOperationException();
     }
 }

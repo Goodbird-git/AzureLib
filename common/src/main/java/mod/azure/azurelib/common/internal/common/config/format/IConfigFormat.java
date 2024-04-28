@@ -1,14 +1,14 @@
 package mod.azure.azurelib.common.internal.common.config.format;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigReadException;
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
 import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
 import mod.azure.azurelib.common.internal.common.config.value.IDescriptionProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Handles exporting of data to custom file format

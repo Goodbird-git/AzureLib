@@ -26,11 +26,14 @@ public final class AzureLib {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static final Marker MAIN_MARKER = MarkerManager.getMarker("main");
-
-    public static boolean hasInitialized;
     public static final Supplier<DataComponentType<Long>> STACK_ANIMATABLE_ID_COMPONENT = Services.PLATFORM.registerDataComponent(
             "stack_animatable_id", builder -> builder.networkSynchronized(
                     ByteBufCodecs.VAR_LONG));
+    public static boolean hasInitialized;
+
+    private AzureLib() {
+        throw new UnsupportedOperationException();
+    }
 
     public static void initialize() {
         if (!hasInitialized) {
@@ -41,9 +44,5 @@ public final class AzureLib {
 
     public static ResourceLocation modResource(String name) {
         return new ResourceLocation(MOD_ID, name);
-    }
-
-    private AzureLib() {
-        throw new UnsupportedOperationException();
     }
 }

@@ -4,10 +4,10 @@
 
 package mod.azure.azurelib.core.keyframe;
 
+import mod.azure.azurelib.core.animation.AnimationController;
+
 import java.io.Serial;
 import java.util.LinkedList;
-
-import mod.azure.azurelib.core.animation.AnimationController;
 
 /**
  * An {@link AnimationPoint} queue holds a queue of {@code AnimationPoints} which are used in the

@@ -17,7 +17,8 @@ import org.jetbrains.annotations.NotNull;
  * Packet for syncing user-definable animations that can be triggered from the server for
  * {@link net.minecraft.world.entity.Entity Entities}
  */
-public record EntityAnimTriggerPacket(int entityId, boolean isReplacedEntity, String controllerName, String animName) implements AbstractPacket {
+public record EntityAnimTriggerPacket(int entityId, boolean isReplacedEntity, String controllerName,
+                                      String animName) implements AbstractPacket {
     public static final CustomPacketPayload.Type<EntityAnimTriggerPacket> TYPE = new Type<>(
             AzureLibNetwork.ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID);
     public static final StreamCodec<FriendlyByteBuf, EntityAnimTriggerPacket> CODEC = StreamCodec.composite(
@@ -41,7 +42,8 @@ public record EntityAnimTriggerPacket(int entityId, boolean isReplacedEntity, St
             return;
         }
         if (RenderUtils.getReplacedAnimatable(entity.getType()) instanceof GeoReplacedEntity replacedEntity)
-            replacedEntity.triggerAnim(entity, this.controllerName.isEmpty() ? null : this.controllerName, this.animName);
+            replacedEntity.triggerAnim(entity, this.controllerName.isEmpty() ? null : this.controllerName,
+                    this.animName);
     }
 
     @Override

@@ -1,30 +1,14 @@
 package mod.azure.azurelib.common.internal.common.config.adapter;
 
+import mod.azure.azurelib.common.internal.common.config.value.*;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import mod.azure.azurelib.common.internal.common.config.value.*;
-
 public final class TypeAdapters {
 
     private static final Map<TypeMatcher, TypeAdapter> ADAPTER_MAP = new HashMap<>();
-
-    public static TypeAdapter forType(Class<?> type) {
-        return ADAPTER_MAP.entrySet()
-            .stream()
-            .filter(entry -> entry.getKey().test(type))
-            .sorted(Comparator.comparingInt(value -> value.getKey().priority()))
-            .map(Map.Entry::getValue)
-            .findFirst()
-            .orElse(null);
-    }
-
-    public static void registerTypeAdapter(TypeMatcher matcher, TypeAdapter adapter) {
-        if (ADAPTER_MAP.put(matcher, adapter) != null) {
-            throw new IllegalArgumentException("Duplicate type matcher with id: " + matcher.getIdentifier());
-        }
-    }
 
     static {
         // primitives
@@ -54,5 +38,21 @@ public final class TypeAdapters {
 
     private TypeAdapters() {
         throw new UnsupportedOperationException();
+    }
+
+    public static TypeAdapter forType(Class<?> type) {
+        return ADAPTER_MAP.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().test(type))
+                .sorted(Comparator.comparingInt(value -> value.getKey().priority()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static void registerTypeAdapter(TypeMatcher matcher, TypeAdapter adapter) {
+        if (ADAPTER_MAP.put(matcher, adapter) != null) {
+            throw new IllegalArgumentException("Duplicate type matcher with id: " + matcher.getIdentifier());
+        }
     }
 }

@@ -1,8 +1,5 @@
 package mod.azure.azurelib.common.api.common.animatable;
 
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
-
 import mod.azure.azurelib.common.api.client.renderer.GeoReplacedEntityRenderer;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.network.SerializableDataTicket;
@@ -12,6 +9,8 @@ import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link GeoAnimatable} interface specific to {@link net.minecraft.world.entity.Entity Entities}. This also applies
@@ -48,10 +47,10 @@ public interface GeoEntity extends GeoAnimatable {
             getAnimatableInstanceCache().getManagerForId(entity.getId()).setData(dataTicket, data);
         } else {
             EntityAnimDataSyncPacket<D> entityAnimDataSyncPacket = new EntityAnimDataSyncPacket<>(
-                entity.getId(),
-                false,
-                dataTicket,
-                data
+                    entity.getId(),
+                    false,
+                    dataTicket,
+                    data
             );
             Services.NETWORK.sendToTrackingEntityAndSelf(entityAnimDataSyncPacket, entity);
         }
@@ -73,10 +72,10 @@ public interface GeoEntity extends GeoAnimatable {
             getAnimatableInstanceCache().getManagerForId(entity.getId()).tryTriggerAnimation(controllerName, animName);
         } else {
             EntityAnimTriggerPacket entityAnimTriggerPacket = new EntityAnimTriggerPacket(
-                entity.getId(),
-                false,
-                controllerName,
-                animName
+                    entity.getId(),
+                    false,
+                    controllerName,
+                    animName
             );
             Services.NETWORK.sendToTrackingEntityAndSelf(entityAnimTriggerPacket, entity);
         }

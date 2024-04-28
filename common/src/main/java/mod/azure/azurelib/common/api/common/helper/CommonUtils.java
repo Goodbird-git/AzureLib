@@ -1,5 +1,9 @@
 package mod.azure.azurelib.common.api.common.helper;
 
+import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
+import mod.azure.azurelib.common.platform.Services;
+import mod.azure.azurelib.common.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -16,11 +20,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
-import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
-import mod.azure.azurelib.common.platform.Services;
-import mod.azure.azurelib.common.platform.services.IPlatformHelper;
-
 public record CommonUtils() {
 
     /**
@@ -36,26 +35,26 @@ public record CommonUtils() {
      * @param effectTime How long the effect should be applied for?
      */
     public static void summonAoE(
-        LivingEntity entity,
-        ParticleOptions particle,
-        int yOffset,
-        int duration,
-        float radius,
-        boolean hasEffect,
-        @Nullable Holder<MobEffect> effect,
-        int effectTime
+            LivingEntity entity,
+            ParticleOptions particle,
+            int yOffset,
+            int duration,
+            float radius,
+            boolean hasEffect,
+            @Nullable Holder<MobEffect> effect,
+            int effectTime
     ) {
         var areaEffectCloudEntity = new AreaEffectCloud(
-            entity.level(),
-            entity.getX(),
-            entity.getY() + yOffset,
-            entity.getZ()
+                entity.level(),
+                entity.getX(),
+                entity.getY() + yOffset,
+                entity.getZ()
         );
         areaEffectCloudEntity.setRadius(radius);
         areaEffectCloudEntity.setDuration(duration);
         areaEffectCloudEntity.setParticle(particle);
         areaEffectCloudEntity.setRadiusPerTick(
-            -areaEffectCloudEntity.getRadius() / areaEffectCloudEntity.getDuration()
+                -areaEffectCloudEntity.getRadius() / areaEffectCloudEntity.getDuration()
         );
         if (hasEffect && effect != null && !entity.hasEffect(effect))
             areaEffectCloudEntity.addEffect(new MobEffectInstance(effect, effectTime, 0));
@@ -75,16 +74,16 @@ public record CommonUtils() {
             if (lightBlockPos == null)
                 return;
             entity.level()
-                .setBlockAndUpdate(
-                    lightBlockPos,
-                    Services.PLATFORM.getTickingLightBlock().defaultBlockState()
-                );
+                    .setBlockAndUpdate(
+                            lightBlockPos,
+                            Services.PLATFORM.getTickingLightBlock().defaultBlockState()
+                    );
         } else if (
-            AzureLibUtil.checkDistance(
-                lightBlockPos,
-                entity.blockPosition(),
-                2
-            ) && entity.level().getBlockEntity(lightBlockPos) instanceof TickingLightEntity tickingLightEntity
+                AzureLibUtil.checkDistance(
+                        lightBlockPos,
+                        entity.blockPosition(),
+                        2
+                ) && entity.level().getBlockEntity(lightBlockPos) instanceof TickingLightEntity tickingLightEntity
         ) {
             tickingLightEntity.refresh(isInWaterBlock ? 20 : 0);
         }
@@ -103,49 +102,49 @@ public record CommonUtils() {
         var look = livingEntity.getViewVector(ticks);
         var start = livingEntity.getEyePosition(ticks);
         var end = new Vec3(
-            livingEntity.getX() + look.x * range,
-            livingEntity.getEyeY() + look.y * range,
-            livingEntity.getZ() + look.z * range
+                livingEntity.getX() + look.x * range,
+                livingEntity.getEyeY() + look.y * range,
+                livingEntity.getZ() + look.z * range
         );
         var traceDistance = livingEntity.level()
-            .clip(
-                new ClipContext(
-                    start,
-                    end,
-                    ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.NONE,
-                    livingEntity
+                .clip(
+                        new ClipContext(
+                                start,
+                                end,
+                                ClipContext.Block.COLLIDER,
+                                ClipContext.Fluid.NONE,
+                                livingEntity
+                        )
                 )
-            )
-            .getLocation()
-            .distanceToSqr(end);
+                .getLocation()
+                .distanceToSqr(end);
         for (
-            var possible : livingEntity.level()
+                var possible : livingEntity.level()
                 .getEntities(
-                    livingEntity,
-                    livingEntity.getBoundingBox()
-                        .expandTowards(look.scale(traceDistance))
-                        .expandTowards(3.0D, 3.0D, 3.0D),
-                    (entity -> !entity.isSpectator() && entity.isPickable() && entity instanceof LivingEntity)
+                        livingEntity,
+                        livingEntity.getBoundingBox()
+                                .expandTowards(look.scale(traceDistance))
+                                .expandTowards(3.0D, 3.0D, 3.0D),
+                        (entity -> !entity.isSpectator() && entity.isPickable() && entity instanceof LivingEntity)
                 )
         ) {
             var clip = possible.getBoundingBox().inflate(0.3D).clip(start, end);
             if (clip.isPresent() && start.distanceToSqr(clip.get()) < traceDistance)
                 return ProjectileUtil.getEntityHitResult(
-                    livingEntity.level(),
-                    livingEntity,
-                    start,
-                    end,
-                    livingEntity.getBoundingBox()
-                        .expandTowards(look.scale(traceDistance))
-                        .inflate(
-                            3.0D,
-                            3.0D,
-                            3.0D
-                        ),
-                    target -> !target.isSpectator() && livingEntity.isAttackable() && livingEntity.hasLineOfSight(
-                        target
-                    )
+                        livingEntity.level(),
+                        livingEntity,
+                        start,
+                        end,
+                        livingEntity.getBoundingBox()
+                                .expandTowards(look.scale(traceDistance))
+                                .inflate(
+                                        3.0D,
+                                        3.0D,
+                                        3.0D
+                                ),
+                        target -> !target.isSpectator() && livingEntity.isAttackable() && livingEntity.hasLineOfSight(
+                                target
+                        )
                 );
         }
         return null;
@@ -159,12 +158,12 @@ public record CommonUtils() {
     public static void setOnFire(Projectile projectile) {
         if (projectile.isOnFire())
             projectile.level()
-                .getEntitiesOfClass(LivingEntity.class, projectile.getBoundingBox().inflate(2))
-                .forEach(
-                    e -> {
-                        if (e.isAlive() && !(e instanceof Player))
-                            e.setRemainingFireTicks(90);
-                    }
-                );
+                    .getEntitiesOfClass(LivingEntity.class, projectile.getBoundingBox().inflate(2))
+                    .forEach(
+                            e -> {
+                                if (e.isAlive() && !(e instanceof Player))
+                                    e.setRemainingFireTicks(90);
+                            }
+                    );
     }
 }

@@ -1,15 +1,14 @@
 package mod.azure.azurelib.common.internal.common.config.value;
 
-import net.minecraft.network.FriendlyByteBuf;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 import mod.azure.azurelib.common.internal.common.config.ConfigUtils;
 import mod.azure.azurelib.common.internal.common.config.Configurable;
 import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
 import mod.azure.azurelib.common.internal.common.config.format.IConfigFormat;
+import net.minecraft.network.FriendlyByteBuf;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class DoubleArrayValue extends ConfigValue<double[]> implements ArrayValue {
 
@@ -31,8 +30,8 @@ public class DoubleArrayValue extends ConfigValue<double[]> implements ArrayValu
         this.fixedSize = field.getAnnotation(Configurable.FixedSize.class) != null;
         Configurable.DecimalRange decimalRange = field.getAnnotation(Configurable.DecimalRange.class);
         this.range = decimalRange != null
-            ? DecimalValue.Range.newBoundedRange(decimalRange.min(), decimalRange.max())
-            : DecimalValue.Range.unboundedDouble();
+                ? DecimalValue.Range.newBoundedRange(decimalRange.min(), decimalRange.max())
+                : DecimalValue.Range.unboundedDouble();
     }
 
     @Override
@@ -41,9 +40,9 @@ public class DoubleArrayValue extends ConfigValue<double[]> implements ArrayValu
             double[] defaultArray = this.valueData.getDefaultValue();
             if (in.length != defaultArray.length) {
                 ConfigUtils.logArraySizeCorrectedMessage(
-                    this.getId(),
-                    Arrays.toString(in),
-                    Arrays.toString(defaultArray)
+                        this.getId(),
+                        Arrays.toString(in),
+                        Arrays.toString(defaultArray)
                 );
                 in = defaultArray;
             }
@@ -112,11 +111,11 @@ public class DoubleArrayValue extends ConfigValue<double[]> implements ArrayValu
 
         @Override
         public ConfigValue<?> serialize(
-            String name,
-            String[] comments,
-            Object value,
-            TypeSerializer serializer,
-            AdapterContext context
+                String name,
+                String[] comments,
+                Object value,
+                TypeSerializer serializer,
+                AdapterContext context
         ) throws IllegalAccessException {
             return new DoubleArrayValue(ValueData.of(name, (double[]) value, context, comments));
         }

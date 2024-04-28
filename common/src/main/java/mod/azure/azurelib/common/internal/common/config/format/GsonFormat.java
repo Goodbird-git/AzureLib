@@ -1,12 +1,13 @@
 package mod.azure.azurelib.common.internal.common.config.format;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.config.ConfigUtils;
+import mod.azure.azurelib.common.internal.common.config.exception.ConfigReadException;
+import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
+import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
+import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
+import mod.azure.azurelib.common.internal.common.config.value.IDescriptionProvider;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,14 +20,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.config.ConfigUtils;
-import mod.azure.azurelib.common.internal.common.config.exception.ConfigReadException;
-import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
-import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
-import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
-import mod.azure.azurelib.common.internal.common.config.value.IDescriptionProvider;
 
 public final class GsonFormat implements IConfigFormat {
 
@@ -295,9 +288,9 @@ public final class GsonFormat implements IConfigFormat {
     }
 
     private <T> T[] readArray(
-        String field,
-        Function<Integer, T[]> arrayFactory,
-        Function<JsonElement, T> function
+            String field,
+            Function<Integer, T[]> arrayFactory,
+            Function<JsonElement, T> function
     ) throws ConfigValueMissingException {
         JsonElement element = this.root.get(field);
         if (element == null || !element.isJsonArray()) {

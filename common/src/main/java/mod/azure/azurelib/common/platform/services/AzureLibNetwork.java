@@ -52,6 +52,25 @@ public interface AzureLibNetwork {
         Services.NETWORK.registerPacketInternal(payloadType, codec, true);
     }
 
+    static void sendWithCallback(AbstractPacket packet, IPacketCallback callback) {
+        callback.onReadyToSend(packet);
+    }
+
+    /**
+     * Gets a registered synced {@link GeoAnimatable} object by name
+     *
+     * @param className the className
+     */
+    @Nullable
+    static GeoAnimatable getSyncedAnimatable(String className) {
+        GeoAnimatable animatable = SYNCED_ANIMATABLES.get(className);
+
+        if (animatable == null)
+            AzureLib.LOGGER.error("Attempting to retrieve unregistered synced animatable! ({})", className);
+
+        return animatable;
+    }
+
     <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacketInternal(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean isClientBound);
 
     /**
@@ -76,29 +95,10 @@ public interface AzureLibNetwork {
 
     void sendClientPacket(ServerPlayer player, String id);
 
-    static void sendWithCallback(AbstractPacket packet, IPacketCallback callback) {
-        callback.onReadyToSend(packet);
-    }
+    void sendToPlayer(AbstractPacket packet, ServerPlayer player);
 
     interface IPacketCallback {
 
         void onReadyToSend(AbstractPacket packetToSend);
     }
-
-    /**
-     * Gets a registered synced {@link GeoAnimatable} object by name
-     *
-     * @param className the className
-     */
-    @Nullable
-    static GeoAnimatable getSyncedAnimatable(String className) {
-        GeoAnimatable animatable = SYNCED_ANIMATABLES.get(className);
-
-        if (animatable == null)
-            AzureLib.LOGGER.error("Attempting to retrieve unregistered synced animatable! ({})", className);
-
-        return animatable;
-    }
-
-    void sendToPlayer(AbstractPacket packet, ServerPlayer player);
 }

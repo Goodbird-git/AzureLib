@@ -1,17 +1,12 @@
 package mod.azure.azurelib.common.internal.common.config.adapter;
 
+import mod.azure.azurelib.common.internal.common.AzureLib;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import mod.azure.azurelib.common.internal.common.AzureLib;
-
 public interface TypeMatcher extends Predicate<Class<?>> {
-
-    ResourceLocation getIdentifier();
-
-    int priority();
 
     static TypeMatcher matchBoolean() {
         return NamedMatcherImpl.vanilla("boolean", Boolean.TYPE);
@@ -75,8 +70,12 @@ public interface TypeMatcher extends Predicate<Class<?>> {
 
     static TypeMatcher matchObject() {
         return NamedMatcherImpl.vanilla("object", type -> !type.isArray())
-            .withPriority(Integer.MAX_VALUE);
+                .withPriority(Integer.MAX_VALUE);
     }
+
+    ResourceLocation getIdentifier();
+
+    int priority();
 
     class NamedMatcherImpl implements TypeMatcher {
 

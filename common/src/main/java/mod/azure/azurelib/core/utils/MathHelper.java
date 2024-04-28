@@ -2,6 +2,10 @@ package mod.azure.azurelib.core.utils;
 
 public final class MathHelper {
 
+    private MathHelper() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * the angle is reduced to an angle between -180 and +180 by mod, and a 360 check
      */
@@ -51,9 +55,5 @@ public final class MathHelper {
         }
 
         return angle;
-    }
-
-    private MathHelper() {
-        throw new UnsupportedOperationException();
     }
 }

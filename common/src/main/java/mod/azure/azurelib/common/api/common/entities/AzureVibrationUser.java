@@ -85,8 +85,8 @@ public class AzureVibrationUser implements VibrationSystem.User {
             GameEvent.@NotNull Context context
     ) {
         if (
-            mob.isNoAi() || mob.isDeadOrDying() || !mob.level().getWorldBorder().isWithinBounds(blockPos) || mob
-                .isRemoved()
+                mob.isNoAi() || mob.isDeadOrDying() || !mob.level().getWorldBorder().isWithinBounds(blockPos) || mob
+                        .isRemoved()
         )
             return false;
         var entity = context.sourceEntity();

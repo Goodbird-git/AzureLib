@@ -3,11 +3,6 @@ package mod.azure.azurelib.core.molang;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-
 import mod.azure.azurelib.core.math.Constant;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.math.MathBuilder;
@@ -17,6 +12,10 @@ import mod.azure.azurelib.core.molang.expressions.MolangValue;
 import mod.azure.azurelib.core.molang.expressions.MolangVariableHolder;
 import mod.azure.azurelib.core.molang.functions.CosDegrees;
 import mod.azure.azurelib.core.molang.functions.SinDegrees;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
 
 /**
  * Utility class for parsing and utilising MoLang functions and expressions
@@ -42,6 +41,94 @@ public class MolangParser extends MathBuilder {
         // Remap functions to be intact with Molang specification
         doCoreRemaps();
         registerAdditionalVariables();
+    }
+
+    public static MolangValue parseJson(JsonElement element) throws MolangException {
+        if (!element.isJsonPrimitive())
+            return ZERO;
+
+        JsonPrimitive primitive = element.getAsJsonPrimitive();
+
+        if (primitive.isNumber())
+            return new MolangValue(new Constant(primitive.getAsDouble()));
+
+        if (primitive.isString()) {
+            String string = primitive.getAsString();
+
+            try {
+                return new MolangValue(new Constant(Double.parseDouble(string)));
+            } catch (NumberFormatException ex) {
+                return parseExpression(string);
+            }
+        }
+
+        return ZERO;
+    }
+
+    /**
+     * Parse a molang expression
+     */
+    public static MolangValue parseExpression(String expression) throws MolangException {
+        MolangCompoundValue result = null;
+
+        for (String split : expression.toLowerCase().trim().split(";")) {
+            String trimmed = split.trim();
+
+            if (!trimmed.isEmpty()) {
+                if (result == null) {
+                    result = new MolangCompoundValue(parseOneLine(trimmed, result));
+
+                    continue;
+                }
+
+                result.values.add(parseOneLine(trimmed, result));
+            }
+        }
+
+        if (result == null)
+            throw new MolangException("Molang expression cannot be blank!");
+
+        return result;
+    }
+
+    /**
+     * Parse a single Molang statement
+     */
+    protected static MolangValue parseOneLine(
+            String expression,
+            MolangCompoundValue currentStatement
+    ) throws MolangException {
+        if (expression.startsWith(RETURN)) {
+            try {
+                return new MolangValue(INSTANCE.parse(expression.substring(RETURN.length())), true);
+            } catch (Exception e) {
+                throw new MolangException("Couldn't parse return '" + expression + "' expression!");
+            }
+        }
+
+        try {
+            List<Object> symbols = INSTANCE.breakdownChars(INSTANCE.breakdown(expression));
+
+            if (
+                    symbols.size() >= 3 && symbols.get(0) instanceof String name && INSTANCE.isVariable(symbols.get(0))
+                            && symbols.get(1).equals("=")
+            ) {
+                symbols = symbols.subList(2, symbols.size());
+                LazyVariable variable;
+
+                if (!VARIABLES.containsKey(name) && !currentStatement.locals.containsKey(name)) {
+                    currentStatement.locals.put(name, (variable = new LazyVariable(name, 0)));
+                } else {
+                    variable = INSTANCE.getVariable(name, currentStatement);
+                }
+
+                return new MolangVariableHolder(variable, INSTANCE.parseSymbolsMolang(symbols));
+            }
+
+            return new MolangValue(INSTANCE.parseSymbolsMolang(symbols));
+        } catch (Exception e) {
+            throw new MolangException("Couldn't parse '" + expression + "' expression!");
+        }
     }
 
     private void doCoreRemaps() {
@@ -154,7 +241,7 @@ public class MolangParser extends MathBuilder {
      *
      * @param name The name of the variable to get
      * @return The registered {@code LazyVariable} instance, or a newly registered instance if one wasn't registered
-     *         previously
+     * previously
      */
     @Override
     public LazyVariable getVariable(String name) {
@@ -172,94 +259,6 @@ public class MolangParser extends MathBuilder {
         }
 
         return getVariable(name);
-    }
-
-    public static MolangValue parseJson(JsonElement element) throws MolangException {
-        if (!element.isJsonPrimitive())
-            return ZERO;
-
-        JsonPrimitive primitive = element.getAsJsonPrimitive();
-
-        if (primitive.isNumber())
-            return new MolangValue(new Constant(primitive.getAsDouble()));
-
-        if (primitive.isString()) {
-            String string = primitive.getAsString();
-
-            try {
-                return new MolangValue(new Constant(Double.parseDouble(string)));
-            } catch (NumberFormatException ex) {
-                return parseExpression(string);
-            }
-        }
-
-        return ZERO;
-    }
-
-    /**
-     * Parse a molang expression
-     */
-    public static MolangValue parseExpression(String expression) throws MolangException {
-        MolangCompoundValue result = null;
-
-        for (String split : expression.toLowerCase().trim().split(";")) {
-            String trimmed = split.trim();
-
-            if (!trimmed.isEmpty()) {
-                if (result == null) {
-                    result = new MolangCompoundValue(parseOneLine(trimmed, result));
-
-                    continue;
-                }
-
-                result.values.add(parseOneLine(trimmed, result));
-            }
-        }
-
-        if (result == null)
-            throw new MolangException("Molang expression cannot be blank!");
-
-        return result;
-    }
-
-    /**
-     * Parse a single Molang statement
-     */
-    protected static MolangValue parseOneLine(
-        String expression,
-        MolangCompoundValue currentStatement
-    ) throws MolangException {
-        if (expression.startsWith(RETURN)) {
-            try {
-                return new MolangValue(INSTANCE.parse(expression.substring(RETURN.length())), true);
-            } catch (Exception e) {
-                throw new MolangException("Couldn't parse return '" + expression + "' expression!");
-            }
-        }
-
-        try {
-            List<Object> symbols = INSTANCE.breakdownChars(INSTANCE.breakdown(expression));
-
-            if (
-                symbols.size() >= 3 && symbols.get(0) instanceof String name && INSTANCE.isVariable(symbols.get(0))
-                    && symbols.get(1).equals("=")
-            ) {
-                symbols = symbols.subList(2, symbols.size());
-                LazyVariable variable;
-
-                if (!VARIABLES.containsKey(name) && !currentStatement.locals.containsKey(name)) {
-                    currentStatement.locals.put(name, (variable = new LazyVariable(name, 0)));
-                } else {
-                    variable = INSTANCE.getVariable(name, currentStatement);
-                }
-
-                return new MolangVariableHolder(variable, INSTANCE.parseSymbolsMolang(symbols));
-            }
-
-            return new MolangValue(INSTANCE.parseSymbolsMolang(symbols));
-        } catch (Exception e) {
-            throw new MolangException("Couldn't parse '" + expression + "' expression!");
-        }
     }
 
     /**

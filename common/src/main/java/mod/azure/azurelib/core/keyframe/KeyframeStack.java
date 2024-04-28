@@ -12,9 +12,9 @@ import java.util.List;
  * Stores a triplet of {@link Keyframe Keyframes} in an ordered stack
  */
 public record KeyframeStack<T extends Keyframe<?>>(
-    List<T> xKeyframes,
-    List<T> yKeyframes,
-    List<T> zKeyframes
+        List<T> xKeyframes,
+        List<T> yKeyframes,
+        List<T> zKeyframes
 ) {
 
     public KeyframeStack() {

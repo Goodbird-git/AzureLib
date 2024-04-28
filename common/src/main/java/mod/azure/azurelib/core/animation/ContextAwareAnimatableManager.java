@@ -1,12 +1,11 @@
 package mod.azure.azurelib.core.animation;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.object.DataTicket;
 import mod.azure.azurelib.core.state.BoneSnapshot;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * Context-aware wrapper for {@link AnimatableManager}.<br>

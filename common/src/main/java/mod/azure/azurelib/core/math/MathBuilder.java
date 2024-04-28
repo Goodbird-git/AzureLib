@@ -1,24 +1,7 @@
 package mod.azure.azurelib.core.math;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import mod.azure.azurelib.core.math.functions.Function;
-import mod.azure.azurelib.core.math.functions.classic.ACos;
-import mod.azure.azurelib.core.math.functions.classic.ASin;
-import mod.azure.azurelib.core.math.functions.classic.ATan;
-import mod.azure.azurelib.core.math.functions.classic.ATan2;
-import mod.azure.azurelib.core.math.functions.classic.Abs;
-import mod.azure.azurelib.core.math.functions.classic.Cos;
-import mod.azure.azurelib.core.math.functions.classic.Exp;
-import mod.azure.azurelib.core.math.functions.classic.Ln;
-import mod.azure.azurelib.core.math.functions.classic.Mod;
-import mod.azure.azurelib.core.math.functions.classic.Pow;
-import mod.azure.azurelib.core.math.functions.classic.Sin;
-import mod.azure.azurelib.core.math.functions.classic.Sqrt;
+import mod.azure.azurelib.core.math.functions.classic.*;
 import mod.azure.azurelib.core.math.functions.limit.Clamp;
 import mod.azure.azurelib.core.math.functions.limit.Max;
 import mod.azure.azurelib.core.math.functions.limit.Min;
@@ -26,13 +9,13 @@ import mod.azure.azurelib.core.math.functions.rounding.Ceil;
 import mod.azure.azurelib.core.math.functions.rounding.Floor;
 import mod.azure.azurelib.core.math.functions.rounding.Round;
 import mod.azure.azurelib.core.math.functions.rounding.Trunc;
-import mod.azure.azurelib.core.math.functions.utility.DieRoll;
-import mod.azure.azurelib.core.math.functions.utility.DieRollInteger;
-import mod.azure.azurelib.core.math.functions.utility.HermiteBlend;
-import mod.azure.azurelib.core.math.functions.utility.Lerp;
-import mod.azure.azurelib.core.math.functions.utility.LerpRotate;
-import mod.azure.azurelib.core.math.functions.utility.Random;
-import mod.azure.azurelib.core.math.functions.utility.RandomInteger;
+import mod.azure.azurelib.core.math.functions.utility.*;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Math builder This class is responsible for parsing math expressions provided by user in a string to an {@link IValue}
@@ -135,8 +118,8 @@ public class MathBuilder {
         /* Amount of left and right brackets should be the same */
         if (left != right) {
             throw new Exception(
-                "Given expression '" + expression
-                    + "' has more uneven amount of parenthesis, there are " + left + " open and " + right + " closed!"
+                    "Given expression '" + expression
+                            + "' has more uneven amount of parenthesis, there are " + left + " open and " + right + " closed!"
             );
         }
 
@@ -164,8 +147,8 @@ public class MathBuilder {
 
                     boolean isFirst = size == 0 && buffer.isEmpty();
                     boolean isOperatorBehind = size > 0
-                        && (this.isOperator(symbols.get(size - 1)) || symbols.get(size - 1).equals(","))
-                        && buffer.isEmpty();
+                            && (this.isOperator(symbols.get(size - 1)) || symbols.get(size - 1).equals(","))
+                            && buffer.isEmpty();
 
                     if (isFirst || isOperatorBehind) {
                         buffer += s;
@@ -297,9 +280,9 @@ public class MathBuilder {
         Operation operation = this.operationForOperator((String) symbols.get(lastOp));
 
         return new Operator(
-            operation,
-            this.parseSymbols(symbols.subList(0, lastOp)),
-            this.parseSymbols(symbols.subList(lastOp + 1, size))
+                operation,
+                this.parseSymbols(symbols.subList(0, lastOp)),
+                this.parseSymbols(symbols.subList(lastOp + 1, size))
         );
     }
 
@@ -374,9 +357,9 @@ public class MathBuilder {
 
         if (questions == colons && question > 0 && question + 1 < colon && colon < size - 1) {
             return new Ternary(
-                this.parseSymbols(symbols.subList(0, question)),
-                this.parseSymbols(symbols.subList(question + 1, colon)),
-                this.parseSymbols(symbols.subList(colon + 1, size))
+                    this.parseSymbols(symbols.subList(0, question)),
+                    this.parseSymbols(symbols.subList(question + 1, colon)),
+                    this.parseSymbols(symbols.subList(colon + 1, size))
             );
         }
 

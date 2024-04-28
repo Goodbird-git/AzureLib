@@ -28,7 +28,8 @@ public final class RawAnimation {
     private final List<Stage> animationList = new ObjectArrayList<>();
 
     // Private constructor to force usage of factory for logical operations
-    private RawAnimation() {}
+    private RawAnimation() {
+    }
 
     /**
      * Start a new RawAnimation instance. This is the start point for creating an animation chain.
@@ -37,6 +38,21 @@ public final class RawAnimation {
      */
     public static RawAnimation begin() {
         return new RawAnimation();
+    }
+
+    /**
+     * Create a new RawAnimation instance based on an existing RawAnimation instance. The new instance will be a shallow
+     * copy of the other instance, and can then be appended to or otherwise modified
+     *
+     * @param other The existing RawAnimation instance to copy
+     * @return A new instance of RawAnimation
+     */
+    public static RawAnimation copyOf(RawAnimation other) {
+        RawAnimation newInstance = RawAnimation.begin();
+
+        newInstance.animationList.addAll(other.animationList);
+
+        return newInstance;
     }
 
     /**
@@ -115,21 +131,6 @@ public final class RawAnimation {
         return this.animationList;
     }
 
-    /**
-     * Create a new RawAnimation instance based on an existing RawAnimation instance. The new instance will be a shallow
-     * copy of the other instance, and can then be appended to or otherwise modified
-     *
-     * @param other The existing RawAnimation instance to copy
-     * @return A new instance of RawAnimation
-     */
-    public static RawAnimation copyOf(RawAnimation other) {
-        RawAnimation newInstance = RawAnimation.begin();
-
-        newInstance.animationList.addAll(other.animationList);
-
-        return newInstance;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -151,9 +152,9 @@ public final class RawAnimation {
      * This is an entry object representing a single animation stage of the final compiled animation.
      */
     public record Stage(
-        String animationName,
-        Animation.LoopType loopType,
-        int additionalTicks
+            String animationName,
+            Animation.LoopType loopType,
+            int additionalTicks
     ) {
 
         static final String WAIT = "internal.wait";

@@ -1,19 +1,22 @@
 package mod.azure.azurelib.common.internal.client;
 
-import net.minecraft.client.gui.screens.Screen;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Map;
-
 import mod.azure.azurelib.common.api.common.config.Config;
 import mod.azure.azurelib.common.internal.client.config.screen.ConfigGroupScreen;
 import mod.azure.azurelib.common.internal.client.config.screen.ConfigScreen;
 import mod.azure.azurelib.common.internal.common.config.ConfigHolder;
 import mod.azure.azurelib.common.internal.common.config.ConfigHolderRegistry;
 import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
+import net.minecraft.client.gui.screens.Screen;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 public final class AzureLibClient {
+
+    private AzureLibClient() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * You can obtain default config screen based on provided config class.
@@ -42,8 +45,8 @@ public final class AzureLibClient {
     @Nullable
     public static Screen getConfigScreen(String configId, Screen previous) {
         return ConfigHolderRegistry.getConfig(configId)
-            .map(holder -> getConfigScreenForHolder(holder, previous))
-            .orElse(null);
+                .map(holder -> getConfigScreenForHolder(holder, previous))
+                .orElse(null);
     }
 
     /**
@@ -68,9 +71,5 @@ public final class AzureLibClient {
 
     public static Screen getConfigScreenByGroup(List<ConfigHolder<?>> group, String groupId, Screen previous) {
         return new ConfigGroupScreen(previous, groupId, group);
-    }
-
-    private AzureLibClient() {
-        throw new UnsupportedOperationException();
     }
 }

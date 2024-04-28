@@ -15,10 +15,10 @@ import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData
 public class CustomInstructionKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T, CustomInstructionKeyframeData> {
 
     public CustomInstructionKeyframeEvent(
-        T entity,
-        double animationTick,
-        AnimationController<T> controller,
-        CustomInstructionKeyframeData customInstructionKeyframeData
+            T entity,
+            double animationTick,
+            AnimationController<T> controller,
+            CustomInstructionKeyframeData customInstructionKeyframeData
     ) {
         super(entity, animationTick, controller, customInstructionKeyframeData);
     }

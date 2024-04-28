@@ -28,23 +28,38 @@ public abstract class GeoAbstractTexture extends AbstractTexture {
      * Generates the texture instance for the given path with the given appendix if it hasn't already been generated
      */
     protected static void generateTexture(
-        ResourceLocation texturePath,
-        Consumer<TextureManager> textureManagerConsumer
+            ResourceLocation texturePath,
+            Consumer<TextureManager> textureManagerConsumer
     ) {
         if (!RenderSystem.isOnRenderThreadOrInit())
             throw new IllegalThreadStateException(
-                "Texture loading called outside of the render thread! This should DEFINITELY not be happening."
+                    "Texture loading called outside of the render thread! This should DEFINITELY not be happening."
             );
 
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
         if (
-            !(textureManager.getTexture(
-                texturePath,
-                MissingTextureAtlasSprite.getTexture()
-            ) instanceof GeoAbstractTexture)
+                !(textureManager.getTexture(
+                        texturePath,
+                        MissingTextureAtlasSprite.getTexture()
+                ) instanceof GeoAbstractTexture)
         )
             textureManagerConsumer.accept(textureManager);
+    }
+
+    /**
+     * No-frills helper method for uploading {@link NativeImage images} into memory for use
+     */
+    public static void uploadSimple(int texture, NativeImage image, boolean blur, boolean clamp) {
+        TextureUtil.prepareImage(texture, 0, image.getWidth(), image.getHeight());
+        image.upload(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, true);
+    }
+
+    public static ResourceLocation appendToPath(ResourceLocation location, String suffix) {
+        String path = location.getPath();
+        int i = path.lastIndexOf('.');
+
+        return new ResourceLocation(location.getNamespace(), path.substring(0, i) + suffix + path.substring(i));
     }
 
     @Override
@@ -94,19 +109,4 @@ public abstract class GeoAbstractTexture extends AbstractTexture {
      */
     @Nullable
     protected abstract RenderCall loadTexture(ResourceManager resourceManager, Minecraft mc) throws IOException;
-
-    /**
-     * No-frills helper method for uploading {@link NativeImage images} into memory for use
-     */
-    public static void uploadSimple(int texture, NativeImage image, boolean blur, boolean clamp) {
-        TextureUtil.prepareImage(texture, 0, image.getWidth(), image.getHeight());
-        image.upload(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, true);
-    }
-
-    public static ResourceLocation appendToPath(ResourceLocation location, String suffix) {
-        String path = location.getPath();
-        int i = path.lastIndexOf('.');
-
-        return new ResourceLocation(location.getNamespace(), path.substring(0, i) + suffix + path.substring(i));
-    }
 }

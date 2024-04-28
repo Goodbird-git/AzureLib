@@ -1,13 +1,12 @@
 package mod.azure.azurelib.common.internal.common.config.value;
 
-import net.minecraft.network.FriendlyByteBuf;
-
-import java.lang.reflect.Field;
-
 import mod.azure.azurelib.common.internal.common.config.ConfigUtils;
 import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
 import mod.azure.azurelib.common.internal.common.config.format.IConfigFormat;
+import net.minecraft.network.FriendlyByteBuf;
+
+import java.lang.reflect.Field;
 
 public class FloatValue extends DecimalValue<Float> {
 
@@ -41,11 +40,11 @@ public class FloatValue extends DecimalValue<Float> {
 
         @Override
         public ConfigValue<?> serialize(
-            String name,
-            String[] comments,
-            Object value,
-            TypeSerializer serializer,
-            AdapterContext context
+                String name,
+                String[] comments,
+                Object value,
+                TypeSerializer serializer,
+                AdapterContext context
         ) throws IllegalAccessException {
             return new FloatValue(ValueData.of(name, (float) value, context, comments));
         }

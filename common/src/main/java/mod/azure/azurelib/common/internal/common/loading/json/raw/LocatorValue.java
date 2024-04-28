@@ -2,16 +2,15 @@ package mod.azure.azurelib.common.internal.common.loading.json.raw;
 
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
-import org.jetbrains.annotations.Nullable;
-
 import mod.azure.azurelib.common.internal.common.util.JsonUtil;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Container class for locator value information, only used in deserialization at startup
  */
 public record LocatorValue(
-    @Nullable LocatorClass locatorClass,
-    double[] values
+        @Nullable LocatorClass locatorClass,
+        double[] values
 ) {
 
     public static JsonDeserializer<LocatorValue> deserializer() throws JsonParseException {

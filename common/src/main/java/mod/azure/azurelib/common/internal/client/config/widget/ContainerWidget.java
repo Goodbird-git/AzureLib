@@ -68,18 +68,18 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
 
     @Override
     public boolean mouseDragged(
-        double p_231045_1_,
-        double p_231045_3_,
-        int p_231045_5_,
-        double p_231045_6_,
-        double p_231045_8_
+            double p_231045_1_,
+            double p_231045_3_,
+            int p_231045_5_,
+            double p_231045_6_,
+            double p_231045_8_
     ) {
         return ContainerEventHandler.super.mouseDragged(
-            p_231045_1_,
-            p_231045_3_,
-            p_231045_5_,
-            p_231045_6_,
-            p_231045_8_
+                p_231045_1_,
+                p_231045_3_,
+                p_231045_5_,
+                p_231045_6_,
+                p_231045_8_
         );
     }
 

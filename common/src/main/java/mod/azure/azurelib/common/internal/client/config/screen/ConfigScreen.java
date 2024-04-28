@@ -1,5 +1,12 @@
 package mod.azure.azurelib.common.internal.client.config.screen;
 
+import mod.azure.azurelib.common.internal.client.config.DisplayAdapter;
+import mod.azure.azurelib.common.internal.client.config.DisplayAdapterManager;
+import mod.azure.azurelib.common.internal.client.config.widget.ConfigEntryWidget;
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
+import mod.azure.azurelib.common.internal.common.config.validate.NotificationSeverity;
+import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,23 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mod.azure.azurelib.common.internal.client.config.DisplayAdapter;
-import mod.azure.azurelib.common.internal.client.config.DisplayAdapterManager;
-import mod.azure.azurelib.common.internal.client.config.widget.ConfigEntryWidget;
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
-import mod.azure.azurelib.common.internal.common.config.validate.NotificationSeverity;
-import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
-
 public class ConfigScreen extends AbstractConfigScreen {
 
     private final Map<String, ConfigValue<?>> valueMap;
 
     public ConfigScreen(
-        String ownerIdentifier,
-        String configId,
-        Map<String, ConfigValue<?>> valueMap,
-        Screen previous
+            String ownerIdentifier,
+            String configId,
+            Map<String, ConfigValue<?>> valueMap,
+            Screen previous
     ) {
         this(Component.translatable("config.screen." + ownerIdentifier), configId, valueMap, previous);
     }
@@ -55,19 +54,20 @@ public class ConfigScreen extends AbstractConfigScreen {
             offset += correct;
             ConfigValue<?> value = values.get(i);
             ConfigEntryWidget widget = addRenderableWidget(
-                new ConfigEntryWidget(30, viewportMin + 10 + j * 25 + offset, this.width - 60, 20, value, this.configId)
+                    new ConfigEntryWidget(30, viewportMin + 10 + j * 25 + offset, this.width - 60, 20, value,
+                            this.configId)
             );
             widget.setDescriptionRenderer(
-                (graphics, widget1, severity, text) -> renderEntryDescription(graphics, widget1, severity, text)
+                    (graphics, widget1, severity, text) -> renderEntryDescription(graphics, widget1, severity, text)
             );
             TypeAdapter.AdapterContext context = value.getSerializationContext();
             Field field = context.getOwner();
             DisplayAdapter adapter = DisplayAdapterManager.forType(field.getType());
             if (adapter == null) {
                 AzureLib.LOGGER.error(
-                    MARKER,
-                    "Missing display adapter for {} type, will not be displayed in GUI",
-                    field.getType().getSimpleName()
+                        MARKER,
+                        "Missing display adapter for {} type, will not be displayed in GUI",
+                        field.getType().getSimpleName()
                 );
                 continue;
             }
@@ -76,10 +76,10 @@ public class ConfigScreen extends AbstractConfigScreen {
                 initializeGuiValue(value, widget);
             } catch (ClassCastException e) {
                 AzureLib.LOGGER.error(
-                    MARKER,
-                    "Unable to create config field for {} type due to error {}",
-                    field.getType().getSimpleName(),
-                    e
+                        MARKER,
+                        "Unable to create config field for {} type due to error {}",
+                        field.getType().getSimpleName(),
+                        e
                 );
             }
         }
@@ -87,10 +87,10 @@ public class ConfigScreen extends AbstractConfigScreen {
     }
 
     private void renderEntryDescription(
-        GuiGraphics graphics,
-        AbstractWidget widget,
-        NotificationSeverity severity,
-        List<FormattedCharSequence> text
+            GuiGraphics graphics,
+            AbstractWidget widget,
+            NotificationSeverity severity,
+            List<FormattedCharSequence> text
     ) {
         int x = widget.getX() + 5;
         int y = widget.getY() + widget.getHeight() + 10;
@@ -107,23 +107,23 @@ public class ConfigScreen extends AbstractConfigScreen {
         // HEADER
         int titleWidth = this.font.width(this.title);
         graphics.drawString(
-            this.font,
-            this.title,
-            (int) ((this.width - titleWidth) / 2.0F),
-            (int) ((HEADER_HEIGHT - this.font.lineHeight) / 2.0F),
-            0xFFFFFF,
-            true
+                this.font,
+                this.title,
+                (int) ((this.width - titleWidth) / 2.0F),
+                (int) ((HEADER_HEIGHT - this.font.lineHeight) / 2.0F),
+                0xFFFFFF,
+                true
         );
         graphics.fill(0, HEADER_HEIGHT, width, height - FOOTER_HEIGHT, 0x99 << 24);
         renderScrollbar(
-            graphics,
-            width - 5,
-            HEADER_HEIGHT,
-            5,
-            height - FOOTER_HEIGHT - HEADER_HEIGHT,
-            index,
-            valueMap.size(),
-            pageSize
+                graphics,
+                width - 5,
+                HEADER_HEIGHT,
+                5,
+                height - FOOTER_HEIGHT - HEADER_HEIGHT,
+                index,
+                valueMap.size(),
+                pageSize
         );
         super.render(graphics, mouseX, mouseY, partialTicks);
     }

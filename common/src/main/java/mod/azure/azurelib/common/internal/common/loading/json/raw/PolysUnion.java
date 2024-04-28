@@ -4,16 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
-import org.jetbrains.annotations.Nullable;
-
 import mod.azure.azurelib.common.internal.common.util.JsonUtil;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Container class for poly union information, only used in deserialization at startup
  */
 public record PolysUnion(
-    double[][][] union,
-    @Nullable Type type
+        double[][][] union,
+        @Nullable Type type
 ) {
 
     public static JsonDeserializer<PolysUnion> deserializer() throws JsonParseException {

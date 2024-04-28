@@ -2,11 +2,9 @@ package mod.azure.azurelib.core.utils;
 
 public class Timer {
 
-    private boolean enabled;
-
-    private long time;
-
     private final long duration;
+    private boolean enabled;
+    private long time;
 
     public Timer(long duration) {
         this.duration = duration;

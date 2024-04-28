@@ -2,6 +2,10 @@ package mod.azure.azurelib.core.utils;
 
 public final class MathUtils {
 
+    private MathUtils() {
+        throw new UnsupportedOperationException();
+    }
+
     public static int clamp(int x, int min, int max) {
         return Math.max(Math.min(x, max), min);
     }
@@ -36,9 +40,5 @@ public final class MathUtils {
         }
 
         return x < min ? max : x;
-    }
-
-    private MathUtils() {
-        throw new UnsupportedOperationException();
     }
 }

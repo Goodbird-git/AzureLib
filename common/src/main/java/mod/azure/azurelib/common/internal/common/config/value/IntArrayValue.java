@@ -1,15 +1,14 @@
 package mod.azure.azurelib.common.internal.common.config.value;
 
-import net.minecraft.network.FriendlyByteBuf;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 import mod.azure.azurelib.common.internal.common.config.ConfigUtils;
 import mod.azure.azurelib.common.internal.common.config.Configurable;
 import mod.azure.azurelib.common.internal.common.config.adapter.TypeAdapter;
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
 import mod.azure.azurelib.common.internal.common.config.format.IConfigFormat;
+import net.minecraft.network.FriendlyByteBuf;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class IntArrayValue extends ConfigValue<int[]> implements ArrayValue {
 
@@ -31,8 +30,8 @@ public class IntArrayValue extends ConfigValue<int[]> implements ArrayValue {
         this.fixedSize = field.getAnnotation(Configurable.FixedSize.class) != null;
         Configurable.Range intRange = field.getAnnotation(Configurable.Range.class);
         this.range = intRange != null
-            ? IntegerValue.Range.newBoundedRange(intRange.min(), intRange.max())
-            : IntegerValue.Range.unboundedInt();
+                ? IntegerValue.Range.newBoundedRange(intRange.min(), intRange.max())
+                : IntegerValue.Range.unboundedInt();
     }
 
     @Override
@@ -41,9 +40,9 @@ public class IntArrayValue extends ConfigValue<int[]> implements ArrayValue {
             int[] defaultArray = this.valueData.getDefaultValue();
             if (in.length != defaultArray.length) {
                 ConfigUtils.logArraySizeCorrectedMessage(
-                    this.getId(),
-                    Arrays.toString(in),
-                    Arrays.toString(defaultArray)
+                        this.getId(),
+                        Arrays.toString(in),
+                        Arrays.toString(defaultArray)
                 );
                 in = defaultArray;
             }
@@ -112,11 +111,11 @@ public class IntArrayValue extends ConfigValue<int[]> implements ArrayValue {
 
         @Override
         public ConfigValue<?> serialize(
-            String name,
-            String[] comments,
-            Object value,
-            TypeSerializer serializer,
-            AdapterContext context
+                String name,
+                String[] comments,
+                Object value,
+                TypeSerializer serializer,
+                AdapterContext context
         ) throws IllegalAccessException {
             return new IntArrayValue(ValueData.of(name, (int[]) value, context, comments));
         }

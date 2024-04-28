@@ -23,13 +23,6 @@ public abstract class SerializableDataTicket<D> extends DataTicket<D> {
     }
 
     /**
-     * @return The {@link StreamCodec} for the given SerializableDataTicket
-     */
-    public abstract StreamCodec<? super RegistryFriendlyByteBuf, D> streamCodec();
-
-    // Pre-defined typings for use
-
-    /**
      * Generate a new {@code SerializableDataTicket<Double>} for the given id
      *
      * @param id The unique id of your ticket. Include your modid
@@ -42,6 +35,8 @@ public abstract class SerializableDataTicket<D> extends DataTicket<D> {
             }
         };
     }
+
+    // Pre-defined typings for use
 
     /**
      * Generate a new {@code SerializableDataTicket<Float>} for the given id
@@ -121,4 +116,9 @@ public abstract class SerializableDataTicket<D> extends DataTicket<D> {
             }
         };
     }
+
+    /**
+     * @return The {@link StreamCodec} for the given SerializableDataTicket
+     */
+    public abstract StreamCodec<? super RegistryFriendlyByteBuf, D> streamCodec();
 }

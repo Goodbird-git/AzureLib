@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.common.internal.common.AzureLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.SimpleTexture;
@@ -24,8 +25,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import mod.azure.azurelib.common.internal.common.AzureLib;
-
 /**
  * Wrapper for {@link SimpleTexture SimpleTexture} implementation allowing for casual use of animated non-atlas textures
  */
@@ -35,6 +34,23 @@ public class AnimatableTexture extends SimpleTexture {
 
     public AnimatableTexture(final ResourceLocation location) {
         super(location);
+    }
+
+    public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
+        AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(texturePath);
+
+        if (texture instanceof AnimatableTexture animatableTexture)
+            animatableTexture.setAnimationFrame(frameTick);
+
+        RenderSystem.setShaderTexture(0, texture.getId());
+    }
+
+    private static void onRenderThread(RenderCall renderCall) {
+        if (!RenderSystem.isOnRenderThread()) {
+            RenderSystem.recordRenderCall(renderCall);
+        } else {
+            renderCall.execute();
+        }
     }
 
     @Override
@@ -53,8 +69,8 @@ public class AnimatableTexture extends SimpleTexture {
 
             simpleTextureMeta = meta.getSection(TextureMetadataSection.SERIALIZER).orElse(simpleTextureMeta);
             this.animationContents = meta.getSection(AnimationMetadataSection.SERIALIZER)
-                .map(animMeta -> new AnimationContents(nativeImage, animMeta))
-                .orElse(null);
+                    .map(animMeta -> new AnimationContents(nativeImage, animMeta))
+                    .orElse(null);
 
             if (this.animationContents != null) {
                 if (!this.animationContents.isValid()) {
@@ -65,21 +81,21 @@ public class AnimatableTexture extends SimpleTexture {
 
                 onRenderThread(() -> {
                     TextureUtil.prepareImage(
-                        getId(),
-                        0,
-                        this.animationContents.frameSize.width(),
-                        this.animationContents.frameSize.height()
+                            getId(),
+                            0,
+                            this.animationContents.frameSize.width(),
+                            this.animationContents.frameSize.height()
                     );
                     nativeImage.upload(
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        this.animationContents.frameSize.width(),
-                        this.animationContents.frameSize.height(),
-                        false,
-                        false
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            this.animationContents.frameSize.width(),
+                            this.animationContents.frameSize.height(),
+                            false,
+                            false
                     );
                 });
 
@@ -95,26 +111,9 @@ public class AnimatableTexture extends SimpleTexture {
         onRenderThread(() -> GeoAbstractTexture.uploadSimple(getId(), nativeImage, blur, clamp));
     }
 
-    public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
-        AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(texturePath);
-
-        if (texture instanceof AnimatableTexture animatableTexture)
-            animatableTexture.setAnimationFrame(frameTick);
-
-        RenderSystem.setShaderTexture(0, texture.getId());
-    }
-
     public void setAnimationFrame(int tick) {
         if (this.animationContents != null)
             this.animationContents.animatedTexture.setCurrentFrame(tick);
-    }
-
-    private static void onRenderThread(RenderCall renderCall) {
-        if (!RenderSystem.isOnRenderThread()) {
-            RenderSystem.recordRenderCall(renderCall);
-        } else {
-            renderCall.execute();
-        }
     }
 
     private class AnimationContents {
@@ -134,18 +133,18 @@ public class AnimatableTexture extends SimpleTexture {
 
         private Texture generateAnimatedTexture(NativeImage image, AnimationMetadataSection animMeta) {
             if (
-                !Mth.isMultipleOf(image.getWidth(), this.frameSize.width()) || !Mth.isMultipleOf(
-                    image.getHeight(),
-                    this.frameSize.height()
-                )
+                    !Mth.isMultipleOf(image.getWidth(), this.frameSize.width()) || !Mth.isMultipleOf(
+                            image.getHeight(),
+                            this.frameSize.height()
+                    )
             ) {
                 AzureLib.LOGGER.error(
-                    "Image {} size {},{} is not multiple of frame size {},{}",
-                    AnimatableTexture.this.location,
-                    image.getWidth(),
-                    image.getHeight(),
-                    this.frameSize.width(),
-                    this.frameSize.height()
+                        "Image {} size {},{} is not multiple of frame size {},{}",
+                        AnimatableTexture.this.location,
+                        image.getWidth(),
+                        image.getHeight(),
+                        this.frameSize.width(),
+                        this.frameSize.height()
                 );
 
                 return null;
@@ -169,18 +168,18 @@ public class AnimatableTexture extends SimpleTexture {
                 for (Frame frame : frames) {
                     if (frame.time <= 0) {
                         AzureLib.LOGGER.warn(
-                            "Invalid frame duration on sprite {} frame {}: {}",
-                            AnimatableTexture.this.location,
-                            index,
-                            frame.time
+                                "Invalid frame duration on sprite {} frame {}: {}",
+                                AnimatableTexture.this.location,
+                                index,
+                                frame.time
                         );
                         unusedFrames.add(frame.index);
                     } else if (frame.index < 0 || frame.index >= frameCount) {
                         AzureLib.LOGGER.warn(
-                            "Invalid frame index on sprite {} frame {}: {}",
-                            AnimatableTexture.this.location,
-                            index,
-                            frame.index
+                                "Invalid frame index on sprite {} frame {}: {}",
+                                AnimatableTexture.this.location,
+                                index,
+                                frame.index
                         );
                         unusedFrames.add(frame.index);
                     }
@@ -190,21 +189,22 @@ public class AnimatableTexture extends SimpleTexture {
 
                 if (!unusedFrames.isEmpty())
                     AzureLib.LOGGER.warn(
-                        "Unused frames in sprite {}: {}",
-                        AnimatableTexture.this.location,
-                        Arrays.toString(unusedFrames.toArray())
+                            "Unused frames in sprite {}: {}",
+                            AnimatableTexture.this.location,
+                            Arrays.toString(unusedFrames.toArray())
                     );
             }
 
             return frames.size() <= 1
-                ? null
-                : new Texture(image, frames.toArray(new Frame[0]), columns, animMeta.isInterpolatedFrames());
+                    ? null
+                    : new Texture(image, frames.toArray(new Frame[0]), columns, animMeta.isInterpolatedFrames());
         }
 
         private record Frame(
-            int index,
-            int time
-        ) {}
+                int index,
+                int time
+        ) {
+        }
 
         private class Texture implements AutoCloseable {
 
@@ -230,12 +230,12 @@ public class AnimatableTexture extends SimpleTexture {
                 this.framePanelSize = framePanelSize;
                 this.interpolating = interpolating;
                 this.interpolatedFrame = interpolating
-                    ? new NativeImage(
+                        ? new NativeImage(
                         AnimationContents.this.frameSize.width(),
                         AnimationContents.this.frameSize.height(),
                         false
-                    )
-                    : null;
+                )
+                        : null;
                 int time = 0;
 
                 for (Frame frame : this.frames) {
@@ -277,21 +277,21 @@ public class AnimatableTexture extends SimpleTexture {
                 if (this.currentFrame != lastFrame && this.currentSubframe == 0) {
                     onRenderThread(() -> {
                         TextureUtil.prepareImage(
-                            AnimatableTexture.this.getId(),
-                            0,
-                            AnimationContents.this.frameSize.width(),
-                            AnimationContents.this.frameSize.height()
+                                AnimatableTexture.this.getId(),
+                                0,
+                                AnimationContents.this.frameSize.width(),
+                                AnimationContents.this.frameSize.height()
                         );
                         this.baseImage.upload(
-                            0,
-                            0,
-                            0,
-                            getFrameX(this.currentFrame) * AnimationContents.this.frameSize.width(),
-                            getFrameY(this.currentFrame) * AnimationContents.this.frameSize.height(),
-                            AnimationContents.this.frameSize.width(),
-                            AnimationContents.this.frameSize.height(),
-                            false,
-                            false
+                                0,
+                                0,
+                                0,
+                                getFrameX(this.currentFrame) * AnimationContents.this.frameSize.width(),
+                                getFrameY(this.currentFrame) * AnimationContents.this.frameSize.height(),
+                                AnimationContents.this.frameSize.width(),
+                                AnimationContents.this.frameSize.height(),
+                                false,
+                                false
                         );
                     });
                 } else if (this.currentSubframe != lastSubframe && this.interpolating) {
@@ -310,49 +310,49 @@ public class AnimatableTexture extends SimpleTexture {
                             int prevFramePixel = getPixel(frame.index, x, y);
                             int nextFramePixel = getPixel(nextFrameIndex, x, y);
                             int blendedRed = interpolate(
-                                frameProgress,
-                                prevFramePixel >> 16 & 255,
-                                nextFramePixel >> 16 & 255
+                                    frameProgress,
+                                    prevFramePixel >> 16 & 255,
+                                    nextFramePixel >> 16 & 255
                             );
                             int blendedGreen = interpolate(
-                                frameProgress,
-                                prevFramePixel >> 8 & 255,
-                                nextFramePixel >> 8 & 255
+                                    frameProgress,
+                                    prevFramePixel >> 8 & 255,
+                                    nextFramePixel >> 8 & 255
                             );
                             int blendedBlue = interpolate(frameProgress, prevFramePixel & 255, nextFramePixel & 255);
 
                             this.interpolatedFrame.setPixelRGBA(
-                                x,
-                                y,
-                                prevFramePixel & -16777216 | blendedRed << 16 | blendedGreen << 8 | blendedBlue
+                                    x,
+                                    y,
+                                    prevFramePixel & -16777216 | blendedRed << 16 | blendedGreen << 8 | blendedBlue
                             );
                         }
                     }
 
                     TextureUtil.prepareImage(
-                        AnimatableTexture.this.getId(),
-                        0,
-                        AnimationContents.this.frameSize.width(),
-                        AnimationContents.this.frameSize.height()
+                            AnimatableTexture.this.getId(),
+                            0,
+                            AnimationContents.this.frameSize.width(),
+                            AnimationContents.this.frameSize.height()
                     );
                     this.interpolatedFrame.upload(
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        AnimationContents.this.frameSize.width(),
-                        AnimationContents.this.frameSize.height(),
-                        false,
-                        false
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            AnimationContents.this.frameSize.width(),
+                            AnimationContents.this.frameSize.height(),
+                            false,
+                            false
                     );
                 }
             }
 
             private int getPixel(int frameIndex, int x, int y) {
                 return this.baseImage.getPixelRGBA(
-                    x + getFrameX(frameIndex) * AnimationContents.this.frameSize.width(),
-                    y + getFrameY(frameIndex) * AnimationContents.this.frameSize.height()
+                        x + getFrameX(frameIndex) * AnimationContents.this.frameSize.width(),
+                        y + getFrameY(frameIndex) * AnimationContents.this.frameSize.height()
                 );
             }
 

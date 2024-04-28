@@ -22,11 +22,33 @@ import java.util.Objects;
  */
 public class AzureNavigation extends GroundPathNavigation {
 
+    static final float EPSILON = 1.0E-8F;
     @Nullable
     private BlockPos pathToPosition;
 
     public AzureNavigation(Mob entity, Level world) {
         super(entity, world);
+    }
+
+    static int leadEdgeToInt(float coord, int step) {
+        return Mth.floor(coord - step * EPSILON);
+    }
+
+    static int trailEdgeToInt(float coord, int step) {
+        return Mth.floor(coord + step * EPSILON);
+    }
+
+    static float element(Vec3 v, int i) {
+        switch (i) {
+            case 0:
+                return (float) v.x;
+            case 1:
+                return (float) v.y;
+            case 2:
+                return (float) v.z;
+            default:
+                return 0.0F;
+        }
     }
 
     @Override
@@ -164,8 +186,6 @@ public class AzureNavigation extends GroundPathNavigation {
         return true;
     }
 
-    static final float EPSILON = 1.0E-8F;
-
     // Based off of
     // https://github.com/andyhall/voxel-aabb-sweep/blob/d3ef85b19c10e4c9d2395c186f9661b052c50dc7/index.js
     private boolean sweep(Vec3 vec, Vec3 base, Vec3 max) {
@@ -240,26 +260,5 @@ public class AzureNavigation extends GroundPathNavigation {
             }
         } while (t <= max_t);
         return true;
-    }
-
-    static int leadEdgeToInt(float coord, int step) {
-        return Mth.floor(coord - step * EPSILON);
-    }
-
-    static int trailEdgeToInt(float coord, int step) {
-        return Mth.floor(coord + step * EPSILON);
-    }
-
-    static float element(Vec3 v, int i) {
-        switch (i) {
-            case 0:
-                return (float) v.x;
-            case 1:
-                return (float) v.y;
-            case 2:
-                return (float) v.z;
-            default:
-                return 0.0F;
-        }
     }
 }

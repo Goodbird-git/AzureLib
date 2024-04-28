@@ -1,13 +1,6 @@
 package mod.azure.azurelib.common.api.common.animatable;
 
 import mod.azure.azurelib.common.internal.client.RenderProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
 import mod.azure.azurelib.common.internal.common.network.SerializableDataTicket;
 import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimDataSyncPacket;
@@ -16,6 +9,12 @@ import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * The {@link GeoAnimatable} interface specific to {@link Entity Entities}. This interface is <u>specifically</u> for
@@ -56,10 +55,10 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
             getAnimatableInstanceCache().getManagerForId(relatedEntity.getId()).setData(dataTicket, data);
         } else {
             EntityAnimDataSyncPacket<D> entityAnimDataSyncPacket = new EntityAnimDataSyncPacket<>(
-                relatedEntity.getId(),
-                true,
-                dataTicket,
-                data
+                    relatedEntity.getId(),
+                    true,
+                    dataTicket,
+                    data
             );
             Services.NETWORK.sendToTrackingEntityAndSelf(entityAnimDataSyncPacket, relatedEntity);
         }
@@ -78,13 +77,13 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
     default void triggerAnim(Entity relatedEntity, @Nullable String controllerName, String animName) {
         if (relatedEntity.level().isClientSide()) {
             getAnimatableInstanceCache().getManagerForId(relatedEntity.getId())
-                .tryTriggerAnimation(controllerName, animName);
+                    .tryTriggerAnimation(controllerName, animName);
         } else {
             EntityAnimTriggerPacket entityAnimTriggerPacket = new EntityAnimTriggerPacket(
-                relatedEntity.getId(),
-                true,
-                controllerName,
-                animName
+                    relatedEntity.getId(),
+                    true,
+                    controllerName,
+                    animName
             );
             Services.NETWORK.sendToTrackingEntityAndSelf(entityAnimTriggerPacket, relatedEntity);
         }
@@ -105,7 +104,8 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 
     // These methods aren't used for GeoReplacedEntity
     @Override
-    default void createRenderer(Consumer<RenderProvider> consumer) {}
+    default void createRenderer(Consumer<RenderProvider> consumer) {
+    }
 
     // These methods aren't used for GeoReplacedEntity
     @Override

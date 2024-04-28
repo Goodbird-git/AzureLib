@@ -1,6 +1,6 @@
 {
-    "pack": {
-        "description": "AzureLib resources",
-        "pack_format": 22
-    }
+  "pack": {
+    "description": "AzureLib resources",
+    "pack_format": 22
+  }
 }

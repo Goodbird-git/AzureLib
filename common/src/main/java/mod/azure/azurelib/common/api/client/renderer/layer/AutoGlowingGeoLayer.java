@@ -2,15 +2,14 @@ package mod.azure.azurelib.common.api.client.renderer.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-
 import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.azurelib.common.internal.common.cache.texture.AutoGlowingTexture;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * {@link GeoRenderLayer} for rendering the auto-generated glowlayer functionality implemented by AzureLib using the
@@ -36,32 +35,32 @@ public class AutoGlowingGeoLayer<T extends GeoAnimatable> extends GeoRenderLayer
      */
     @Override
     public void render(
-        PoseStack poseStack,
-        T animatable,
-        BakedGeoModel bakedModel,
-        RenderType renderType,
-        MultiBufferSource bufferSource,
-        VertexConsumer buffer,
-        float partialTick,
-        int packedLight,
-        int packedOverlay
+            PoseStack poseStack,
+            T animatable,
+            BakedGeoModel bakedModel,
+            RenderType renderType,
+            MultiBufferSource bufferSource,
+            VertexConsumer buffer,
+            float partialTick,
+            int packedLight,
+            int packedOverlay
     ) {
         RenderType emissiveRenderType = getRenderType(animatable);
 
         getRenderer().reRender(
-            bakedModel,
-            poseStack,
-            bufferSource,
-            animatable,
-            emissiveRenderType,
-            bufferSource.getBuffer(emissiveRenderType),
-            partialTick,
-            15728640,
-            OverlayTexture.NO_OVERLAY,
-            1,
-            1,
-            1,
-            1
+                bakedModel,
+                poseStack,
+                bufferSource,
+                animatable,
+                emissiveRenderType,
+                bufferSource.getBuffer(emissiveRenderType),
+                partialTick,
+                15728640,
+                OverlayTexture.NO_OVERLAY,
+                1,
+                1,
+                1,
+                1
         );
     }
 }

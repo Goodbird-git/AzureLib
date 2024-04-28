@@ -10,12 +10,12 @@ import org.jetbrains.annotations.Nullable;
  * Container class for UV face information, only used in deserialization at startup
  */
 public record UVFaces(
-    @Nullable FaceUV north,
-    @Nullable FaceUV south,
-    @Nullable FaceUV east,
-    @Nullable FaceUV west,
-    @Nullable FaceUV up,
-    @Nullable FaceUV down
+        @Nullable FaceUV north,
+        @Nullable FaceUV south,
+        @Nullable FaceUV east,
+        @Nullable FaceUV west,
+        @Nullable FaceUV up,
+        @Nullable FaceUV down
 ) {
 
     public static JsonDeserializer<UVFaces> deserializer() {

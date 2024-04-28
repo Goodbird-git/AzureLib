@@ -1,27 +1,17 @@
 package mod.azure.azurelib.common.internal.common.config.format;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import mod.azure.azurelib.common.internal.common.config.ConfigUtils;
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigReadException;
 import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
 import mod.azure.azurelib.common.internal.common.config.value.ConfigValue;
 import mod.azure.azurelib.common.internal.common.config.value.IDescriptionProvider;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class PropertiesFormat implements IConfigFormat {
 
@@ -291,16 +281,16 @@ public final class PropertiesFormat implements IConfigFormat {
     @Override
     public void readMap(String field, Collection<ConfigValue<?>> values) throws ConfigValueMissingException {
         Set<String> validElements = this.parsed.keySet()
-            .stream()
-            .filter(key -> {
-                String[] strings = key.split("\\.", 2);
-                if (strings.length < 2) {
-                    return false;
-                }
-                String prefix = strings[0];
-                return prefix.equals(field);
-            })
-            .collect(Collectors.toSet());
+                .stream()
+                .filter(key -> {
+                    String[] strings = key.split("\\.", 2);
+                    if (strings.length < 2) {
+                        return false;
+                    }
+                    String prefix = strings[0];
+                    return prefix.equals(field);
+                })
+                .collect(Collectors.toSet());
         Map<String, String> parsed = new HashMap<>();
         for (String key : validElements) {
             String s = key.split("\\.", 2)[1];

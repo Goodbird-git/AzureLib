@@ -1,5 +1,8 @@
 package mod.azure.azurelib.common.internal.common.config;
 
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
+import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import net.minecraft.client.gui.components.EditBox;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,15 +14,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.config.exception.ConfigValueMissingException;
-import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
-
 public final class ConfigUtils {
 
-    public static final char[] INTEGER_CHARS = { '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    public static final char[] INTEGER_CHARS = {'-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-    public static final char[] DECIMAL_CHARS = { '-', '.', 'E', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    public static final char[] DECIMAL_CHARS = {'-', '.', 'E', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     public static final Pattern INTEGER_PATTERN = Pattern.compile("-?[0-9]+");
 
@@ -27,23 +26,38 @@ public final class ConfigUtils {
 
     public static final Map<Class<?>, Class<?>> PRIMITIVE_MAPPINGS = new HashMap<>();
 
+    static {
+        PRIMITIVE_MAPPINGS.put(Boolean.class, Boolean.TYPE);
+        PRIMITIVE_MAPPINGS.put(Character.class, Character.TYPE);
+        PRIMITIVE_MAPPINGS.put(Byte.class, Byte.TYPE);
+        PRIMITIVE_MAPPINGS.put(Short.class, Short.TYPE);
+        PRIMITIVE_MAPPINGS.put(Integer.class, Integer.TYPE);
+        PRIMITIVE_MAPPINGS.put(Long.class, Long.TYPE);
+        PRIMITIVE_MAPPINGS.put(Float.class, Float.TYPE);
+        PRIMITIVE_MAPPINGS.put(Double.class, Double.TYPE);
+    }
+
+    private ConfigUtils() {
+        throw new UnsupportedOperationException();
+    }
+
     public static void logCorrectedMessage(String field, @Nullable Object prevValue, Object corrected) {
         AzureLib.LOGGER.warn(
-            ConfigIO.MARKER,
-            "Correcting config value '{}' from '{}' to '{}'",
-            field,
-            Objects.toString(prevValue),
-            corrected
+                ConfigIO.MARKER,
+                "Correcting config value '{}' from '{}' to '{}'",
+                field,
+                Objects.toString(prevValue),
+                corrected
         );
     }
 
     public static void logArraySizeCorrectedMessage(String field, Object prevValue, Object corrected) {
         AzureLib.LOGGER.warn(
-            ConfigIO.MARKER,
-            "Correcting config array value '{}' due to invalid size from '{}' to '{}'",
-            field,
-            prevValue,
-            corrected
+                ConfigIO.MARKER,
+                "Correcting config array value '{}' due to invalid size from '{}' to '{}'",
+                field,
+                prevValue,
+                corrected
         );
     }
 
@@ -93,8 +107,8 @@ public final class ConfigUtils {
     }
 
     public static <E extends Enum<E>> E getEnumConstant(
-        String value,
-        Class<E> declaringClass
+            String value,
+            Class<E> declaringClass
     ) throws ConfigValueMissingException {
         E[] constants = declaringClass.getEnumConstants();
         for (E e : constants) {
@@ -141,20 +155,5 @@ public final class ConfigUtils {
         if (limit != null) {
             widget.setMaxLength(Math.max(limit.value(), 1));
         }
-    }
-
-    static {
-        PRIMITIVE_MAPPINGS.put(Boolean.class, Boolean.TYPE);
-        PRIMITIVE_MAPPINGS.put(Character.class, Character.TYPE);
-        PRIMITIVE_MAPPINGS.put(Byte.class, Byte.TYPE);
-        PRIMITIVE_MAPPINGS.put(Short.class, Short.TYPE);
-        PRIMITIVE_MAPPINGS.put(Integer.class, Integer.TYPE);
-        PRIMITIVE_MAPPINGS.put(Long.class, Long.TYPE);
-        PRIMITIVE_MAPPINGS.put(Float.class, Float.TYPE);
-        PRIMITIVE_MAPPINGS.put(Double.class, Double.TYPE);
-    }
-
-    private ConfigUtils() {
-        throw new UnsupportedOperationException();
     }
 }

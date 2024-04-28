@@ -1,11 +1,10 @@
 package mod.azure.azurelib.common.api.client.renderer.layer;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import java.util.List;
-
 import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+
+import java.util.List;
 
 /**
  * Base interface for a container for {@link GeoRenderLayer GeoRenderLayers}<br>

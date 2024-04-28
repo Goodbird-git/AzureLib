@@ -3,14 +3,13 @@ package mod.azure.azurelib.core.animation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
+import mod.azure.azurelib.core.keyframe.AnimationPoint;
+import mod.azure.azurelib.core.keyframe.Keyframe;
+import mod.azure.azurelib.core.utils.Interpolations;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import mod.azure.azurelib.core.keyframe.AnimationPoint;
-import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.utils.Interpolations;
 
 /**
  * Functional interface defining an easing function.<br>
@@ -91,8 +90,6 @@ public interface EasingType {
 
     EasingType CATMULLROM = register("catmullrom", value -> easeInOut(EasingType::catmullRom));
 
-    Double2DoubleFunction buildTransformer(Double value);
-
     static double lerpWithOverride(AnimationPoint animationPoint, EasingType override) {
         EasingType easingType = override;
 
@@ -100,26 +97,6 @@ public interface EasingType {
             easingType = animationPoint.keyFrame() == null ? LINEAR : animationPoint.keyFrame().easingType();
 
         return easingType.apply(animationPoint);
-    }
-
-    default double apply(AnimationPoint animationPoint) {
-        Double easingVariable = null;
-
-        if (animationPoint.keyFrame() != null && animationPoint.keyFrame().easingArgs().size() > 0)
-            easingVariable = animationPoint.keyFrame().easingArgs().get(0).get();
-
-        return apply(animationPoint, easingVariable, animationPoint.currentTick() / animationPoint.transitionLength());
-    }
-
-    default double apply(AnimationPoint animationPoint, Double easingValue, double lerpValue) {
-        if (animationPoint.currentTick() >= animationPoint.transitionLength())
-            return (float) animationPoint.animationEndValue();
-
-        return Interpolations.lerp(
-            animationPoint.animationStartValue(),
-            animationPoint.animationEndValue(),
-            buildTransformer(easingValue).apply(lerpValue)
-        );
     }
 
     /**
@@ -161,8 +138,6 @@ public interface EasingType {
         return EASING_TYPES.getOrDefault(name, EasingType.LINEAR);
     }
 
-    // ---> Easing Transition Type Functions <--- //
-
     /**
      * Returns an easing function running linearly. Functionally equivalent to no easing
      */
@@ -176,8 +151,8 @@ public interface EasingType {
      */
     static double catmullRom(double n) {
         return (0.5f * (2.0f * (n + 1) + ((n + 2) - n) * 1
-            + (2.0f * n - 5.0f * (n + 1) + 4.0f * (n + 2) - (n + 3)) * 1
-            + (3.0f * (n + 1) - n - 3.0f * (n + 2) + (n + 3)) * 1));
+                + (2.0f * n - 5.0f * (n + 1) + 4.0f * (n + 2) - (n + 3)) * 1
+                + (3.0f * (n + 1) - n - 3.0f * (n + 2) + (n + 3)) * 1));
     }
 
     /**
@@ -186,6 +161,8 @@ public interface EasingType {
     static Double2DoubleFunction easeIn(Double2DoubleFunction function) {
         return function;
     }
+
+    // ---> Easing Transition Type Functions <--- //
 
     /**
      * Returns an easing function running backwards in time
@@ -207,8 +184,6 @@ public interface EasingType {
         };
     }
 
-    // ---> Stepping Functions <--- //
-
     /**
      * Returns a stepping function that returns 1 for any input value greater than 0, or otherwise returning 0
      */
@@ -224,8 +199,6 @@ public interface EasingType {
         return n -> n >= 0 ? 1 : 0;
     }
 
-    // ---> Mathematical Functions <--- //
-
     /**
      * A linear function, equivalent to a null-operation.<br>
      * {@code f(n) = n}
@@ -233,6 +206,8 @@ public interface EasingType {
     static double linear(double n) {
         return n;
     }
+
+    // ---> Stepping Functions <--- //
 
     /**
      * A quadratic function, equivalent to the square (<i>n</i>^2) of elapsed time.<br>
@@ -251,6 +226,8 @@ public interface EasingType {
     static double cubic(double n) {
         return n * n * n;
     }
+
+    // ---> Mathematical Functions <--- //
 
     /**
      * A sinusoidal function, equivalent to a sine curve output.<br>
@@ -278,8 +255,6 @@ public interface EasingType {
     static double exp(double n) {
         return Math.pow(2, 10 * (n - 1));
     }
-
-    // ---> Easing Curve Functions <--- //
 
     /**
      * An elastic function, equivalent to an oscillating curve.<br>
@@ -322,6 +297,8 @@ public interface EasingType {
         return t -> t * t * ((n2 + 1) * t - n2);
     }
 
+    // ---> Easing Curve Functions <--- //
+
     /**
      * An exponential function, equivalent to an exponential curve to the {@code n} root.<br>
      * <code>f(t) = t^n</code>
@@ -332,7 +309,6 @@ public interface EasingType {
         return t -> Math.pow(t, n);
     }
 
-    // The MIT license notice below applies to the function step
     /**
      * The MIT License (MIT) <br>
      * <br>
@@ -390,5 +366,29 @@ public interface EasingType {
 
             return leftBorderIndex * stepLength;
         };
+    }
+
+    Double2DoubleFunction buildTransformer(Double value);
+
+    default double apply(AnimationPoint animationPoint) {
+        Double easingVariable = null;
+
+        if (animationPoint.keyFrame() != null && animationPoint.keyFrame().easingArgs().size() > 0)
+            easingVariable = animationPoint.keyFrame().easingArgs().get(0).get();
+
+        return apply(animationPoint, easingVariable, animationPoint.currentTick() / animationPoint.transitionLength());
+    }
+
+    // The MIT license notice below applies to the function step
+
+    default double apply(AnimationPoint animationPoint, Double easingValue, double lerpValue) {
+        if (animationPoint.currentTick() >= animationPoint.transitionLength())
+            return (float) animationPoint.animationEndValue();
+
+        return Interpolations.lerp(
+                animationPoint.animationStartValue(),
+                animationPoint.animationEndValue(),
+                buildTransformer(easingValue).apply(lerpValue)
+        );
     }
 }

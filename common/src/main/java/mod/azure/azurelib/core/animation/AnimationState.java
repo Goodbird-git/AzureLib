@@ -1,13 +1,12 @@
 package mod.azure.azurelib.core.animation;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
-import java.util.Map;
-import java.util.Objects;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.object.DataTicket;
 import mod.azure.azurelib.core.object.PlayState;
+
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Animation state handler for end-users.<br>
@@ -27,10 +26,8 @@ public class AnimationState<T extends GeoAnimatable> {
     private final boolean isMoving;
 
     private final Map<DataTicket<?>, Object> extraData = new Object2ObjectOpenHashMap<>();
-
-    protected AnimationController<T> controller;
-
     public double animationTick;
+    protected AnimationController<T> controller;
 
     public AnimationState(T animatable, float limbSwing, float limbSwingAmount, float partialTick, boolean isMoving) {
         this.animatable = animatable;
@@ -106,9 +103,9 @@ public class AnimationState<T extends GeoAnimatable> {
     /**
      * Get a data value saved to this animation event by the ticket for that data.<br>
      *
-     * @see DataTicket
      * @param dataTicket The {@link DataTicket} for the data to retrieve
      * @return The cached data for the given {@code DataTicket}, or null if not saved
+     * @see DataTicket
      */
     public <D> D getData(DataTicket<D> dataTicket) {
         return dataTicket.getData(this.extraData);
@@ -170,9 +167,9 @@ public class AnimationState<T extends GeoAnimatable> {
      */
     public boolean isCurrentAnimationStage(String name) {
         return getController().getCurrentAnimation() != null && getController().getCurrentAnimation()
-            .animation()
-            .name()
-            .equals(name);
+                .animation()
+                .name()
+                .equals(name);
     }
 
     /**

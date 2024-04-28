@@ -1,14 +1,13 @@
 package mod.azure.azurelib.common.internal.common.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.common.internal.common.loading.json.raw.*;
+import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.BakedAnimationsAdapter;
+import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.KeyFramesAdapter;
+import mod.azure.azurelib.common.internal.common.loading.object.BakedAnimations;
+import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,46 +16,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import mod.azure.azurelib.common.internal.common.loading.json.raw.Bone;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.Cube;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.FaceUV;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.LocatorClass;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.LocatorValue;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.MinecraftGeometry;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.Model;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.ModelProperties;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.PolyMesh;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.PolysUnion;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.TextureMesh;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.UVFaces;
-import mod.azure.azurelib.common.internal.common.loading.json.raw.UVUnion;
-import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.BakedAnimationsAdapter;
-import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.KeyFramesAdapter;
-import mod.azure.azurelib.common.internal.common.loading.object.BakedAnimations;
-import mod.azure.azurelib.core.animation.Animation;
-
 /**
  * Json helper class for various json functions
  */
 public final class JsonUtil {
 
     public static final Gson GEO_GSON = new GsonBuilder().setLenient()
-        .registerTypeAdapter(Bone.class, Bone.deserializer())
-        .registerTypeAdapter(Cube.class, Cube.deserializer())
-        .registerTypeAdapter(FaceUV.class, FaceUV.deserializer())
-        .registerTypeAdapter(LocatorClass.class, LocatorClass.deserializer())
-        .registerTypeAdapter(LocatorValue.class, LocatorValue.deserializer())
-        .registerTypeAdapter(MinecraftGeometry.class, MinecraftGeometry.deserializer())
-        .registerTypeAdapter(Model.class, Model.deserializer())
-        .registerTypeAdapter(ModelProperties.class, ModelProperties.deserializer())
-        .registerTypeAdapter(PolyMesh.class, PolyMesh.deserializer())
-        .registerTypeAdapter(PolysUnion.class, PolysUnion.deserializer())
-        .registerTypeAdapter(TextureMesh.class, TextureMesh.deserializer())
-        .registerTypeAdapter(UVFaces.class, UVFaces.deserializer())
-        .registerTypeAdapter(UVUnion.class, UVUnion.deserializer())
-        .registerTypeAdapter(Animation.Keyframes.class, new KeyFramesAdapter())
-        .registerTypeAdapter(BakedAnimations.class, new BakedAnimationsAdapter())
-        .create();
+            .registerTypeAdapter(Bone.class, Bone.deserializer())
+            .registerTypeAdapter(Cube.class, Cube.deserializer())
+            .registerTypeAdapter(FaceUV.class, FaceUV.deserializer())
+            .registerTypeAdapter(LocatorClass.class, LocatorClass.deserializer())
+            .registerTypeAdapter(LocatorValue.class, LocatorValue.deserializer())
+            .registerTypeAdapter(MinecraftGeometry.class, MinecraftGeometry.deserializer())
+            .registerTypeAdapter(Model.class, Model.deserializer())
+            .registerTypeAdapter(ModelProperties.class, ModelProperties.deserializer())
+            .registerTypeAdapter(PolyMesh.class, PolyMesh.deserializer())
+            .registerTypeAdapter(PolysUnion.class, PolysUnion.deserializer())
+            .registerTypeAdapter(TextureMesh.class, TextureMesh.deserializer())
+            .registerTypeAdapter(UVFaces.class, UVFaces.deserializer())
+            .registerTypeAdapter(UVUnion.class, UVUnion.deserializer())
+            .registerTypeAdapter(Animation.Keyframes.class, new KeyFramesAdapter())
+            .registerTypeAdapter(BakedAnimations.class, new BakedAnimationsAdapter())
+            .create();
 
     /**
      * Convert a {@link JsonArray} of doubles to a {@code double[]}.<br>
@@ -85,9 +66,9 @@ public final class JsonUtil {
      * @param objectClass The object type that the array contains
      */
     public static <T> T[] jsonArrayToObjectArray(
-        JsonArray array,
-        JsonDeserializationContext context,
-        Class<T> objectClass
+            JsonArray array,
+            JsonDeserializationContext context,
+            Class<T> objectClass
     ) {
         T[] objArray = (T[]) Array.newInstance(objectClass, array.size());
 
@@ -126,9 +107,9 @@ public final class JsonUtil {
      * @param objectType The object class that the map should contain
      */
     public static <T> Map<String, T> jsonObjToMap(
-        JsonObject obj,
-        JsonDeserializationContext context,
-        Class<T> objectType
+            JsonObject obj,
+            JsonDeserializationContext context,
+            Class<T> objectType
     ) {
         Map<String, T> map = new Object2ObjectOpenHashMap<>(obj.size());
 
