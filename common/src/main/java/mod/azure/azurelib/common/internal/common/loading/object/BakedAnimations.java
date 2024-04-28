@@ -1,6 +1,5 @@
 package mod.azure.azurelib.common.internal.common.loading.object;
 
-import mod.azure.azurelib.common.internal.common.cache.AzureLibCache;
 import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -22,23 +21,6 @@ public record BakedAnimations(
      */
     @Nullable
     public Animation getAnimation(String name) {
-        Animation result = animations.get(name);
-        if (result == null && includes != null) {
-            ResourceLocation otherFileID = includes.getOrDefault(name, null);
-            if (otherFileID != null) {
-                BakedAnimations otherBakedAnims = AzureLibCache.getBakedAnimations().get(otherFileID);
-                if (otherBakedAnims.equals(this)) {
-                    // TODO: Throw exception
-                } else {
-                    result = otherBakedAnims.getAnimationWithoutIncludes(name);
-                }
-            }
-        }
-        return result;
-    }
-
-    @Nullable
-    private Animation getAnimationWithoutIncludes(String name) {
         return animations.get(name);
     }
 
