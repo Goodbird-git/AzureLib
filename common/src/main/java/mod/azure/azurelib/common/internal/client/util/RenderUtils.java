@@ -38,11 +38,7 @@ import org.joml.Vector3f;
 /**
  * Helper class for various methods and functions useful while rendering
  */
-public final class RenderUtils {
-
-    private RenderUtils() {
-        throw new UnsupportedOperationException();
-    }
+public record RenderUtils() {
 
     public static void translateMatrixToBone(PoseStack poseStack, CoreGeoBone bone) {
         poseStack.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
