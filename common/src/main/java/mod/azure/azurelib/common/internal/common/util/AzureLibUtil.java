@@ -118,17 +118,17 @@ public record AzureLibUtil() {
         if (blockPos == null)
             return null;
 
-        int[] offsets = new int[maxDistance * 2 + 1];
+        var offsets = new int[maxDistance * 2 + 1];
         offsets[0] = 0;
-        for (int i = 2; i <= maxDistance * 2; i += 2) {
+        for (var i = 2; i <= maxDistance * 2; i += 2) {
             offsets[i - 1] = i / 2;
             offsets[i] = -i / 2;
         }
-        for (int x : offsets)
-            for (int y : offsets)
-                for (int z : offsets) {
-                    BlockPos offsetPos = blockPos.offset(x, y, z);
-                    BlockState state = world.getBlockState(offsetPos);
+        for (var x : offsets)
+            for (var y : offsets)
+                for (var z : offsets) {
+                    var offsetPos = blockPos.offset(x, y, z);
+                    var state = world.getBlockState(offsetPos);
                     if (state.isAir() || state.getBlock().equals(Services.PLATFORM.getTickingLightBlock()))
                         return offsetPos;
                 }
