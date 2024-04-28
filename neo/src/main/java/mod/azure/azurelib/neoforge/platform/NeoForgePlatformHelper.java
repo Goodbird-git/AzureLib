@@ -40,7 +40,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public TickingLightBlock getTickingLightBlock() {
-        return (TickingLightBlock) NeoForgeAzureLibMod.AzureBlocks.TICKING_LIGHT_BLOCK.get();
+        return NeoForgeAzureLibMod.AzureBlocks.TICKING_LIGHT_BLOCK.get();
     }
 
     @Override

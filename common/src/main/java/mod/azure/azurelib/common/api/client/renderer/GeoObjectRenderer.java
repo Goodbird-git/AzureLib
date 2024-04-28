@@ -257,7 +257,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(
-                    RenderUtils.translateMatrix(localMatrix, getRenderOffset(this.animatable, 1).toVector3f())
+                    RenderUtils.translateMatrix(localMatrix, getRenderOffset().toVector3f())
             );
         }
 
@@ -279,7 +279,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
         );
     }
 
-    public Vec3 getRenderOffset(T entity, float f) {
+    public Vec3 getRenderOffset() {
         return Vec3.ZERO;
     }
 

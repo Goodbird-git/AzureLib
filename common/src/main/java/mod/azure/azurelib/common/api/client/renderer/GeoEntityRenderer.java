@@ -37,6 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -148,7 +149,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      * This redirects the call to {@link GeoRenderer#getTextureLocation}
      */
     @Override
-    public ResourceLocation getTextureLocation(T animatable) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
         return GeoRenderer.super.getTextureLocation(animatable);
     }
 

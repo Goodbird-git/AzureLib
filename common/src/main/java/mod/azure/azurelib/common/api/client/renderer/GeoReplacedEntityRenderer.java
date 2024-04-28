@@ -38,6 +38,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -158,7 +159,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
      * This redirects the call to {@link GeoRenderer#getTextureLocation}
      */
     @Override
-    public ResourceLocation getTextureLocation(E entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull E entity) {
         return GeoRenderer.super.getTextureLocation(this.animatable);
     }
 
@@ -367,6 +368,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
         this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
+        assert Minecraft.getInstance().player != null;
         if (!this.currentEntity.isInvisibleTo(Minecraft.getInstance().player))
             GeoRenderer.super.actuallyRender(
                     poseStack,
@@ -589,7 +591,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
      * Pretty much exclusively used in {@link EntityRenderer#renderNameTag}
      */
     @Override
-    public boolean shouldShowName(E entity) {
+    public boolean shouldShowName(@NotNull E entity) {
         if (!(entity instanceof LivingEntity))
             return super.shouldShowName(entity);
 
@@ -605,6 +607,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
             return false;
 
         final var minecraft = Minecraft.getInstance();
+        assert minecraft.player != null;
         var visibleToClient = !entity.isInvisibleTo(minecraft.player);
         var entityTeam = entity.getTeam();
 

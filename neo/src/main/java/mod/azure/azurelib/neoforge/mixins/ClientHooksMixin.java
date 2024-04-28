@@ -26,7 +26,7 @@ public class ClientHooksMixin {
     ) {
         if (itemStack.getItem() instanceof GeoItem)
             cir.setReturnValue(
-                    (Model) RenderProvider.of(itemStack)
+                    RenderProvider.of(itemStack)
                             .getGenericArmorModel(entityLiving, itemStack, slot, (HumanoidModel<LivingEntity>) _default)
             );
     }
