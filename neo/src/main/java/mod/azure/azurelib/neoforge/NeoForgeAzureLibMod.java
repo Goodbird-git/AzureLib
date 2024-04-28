@@ -45,7 +45,7 @@ public final class NeoForgeAzureLibMod {
         ConfigIO.FILE_WATCH_MANAGER.startService();
     }
 
-    public static class AzureEnchantments {
+    public record AzureEnchantments() {
 
         public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(Registries.ENCHANTMENT,
                 AzureLib.MOD_ID);
@@ -54,7 +54,7 @@ public final class NeoForgeAzureLibMod {
                 () -> new IncendiaryEnchantment(EquipmentSlot.MAINHAND));
     }
 
-    public static class AzureBlocks {
+    public record AzureBlocks() {
 
         public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, AzureLib.MOD_ID);
 
@@ -63,7 +63,7 @@ public final class NeoForgeAzureLibMod {
                         TickingLightBlock.litBlockEmission(15)).pushReaction(PushReaction.DESTROY).noOcclusion()));
     }
 
-    public static class AzureEntities {
+    public record AzureEntities() {
 
         public static final DeferredRegister<BlockEntityType<?>> TILE_TYPES = DeferredRegister.create(
                 Registries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID);
