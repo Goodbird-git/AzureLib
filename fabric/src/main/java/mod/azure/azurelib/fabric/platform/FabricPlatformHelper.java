@@ -25,11 +25,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
-        return FabricLoader.getInstance().isModLoaded(modId);
-    }
-
-    @Override
     public boolean isDevelopmentEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
@@ -57,11 +52,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public Enchantment getIncendairyenchament() {
         return FabricAzureLibMod.INCENDIARYENCHANTMENT;
-    }
-
-    @Override
-    public Path modsDir() {
-        return FabricLoader.getInstance().getGameDir().resolve("mods");
     }
 
     @Override
