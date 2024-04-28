@@ -15,4 +15,3 @@ public record KeyframeLocation<T extends Keyframe<?>>(
         double startTick
 ) {
 }
-// TODO: public record KeyframeLocation<T extends IValue>(Keyframe<T> keyframe, double startTick) { }

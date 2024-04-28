@@ -10,6 +10,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,7 @@ public final class ColorWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput elementOutput) {
+    public void updateWidgetNarration(@NotNull NarrationElementOutput elementOutput) {
     }
 
     public interface GetSet<T> {

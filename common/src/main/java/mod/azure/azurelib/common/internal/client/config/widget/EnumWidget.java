@@ -12,6 +12,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 public class EnumWidget<E extends Enum<E>> extends AbstractWidget {
 
@@ -46,16 +47,6 @@ public class EnumWidget<E extends Enum<E>> extends AbstractWidget {
         this.renderString(graphics, minecraft.font, Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
-    private int getTextureY() {
-        int i = 1;
-        if (!this.active) {
-            i = 0;
-        } else if (this.isHoveredOrFocused()) {
-            i = 2;
-        }
-        return 46 + i * 20;
-    }
-
     private void renderString(GuiGraphics graphics, Font font, int color) {
         this.renderScrollingString(graphics, font, 2, color);
     }
@@ -67,7 +58,7 @@ public class EnumWidget<E extends Enum<E>> extends AbstractWidget {
     }
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
     }
 
     private void nextValue() {
