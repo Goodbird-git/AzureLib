@@ -2,7 +2,7 @@ package mod.azure.azurelib.neoforge.platform;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.S2C_NeoSendConfigData;
+import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -60,7 +60,7 @@ public class NeoForgeAzureLibNetwork implements AzureLibNetwork {
 
     @Override
     public void sendClientPacket(ServerPlayer player, String id) {
-        PacketDistributor.sendToPlayer(player, new S2C_NeoSendConfigData(id));
+        PacketDistributor.sendToPlayer(player, new SendConfigDataPacket(id));
     }
 
     @Override

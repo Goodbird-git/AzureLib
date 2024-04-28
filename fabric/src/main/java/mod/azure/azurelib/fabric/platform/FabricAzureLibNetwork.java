@@ -1,7 +1,7 @@
 package mod.azure.azurelib.fabric.platform;
 
 import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.S2C_NeoSendConfigData;
+import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -67,6 +67,6 @@ public class FabricAzureLibNetwork implements AzureLibNetwork {
 
     @Override
     public void sendClientPacket(ServerPlayer player, String id) {
-        ServerPlayNetworking.send(player, new S2C_NeoSendConfigData(id));
+        ServerPlayNetworking.send(player, new SendConfigDataPacket(id));
     }
 }

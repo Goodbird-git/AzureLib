@@ -17,12 +17,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public record S2C_NeoSendConfigData(String config) implements AbstractPacket {
+public record SendConfigDataPacket(String config) implements AbstractPacket {
 
     public static final Marker MARKER = MarkerManager.getMarker("Network");
-    public static final Type<S2C_NeoSendConfigData> TYPE = new Type<>(
+    public static final Type<SendConfigDataPacket> TYPE = new Type<>(
             AzureLibNetwork.CONFIG_PACKET_ID);
-    public static final StreamCodec<RegistryFriendlyByteBuf, S2C_NeoSendConfigData> CODEC = StreamCodec.of(
+    public static final StreamCodec<RegistryFriendlyByteBuf, SendConfigDataPacket> CODEC = StreamCodec.of(
             (buf, packet) -> {
                 buf.writeUtf(packet.config);
                 ConfigHolderRegistry.getConfig(packet.config).ifPresent(data -> {
@@ -51,7 +51,7 @@ public record S2C_NeoSendConfigData(String config) implements AbstractPacket {
                         setValue(value, buf);
                     }
                 });
-                return new S2C_NeoSendConfigData(config);
+                return new SendConfigDataPacket(config);
             });
 
     @SuppressWarnings("unchecked")

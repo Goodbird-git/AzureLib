@@ -45,7 +45,7 @@ public interface AzureLibNetwork {
         registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
         registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
         registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
-        registerPacket(S2C_NeoSendConfigData.TYPE, S2C_NeoSendConfigData.CODEC);
+        registerPacket(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC);
     }
 
     private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec) {
