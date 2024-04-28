@@ -147,7 +147,7 @@ public final class DefaultAnimations {
             Function<AnimationState<T>, Object> objectSupplier,
             int ticks
     ) {
-        return new AnimationController<T>(animatable, "Spawn", 0, state -> {
+        return new AnimationController<>(animatable, "Spawn", 0, state -> {
             if (animatable.getTick(objectSupplier.apply(state)) <= ticks)
                 return state.setAndContinue(DefaultAnimations.SPAWN);
 
@@ -160,7 +160,7 @@ public final class DefaultAnimations {
      * Will play the walk animation if the animatable is considered moving, or stop if not.
      */
     public static <T extends GeoAnimatable> AnimationController<T> genericWalkController(T animatable) {
-        return new AnimationController<T>(animatable, "Walk", 0, state -> {
+        return new AnimationController<>(animatable, "Walk", 0, state -> {
             if (state.isMoving())
                 return state.setAndContinue(WALK);
 
