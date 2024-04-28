@@ -143,12 +143,12 @@ public interface SingletonGeoAnimatable extends GeoAnimatable {
      *
      * <pre>
      * {@code
-     * &#64;Override
+     * @Override
      * public void createRenderer(Consumer<RenderProvider> consumer) {
      * 	consumer.accept(new RenderProvider() {
      * 		private final GeoArmorRenderer<?> renderer = new MyArmorRenderer();
      *
-     *        &#64;Override
+     *        @Override
      *        GeoArmorRenderer<?> getRenderer(GeoArmor armor) {
      * 			return this.renderer;
      *        }
