@@ -1,4 +1,6 @@
-v2.2.0
+v2.2.1
 
-- Fix createRenderer to RenderProvider instead of Object
-- Updated to 1.20.5!
+- Update getRenderProvider to no longer use Object but instead RenderProvider
+- getRenderProvider no longer needs called by modders.
+- Moved more plain Execptions to AzureLibExpections instead.
+- General clean up of code.
