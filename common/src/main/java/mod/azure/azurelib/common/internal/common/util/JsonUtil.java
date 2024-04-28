@@ -19,7 +19,7 @@ import java.util.function.Function;
 /**
  * Json helper class for various json functions
  */
-public final class JsonUtil {
+public record JsonUtil() {
 
     public static final Gson GEO_GSON = new GsonBuilder().setLenient()
             .registerTypeAdapter(Bone.class, Bone.deserializer())
