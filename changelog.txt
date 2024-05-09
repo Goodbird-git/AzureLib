@@ -1,4 +1,3 @@
-v2.0.21
+v2.0.22
 
-- Fixes error message about armor missing textures.
-- Started releasing common source for Mulitloader setups.
+- Fixes enchants applying to random items.
