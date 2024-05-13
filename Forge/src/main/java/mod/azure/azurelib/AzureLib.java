@@ -1,5 +1,6 @@
 package mod.azure.azurelib;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import org.apache.logging.log4j.LogManager;
@@ -25,5 +26,9 @@ public class AzureLib {
 		}
 
 		hasInitialized = true;
+	}
+
+	public static final ResourceLocation modResource(String name) {
+		return new ResourceLocation(MOD_ID, name);
 	}
 }
