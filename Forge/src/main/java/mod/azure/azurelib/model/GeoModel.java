@@ -95,9 +95,9 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 	 * Gets a bone from this model by name
 	 * 
 	 * @param name The name of the bone
-	 * @return An {@link Optional} containing the {@link mod.azure.azurelib.cache.object.GeoBone} if one matches, otherwise an empty Optional
+	 * @return An {@link Optional} containing the {@link GeoBone} if one matches, otherwise an empty Optional
 	 */
-	public Optional<mod.azure.azurelib.cache.object.GeoBone> getBone(String name) {
+	public Optional<GeoBone> getBone(String name) {
 		return Optional.ofNullable((GeoBone) getAnimationProcessor().getBone(name));
 	}
 
@@ -187,7 +187,7 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 			parser.setMemoizedValue(MolangQueries.IS_IN_WATER, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWater()));
 			parser.setMemoizedValue(MolangQueries.IS_IN_WATER_OR_RAIN, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWaterRainOrBubble()));
 
-			if (((Entity) animatable) instanceof LivingEntity) {
+			if (animatable instanceof LivingEntity) {
 				parser.setMemoizedValue(MolangQueries.HEALTH, ((LivingEntity) animatable)::getHealth);
 				parser.setMemoizedValue(MolangQueries.MAX_HEALTH, ((LivingEntity) animatable)::getMaxHealth);
 				parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((LivingEntity) animatable).isOnFire()));
