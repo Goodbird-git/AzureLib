@@ -50,7 +50,7 @@ public class AnimationController<T extends GeoAnimatable> {
 	protected final AnimationStateHandler<T> stateHandler;
 	protected final Map<String, BoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
 	protected final Map<String, BoneSnapshot> boneSnapshots = new Object2ObjectOpenHashMap<>();
-	protected Queue<QueuedAnimation> animationQueue = new LinkedList<>();
+	protected Queue<AnimationProcessor<T>.QueuedAnimation> animationQueue = new LinkedList<>();
 
 	protected boolean isJustStarting = false;
 	protected boolean needsAnimationReload = false;
@@ -68,7 +68,7 @@ public class AnimationController<T extends GeoAnimatable> {
 
 	protected double transitionLength;
 	protected RawAnimation currentRawAnimation;
-	protected QueuedAnimation currentAnimation;
+	protected AnimationProcessor.QueuedAnimation currentAnimation;
 	protected State animationState = State.STOPPED;
 	protected double tickOffset;
 	protected Function<T, Double> animationSpeedModifier = animatable -> 1d;
@@ -237,7 +237,7 @@ public class AnimationController<T extends GeoAnimatable> {
 	 * An animation returned here does not guarantee it is currently playing, just that it is the currently loaded animation for this controller
 	 */
 
-	public QueuedAnimation getCurrentAnimation() {
+	public AnimationProcessor.QueuedAnimation getCurrentAnimation() {
 		return this.currentAnimation;
 	}
 
@@ -333,7 +333,7 @@ public class AnimationController<T extends GeoAnimatable> {
 
 		if (this.needsAnimationReload || !rawAnimation.equals(this.currentRawAnimation)) {
 			if (this.lastModel != null) {
-				Queue<QueuedAnimation> animations = this.lastModel.getAnimationProcessor().buildAnimationQueue(this.animatable, rawAnimation);
+				Queue<AnimationProcessor<T>.QueuedAnimation> animations = this.lastModel.getAnimationProcessor().buildAnimationQueue(this.animatable, rawAnimation);
 
 				if (animations != null) {
 					this.animationQueue = animations;
@@ -520,7 +520,7 @@ public class AnimationController<T extends GeoAnimatable> {
 				}
 			}
 			else {
-				QueuedAnimation nextAnimation = this.animationQueue.peek();
+				AnimationProcessor.QueuedAnimation nextAnimation = this.animationQueue.peek();
 
 				resetEventKeyFrames();
 
@@ -632,12 +632,12 @@ public class AnimationController<T extends GeoAnimatable> {
 	}
 
 	/**
-	 * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link mod.azure.azurelib.core.animation.QueuedAnimation}
+	 * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link mod.azure.azurelib.core.animation.AnimationProcessor.QueuedAnimation}
 	 * for animation lerping
 	 * @param animation The {@code QueuedAnimation} to filter {@code BoneSnapshots} for
 	 * @param snapshots The master snapshot collection to pull filter from
 	 */
-	private void saveSnapshotsForAnimation(QueuedAnimation animation, Map<String, BoneSnapshot> snapshots) {
+	private void saveSnapshotsForAnimation(AnimationProcessor.QueuedAnimation animation, Map<String, BoneSnapshot> snapshots) {
 		for (BoneSnapshot snapshot : snapshots.values()) {
 			if (animation.animation().boneAnimations() != null) {
 				for (BoneAnimation boneAnimation : animation.animation().boneAnimations()) {

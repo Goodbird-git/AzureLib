@@ -1,32 +1,51 @@
 package mod.azure.azurelib.loading.json.raw;
 
+import net.minecraft.util.JSONUtils;
+
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.util.JSONUtils;
-import mod.azure.azurelib.util.JsonUtil;
 
-import javax.annotation.Nullable;
+import mod.azure.azurelib.util.JsonUtil;
 
 /**
  * Container class for poly mesh information, only used in deserialization at startup
  */
 public class PolyMesh {
-	
-	protected final @Nullable Boolean normalizedUVs;
-	protected final double[] normals;
-	protected final @Nullable PolysUnion polysUnion;
-	protected final double[] positions;
-	protected final double[] uvs;
-	
-	public PolyMesh(@Nullable Boolean normalizedUVs, double[] normals, @Nullable PolysUnion polysUnion, double[] positions, double[] uvs) {
+	private final Boolean normalizedUVs;
+	private final double[] normals;
+	private final PolysUnion polysUnion;
+	private final double[] positions;
+	private final double[] uvs;
+
+	public PolyMesh(Boolean normalizedUVs, double[] normals, PolysUnion polysUnion, double[] positions, double[] uvs) {
 		this.normalizedUVs = normalizedUVs;
 		this.normals = normals;
 		this.polysUnion = polysUnion;
 		this.positions = positions;
 		this.uvs = uvs;
 	}
-	
+
+	public Boolean normalizedUVs() {
+		return normalizedUVs;
+	}
+
+	public double[] normals() {
+		return normals;
+	}
+
+	public PolysUnion polysUnion() {
+		return polysUnion;
+	}
+
+	public double[] positions() {
+		return positions;
+	}
+
+	public double[] uvs() {
+		return uvs;
+	}
+
 	public static JsonDeserializer<PolyMesh> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
@@ -39,27 +58,4 @@ public class PolyMesh {
 			return new PolyMesh(normalizedUVs, normals, polysUnion, positions, uvs);
 		};
 	}
-	
-	@Nullable
-	public Boolean normalizedUVs() {
-		return this.normalizedUVs;
-	}
-	
-	public double[] normals() {
-		return this.normals;
-	}
-	
-	@Nullable
-	public PolysUnion polysUnion() {
-		return this.polysUnion;
-	}
-	
-	public double[] positions() {
-		return this.positions;
-	}
-	
-	public double[] uvs() {
-		return this.uvs;
-	}
-	
 }

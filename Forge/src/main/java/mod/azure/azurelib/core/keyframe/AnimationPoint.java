@@ -5,35 +5,47 @@
 
 package mod.azure.azurelib.core.keyframe;
 
+/**
+ * Animation state record that holds the state of an animation at a given point
+ * @param currentTick The lerped tick time (current tick + partial tick) of the point
+ * @param transitionLength The length of time (in ticks) that the point should take to transition
+ * @param animationStartValue The start value to provide to the animation handling system
+ * @param animationEndValue The end value to provide to the animation handling system
+ * @param keyFrame The {@code Nullable} Keyframe
+ */
 public class AnimationPoint {
-	/**
-	 * The current tick in the animation to lerp from
-	 */
-	public final double currentTick;
-	/**
-	 * The tick that the current animation should end at
-	 */
-	public final double transitionLength;
-	/**
-	 * The Animation start value.
-	 */
-	public final double animationStartValue;
-	/**
-	 * The Animation end value.
-	 */
-	public final double animationEndValue;
+	private Keyframe<?> keyFrame;
+	private double currentTick;
+	private double transitionLength;
+	private double animationStartValue;
+	private double animationEndValue;
 
-	/**
-	 * The current keyframe.
-	 */
-	public final Keyframe keyframe;
-
-	public AnimationPoint(Keyframe keyFrame, double currentTick, double transitionLength, double animationStartValue, double animationEndValue) {
-		this.keyframe = keyFrame;
+	public AnimationPoint(Keyframe<?> keyFrame, double currentTick, double transitionLength, double animationStartValue, double animationEndValue) {
+		this.keyFrame = keyFrame;
 		this.currentTick = currentTick;
 		this.transitionLength = transitionLength;
 		this.animationStartValue = animationStartValue;
 		this.animationEndValue = animationEndValue;
+	}
+
+	@Override
+	public String toString() {
+		return "Tick: " + currentTick +
+				" | Transition Length: " + transitionLength +
+				" | Start Value: " + animationStartValue +
+				" | End Value: " + animationEndValue;
+	}
+
+	public Keyframe<?> keyFrame() {
+		return keyFrame;
+	}
+
+	public double currentTick() {
+		return currentTick;
+	}
+
+	public double transitionLength() {
+		return transitionLength;
 	}
 
 	public double animationStartValue() {
@@ -42,22 +54,5 @@ public class AnimationPoint {
 
 	public double animationEndValue() {
 		return animationEndValue;
-	}
-
-	public double transitionLength() {
-		return transitionLength;
-	}
-
-	public double currentTick() {
-		return currentTick;
-	}
-
-	@Override
-	public String toString() {
-		return "Tick: " + this.currentTick + " | Transition Length: " + this.transitionLength + " | Start Value: " + this.animationStartValue + " | End Value: " + this.animationEndValue;
-	}
-
-	public Keyframe keyFrame() {
-		return keyframe;
 	}
 }

@@ -1,30 +1,27 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
+import net.minecraft.util.JSONUtils;
 
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 
 /**
  * Container class for face UV information, only used in deserialization at startup
  */
 public class FaceUV {
-	@Nullable
-	public String materialInstance;
-	public double[] uv;
-	public double[] uvSize;
+	private final String materialInstance;
+	private final double[] uv;
+	private final double[] uvSize;
 
-	public FaceUV(@Nullable String materialInstance, double[] uv, double[] uvSize) {
+	public FaceUV(String materialInstance, double[] uv, double[] uvSize) {
 		this.materialInstance = materialInstance;
 		this.uv = uv;
 		this.uvSize = uvSize;
 	}
 
-	@Nullable
 	public String materialInstance() {
 		return materialInstance;
 	}

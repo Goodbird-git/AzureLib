@@ -8,93 +8,75 @@ package mod.azure.azurelib.core.keyframe;
 import java.util.List;
 import java.util.Objects;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.math.IValue;
 
-public class Keyframe<T> {
-	private double length;
-	private IValue startValue;
-	private IValue endValue;
-	public EasingType easingType = EasingType.LINEAR;
-	public DoubleList easingArgs = new DoubleArrayList();
 
-	public Keyframe(double length, IValue startValue, IValue endValue) {
+public class Keyframe<T extends IValue> {
+	double length;
+	T startValue;
+	T endValue;
+	EasingType easingType;
+	List<T> easingArgs;
+
+	/**
+	 * Animation keyframe data
+	 * @param length The length (in ticks) the keyframe lasts for
+	 * @param startValue The value to start the keyframe's transformation with
+	 * @param endValue The value to end the keyframe's transformation with
+	 * @param easingType The {@code EasingType} to use for transformations
+	 * @param easingArgs The arguments to provide to the easing calculation
+	 */
+	public Keyframe(double length, T startValue, T endValue, EasingType easingType, List<T> easingArgs) {
 		this.length = length;
 		this.startValue = startValue;
 		this.endValue = endValue;
-	}
-
-	public Keyframe(double length, IValue startValue, IValue endValue, EasingType easingType) {
-		this.length = length;
-		this.startValue = startValue;
-		this.endValue = endValue;
+		this.easingArgs = easingArgs;
 		this.easingType = easingType;
 	}
 
-	public Keyframe(double length, IValue startValue, IValue endValue, EasingType easingType, List<IValue> easingArgs) {
-		this.length = length;
-		this.startValue = startValue;
-		this.endValue = endValue;
-		this.easingType = easingType;
-
-		for (IValue easing : easingArgs) {
-			this.easingArgs.add(easing.get());
-		}
+	public Keyframe(double length, T startValue, T endValue) {
+		this(length, startValue, endValue, EasingType.LINEAR);
 	}
 
-	public double getLength() {
-		return length;
-	}
-
-	public void setLength(Double length) {
-		this.length = length;
-	}
-
-	public IValue getStartValue() {
-		return startValue;
-	}
-
-	public void setStartValue(IValue startValue) {
-		this.startValue = startValue;
-	}
-
-	public IValue getEndValue() {
-		return endValue;
-	}
-
-	public void setEndValue(IValue endValue) {
-		this.endValue = endValue;
+	public Keyframe(double length, T startValue, T endValue, EasingType easingType) {
+		this(length, startValue, endValue, easingType, new ObjectArrayList<>(0));
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(length, startValue, endValue);
+		return Objects.hash(this.length, this.startValue, this.endValue, this.easingType, this.easingArgs);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Keyframe && hashCode() == obj.hashCode();
+		if (this == obj)
+			return true;
+
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		return hashCode() == obj.hashCode();
 	}
 
-	public DoubleList easingArgs() {
-		return easingArgs;
+	public double length() {
+		return this.length;
+	}
+
+	public T startValue() {
+		return startValue;
+	}
+
+	public T endValue() {
+		return endValue;
 	}
 
 	public EasingType easingType() {
 		return easingType;
 	}
 
-	public IValue startValue() {
-		return startValue;
-	}
-
-	public IValue endValue() {
-		return endValue;
-	}
-
-	public double length() {
-		return length;
+	public List<T> easingArgs() {
+		return easingArgs;
 	}
 }

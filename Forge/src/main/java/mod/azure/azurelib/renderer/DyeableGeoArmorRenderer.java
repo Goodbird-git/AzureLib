@@ -1,5 +1,7 @@
 package mod.azure.azurelib.renderer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
@@ -11,9 +13,6 @@ import net.minecraft.item.Item;
 
 import java.util.Collection;
 import java.util.Set;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 /**
  * A dyeable armour renderer for AzureLib armor models.
@@ -27,7 +26,8 @@ public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends 
 
     @Override
     public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
+                packedOverlay, red, green, blue, alpha);
 
         if (!isReRender)
             checkBoneDyeCache(model);

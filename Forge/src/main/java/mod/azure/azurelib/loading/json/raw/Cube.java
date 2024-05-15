@@ -1,30 +1,26 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
+import net.minecraft.util.JSONUtils;
 
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 
 /**
  * Container class for cube information, only used in deserialization at startup
  */
 public class Cube {
+	private final Double inflate;
+	private final Boolean mirror;
+	private final double[] origin;
+	private final double[] pivot;
+	private final double[] rotation;
+	private final double[] size;
+	private final UVUnion uv;
 
-	@Nullable
-	public Double inflate;
-	@Nullable
-	public Boolean mirror;
-	public double[] origin;
-	public double[] pivot;
-	public double[] rotation;
-	public double[] size;
-	public UVUnion uv;
-
-	public Cube(@Nullable Double inflate, @Nullable Boolean mirror, double[] origin, double[] pivot, double[] rotation, double[] size, UVUnion uv) {
+	public Cube(Double inflate, Boolean mirror, double[] origin, double[] pivot, double[] rotation, double[] size, UVUnion uv) {
 		this.inflate = inflate;
 		this.mirror = mirror;
 		this.origin = origin;
@@ -34,12 +30,10 @@ public class Cube {
 		this.uv = uv;
 	}
 
-	@Nullable
 	public Double inflate() {
 		return inflate;
 	}
 
-	@Nullable
 	public Boolean mirror() {
 		return mirror;
 	}

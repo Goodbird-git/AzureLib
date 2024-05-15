@@ -2,8 +2,6 @@ package mod.azure.azurelib.loading.json.raw;
 
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
@@ -16,34 +14,25 @@ import net.minecraft.util.JSONUtils;
  * Container class for cube information, only used in deserialization at startup
  */
 public class Bone {
-	public double[] bindPoseRotation;
-	public Cube[] cubes;
-	@Nullable
-	public Boolean debug;
-	@Nullable
-	public Double inflate;
-	@Nullable
-	public Map<String, LocatorValue> locators;
-	@Nullable
-	public Boolean mirror;
-	@Nullable
-	public String name;
-	@Nullable
-	public Boolean neverRender;
-	@Nullable
-	public String parent;
-	public double[] pivot;
-	@Nullable
-	public PolyMesh polyMesh;
-	@Nullable
-	public Long renderGroupId;
-	@Nullable
-	public Boolean reset;
-	public double[] rotation;
-	@Nullable
-	public TextureMesh[] textureMeshes;
+	private final double[] bindPoseRotation;
+	private final Cube[] cubes;
+	private final Boolean debug;
+	private final Double inflate;
+	private final Map<String, LocatorValue> locators;
+	private final Boolean mirror;
+	private final String name;
+	private final Boolean neverRender;
+	private final String parent;
+	private final double[] pivot;
+	private final PolyMesh polyMesh;
+	private final Long renderGroupId;
+	private final Boolean reset;
+	private final double[] rotation;
+	private final TextureMesh[] textureMeshes;
 
-	public Bone(double[] bindPoseRotation, Cube[] cubes, @Nullable Boolean debug, @Nullable Double inflate, @Nullable Map<String, LocatorValue> locators, @Nullable Boolean mirror, @Nullable String name, @Nullable Boolean neverRender, @Nullable String parent, double[] pivot, @Nullable PolyMesh polyMesh, @Nullable Long renderGroupId, @Nullable Boolean reset, double[] rotation, @Nullable TextureMesh[] textureMeshes) {
+	public Bone(double[] bindPoseRotation, Cube[] cubes, Boolean debug, Double inflate, Map<String, LocatorValue> locators,
+				Boolean mirror, String name, Boolean neverRender, String parent, double[] pivot, PolyMesh polyMesh,
+				Long renderGroupId, Boolean reset, double[] rotation, TextureMesh[] textureMeshes) {
 		this.bindPoseRotation = bindPoseRotation;
 		this.cubes = cubes;
 		this.debug = debug;
@@ -69,37 +58,30 @@ public class Bone {
 		return cubes;
 	}
 
-	@Nullable
 	public Boolean debug() {
 		return debug;
 	}
 
-	@Nullable
 	public Double inflate() {
 		return inflate;
 	}
 
-	@Nullable
 	public Map<String, LocatorValue> locators() {
 		return locators;
 	}
 
-	@Nullable
 	public Boolean mirror() {
 		return mirror;
 	}
 
-	@Nullable
 	public String name() {
 		return name;
 	}
 
-	@Nullable
 	public Boolean neverRender() {
 		return neverRender;
 	}
 
-	@Nullable
 	public String parent() {
 		return parent;
 	}
@@ -108,17 +90,14 @@ public class Bone {
 		return pivot;
 	}
 
-	@Nullable
 	public PolyMesh polyMesh() {
 		return polyMesh;
 	}
 
-	@Nullable
 	public Long renderGroupId() {
 		return renderGroupId;
 	}
 
-	@Nullable
 	public Boolean reset() {
 		return reset;
 	}
@@ -127,11 +106,10 @@ public class Bone {
 		return rotation;
 	}
 
-	@Nullable
 	public TextureMesh[] textureMeshes() {
 		return textureMeshes;
 	}
-	
+
 	public static JsonDeserializer<Bone> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
@@ -149,7 +127,8 @@ public class Bone {
 			Long renderGroupId = JsonUtil.getOptionalLong(obj, "render_group_id");
 			Boolean reset = JsonUtil.getOptionalBoolean(obj, "reset");
 			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "rotation", null));
-			TextureMesh[] textureMeshes = JsonUtil.jsonArrayToObjectArray(JSONUtils.getAsJsonArray(obj, "texture_meshes", new JsonArray()), context, TextureMesh.class);
+			TextureMesh[] textureMeshes = JsonUtil.jsonArrayToObjectArray(
+					JSONUtils.getAsJsonArray(obj, "texture_meshes", new JsonArray()), context, TextureMesh.class);
 
 			return new Bone(bindPoseRotation, cubes, debug, inflate, locators, mirror, name, neverRender, parent, pivot, polyMesh, renderGroupId, reset, rotation, textureMeshes);
 		};

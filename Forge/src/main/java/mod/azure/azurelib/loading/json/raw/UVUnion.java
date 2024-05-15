@@ -1,7 +1,5 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
 
@@ -11,14 +9,11 @@ import mod.azure.azurelib.util.JsonUtil;
  * Container class for UV information, only used in deserialization at startup
  */
 public class UVUnion {
+	private final double[] boxUVCoords;
+	private final UVFaces faceUV;
+	private final boolean isBoxUV;
 
-	public double[] boxUVCoords;
-	@Nullable
-	public UVFaces faceUV;
-
-	public boolean isBoxUV;
-
-	public UVUnion(double[] boxUVCoords, @Nullable UVFaces faceUV, boolean isBoxUV) {
+	public UVUnion(double[] boxUVCoords, UVFaces faceUV, boolean isBoxUV) {
 		this.boxUVCoords = boxUVCoords;
 		this.faceUV = faceUV;
 		this.isBoxUV = isBoxUV;
@@ -28,7 +23,6 @@ public class UVUnion {
 		return boxUVCoords;
 	}
 
-	@Nullable
 	public UVFaces faceUV() {
 		return faceUV;
 	}
@@ -41,9 +35,11 @@ public class UVUnion {
 		return (json, type, context) -> {
 			if (json.isJsonObject()) {
 				return new UVUnion(new double[0], context.deserialize(json.getAsJsonObject(), UVFaces.class), false);
-			} else if (json.isJsonArray()) {
+			}
+			else if (json.isJsonArray()) {
 				return new UVUnion(JsonUtil.jsonArrayToDoubleArray(json.getAsJsonArray()), null, true);
-			} else {
+			}
+			else {
 				throw new JsonParseException("Invalid format provided for UVUnion, must be either double array or UVFaces collection");
 			}
 		};

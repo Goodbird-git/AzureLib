@@ -56,24 +56,21 @@ public final class AzureLibCache {
 	public static void registerReloadListener() {
 		Minecraft mc = Minecraft.getInstance();
 
-		if (mc == null) {
-			if (!ModLoader.isDataGenRunning())
-				AzureLib.LOGGER.warn("Minecraft.getInstance() was null, could not register reload listeners");
-
-			return;
-		}
-
 		if (!(mc.getResourceManager() instanceof IReloadableResourceManager))
 			throw new RuntimeException("AzureLib was initialized too early!");
 
-		((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(AzureLibCache::reload);
+		IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getInstance()
+				.getResourceManager();
+		reloadable.registerReloadListener(AzureLibCache::reload);
 	}
 
 	private static CompletableFuture<Void> reload(IFutureReloadListener.IStage stage, IResourceManager resourceManager, IProfiler preparationsProfiler, IProfiler reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
 		Map<ResourceLocation, BakedAnimations> animations = new Object2ObjectOpenHashMap<>();
 		Map<ResourceLocation, BakedGeoModel> models = new Object2ObjectOpenHashMap<>();
 
-		return CompletableFuture.allOf(loadAnimations(backgroundExecutor, resourceManager, animations::put), loadModels(backgroundExecutor, resourceManager, models::put)).thenCompose(stage::wait).thenAcceptAsync(empty -> {
+		return CompletableFuture.allOf(
+				loadAnimations(backgroundExecutor, resourceManager, animations::put),
+				loadModels(backgroundExecutor, resourceManager, models::put)).thenCompose(stage::wait).thenAcceptAsync(empty -> {
 			AzureLibCache.ANIMATIONS = animations;
 			AzureLibCache.MODELS = models;
 		}, gameExecutor);
@@ -84,31 +81,31 @@ public final class AzureLibCache {
 	}
 
 	private static CompletableFuture<Void> loadModels(Executor backgroundExecutor, IResourceManager resourceManager, BiConsumer<ResourceLocation, BakedGeoModel> elementConsumer) {
-		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> {
-			Model model = FileLoader.loadModelFile(resource, resourceManager);
-
-			if (model.formatVersion() != FormatVersion.V_1_12_0)
-				throw new AzureLibException(resource, "Unsupported geometry json version. Supported versions: 1.12.0");
-
-			return BakedModelFactory.getForNamespace(resource.getNamespace()).constructGeoModel(GeometryTree.fromModel(model));
-		}, elementConsumer);
+		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> BakedModelFactory.getForNamespace(resource.getNamespace()).constructGeoModel(GeometryTree.fromModel(FileLoader.loadModelFile(resource, resourceManager))), elementConsumer);
 	}
 
 	private static <T> CompletableFuture<Void> loadResources(Executor executor, IResourceManager resourceManager, String type, Function<ResourceLocation, T> loader, BiConsumer<ResourceLocation, T> map) {
-		return CompletableFuture.supplyAsync(() -> resourceManager.listResources(type, fileName -> fileName.toString().endsWith(".json")), executor).thenApplyAsync(resources -> {
-			Map<ResourceLocation, CompletableFuture<T>> tasks = new Object2ObjectOpenHashMap<>();
+		return CompletableFuture.supplyAsync(
+						() -> resourceManager.listResources(type, fileName -> fileName.endsWith(".json")), executor)
+				.thenApplyAsync(resources -> {
+					Map<ResourceLocation, CompletableFuture<T>> tasks = new Object2ObjectOpenHashMap<>();
 
-			for (ResourceLocation resource : resources) {
-				tasks.put(resource, CompletableFuture.supplyAsync(() -> loader.apply(resource), executor));
-			}
+					for (ResourceLocation resource : resources) {
+						CompletableFuture<T> existing = tasks.put(resource,
+								CompletableFuture.supplyAsync(() -> loader.apply(resource), executor));
 
-			return tasks;
-		}, executor).thenAcceptAsync(tasks -> {
-			for (Entry<ResourceLocation, CompletableFuture<T>> entry : tasks.entrySet()) {
-				// Skip known namespaces that use an "animation" folder as well
-				if (!EXCLUDED_NAMESPACES.contains(entry.getKey().getNamespace().toLowerCase(Locale.ROOT)))
-					map.accept(entry.getKey(), entry.getValue().join());
-			}
-		}, executor);
+						if (existing != null) {// Possibly if this matters, the last one will win
+							System.err.println("Duplicate resource for " + resource);
+							existing.cancel(false);
+						}
+					}
+
+					return tasks;
+				}, executor).thenAcceptAsync(tasks -> {
+					for (Entry<ResourceLocation, CompletableFuture<T>> entry : tasks.entrySet()) {
+						if (!EXCLUDED_NAMESPACES.contains(entry.getKey().getNamespace().toLowerCase(Locale.ROOT)))
+							map.accept(entry.getKey(), entry.getValue().join());
+					}
+				}, executor);
 	}
 }

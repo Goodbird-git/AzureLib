@@ -3,8 +3,6 @@ package mod.azure.azurelib.cache.object;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
@@ -23,7 +21,7 @@ public class GeoBone implements CoreGeoBone {
 
 	private final List<GeoBone> children = new ObjectArrayList<>();
 	private final List<GeoCube> cubes = new ObjectArrayList<>();
-
+	
 	private final Boolean mirror;
 	private final Double inflate;
 	private final Boolean dontRender;
@@ -57,10 +55,10 @@ public class GeoBone implements CoreGeoBone {
 	private final Matrix4f localSpaceMatrix = new Matrix4f();
 	private final Matrix4f worldSpaceMatrix = new Matrix4f();
 	private Matrix3f worldSpaceNormal = new Matrix3f();
-
+	
 	private boolean trackingMatrices;
 
-	public GeoBone(@Nullable GeoBone parent, String name, Boolean mirror, @Nullable Double inflate, @Nullable Boolean dontRender, @Nullable Boolean reset) {
+	public GeoBone(GeoBone parent, String name, Boolean mirror, Double inflate, Boolean dontRender, Boolean reset) {
 		this.parent = parent;
 		this.name = name;
 		this.mirror = mirror;
@@ -334,7 +332,7 @@ public class GeoBone implements CoreGeoBone {
 	}
 
 	public void setModelSpaceMatrix(Matrix4f matrix) {
-		this.modelSpaceMatrix.multiply(matrix);
+		this.modelSpaceMatrix.set(matrix);
 	}
 
 	public Matrix4f getLocalSpaceMatrix() {
@@ -344,7 +342,7 @@ public class GeoBone implements CoreGeoBone {
 	}
 
 	public void setLocalSpaceMatrix(Matrix4f matrix) {
-		localload(matrix);
+		this.localSpaceMatrix.set(matrix);
 	}
 
 	public Matrix4f getWorldSpaceMatrix() {
@@ -354,7 +352,7 @@ public class GeoBone implements CoreGeoBone {
 	}
 
 	public void setWorldSpaceMatrix(Matrix4f matrix) {
-		worldload(matrix);
+		this.worldSpaceMatrix.set(matrix);
 	}
 
 	public void setWorldSpaceNormal(Matrix3f matrix) {
@@ -382,6 +380,7 @@ public class GeoBone implements CoreGeoBone {
 		Matrix4f matrix = getModelSpaceMatrix();
 		Vector4f vec = new Vector4f(0, 0, 0, 1);
 		vec.transform(matrix);
+
 		return new Vector3d(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
 	}
 
@@ -396,69 +395,23 @@ public class GeoBone implements CoreGeoBone {
 		return new Vector3d(vec.x(), vec.y(), vec.z());
 	}
 
-	public void setModelPosition(Vector3d pos) {
-		// Doesn't work on bones with parent transforms
-		GeoBone parent = getParent();
-		Matrix4f identity = new Matrix4f();
-		identity.setIdentity();
-		Matrix4f matrix = parent == null ? identity : parent.getModelSpaceMatrix().copy();
-		matrix.invert();
-		Vector4f vec = new Vector4f(-(float) pos.x / 16f, (float) pos.y / 16f, (float) pos.z / 16f, 1);
-		vec.transform(matrix);
+//	public void setModelPosition(Vector3d pos) {
+//		// Doesn't work on bones with parent transforms
+//		GeoBone parent = getParent();
+//		Matrix4f matrix = (parent == null ? new Matrix4f().identity() : new Matrix4f(parent.getModelSpaceMatrix())).invert();
+//		Vector4f vec = matrix.transform(new Vector4f(-(float)pos.x / 16f, (float)pos.y / 16f, (float)pos.z / 16f, 1));
+//
+//		updatePosition(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
+//	}
 
-		updatePosition(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
-	}
-
-	public Matrix4f getModelRotationMatrix() {
-		Matrix4f matrix = getModelSpaceMatrix().copy();
-		removeMatrixTranslation(matrix);
-
-		return matrix;
-	}
-
-	public void worldload(Matrix4f pOther) {
-		this.worldSpaceMatrix.m00 = pOther.m00;
-		this.worldSpaceMatrix.m01 = pOther.m01;
-		this.worldSpaceMatrix.m02 = pOther.m02;
-		this.worldSpaceMatrix.m03 = pOther.m03;
-		this.worldSpaceMatrix.m10 = pOther.m10;
-		this.worldSpaceMatrix.m11 = pOther.m11;
-		this.worldSpaceMatrix.m12 = pOther.m12;
-		this.worldSpaceMatrix.m13 = pOther.m13;
-		this.worldSpaceMatrix.m20 = pOther.m20;
-		this.worldSpaceMatrix.m21 = pOther.m21;
-		this.worldSpaceMatrix.m22 = pOther.m22;
-		this.worldSpaceMatrix.m23 = pOther.m23;
-		this.worldSpaceMatrix.m30 = pOther.m30;
-		this.worldSpaceMatrix.m31 = pOther.m31;
-		this.worldSpaceMatrix.m32 = pOther.m32;
-		this.worldSpaceMatrix.m33 = pOther.m33;
-	}
-
-	public void localload(Matrix4f pOther) {
-		this.localSpaceMatrix.m00 = pOther.m00;
-		this.localSpaceMatrix.m01 = pOther.m01;
-		this.localSpaceMatrix.m02 = pOther.m02;
-		this.localSpaceMatrix.m03 = pOther.m03;
-		this.localSpaceMatrix.m10 = pOther.m10;
-		this.localSpaceMatrix.m11 = pOther.m11;
-		this.localSpaceMatrix.m12 = pOther.m12;
-		this.localSpaceMatrix.m13 = pOther.m13;
-		this.localSpaceMatrix.m20 = pOther.m20;
-		this.localSpaceMatrix.m21 = pOther.m21;
-		this.localSpaceMatrix.m22 = pOther.m22;
-		this.localSpaceMatrix.m23 = pOther.m23;
-		this.localSpaceMatrix.m30 = pOther.m30;
-		this.localSpaceMatrix.m31 = pOther.m31;
-		this.localSpaceMatrix.m32 = pOther.m32;
-		this.localSpaceMatrix.m33 = pOther.m33;
-	}
-
-	public static void removeMatrixTranslation(Matrix4f matrix) {
-		matrix.m03 = 0;
-		matrix.m13 = 0;
-		matrix.m23 = 0;
-	}
+//	public Matrix4f getModelRotationMatrix() {
+//		Matrix4f matrix = new Matrix4f(getModelSpaceMatrix());
+//		matrix.m03(0);
+//		matrix.m13(0);
+//		matrix.m23(0);
+//
+//		return matrix;
+//	}
 
 	public Vector3d getPositionVector() {
 		return new Vector3d(getPosX(), getPosY(), getPosZ());

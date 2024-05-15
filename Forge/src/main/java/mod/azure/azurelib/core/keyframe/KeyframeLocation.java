@@ -5,33 +5,26 @@
 
 package mod.azure.azurelib.core.keyframe;
 
-public class KeyframeLocation<T extends Keyframe> {
-	/**
-	 * The curent frame.
-	 */
-	public T currentFrame;
+public class KeyframeLocation<T extends Keyframe<?>> {
+    T keyframe;
+    double startTick;
 
-	/**
-	 * This is the combined total time of all the previous keyframes
-	 */
-	public double currentTick;
+    /**
+     * A named pair object that stores a {@link Keyframe} and a double representing a temporally placed {@code Keyframe}
+     *
+     * @param keyframe  The {@code Keyframe} at the tick time
+     * @param startTick The animation tick time at the start of this {@code Keyframe}
+     */
+    public KeyframeLocation(T keyframe, double startTick) {
+        this.keyframe = keyframe;
+        this.startTick = startTick;
+    }
 
-	/**
-	 * Instantiates a new Key frame location.
-	 *
-	 * @param currentFrame the current frame
-	 * @param currentTick  the current animation tick
-	 */
-	public KeyframeLocation(T keyframe, double startTick) {
-		this.currentFrame = keyframe;
-		this.currentTick = startTick;
-	}
+    public T keyframe() {
+        return keyframe;
+    }
 
-	public T keyframe() {
-		return currentFrame;
-	}
-
-	public double startTick() {
-		return currentTick;
-	}
+    public double startTick() {
+        return startTick;
+    }
 }

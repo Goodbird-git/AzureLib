@@ -5,34 +5,29 @@
 
 package mod.azure.azurelib.core.animation;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.core.animation.Animation.LoopType;
-
 /**
- * A builder class for a raw/unbaked animation. These are constructed to pass to the {@link AnimationController} to build into full-fledged animations for usage. <br>
- * <br>
+ * A builder class for a raw/unbaked animation. These are constructed to pass to the
+ * {@link AnimationController} to build into full-fledged animations for usage.
+ * <br><br>
  * Animations added to this builder are added <u>in order of insertion</u> - the animations will play in the order that you define them.<br>
- * RawAnimation instances should be cached statically where possible to reduce overheads and improve efficiency. <br>
- * <br>
+ * RawAnimation instances should be cached statically where possible to reduce overheads and improve efficiency.
+ * <br><br>
  * Example usage: <br>
- * 
- * <pre>
- * {@code RawAnimation.begin().thenPlay("action.open_box").thenLoop("state.stay_open")}
- * </pre>
+ * <pre>{@code RawAnimation.begin().thenPlay("action.open_box").thenLoop("state.stay_open")}</pre>
  */
 public final class RawAnimation {
 	private final List<Stage> animationList = new ObjectArrayList<>();
 
 	// Private constructor to force usage of factory for logical operations
-	private RawAnimation() {
-	}
+	private RawAnimation() {}
 
 	/**
 	 * Start a new RawAnimation instance. This is the start point for creating an animation chain.
-	 * 
 	 * @return A new RawAnimation instance
 	 */
 	public static RawAnimation begin() {
@@ -40,8 +35,8 @@ public final class RawAnimation {
 	}
 
 	/**
-	 * Append an animation to the animation chain, playing the named animation and stopping or progressing to the next chained animation depending on the loop type set in the animation json
-	 * 
+	 * Append an animation to the animation chain, playing the named animation and stopping
+	 * or progressing to the next chained animation depending on the loop type set in the animation json
 	 * @param animationName The name of the animation to play once
 	 */
 	public RawAnimation thenPlay(String animationName) {
@@ -50,7 +45,6 @@ public final class RawAnimation {
 
 	/**
 	 * Append an animation to the animation chain, playing the named animation and repeating it continuously until the animation is stopped by external sources.
-	 * 
 	 * @param animationName The name of the animation to play on a loop
 	 */
 	public RawAnimation thenLoop(String animationName) {
@@ -60,7 +54,6 @@ public final class RawAnimation {
 	/**
 	 * Appends a 'wait' animation to the animation chain.<br>
 	 * This causes the animatable to do nothing for a set period of time before performing the next animation.
-	 * 
 	 * @param ticks The number of ticks to 'wait' for
 	 */
 	public RawAnimation thenWait(int ticks) {
@@ -70,8 +63,8 @@ public final class RawAnimation {
 	}
 
 	/**
-	 * Appends an animation to the animation chain, then has the animatable hold the pose at the end of the animation until it is stopped by external sources.
-	 * 
+	 * Appends an animation to the animation chain, then has the animatable hold the pose at the end of the
+	 * animation until it is stopped by external sources.
 	 * @param animation The name of the animation to play and hold
 	 */
 	public RawAnimation thenPlayAndHold(String animation) {
@@ -79,10 +72,10 @@ public final class RawAnimation {
 	}
 
 	/**
-	 * Append an animation to the animation chain, playing the named animation <code>playCount</code> times, then stopping or progressing to the next chained animation depending on the loop type set in the animation json
-	 * 
+	 * Append an animation to the animation chain, playing the named animation <code>playCount</code> times,
+	 * then stopping or progressing to the next chained animation depending on the loop type set in the animation json
 	 * @param animationName The name of the animation to play X times
-	 * @param playCount     The number of times to repeat the animation before proceeding
+	 * @param playCount The number of times to repeat the animation before proceeding
 	 */
 	public RawAnimation thenPlayXTimes(String animationName, int playCount) {
 		for (int i = 0; i < playCount; i++) {
@@ -94,9 +87,8 @@ public final class RawAnimation {
 
 	/**
 	 * Append an animation to the animation chain, playing the named animation and proceeding based on the <code>loopType</code> parameter provided.
-	 * 
 	 * @param animationName The name of the animation to play. <u>MUST</u> match the name of the animation in the <code>.animation.json</code> file.
-	 * @param loopType      The loop type handler for the animation, overriding the default value set in the animation json
+	 * @param loopType The loop type handler for the animation, overriding the default value set in the animation json
 	 */
 	public RawAnimation then(String animationName, Animation.LoopType loopType) {
 		this.animationList.add(new Stage(animationName, loopType));
@@ -109,8 +101,8 @@ public final class RawAnimation {
 	}
 
 	/**
-	 * Create a new RawAnimation instance based on an existing RawAnimation instance. The new instance will be a shallow copy of the other instance, and can then be appended to or otherwise modified
-	 * 
+	 * Create a new RawAnimation instance based on an existing RawAnimation instance.
+	 * The new instance will be a shallow copy of the other instance, and can then be appended to or otherwise modified
 	 * @param other The existing RawAnimation instance to copy
 	 * @return A new instance of RawAnimation
 	 */
@@ -143,16 +135,17 @@ public final class RawAnimation {
 	 * This is an entry object representing a single animation stage of the final compiled animation.
 	 */
 	public class Stage {
-		public String animationName;
-		public Animation.LoopType loopType;
-		public int additionalTicks;
-		static final String WAIT = "internal.wait";
+		private String animationName;
+		private Animation.LoopType loopType;
+		private int additionalTicks;
+
+		public static final String WAIT = "internal.wait";
 
 		public Stage(String animationName, Animation.LoopType loopType) {
 			this(animationName, loopType, 0);
 		}
 
-		public Stage(String animationName, LoopType loopType, int additionalTicks) {
+		public Stage(String animationName, Animation.LoopType loopType, int additionalTicks) {
 			this.animationName = animationName;
 			this.loopType = loopType;
 			this.additionalTicks = additionalTicks;
@@ -160,15 +153,15 @@ public final class RawAnimation {
 
 		public String animationName() {
 			return animationName;
-		};
+		}
 
 		public Animation.LoopType loopType() {
-			return this.loopType;
-		};
+			return loopType;
+		}
 
 		public int additionalTicks() {
 			return additionalTicks;
-		};
+		}
 
 		@Override
 		public boolean equals(Object obj) {
@@ -183,7 +176,7 @@ public final class RawAnimation {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(this.animationName, this.loopType);
+			return Objects.hash(animationName, loopType);
 		}
 	}
 }

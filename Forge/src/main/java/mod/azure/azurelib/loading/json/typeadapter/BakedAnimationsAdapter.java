@@ -21,7 +21,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.animation.EasingType;
-import mod.azure.azurelib.core.animation.Keyframes;
 import mod.azure.azurelib.core.keyframe.BoneAnimation;
 import mod.azure.azurelib.core.keyframe.Keyframe;
 import mod.azure.azurelib.core.keyframe.KeyframeStack;
@@ -82,7 +81,7 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 		double length = animationObj.has("animation_length") ? JSONUtils.getAsFloat(animationObj, "animation_length") * 20d : -1;
 		Animation.LoopType loopType = Animation.LoopType.fromJson(animationObj.get("loop"));
 		BoneAnimation[] boneAnimations = bakeBoneAnimations(JSONUtils.getAsJsonObject(animationObj, "bones", new JsonObject()));
-		Keyframes keyframes = context.deserialize(animationObj, Keyframes.class);
+		Animation.Keyframes keyframes = context.deserialize(animationObj, Animation.Keyframes.class);
 
 		if (length == -1)
 			length = calculateAnimationLength(boneAnimations);

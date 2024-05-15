@@ -5,74 +5,61 @@
 
 package mod.azure.azurelib.core.keyframe;
 
-import java.util.List;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-public class KeyframeStack<T extends Keyframe> {
-	/**
-	 * The X key frames.
-	 */
-	public List<T> xKeyframes;
-	/**
-	 * The Y key frames.
-	 */
-	public List<T> yKeyframes;
-	/**
-	 * The Z key frames.
-	 */
-	public List<T> zKeyframes;
+import java.util.List;
 
-	/**
-	 * Instantiates a new vector key frame list from 3 lists of keyframes
-	 *
-	 * @param XKeyFrames the x key frames
-	 * @param YKeyFrames the y key frames
-	 * @param ZKeyFrames the z key frames
-	 */
-	public KeyframeStack(List<T> XKeyFrames, List<T> YKeyFrames, List<T> ZKeyFrames) {
-		xKeyframes = XKeyFrames;
-		yKeyframes = YKeyFrames;
-		zKeyframes = ZKeyFrames;
-	}
+/**
+ * Stores a triplet of {@link Keyframe Keyframes} in an ordered stack
+ */
+public class KeyframeStack<T extends Keyframe<?>> {
+    List<T> xKeyframes;
+    List<T> yKeyframes;
+    List<T> zKeyframes;
 
-	/**
-	 * Instantiates a new blank key frame list
-	 */
-	public KeyframeStack() {
-		xKeyframes = new ObjectArrayList<>();
-		yKeyframes = new ObjectArrayList<>();
-		zKeyframes = new ObjectArrayList<>();
-	}
+    public KeyframeStack(List<T> xKeyframes, List<T> yKeyframes, List<T> zKeyframes) {
+        this.xKeyframes = xKeyframes;
+        this.yKeyframes = yKeyframes;
+        this.zKeyframes = zKeyframes;
+    }
 
-	public double getLastKeyframeTime() {
-		double xTime = 0;
-		for (T frame : xKeyframes) {
-			xTime += frame.getLength();
-		}
+    public KeyframeStack() {
+        this(new ObjectArrayList<>(), new ObjectArrayList<>(), new ObjectArrayList<>());
+    }
 
-		double yTime = 0;
-		for (T frame : yKeyframes) {
-			yTime += frame.getLength();
-		}
+    public static <F extends Keyframe<?>> KeyframeStack<F> from(KeyframeStack<F> otherStack) {
+        return new KeyframeStack<>(otherStack.xKeyframes, otherStack.yKeyframes, otherStack.zKeyframes);
+    }
 
-		double zTime = 0;
-		for (T frame : zKeyframes) {
-			zTime += frame.getLength();
-		}
+    public double getLastKeyframeTime() {
+        double xTime = 0;
+        double yTime = 0;
+        double zTime = 0;
 
-		return Math.max(xTime, Math.max(yTime, zTime));
-	}
+        for (T frame : xKeyframes()) {
+            xTime += frame.length();
+        }
+
+        for (T frame : yKeyframes()) {
+            yTime += frame.length();
+        }
+
+        for (T frame : zKeyframes()) {
+            zTime += frame.length();
+        }
+
+        return Math.max(xTime, Math.max(yTime, zTime));
+    }
 
 	public List<T> xKeyframes() {
-		return xKeyframes;
+		return this.xKeyframes;
 	}
 
-	public List<T> yKeyframes() {
-		return yKeyframes;
+    public List<T> yKeyframes() {
+		return this.yKeyframes;
 	}
 
-	public List<T> zKeyframes() {
-		return zKeyframes;
+    public List<T> zKeyframes() {
+		return this.zKeyframes;
 	}
 }

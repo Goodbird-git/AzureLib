@@ -1,6 +1,5 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
@@ -13,11 +12,10 @@ import mod.azure.azurelib.util.JsonUtil;
  * Container class for poly union information, only used in deserialization at startup
  */
 public class PolysUnion {
-	public double[][][] union;
-	@Nullable
-	public Type type;
+	private final double[][][] union;
+	private final Type type;
 
-	public PolysUnion(double[][][] union, @Nullable Type type) {
+	public PolysUnion(double[][][] union, Type type) {
 		this.union = union;
 		this.type = type;
 	}
@@ -26,7 +24,6 @@ public class PolysUnion {
 		return union;
 	}
 
-	@Nullable
 	public Type type() {
 		return type;
 	}
@@ -35,7 +32,8 @@ public class PolysUnion {
 		return (json, type, context) -> {
 			if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
 				return new PolysUnion(new double[0][0][0], context.deserialize(json.getAsJsonPrimitive(), Type.class));
-			} else if (json.isJsonArray()) {
+			}
+			else if (json.isJsonArray()) {
 				JsonArray array = json.getAsJsonArray();
 				double[][][] matrix = makeSizedMatrix(array);
 
@@ -50,7 +48,8 @@ public class PolysUnion {
 				}
 
 				return new PolysUnion(matrix, null);
-			} else {
+			}
+			else {
 				throw new JsonParseException("Invalid format for PolysUnion, must be either string or array");
 			}
 		};
@@ -66,8 +65,7 @@ public class PolysUnion {
 	}
 
 	public enum Type {
-		@SerializedName(value = "quad_list")
-		QUAD, @SerializedName(value = "tri_list")
-		TRI;
+		@SerializedName(value = "quad_list") QUAD,
+		@SerializedName(value = "tri_list") TRI;
 	}
 }

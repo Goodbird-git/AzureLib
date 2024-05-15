@@ -1,7 +1,5 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -13,12 +11,11 @@ import net.minecraft.util.JSONUtils;
  * Container class for locator class information, only used in deserialization at startup
  */
 public class LocatorClass {
-	@Nullable
-	public Boolean ignoreInheritedScale;
-	public double[] offset;
-	public double[] rotation;
+	private final Boolean ignoreInheritedScale;
+	private final double[] offset;
+	private final double[] rotation;
 
-	public LocatorClass(@Nullable Boolean ignoreInheritedScale, double[] offset, double[] rotation) {
+	public LocatorClass(Boolean ignoreInheritedScale, double[] offset, double[] rotation) {
 		this.ignoreInheritedScale = ignoreInheritedScale;
 		this.offset = offset;
 		this.rotation = rotation;

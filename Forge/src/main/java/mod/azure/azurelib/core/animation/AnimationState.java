@@ -150,7 +150,7 @@ public class AnimationState<T extends GeoAnimatable> {
 	 * @return Whether the controller's current stage is the one provided
 	 */
 	public boolean isCurrentAnimationStage(String name) {
-		return getController().getCurrentAnimation() != null && getController().getCurrentAnimation().animation().name.equals(name);
+		return getController().getCurrentAnimation() != null && getController().getCurrentAnimation().animation().name().equals(name);
 	}
 
 	/**

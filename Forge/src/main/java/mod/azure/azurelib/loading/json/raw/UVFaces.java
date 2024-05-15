@@ -1,10 +1,7 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
-
 import net.minecraft.util.Direction;
 import net.minecraft.util.JSONUtils;
 
@@ -12,21 +9,14 @@ import net.minecraft.util.JSONUtils;
  * Container class for UV face information, only used in deserialization at startup
  */
 public class UVFaces {
+	private final FaceUV north;
+	private final FaceUV south;
+	private final FaceUV east;
+	private final FaceUV west;
+	private final FaceUV up;
+	private final FaceUV down;
 
-	@Nullable
-	public FaceUV north;
-	@Nullable
-	public FaceUV south;
-	@Nullable
-	public FaceUV east;
-	@Nullable
-	public FaceUV west;
-	@Nullable
-	public FaceUV up;
-	@Nullable
-	public FaceUV down;
-
-	public UVFaces(@Nullable FaceUV north, @Nullable FaceUV south, @Nullable FaceUV east, @Nullable FaceUV west, @Nullable FaceUV up, @Nullable FaceUV down) {
+	public UVFaces(FaceUV north, FaceUV south, FaceUV east, FaceUV west, FaceUV up, FaceUV down) {
 		this.north = north;
 		this.south = south;
 		this.east = east;
@@ -35,32 +25,26 @@ public class UVFaces {
 		this.down = down;
 	}
 
-	@Nullable
 	public FaceUV north() {
 		return north;
 	}
 
-	@Nullable
 	public FaceUV south() {
 		return south;
 	}
 
-	@Nullable
 	public FaceUV east() {
 		return east;
 	}
 
-	@Nullable
 	public FaceUV west() {
 		return west;
 	}
 
-	@Nullable
 	public FaceUV up() {
 		return up;
 	}
 
-	@Nullable
 	public FaceUV down() {
 		return down;
 	}
@@ -80,17 +64,18 @@ public class UVFaces {
 	}
 
 	public FaceUV fromDirection(Direction direction) {
-		if (direction.equals(Direction.NORTH))
+		if (direction == Direction.NORTH) {
 			return north;
-		else if (direction.equals(Direction.SOUTH))
+		} else if (direction == Direction.SOUTH) {
 			return south;
-		else if (direction.equals(Direction.EAST))
+		} else if (direction == Direction.EAST) {
 			return east;
-		else if (direction.equals(Direction.WEST))
+		} else if (direction == Direction.WEST) {
 			return west;
-		else if (direction.equals(Direction.UP))
+		} else if (direction == Direction.UP) {
 			return up;
-		else
+		} else {
 			return down;
+		}
 	}
 }

@@ -8,61 +8,82 @@ package mod.azure.azurelib.core.keyframe;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
 
-
+/**
+ * A bone pseudo-stack for bone animation positions, scales, and rotations.
+ * Animation points are calculated then pushed onto their respective queues to be used for transformations in rendering
+ */
 public class BoneAnimationQueue {
-	public final CoreGeoBone bone;
-	public AnimationPointQueue rotationXQueue = new AnimationPointQueue();
-	public AnimationPointQueue rotationYQueue = new AnimationPointQueue();
-	public AnimationPointQueue rotationZQueue = new AnimationPointQueue();
-	public AnimationPointQueue positionXQueue = new AnimationPointQueue();
-	public AnimationPointQueue positionYQueue = new AnimationPointQueue();
-	public AnimationPointQueue positionZQueue = new AnimationPointQueue();
-	public AnimationPointQueue scaleXQueue = new AnimationPointQueue();
-	public AnimationPointQueue scaleYQueue = new AnimationPointQueue();
-	public AnimationPointQueue scaleZQueue = new AnimationPointQueue();
+	private CoreGeoBone bone;
+	private AnimationPointQueue rotationXQueue;
+	private AnimationPointQueue rotationYQueue;
+	private AnimationPointQueue rotationZQueue;
+	private AnimationPointQueue positionXQueue;
+	private AnimationPointQueue positionYQueue;
+	private AnimationPointQueue positionZQueue;
+	private AnimationPointQueue scaleXQueue;
+	private AnimationPointQueue scaleYQueue;
+	private AnimationPointQueue scaleZQueue;
 
-	public BoneAnimationQueue(CoreGeoBone bone) {
+	public BoneAnimationQueue(CoreGeoBone bone, AnimationPointQueue rotationXQueue, AnimationPointQueue rotationYQueue,
+							  AnimationPointQueue rotationZQueue, AnimationPointQueue positionXQueue, AnimationPointQueue positionYQueue,
+							  AnimationPointQueue positionZQueue, AnimationPointQueue scaleXQueue, AnimationPointQueue scaleYQueue,
+							  AnimationPointQueue scaleZQueue) {
 		this.bone = bone;
+		this.rotationXQueue = rotationXQueue;
+		this.rotationYQueue = rotationYQueue;
+		this.rotationZQueue = rotationZQueue;
+		this.positionXQueue = positionXQueue;
+		this.positionYQueue = positionYQueue;
+		this.positionZQueue = positionZQueue;
+		this.scaleXQueue = scaleXQueue;
+		this.scaleYQueue = scaleYQueue;
+		this.scaleZQueue = scaleZQueue;
 	}
-	
+
 	public CoreGeoBone bone() {
 		return bone;
 	}
-	
+
 	public AnimationPointQueue rotationXQueue() {
 		return rotationXQueue;
 	}
-	
+
 	public AnimationPointQueue rotationYQueue() {
 		return rotationYQueue;
 	}
-	
+
 	public AnimationPointQueue rotationZQueue() {
 		return rotationZQueue;
 	}
-	
+
 	public AnimationPointQueue positionXQueue() {
 		return positionXQueue;
 	}
-	
+
 	public AnimationPointQueue positionYQueue() {
 		return positionYQueue;
 	}
-	
+
 	public AnimationPointQueue positionZQueue() {
 		return positionZQueue;
 	}
-	
+
 	public AnimationPointQueue scaleXQueue() {
 		return scaleXQueue;
 	}
-	
+
 	public AnimationPointQueue scaleYQueue() {
 		return scaleYQueue;
 	}
-	
+
 	public AnimationPointQueue scaleZQueue() {
 		return scaleZQueue;
+	}
+
+	public BoneAnimationQueue(CoreGeoBone bone) {
+		this(bone, new AnimationPointQueue(), new AnimationPointQueue(), new AnimationPointQueue(),
+				new AnimationPointQueue(), new AnimationPointQueue(), new AnimationPointQueue(),
+				new AnimationPointQueue(), new AnimationPointQueue(), new AnimationPointQueue());
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package mod.azure.azurelib.loading.json.raw;
 
-import javax.annotation.Nullable;
+import net.minecraft.util.JSONUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
@@ -8,19 +8,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 
 /**
  * Container class for generic geometry information, only used in deserialization at startup
  */
 public class MinecraftGeometry {
-	public Bone[] bones;
-	@Nullable
-	public String cape;
-	@Nullable
-	public ModelProperties modelProperties;
+	private final Bone[] bones;
+	private final String cape;
+	private final ModelProperties modelProperties;
 
-	public MinecraftGeometry(Bone[] bones, @Nullable String cape, @Nullable ModelProperties modelProperties) {
+	public MinecraftGeometry(Bone[] bones, String cape, ModelProperties modelProperties) {
 		this.bones = bones;
 		this.cape = cape;
 		this.modelProperties = modelProperties;
@@ -30,12 +27,10 @@ public class MinecraftGeometry {
 		return bones;
 	}
 
-	@Nullable
 	public String cape() {
 		return cape;
 	}
 
-	@Nullable
 	public ModelProperties modelProperties() {
 		return modelProperties;
 	}

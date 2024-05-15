@@ -12,5 +12,5 @@ import java.util.LinkedList;
  * the {@link mod.azure.azurelib.core.animation.AnimationController} to lerp between values
  */
 public final class AnimationPointQueue extends LinkedList<AnimationPoint> {
-	private static final long serialVersionUID = 5472797438476621193L;
+
 }

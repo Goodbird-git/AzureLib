@@ -7,20 +7,30 @@ import net.minecraft.util.math.vector.Vector3f;
  * Quad data holder
  */
 public class GeoQuad {
-	protected final GeoVertex[] vertices;
-	protected final Vector3f normal;
-	protected final Direction direction;
-	
-	public GeoQuad(final GeoVertex[] vertices, final Vector3f normal, final Direction direction) {
-		this.vertices = vertices;
-		this.normal = normal;
-		this.direction = direction;
-	}
-	
-	public static GeoQuad build(GeoVertex[] vertices, double[] uvCoords, double[] uvSize, float texWidth,
-			float texHeight, boolean mirror, Direction direction) {
-		return build(vertices, (float) uvCoords[0], (float) uvCoords[1], (float) uvSize[0], (float) uvSize[1], texWidth,
-				texHeight, mirror, direction);
+    private final GeoVertex[] vertices;
+    private final Vector3f normal;
+    private final Direction direction;
+
+    public GeoQuad(GeoVertex[] vertices, Vector3f normal, Direction direction) {
+        this.vertices = vertices;
+        this.normal = normal;
+        this.direction = direction;
+    }
+
+    public GeoVertex[] vertices() {
+        return vertices;
+    }
+
+    public Vector3f normal() {
+        return normal;
+    }
+
+    public Direction direction() {
+        return direction;
+    }
+
+	public static GeoQuad build(GeoVertex[] vertices, double[] uvCoords, double[] uvSize, float texWidth, float texHeight, boolean mirror, Direction direction) {
+		return build(vertices, (float)uvCoords[0], (float)uvCoords[1], (float)uvSize[0], (float)uvSize[1], texWidth, texHeight, mirror, direction);
 	}
 
 	public static GeoQuad build(GeoVertex[] vertices, float u, float v, float uSize, float vSize, float texWidth,
@@ -45,17 +55,5 @@ public class GeoQuad {
 		vertices[3] = vertices[3].withUVs(u, vHeight);
 
 		return new GeoQuad(vertices, normal, direction);
-	}
-
-	public GeoVertex[] vertices() {
-		return vertices;
-	}
-
-	public Vector3f normal() {
-		return normal;
-	}
-
-	public Direction direction() {
-		return direction;
 	}
 }

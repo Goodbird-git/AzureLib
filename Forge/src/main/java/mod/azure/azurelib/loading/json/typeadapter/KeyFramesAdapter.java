@@ -13,7 +13,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.core.animation.Keyframes;
+import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
@@ -21,18 +21,18 @@ import mod.azure.azurelib.util.JsonUtil;
 import net.minecraft.util.JSONUtils;
 
 /**
- * {@link Gson} {@link JsonDeserializer} for {@link Keyframes}.<br>
+ * {@link Gson} {@link JsonDeserializer} for {@link Animation.Keyframes}.<br>
  * Acts as the deserialization interface for {@code Keyframes}
  */
-public class KeyFramesAdapter implements JsonDeserializer<Keyframes> {
+public class KeyFramesAdapter implements JsonDeserializer<Animation.Keyframes> {
 	@Override
-	public Keyframes deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+	public Animation.Keyframes deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
 		JsonObject obj = json.getAsJsonObject();
 		SoundKeyframeData[] sounds = buildSoundFrameData(obj);
 		ParticleKeyframeData[] particles = buildParticleFrameData(obj);
 		CustomInstructionKeyframeData[] customInstructions = buildCustomFrameData(obj);
 
-		return new Keyframes(sounds, particles, customInstructions);
+		return new Animation.Keyframes(sounds, particles, customInstructions);
 	}
 
 	private static SoundKeyframeData[] buildSoundFrameData(JsonObject rootObj) {

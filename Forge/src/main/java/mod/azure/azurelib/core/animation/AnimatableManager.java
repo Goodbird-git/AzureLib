@@ -25,7 +25,7 @@ import java.util.Map;
 public class AnimatableManager<T extends GeoAnimatable> {
 	private final Map<String, BoneSnapshot> boneSnapshotCollection = new Object2ObjectOpenHashMap<>();
 	private final Map<String, AnimationController<T>> animationControllers;
-	private Map<DataTicket<?>, Object> extraData;
+	protected Map<DataTicket<?>, Object> extraData;
 
 	private double lastUpdateTime;
 	private boolean isFirstTick = true;
