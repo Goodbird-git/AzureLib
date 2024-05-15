@@ -10,7 +10,6 @@
   ],
   "client": [
     "fabric.MixinItemRenderer",
-    "fabric.MixinHumanoidArmorLayer",
-    "fabric.TextureManagerMixin"
+    "fabric.MixinHumanoidArmorLayer"
   ]
 }

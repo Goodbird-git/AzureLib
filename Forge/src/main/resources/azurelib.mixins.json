@@ -9,7 +9,6 @@
   "mixins": [],
   "client": [
     "MixinHumanoidArmorLayer",
-    "MixinItemRenderer",
-    "TextureManagerMixin"
+    "MixinItemRenderer"
   ]
 }
