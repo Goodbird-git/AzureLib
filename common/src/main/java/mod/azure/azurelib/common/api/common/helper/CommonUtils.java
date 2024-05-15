@@ -150,20 +150,4 @@ public record CommonUtils() {
         return null;
     }
 
-    /**
-     * Handles setting fire to targets when using the {@link IPlatformHelper#getIncendairyenchament()}
-     *
-     * @param projectile The Projectile being used
-     */
-    public static void setOnFire(Projectile projectile) {
-        if (projectile.isOnFire())
-            projectile.level()
-                    .getEntitiesOfClass(LivingEntity.class, projectile.getBoundingBox().inflate(2))
-                    .forEach(
-                            e -> {
-                                if (e.isAlive() && !(e instanceof Player))
-                                    e.setRemainingFireTicks(90);
-                            }
-                    );
-    }
 }

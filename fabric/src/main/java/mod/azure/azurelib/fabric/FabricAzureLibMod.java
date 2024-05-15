@@ -1,6 +1,5 @@
 package mod.azure.azurelib.fabric;
 
-import mod.azure.azurelib.common.api.common.enchantments.IncendiaryEnchantment;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.AzureLibMod;
 import mod.azure.azurelib.common.internal.common.blocks.TickingLightBlock;
@@ -12,8 +11,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -27,9 +24,6 @@ public final class FabricAzureLibMod implements ModInitializer {
                     .lightLevel(TickingLightBlock.litBlockEmission(15))
                     .pushReaction(PushReaction.DESTROY)
                     .noOcclusion()
-    );
-    public static final Enchantment INCENDIARYENCHANTMENT = new IncendiaryEnchantment(
-            EquipmentSlot.MAINHAND
     );
     public static BlockEntityType<TickingLightEntity> TICKING_LIGHT_ENTITY;
 
@@ -52,10 +46,5 @@ public final class FabricAzureLibMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             ConfigIO.FILE_WATCH_MANAGER.stopService();
         });
-        Registry.register(
-                BuiltInRegistries.ENCHANTMENT,
-                AzureLib.modResource("incendiaryenchantment"),
-                INCENDIARYENCHANTMENT
-        );
     }
 }

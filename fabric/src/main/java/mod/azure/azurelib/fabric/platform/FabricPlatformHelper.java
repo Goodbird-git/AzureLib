@@ -50,11 +50,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public Enchantment getIncendairyenchament() {
-        return FabricAzureLibMod.INCENDIARYENCHANTMENT;
-    }
-
-    @Override
     public <T> Supplier<DataComponentType<T>> registerDataComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builder) {
         final DataComponentType<T> componentType = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
                 AzureLib.modResource(id).toString(), builder.apply(DataComponentType.builder()).build());
