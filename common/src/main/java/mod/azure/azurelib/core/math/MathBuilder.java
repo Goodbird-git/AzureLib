@@ -22,8 +22,9 @@ import java.util.Map;
  * Math builder This class is responsible for parsing math expressions provided by user in a string to an {@link IValue}
  * which can be used to compute some value dynamically using different math operators, variables and functions. It works
  * by first breaking down given string into a list of tokens and then putting them together in a binary tree-like
- * {@link IValue}. TODO: maybe implement constant pool (to reuse same values)? TODO: maybe pre-compute constant
- * expressions?
+ * {@link IValue}.
+ * TODO: maybe implement constant pool (to reuse same values)?
+ * TODO: maybe pre-compute constant expressions?
  */
 public class MathBuilder {
 
@@ -94,7 +95,7 @@ public class MathBuilder {
     /**
      * Breakdown an expression
      */
-    public String[] breakdown(String expression) throws Exception {
+    public String[] breakdown(String expression) throws AzureLibException {
         /* If given string have illegal characters, then it can't be parsed */
         if (!expression.matches("^[\\w\\d\\s_+-/*%^&|<>=!?:.,()]+$")) {
             throw new AzureLibException("Given expression '" + expression + "' contains illegal characters!");
@@ -467,7 +468,7 @@ public class MathBuilder {
     /**
      * Get operation for given operator strings
      */
-    protected Operation operationForOperator(String op) throws Exception {
+    protected Operation operationForOperator(String op) throws AzureLibException {
         for (Operation operation : Operation.values()) {
             if (operation.sign.equals(op)) {
                 return operation;

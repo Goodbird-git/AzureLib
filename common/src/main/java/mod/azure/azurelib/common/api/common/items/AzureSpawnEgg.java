@@ -8,8 +8,7 @@ import net.minecraft.world.item.SpawnEggItem;
 public class AzureSpawnEgg extends SpawnEggItem {
 
     /**
-     * TODO: Make egg work correctly for both loaders using this common version, currently only works correctly with
-     * Fabric.
+     * TODO: Make egg work correctly for both loaders using this common version, currently only works correctly with Fabric.
      *
      * @param type           Your registered Entity
      * @param primaryColor   Primary Egg Color

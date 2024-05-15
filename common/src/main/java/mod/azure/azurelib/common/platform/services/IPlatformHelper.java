@@ -30,7 +30,5 @@ public interface IPlatformHelper {
         return null;
     }
 
-    Enchantment getIncendairyenchament();
-
     <T> Supplier<DataComponentType<T>> registerDataComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builder);
 }

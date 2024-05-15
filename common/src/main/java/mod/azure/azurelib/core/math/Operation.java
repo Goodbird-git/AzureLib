@@ -5,8 +5,8 @@ import java.util.Set;
 
 /**
  * Operation enumeration This enumeration provides different hardcoded enumerations of default math operators such
- * addition, substraction, multiplication, division, modulo and power. TODO: maybe convert to classes (for the sake of
- * API)?
+ * addition, substraction, multiplication, division, modulo and power.
+ * TODO: maybe convert to classes (for the sake of API)?
  */
 public enum Operation {
 
