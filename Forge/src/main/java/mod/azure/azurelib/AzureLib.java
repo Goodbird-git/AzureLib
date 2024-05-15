@@ -19,7 +19,7 @@ public class AzureLib {
 	public static final String MOD_ID = "azurelib";
 	public static volatile boolean hasInitialized;
 
-	synchronized public static void initialize() {
+	public static synchronized void initialize() {
 		if (!hasInitialized) {
 			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AzureLibCache::registerReloadListener);
 			AzureLibNetwork.init();
