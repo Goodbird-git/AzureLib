@@ -30,7 +30,7 @@ public class AzureLib {
 					.registerReloadListener(new IdentifiableResourceReloadListener() {
 						@Override
 						public ResourceLocation getFabricId() {
-							return new ResourceLocation(AzureLib.MOD_ID, "models");
+							return AzureLib.modResource("models");
 						}
 
 						@Override
@@ -43,5 +43,9 @@ public class AzureLib {
 					});
 		}
 		hasInitialized = true;
+	}
+
+	public static ResourceLocation modResource(String name) {
+		return new ResourceLocation(MOD_ID, name);
 	}
 }

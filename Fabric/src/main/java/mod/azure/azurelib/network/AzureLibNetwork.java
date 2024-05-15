@@ -28,16 +28,16 @@ import net.minecraft.world.entity.Entity;
  * Handles packet registration and some networking functions
  */
 public final class AzureLibNetwork {
-	public static final ResourceLocation ANIM_DATA_SYNC_PACKET_ID = new ResourceLocation(AzureLib.MOD_ID, "anim_data_sync");
-	public static final ResourceLocation ANIM_TRIGGER_SYNC_PACKET_ID = new ResourceLocation(AzureLib.MOD_ID, "anim_trigger_sync");
+	public static final ResourceLocation ANIM_DATA_SYNC_PACKET_ID = AzureLib.modResource("anim_data_sync");
+	public static final ResourceLocation ANIM_TRIGGER_SYNC_PACKET_ID = AzureLib.modResource("anim_trigger_sync");
 
-	public static final ResourceLocation ENTITY_ANIM_DATA_SYNC_PACKET_ID = new ResourceLocation(AzureLib.MOD_ID, "entity_anim_data_sync");
-	public static final ResourceLocation ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = new ResourceLocation(AzureLib.MOD_ID, "entity_anim_trigger_sync");
+	public static final ResourceLocation ENTITY_ANIM_DATA_SYNC_PACKET_ID = AzureLib.modResource("entity_anim_data_sync");
+	public static final ResourceLocation ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = AzureLib.modResource("entity_anim_trigger_sync");
 
-	public static final ResourceLocation BLOCK_ENTITY_ANIM_DATA_SYNC_PACKET_ID = new ResourceLocation(AzureLib.MOD_ID, "block_entity_anim_data_sync");
-	public static final ResourceLocation BLOCK_ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = new ResourceLocation(AzureLib.MOD_ID, "block_entity_anim_trigger_sync");
+	public static final ResourceLocation BLOCK_ENTITY_ANIM_DATA_SYNC_PACKET_ID = AzureLib.modResource("block_entity_anim_data_sync");
+	public static final ResourceLocation BLOCK_ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = AzureLib.modResource("block_entity_anim_trigger_sync");
 
-	public static final ResourceLocation CUSTOM_ENTITY_ID = new ResourceLocation(AzureLib.MOD_ID, "spawn_entity");
+	public static final ResourceLocation CUSTOM_ENTITY_ID = AzureLib.modResource("spawn_entity");
 
 	public static final Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
 
