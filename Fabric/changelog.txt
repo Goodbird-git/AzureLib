@@ -1,4 +1,3 @@
-v1.0.34
+v1.0.35
 
-- Fixes models not rendering, curse you MatrixStack!
-- Fixes Item/Armor rendering.
+- Disables Animated Texture support due to resource bug causing player skins to break.
