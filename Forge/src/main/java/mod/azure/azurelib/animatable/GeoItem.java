@@ -14,18 +14,20 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.ContextAwareAnimatableManager;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.server.ServerWorld;
 
 /**
- * The {@link mod.azure.azurelib.core.animatable.GeoAnimatable GeoAnimatable} interface specific to {@link net.minecraft.world.item.Item Items}. This also applies to armor, as they are just items too.
+ * The {@link mod.azure.azurelib.core.animatable.GeoAnimatable GeoAnimatable} interface specific to {@link Item Items}. This also applies to armor, as they are just items too.
  */
 public interface GeoItem extends SingletonGeoAnimatable {
 	static final String ID_NBT_KEY = "AzureLibID";
 
 	/**
-	 * Gets the unique identifying number from this ItemStack's {@link net.minecraft.nbt.Tag NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
+	 * Gets the unique identifying number from this ItemStack's {@link Tag NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
 	 */
 	static long getId(ItemStack stack) {
 		CompoundNBT tag = stack.getTag();
@@ -37,7 +39,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Gets the unique identifying number from this ItemStack's {@link net.minecraft.nbt.Tag NBT}.<br>
+	 * Gets the unique identifying number from this ItemStack's {@link Tag NBT}.<br>
 	 * If no ID has been reserved for this stack yet, it will reserve a new id and assign it
 	 */
 	static long getOrAssignId(ItemStack stack, ServerWorld level) {
@@ -67,7 +69,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link net.minecraft.world.item.ItemDisplayContext render perspective}
+	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link ItemDisplayContext render perspective}
 	 */
 	default boolean isPerspectiveAware() {
 		return false;
