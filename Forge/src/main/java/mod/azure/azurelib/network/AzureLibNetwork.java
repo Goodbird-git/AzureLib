@@ -24,7 +24,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
  */
 public final class AzureLibNetwork {
 	private static final String VER = "1";
-	private static final SimpleChannel PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(AzureLib.MOD_ID, "main"), () -> VER, VER::equals, VER::equals);
+	private static final SimpleChannel PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(AzureLib.modResource("main"), () -> VER, VER::equals, VER::equals);
 
 	private static final Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
 
