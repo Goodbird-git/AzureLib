@@ -1,4 +1,4 @@
-v1.0.32
+v1.0.33
 
-- Fixes name rendering on non-living entities such as projectiles
-- Fixes model file loading.
+- Fixes models not rendering, curse you MatrixStack!
+- Rebackported a ton of core stuff, only affects the mods core code.
