@@ -2,9 +2,13 @@ package mod.azure.azurelib.animatable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Suppliers;
+import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.cache.AnimatableIdCache;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -13,18 +17,35 @@ import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCa
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.ContextAwareAnimatableManager;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 /**
  * The {@link mod.azure.azurelib.core.animatable.GeoAnimatable GeoAnimatable} interface specific to {@link Item Items}. This also applies to armor, as they are just items too.
  */
 public interface GeoItem extends SingletonGeoAnimatable {
 	static final String ID_NBT_KEY = "AzureLibID";
+
+	/**
+	 * Safety wrapper to distance the client-side code from common code.<br>
+	 * This should be cached in your {@link Item Item} class
+	 */
+	static Supplier<RenderProvider> makeRenderer(GeoItem item) {
+		if (FMLLoader.getDist().isDedicatedServer())
+			return () -> null;
+
+		return Suppliers.memoize(() -> {
+			AtomicReference<RenderProvider> renderProvider = new AtomicReference<>();
+			item.createRenderer(renderProvider::set);
+			return renderProvider.get();
+		});
+	}
 
 	/**
 	 * Gets the unique identifying number from this ItemStack's {@link Tag NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
@@ -69,7 +90,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link ItemDisplayContext render perspective}
+	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link ItemCameraTransforms.TransformType render perspective}
 	 */
 	default boolean isPerspectiveAware() {
 		return false;

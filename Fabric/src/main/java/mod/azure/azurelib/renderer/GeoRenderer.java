@@ -3,6 +3,7 @@ package mod.azure.azurelib.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mod.azure.azurelib.cache.texture.AnimatableTexture;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -272,7 +273,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 		RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
 
 		Matrix3f normalisedPoseState = poseStack.last().normal();
-		Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+		Matrix4f poseState = poseStack.last().pose();
 
 		for (GeoQuad quad : cube.quads()) {
 			if (quad == null)

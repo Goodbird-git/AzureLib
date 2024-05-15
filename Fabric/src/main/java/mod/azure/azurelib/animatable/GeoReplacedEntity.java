@@ -3,6 +3,7 @@ package mod.azure.azurelib.animatable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import mod.azure.azurelib.animatable.client.RenderProvider;
 import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -86,12 +87,12 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 
 	// These methods aren't used for GeoReplacedEntity
 	@Override
-	default void createRenderer(Consumer<Object> consumer) {
+	default void createRenderer(Consumer<RenderProvider> consumer) {
 	}
 
 	// These methods aren't used for GeoReplacedEntity
 	@Override
-	default Supplier<Object> getRenderProvider() {
+	default Supplier<RenderProvider> getRenderProvider() {
 		return null;
 	}
 }

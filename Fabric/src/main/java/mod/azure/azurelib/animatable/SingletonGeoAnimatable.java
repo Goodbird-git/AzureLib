@@ -3,6 +3,7 @@ package mod.azure.azurelib.animatable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import mod.azure.azurelib.animatable.client.RenderProvider;
 import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -135,10 +136,12 @@ public interface SingletonGeoAnimatable extends GeoAnimatable {
 	 *
 	 * @param consumer
 	 */
-	void createRenderer(Consumer<Object> consumer);
+	void createRenderer(Consumer<RenderProvider> consumer);
 
 	/**
 	 * Getter for the cached RenderProvider in your class
 	 */
-	Supplier<Object> getRenderProvider();
+	default Supplier<RenderProvider> getRenderProvider() {
+		return getAnimatableInstanceCache().getRenderProvider();
+	}
 }

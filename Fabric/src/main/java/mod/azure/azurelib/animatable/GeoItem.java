@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+import mod.azure.azurelib.animatable.client.RenderProvider;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
@@ -34,12 +36,12 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	 * Safety wrapper to distance the client-side code from common code.<br>
 	 * This should be cached in your {@link net.minecraft.world.item.Item Item} class
 	 */
-	static Supplier<Object> makeRenderer(GeoItem item) {
+	static Supplier<RenderProvider> makeRenderer(GeoItem item) {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
 			return () -> null;
 
 		return Suppliers.memoize(() -> {
-			AtomicReference<Object> renderProvider = new AtomicReference<>();
+			AtomicReference<RenderProvider> renderProvider = new AtomicReference<>();
 			item.createRenderer(renderProvider::set);
 			return renderProvider.get();
 		});
@@ -88,7 +90,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link net.minecraft.world.item.ItemDisplayContext render perspective}
+	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link ItemTransforms.TransformType render perspective}
 	 */
 	default boolean isPerspectiveAware() {
 		return false;
