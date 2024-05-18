@@ -207,7 +207,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
                     this.animatable,
                     getTextureLocation(this.animatable),
                     bufferSource,
-                    Minecraft.getInstance().getFrameTime()
+                    Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()
             );
             VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(
                     bufferSource,
@@ -223,7 +223,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
                     renderType,
                     buffer,
                     0,
-                    Minecraft.getInstance().getFrameTime(),
+                    Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(),
                     packedLight
             );
         }
@@ -249,7 +249,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
                 this.animatable,
                 getTextureLocation(this.animatable),
                 defaultBufferSource,
-                Minecraft.getInstance().getFrameTime()
+                Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()
         );
         VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(
                 bufferSource,
@@ -267,7 +267,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
                 renderType,
                 buffer,
                 0,
-                Minecraft.getInstance().getFrameTime(),
+                Minecraft.getInstance().getTimer().getGameTimeDeltaTicks(),
                 packedLight
         );
         defaultBufferSource.endBatch();

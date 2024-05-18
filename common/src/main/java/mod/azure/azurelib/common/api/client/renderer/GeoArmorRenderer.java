@@ -342,7 +342,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
         )
             bufferSource = Minecraft.getInstance().levelRenderer.renderBuffers.outlineBufferSource();
 
-        float partialTick = mc.getFrameTime();
+        float partialTick = mc.getTimer().getGameTimeDeltaTicks();
         RenderType renderType = getRenderType(
                 this.animatable,
                 getTextureLocation(this.animatable),

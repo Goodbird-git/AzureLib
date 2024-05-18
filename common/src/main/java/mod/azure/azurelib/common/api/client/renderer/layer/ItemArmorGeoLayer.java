@@ -79,7 +79,7 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
     @NotNull
     protected EquipmentSlot getEquipmentSlotForBone(GeoBone bone, ItemStack stack, T animatable) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                 if (stack == animatable.getItemBySlot(slot))
                     return slot;
             }

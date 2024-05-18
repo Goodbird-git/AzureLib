@@ -137,7 +137,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
         if (buffer == null)
             bufferSource = Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
 
-        defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, mc.getFrameTime(), packedLight);
+        defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, mc.getTimer().getGameTimeDeltaTicks(), packedLight);
     }
 
     /**
