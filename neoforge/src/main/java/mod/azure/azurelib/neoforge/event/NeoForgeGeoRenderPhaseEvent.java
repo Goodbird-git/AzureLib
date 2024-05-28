@@ -11,9 +11,8 @@ import net.neoforged.neoforge.common.NeoForge;
  */
 public class NeoForgeGeoRenderPhaseEvent implements GeoRenderPhaseEventFactory.GeoRenderPhaseEvent {
 
-    // TODO: Move this.
-    static class NeoForgeGeoRenderEvent extends Event implements ICancellableEvent {
-        private final GeoRenderEvent geoRenderEvent;
+    public static class NeoForgeGeoRenderEvent extends Event implements ICancellableEvent {
+        public final GeoRenderEvent geoRenderEvent;
 
         public NeoForgeGeoRenderEvent(GeoRenderEvent geoRenderEvent) {
             this.geoRenderEvent = geoRenderEvent;
