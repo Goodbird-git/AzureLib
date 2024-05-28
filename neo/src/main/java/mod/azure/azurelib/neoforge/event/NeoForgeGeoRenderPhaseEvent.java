@@ -16,10 +16,9 @@ public class NeoForgeGeoRenderPhaseEvent implements GeoRenderPhaseEventFactory.G
         return NeoForge.EVENT_BUS.post(new NeoForgeGeoRenderEvent(geoRenderEvent)).hasResult();
     }
 
-    // TODO: Move this.
-    static class NeoForgeGeoRenderEvent extends Event implements ICancellableEvent {
+    public static class NeoForgeGeoRenderEvent extends Event implements ICancellableEvent {
 
-        private final GeoRenderEvent geoRenderEvent;
+        public final GeoRenderEvent geoRenderEvent;
 
         public NeoForgeGeoRenderEvent(GeoRenderEvent geoRenderEvent) {
             this.geoRenderEvent = geoRenderEvent;
