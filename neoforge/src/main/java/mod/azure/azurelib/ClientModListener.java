@@ -1,6 +1,7 @@
 package mod.azure.azurelib;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import mod.azure.azurelib.client.AzureLibClient;
 import mod.azure.azurelib.config.ConfigHolder;
 import net.minecraft.client.KeyMapping;
@@ -17,18 +18,28 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @EventBusSubscriber(modid = AzureLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModListener {
 
+    private static final Set<String> MYGUNMODS = ObjectOpenHashSet.of(
+            "doom", "hwg", "arachnids", "aftershock", "mchalo"
+    );
+
     @SubscribeEvent
     public static void registerKeys(final RegisterKeyMappingsEvent event) {
-        Keybindings.RELOAD = new KeyMapping("key.azurelib.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "category.azurelib.binds");
-        event.register(Keybindings.RELOAD);
-        Keybindings.SCOPE = new KeyMapping("key.azurelib.scope", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "category.azurelib.binds");
-        event.register(Keybindings.SCOPE);
-        Keybindings.FIRE_WEAPON = new KeyMapping("key.azurelib.fire", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "category.azurelib.binds");
-        event.register(Keybindings.FIRE_WEAPON);
+        if (ModList.get().isLoaded(MYGUNMODS.stream().toString())) {
+            Keybindings.RELOAD = new KeyMapping("key.azurelib.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R,
+                    "category.azurelib.binds");
+            event.register(Keybindings.RELOAD);
+            Keybindings.SCOPE = new KeyMapping("key.azurelib.scope", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT,
+                    "category.azurelib.binds");
+            event.register(Keybindings.SCOPE);
+            Keybindings.FIRE_WEAPON = new KeyMapping("key.azurelib.fire", InputConstants.Type.KEYSYM,
+                    GLFW.GLFW_KEY_UNKNOWN, "category.azurelib.binds");
+            event.register(Keybindings.FIRE_WEAPON);
+        }
     }
 
     @SubscribeEvent
@@ -40,12 +51,13 @@ public class ClientModListener {
             Optional<? extends ModContainer> optional = modList.getModContainerById(modId);
             optional.ifPresent(modContainer -> {
                 List<ConfigHolder<?>> list = entry.getValue();
-                modContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> {
-                    if (list.size() == 1) {
-                        return AzureLibClient.getConfigScreen(list.get(0).getConfigId(), screen);
-                    }
-                    return AzureLibClient.getConfigScreenByGroup(list, modId, screen);
-                }));
+                modContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+                        () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> {
+                            if (list.size() == 1) {
+                                return AzureLibClient.getConfigScreen(list.get(0).getConfigId(), screen);
+                            }
+                            return AzureLibClient.getConfigScreenByGroup(list, modId, screen);
+                        }));
             });
         }
     }
