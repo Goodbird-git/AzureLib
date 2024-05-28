@@ -9,9 +9,8 @@ import net.minecraftforge.eventbus.api.Event;
  */
 public class NeoForgeGeoRenderPhaseEvent implements GeoRenderPhaseEventFactory.GeoRenderPhaseEvent {
 
-    // TODO: Move this.
-    static class NeoForgeGeoRenderEvent extends Event {
-        private final GeoRenderEvent geoRenderEvent;
+    public static class NeoForgeGeoRenderEvent extends Event {
+        public final GeoRenderEvent geoRenderEvent;
 
         public NeoForgeGeoRenderEvent(GeoRenderEvent geoRenderEvent) {
             this.geoRenderEvent = geoRenderEvent;
