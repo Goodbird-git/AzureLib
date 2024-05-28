@@ -1,3 +1,4 @@
-v2.2.3
+v2.2.4
 
-- Fixes enchants applying to random items.
+- Only register AzureLib keybinds if my mods are installed.
+- Makes NeoForge event public.
