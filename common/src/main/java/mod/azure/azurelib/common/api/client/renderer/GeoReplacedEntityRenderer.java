@@ -108,14 +108,12 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
                 : yDif - yDif * (1.0f - piecePosPercent) * (1.0f - piecePosPercent);
         float z = zDif * piecePosPercent;
 
-        buffer.vertex(positionMatrix, x - xOffset, y + yOffset, z + zOffset)
-                .color(red, green, blue, 1)
-                .uv2(packedLight)
-                .endVertex();
-        buffer.vertex(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset)
-                .color(red, green, blue, 1)
-                .uv2(packedLight)
-                .endVertex();
+        buffer.addVertex(positionMatrix, x - xOffset, y + yOffset, z + zOffset)
+                .setColor(red, green, blue, 1)
+                .setLight(packedLight);
+        buffer.addVertex(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset)
+                .setColor(red, green, blue, 1)
+                .setLight(packedLight);
     }
 
     /**

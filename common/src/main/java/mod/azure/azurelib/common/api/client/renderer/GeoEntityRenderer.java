@@ -105,18 +105,16 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
                 : yDif - yDif * (1.0f - piecePosPercent) * (1.0f - piecePosPercent);
         float z = zDif * piecePosPercent;
 
-        buffer.vertex(positionMatrix, x - xOffset, y + yOffset, z + zOffset)
-                .color(red, green, blue, 1)
-                .uv2(
+        buffer.addVertex(positionMatrix, x - xOffset, y + yOffset, z + zOffset)
+                .setColor(red, green, blue, 1)
+                .setLight(
                         packedLight
-                )
-                .endVertex();
-        buffer.vertex(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset)
-                .color(red, green, blue, 1)
-                .uv2(
+                );
+        buffer.addVertex(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset)
+                .setColor(red, green, blue, 1)
+                .setLight(
                         packedLight
-                )
-                .endVertex();
+                );
     }
 
     /**

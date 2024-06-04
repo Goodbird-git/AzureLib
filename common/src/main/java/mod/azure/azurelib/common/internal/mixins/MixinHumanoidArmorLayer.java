@@ -30,7 +30,7 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, A extends 
                 geoArmorRenderer.prepForRender(entity, stack, equipmentSlot, baseModel);
 
             baseModel.copyPropertiesTo((A) geckolibModel);
-            geckolibModel.renderToBuffer(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            geckolibModel.renderToBuffer(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, 1);
             ci.cancel();
         }
     }

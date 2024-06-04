@@ -113,6 +113,7 @@ public abstract class AbstractConfigScreen extends Screen {
     }
 
     private void buttonBackClicked(Button button) {
+        assert this.minecraft != null;
         this.minecraft.setScreen(this.last);
         this.saveConfig();
     }
@@ -131,6 +132,7 @@ public abstract class AbstractConfigScreen extends Screen {
             });
             this.backToConfigList();
         });
+        assert minecraft != null;
         minecraft.setScreen(dialog);
     }
 
@@ -144,6 +146,7 @@ public abstract class AbstractConfigScreen extends Screen {
             ConfigHolderRegistry.getConfig(this.configId).ifPresent(ConfigIO::reloadClientValues);
             this.backToConfigList();
         });
+        assert minecraft != null;
         minecraft.setScreen(dialog);
     }
 
@@ -158,6 +161,7 @@ public abstract class AbstractConfigScreen extends Screen {
     }
 
     private void backToConfigList() {
+        assert this.minecraft != null;
         this.minecraft.setScreen(this.getFirstNonConfigScreen());
         this.saveConfig();
     }
@@ -213,8 +217,7 @@ public abstract class AbstractConfigScreen extends Screen {
             int zIndex = 400;
             Tesselator tessellator = Tesselator.getInstance();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            BufferBuilder bufferbuilder = tessellator.getBuilder();
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
             Matrix4f matrix4f = graphics.pose().last().pose();
             graphics.fillGradient(
@@ -301,25 +304,23 @@ public abstract class AbstractConfigScreen extends Screen {
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            BufferUploader.drawWithShader(bufferbuilder.end());
+            BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
 
             if (!severity.isOkStatus()) {
                 ResourceLocation icon = severity.getIcon();
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, icon);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 float min = -0.5f;
                 float max = 8.5f;
-                bufferbuilder.vertex(matrix4f, startX + min, startY + min, zIndex).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f, startX + min, startY + max, zIndex).uv(0.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f, startX + max, startY + max, zIndex).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f, startX + max, startY + min, zIndex).uv(1.0F, 0.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferBuilder.addVertex(matrix4f, startX + min, startY + min, zIndex).setUv(0.0F, 0.0F);
+                bufferBuilder.addVertex(matrix4f, startX + min, startY + max, zIndex).setUv(0.0F, 1.0F);
+                bufferBuilder.addVertex(matrix4f, startX + max, startY + max, zIndex).setUv(1.0F, 1.0F);
+                bufferBuilder.addVertex(matrix4f, startX + max, startY + min, zIndex).setUv(1.0F, 0.0F);
             }
 
             RenderSystem.disableBlend();
             MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(
-                    Tesselator.getInstance().getBuilder()
+                    new ByteBufferBuilder(1536)
             );
 
             int textOffset = severity.isOkStatus() ? 0 : iconOffset;

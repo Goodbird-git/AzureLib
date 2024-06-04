@@ -184,7 +184,7 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
                     prepModelPartForRender(poseStack, bone, modelPart);
                     geoArmorRenderer.prepForRender(animatable, armorStack, slot, model);
                     geoArmorRenderer.applyBoneVisibilityByPart(slot, modelPart, model);
-                    geoArmorRenderer.renderToBuffer(poseStack, null, packedLight, packedOverlay, 1, 1, 1, 1);
+                    geoArmorRenderer.renderToBuffer(poseStack, null, packedLight, packedOverlay, 1);
                 } else if (armorStack.getItem() instanceof ArmorItem) {
                     prepModelPartForRender(poseStack, bone, modelPart);
                     renderVanillaArmorPiece(
@@ -230,8 +230,7 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
             VertexConsumer buffer = getVanillaArmorBuffer(bufferSource, animatable, armorStack, slot, bone, layer,
                     packedLight, packedOverlay, false);
 
-            modelPart.render(poseStack, buffer, packedLight, packedOverlay, (color >> 16 & 255) / 255f,
-                    (color >> 8 & 255) / 255f, (color & 255) / 255f, 1);
+            modelPart.render(poseStack, buffer, packedLight, packedOverlay);
         }
 
         ArmorTrim trim = armorStack.get(DataComponents.TRIM);
@@ -248,7 +247,7 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
         if (armorStack.hasFoil())
             modelPart.render(poseStack,
                     getVanillaArmorBuffer(bufferSource, animatable, armorStack, slot, bone, null, packedLight,
-                            packedOverlay, true), packedLight, packedOverlay, 1, 1, 1, 1);
+                            packedOverlay, true), packedLight, packedOverlay, 1);
     }
 
     protected VertexConsumer getVanillaArmorBuffer(MultiBufferSource bufferSource, T animatable, ItemStack stack, EquipmentSlot slot, GeoBone bone, @Nullable ArmorMaterial.Layer layer, int packedLight, int packedOverlay, boolean forGlint) {
