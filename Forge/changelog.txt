@@ -1,3 +1,4 @@
-v1.0.35
+v1.0.36
 
-- Disables Animated Texture support due to resource bug causing player skins to break.
+- Make handleAnimations no longer final in GeoModel
+- Set up lighting before getting VertexConsumer on GeoItems
