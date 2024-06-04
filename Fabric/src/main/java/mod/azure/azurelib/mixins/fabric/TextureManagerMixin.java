@@ -24,7 +24,7 @@ public abstract class TextureManagerMixin {
 	private void wrapAnimatableTexture(ResourceLocation path, CallbackInfoReturnable<AbstractTexture> callback) {
 		AbstractTexture existing = this.byPath.get(path);
 
-		if (existing == null) {
+		if (existing == null && !path.getNamespace().equals("minecraft")) {
 			existing = new AnimatableTexture(path);
 
 			register(path, existing);

@@ -9,7 +9,7 @@ import net.minecraft.client.resources.metadata.animation.AnimationFrame;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSectionSerializer;
 
-public class AzureAnimationMetadataSection {
+public class AzureAnimationMetadataSection extends AnimationMetadataSection {
 	public static final AnimationMetadataSectionSerializer SERIALIZER = new AnimationMetadataSectionSerializer();
 	public static final String SECTION_NAME = "animation";
 	public static final int DEFAULT_FRAME_TIME = 1;
@@ -25,12 +25,13 @@ public class AzureAnimationMetadataSection {
 	private final int defaultFrameTime;
 	private final boolean interpolatedFrames;
 
-	public AzureAnimationMetadataSection(List<AnimationFrame> p_119020_, int p_119021_, int p_119022_, int p_119023_, boolean p_119024_) {
-		this.frames = p_119020_;
-		this.frameWidth = p_119021_;
-		this.frameHeight = p_119022_;
-		this.defaultFrameTime = p_119023_;
-		this.interpolatedFrames = p_119024_;
+	public AzureAnimationMetadataSection(List<AnimationFrame> list, int frameWidth, int frameHeight, int defaultFrameTime, boolean interpolatedFrames) {
+        super(list, frameWidth, frameHeight, defaultFrameTime, interpolatedFrames);
+        this.frames = list;
+		this.frameWidth = frameWidth;
+		this.frameHeight = frameHeight;
+		this.defaultFrameTime = defaultFrameTime;
+		this.interpolatedFrames = interpolatedFrames;
 	}
 
 	private static boolean isDivisionInteger(int p_119034_, int p_119035_) {
