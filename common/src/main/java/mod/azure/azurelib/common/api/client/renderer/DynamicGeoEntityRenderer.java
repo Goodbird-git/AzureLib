@@ -305,14 +305,11 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             float texU = (vertex.texU() * entityTextureSize.firstInt()) / boneTextureSize.firstInt();
             float texV = (vertex.texV() * entityTextureSize.secondInt()) / boneTextureSize.secondInt();
 
-            buffer.vertex(
+            buffer.addVertex(
                     vector4f.x(),
                     vector4f.y(),
                     vector4f.z(),
-                    red,
-                    green,
-                    blue,
-                    alpha,
+                    1,
                     texU,
                     texV,
                     packedOverlay,
