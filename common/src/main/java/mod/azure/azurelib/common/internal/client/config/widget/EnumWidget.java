@@ -17,9 +17,9 @@ import org.jetbrains.annotations.NotNull;
 public class EnumWidget<E extends Enum<E>> extends AbstractWidget {
 
     private static final WidgetSprites SPRITES = new WidgetSprites(
-            new ResourceLocation("widget/button"),
-            new ResourceLocation("widget/button_disabled"),
-            new ResourceLocation("widget/button_highlighted")
+            ResourceLocation.parse("widget/button"),
+            ResourceLocation.parse("widget/button_disabled"),
+            ResourceLocation.parse("widget/button_highlighted")
     );
 
     private final EnumValue<E> value;
