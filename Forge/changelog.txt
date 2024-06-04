@@ -1,3 +1,4 @@
-v1.0.41
+v1.0.42
 
-- Fixes name rendering on non-living entities such as projectiles
+- Make handleAnimations no longer final in GeoModel
+- Set up lighting before getting VertexConsumer on GeoItems
