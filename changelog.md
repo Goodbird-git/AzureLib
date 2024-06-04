@@ -1,4 +1,4 @@
-v2.2.4
+v2.2.5
 
-- Only register AzureLib keybinds if my mods are installed.
-- Makes NeoForge event public.
+- Make handleAnimations no longer final in GeoModel
+- Set up lighting before getting VertexConsumer on GeoItems
