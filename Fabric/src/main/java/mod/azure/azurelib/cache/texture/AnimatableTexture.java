@@ -48,25 +48,37 @@ public class AnimatableTexture extends SimpleTexture {
 		}
 
 		try {
-			AnimationMetadataSection meta = resource.getMetadata(AnimationMetadataSection.SERIALIZER);
-			Optional<?> meta2 = Optional.of(meta);
+			if (resource.hasMetadata()) {
+				// Retrieve metadata for the texture section
+				TextureMetadataSection textureMeta = resource.getMetadata(TextureMetadataSection.SERIALIZER);
+				if (textureMeta != null) {
+					simpleTextureMeta = textureMeta;
+				}
 
-			simpleTextureMeta = resource.getMetadata(TextureMetadataSection.SERIALIZER);
-			this.animationContents = meta2.map(animMeta -> new AnimationContents(nativeImage, (AnimationMetadataSection) animMeta)).orElse(null);
+				// Retrieve metadata for the animation section
+				AnimationMetadataSection animMeta = resource.getMetadata(AnimationMetadataSection.SERIALIZER);
+				if (animMeta != null) {
+					this.animationContents = new AnimationContents(nativeImage, animMeta);
+				} else {
+					this.animationContents = null;
+				}
 
-			if (this.animationContents != null) {
-				if (!this.animationContents.isValid()) {
-					nativeImage.close();
+				if (this.animationContents != null) {
+					if (!this.animationContents.isValid()) {
+						nativeImage.close();
+
+						return;
+					}
+
+					onRenderThread(() -> {
+						TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.getFirst(),
+								this.animationContents.frameSize.getSecond());
+						nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(),
+								this.animationContents.frameSize.getSecond(), false, false);
+					});
 
 					return;
 				}
-
-				onRenderThread(() -> {
-					TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.getFirst(), this.animationContents.frameSize.getSecond());
-					nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(), this.animationContents.frameSize.getSecond(), false, false);
-				});
-
-				return;
 			}
 		}
 		catch (RuntimeException exception) {
