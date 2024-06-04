@@ -47,6 +47,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 	protected T animatable;
 	protected float scaleWidth = 1;
 	protected float scaleHeight = 1;
+	protected boolean useEntityGuiLighting = false;
 
 	protected Matrix4f itemRenderTranslations = new Matrix4f();
 	protected Matrix4f modelRenderTranslations = new Matrix4f();
@@ -83,6 +84,17 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 	 */
 	public ItemStack getCurrentItemStack() {
 		return this.currentItemStack;
+	}
+
+	/**
+	 * Mark this renderer so that it uses an alternate lighting scheme when rendering the item in GUI
+	 * <p>
+	 * This can help with improperly lit 3d models
+	 */
+	public GeoItemRenderer<T> useAlternateGuiLighting() {
+		this.useEntityGuiLighting = true;
+
+		return this;
 	}
 
 	/**
@@ -171,12 +183,17 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 	 * Just includes some additional required transformations and settings.
 	 */
 	protected void renderInGui(ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+		if (this.useEntityGuiLighting) {
+			Lighting.setupForEntityInInventory();
+		}
+		else {
+			Lighting.setupForFlatItems();
+		}
 		MultiBufferSource.BufferSource defaultBufferSource = bufferSource instanceof MultiBufferSource.BufferSource bufferSource2 ? bufferSource2 : Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
 		RenderType renderType = getRenderType(this.animatable, getTextureLocation(this.animatable), defaultBufferSource, Minecraft.getInstance().getFrameTime());
 		VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, true, this.currentItemStack != null && this.currentItemStack.hasFoil());
 
 		poseStack.pushPose();
-		Lighting.setupForFlatItems();
 		defaultRender(poseStack, this.animatable, defaultBufferSource, renderType, buffer, 0, Minecraft.getInstance().getFrameTime(), packedLight);
 		defaultBufferSource.endBatch();
 		RenderSystem.enableDepthTest();
