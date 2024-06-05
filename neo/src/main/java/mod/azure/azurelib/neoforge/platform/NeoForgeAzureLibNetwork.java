@@ -44,11 +44,6 @@ public class NeoForgeAzureLibNetwork implements AzureLibNetwork {
     }
 
     @Override
-    public Packet<?> createPacket(Entity entity) {
-        return entity.getAddEntityPacket();
-    }
-
-    @Override
     public void sendToTrackingEntityAndSelf(AbstractPacket packet, Entity entityToTrack) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entityToTrack, packet);
     }
