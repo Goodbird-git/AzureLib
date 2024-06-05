@@ -346,7 +346,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
                 bufferSource,
                 partialTick
         );
-        buffer = ItemRenderer.getArmorFoilBuffer(bufferSource, renderType, false);
+        buffer = ItemRenderer.getArmorFoilBuffer(bufferSource, renderType, this.currentStack.hasFoil());
 
         defaultRender(poseStack, this.animatable, bufferSource, null, buffer, 0, partialTick, packedLight);
     }

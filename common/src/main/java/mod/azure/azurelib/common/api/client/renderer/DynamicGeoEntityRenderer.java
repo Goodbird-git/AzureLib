@@ -309,7 +309,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
                     vector4f.x(),
                     vector4f.y(),
                     vector4f.z(),
-                    1,
+                    -1,
                     texU,
                     texV,
                     packedOverlay,

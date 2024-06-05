@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -184,7 +185,8 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
                     prepModelPartForRender(poseStack, bone, modelPart);
                     geoArmorRenderer.prepForRender(animatable, armorStack, slot, model);
                     geoArmorRenderer.applyBoneVisibilityByPart(slot, modelPart, model);
-                    geoArmorRenderer.renderToBuffer(poseStack, null, packedLight, packedOverlay, 1);
+                    geoArmorRenderer.renderToBuffer(poseStack, null, packedLight, packedOverlay, armorStack.is(
+                            ItemTags.DYEABLE) ? FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(armorStack, -6265536)) : -1);
                 } else if (armorStack.getItem() instanceof ArmorItem) {
                     prepModelPartForRender(poseStack, bone, modelPart);
                     renderVanillaArmorPiece(

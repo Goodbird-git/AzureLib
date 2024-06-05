@@ -672,7 +672,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                     vector4f.x(),
                     vector4f.y(),
                     vector4f.z(),
-                    1,
+                    -1,
                     vertex.texU(),
                     vertex.texV(),
                     packedOverlay,
