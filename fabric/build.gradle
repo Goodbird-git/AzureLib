@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom' version '1.+'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'me.modmuss50.mod-publish-plugin' version "${modmuss50_mod_publish_version}"
 }
 
