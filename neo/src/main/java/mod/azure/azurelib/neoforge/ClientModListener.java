@@ -24,17 +24,23 @@ import java.util.Optional;
 @EventBusSubscriber(modid = AzureLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModListener {
 
+    private static final Set<String> MYGUNMODS = ObjectOpenHashSet.of(
+            "doom", "hwg", "arachnids", "aftershock", "mchalo"
+    );
+
     @SubscribeEvent
     public static void registerKeys(final RegisterKeyMappingsEvent event) {
-        ClientUtils.RELOAD = new KeyMapping("key.azurelib.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R,
-                "category.azurelib.binds");
-        event.register(ClientUtils.RELOAD);
-        ClientUtils.SCOPE = new KeyMapping("key.azurelib.scope", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT,
-                "category.azurelib.binds");
-        event.register(ClientUtils.SCOPE);
-        ClientUtils.FIRE_WEAPON = new KeyMapping("key.azurelib.fire", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN,
-                "category.azurelib.binds");
-        event.register(ClientUtils.FIRE_WEAPON);
+        if (ModList.get().isLoaded(MYGUNMODS.stream().toString())) {
+            ClientUtils.RELOAD = new KeyMapping("key.azurelib.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R,
+                    "category.azurelib.binds");
+            event.register(ClientUtils.RELOAD);
+            ClientUtils.SCOPE = new KeyMapping("key.azurelib.scope", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT,
+                    "category.azurelib.binds");
+            event.register(ClientUtils.SCOPE);
+            ClientUtils.FIRE_WEAPON = new KeyMapping("key.azurelib.fire", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN,
+                    "category.azurelib.binds");
+            event.register(ClientUtils.FIRE_WEAPON);
+        }
     }
 
     @SubscribeEvent
