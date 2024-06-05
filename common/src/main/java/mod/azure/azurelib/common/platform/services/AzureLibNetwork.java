@@ -13,6 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -86,8 +87,6 @@ public interface AzureLibNetwork {
                 AzureLib.LOGGER.debug("Registered SyncedAnimatable for {}", animatable.getClass());
         }
     }
-
-    Packet<?> createPacket(Entity entity);
 
     void sendToTrackingEntityAndSelf(AbstractPacket packet, Entity entityToTrack);
 

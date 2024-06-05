@@ -14,6 +14,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -33,11 +34,6 @@ public class FabricAzureLibNetwork implements AzureLibNetwork {
             PayloadTypeRegistry.playC2S().register(payloadType, (StreamCodec<FriendlyByteBuf, P>) codec);
             ServerPlayNetworking.registerGlobalReceiver(payloadType, (packet, context) -> packet.handle());
         }
-    }
-
-    @Override
-    public Packet<?> createPacket(Entity entity) {
-        return entity.getAddEntityPacket();
     }
 
     public FriendlyByteBuf createFriendlyByteBuf() {
