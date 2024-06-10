@@ -1,5 +1,3 @@
-v1.0.33
+v1.0.34
 
-- Make handleAnimations no longer final in GeoModel
-- Set up lighting before getting VertexConsumer on GeoItems
-- Fixes metadata log spam
+- Port additional handling for weirdly formatted bedrock animation jsons
