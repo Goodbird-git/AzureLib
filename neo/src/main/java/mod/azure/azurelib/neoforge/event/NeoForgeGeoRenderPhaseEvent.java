@@ -13,7 +13,7 @@ public class NeoForgeGeoRenderPhaseEvent implements GeoRenderPhaseEventFactory.G
 
     @Override
     public boolean handle(GeoRenderEvent geoRenderEvent) {
-        return NeoForge.EVENT_BUS.post(new NeoForgeGeoRenderEvent(geoRenderEvent)).hasResult();
+        return !NeoForge.EVENT_BUS.post(new NeoForgeGeoRenderEvent(geoRenderEvent)).isCanceled();
     }
 
     public static class NeoForgeGeoRenderEvent extends Event implements ICancellableEvent {
