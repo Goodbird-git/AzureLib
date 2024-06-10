@@ -23,6 +23,6 @@ public class NeoForgeGeoRenderPhaseEvent implements GeoRenderPhaseEventFactory.G
 
     @Override
     public boolean handle(GeoRenderEvent geoRenderEvent) {
-        return MinecraftForge.EVENT_BUS.post(new NeoForgeGeoRenderEvent(geoRenderEvent));
+        return !MinecraftForge.EVENT_BUS.post(new NeoForgeGeoRenderEvent(geoRenderEvent));
     }
 }

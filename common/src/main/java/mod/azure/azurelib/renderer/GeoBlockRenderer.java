@@ -232,8 +232,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		var event = GeoRenderBlockEvent.Pre.EVENT.handle(new GeoRenderBlockEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
-		return Services.PLATFORM.getPlatformName().equalsIgnoreCase("forge") ? !event : event;
+        return GeoRenderBlockEvent.Pre.EVENT.handle(new GeoRenderBlockEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
 	}
 
 	/**

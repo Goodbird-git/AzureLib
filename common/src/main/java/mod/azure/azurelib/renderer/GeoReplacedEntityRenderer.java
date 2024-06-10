@@ -499,8 +499,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		var event = GeoRenderReplacedEntityEvent.Pre.EVENT.handle(new GeoRenderReplacedEntityEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
-		return Services.PLATFORM.getPlatformName().equalsIgnoreCase("forge") ? !event : event;
+        return GeoRenderReplacedEntityEvent.Pre.EVENT.handle(new GeoRenderReplacedEntityEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
 	}
 
 	/**
