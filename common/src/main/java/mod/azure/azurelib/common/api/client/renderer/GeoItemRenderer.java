@@ -438,10 +438,9 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
             float partialTick,
             int packedLight
     ) {
-        var event = GeoRenderItemEvent.Pre.EVENT.handle(
+        return GeoRenderItemEvent.Pre.EVENT.handle(
                 new GeoRenderItemEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight)
         );
-        return Services.PLATFORM.getPlatformName().equalsIgnoreCase("forge") ? !event : event;
     }
 
     /**
