@@ -1,3 +1,3 @@
-v2.2.3
+v2.3.0
 
-- Fixes enchants applying to random items.
+- Ported to 1.21
