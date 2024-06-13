@@ -1,6 +1,5 @@
 package mod.azure.azurelib.neoforge;
 
-import mod.azure.azurelib.common.api.common.enchantments.IncendiaryEnchantment;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.AzureLibMod;
 import mod.azure.azurelib.common.internal.common.blocks.TickingLightBlock;
@@ -10,8 +9,6 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.neoforge.platform.NeoForgeAzureLibNetwork;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,22 +33,12 @@ public final class NeoForgeAzureLibMod {
         DATA_COMPONENTS_REGISTER.register(modEventBus);
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
-        AzureEnchantments.ENCHANTMENTS.register(modEventBus);
         AzureBlocks.BLOCKS.register(modEventBus);
         AzureEntities.TILE_TYPES.register(modEventBus);
     }
 
     private void init(FMLCommonSetupEvent event) {
         ConfigIO.FILE_WATCH_MANAGER.startService();
-    }
-
-    public record AzureEnchantments() {
-
-        public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(Registries.ENCHANTMENT,
-                AzureLib.MOD_ID);
-
-        public static final Supplier<Enchantment> INCENDIARYENCHANTMENT = ENCHANTMENTS.register("incendiaryenchantment",
-                () -> new IncendiaryEnchantment(EquipmentSlot.MAINHAND));
     }
 
     public record AzureBlocks() {
