@@ -31,6 +31,7 @@ public final class AzureLib {
             "stack_animatable_id", builder -> builder.persistent(Codec.LONG).networkSynchronized(
                     ByteBufCodecs.VAR_LONG));
     public static boolean hasInitialized;
+    public static boolean hasKeyBindsInitialized;
 
     private AzureLib() {
         throw new UnsupportedOperationException();
@@ -41,6 +42,11 @@ public final class AzureLib {
             Services.INITIALIZER.initialize();
         }
         hasInitialized = true;
+    }
+
+    public static void initKeybinds() {
+        if (!hasKeyBindsInitialized)
+            hasKeyBindsInitialized = false;
     }
 
     public static ResourceLocation modResource(String name) {
