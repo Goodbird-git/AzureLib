@@ -1,3 +1,4 @@
-v2.3.0
+v2.3.1
 
-- Ported to 1.21
+- Move Keybind system to needing AzureLib.hasKeyBindsInitialized = true called to enable them.
+- Update pack.mcmeta version
