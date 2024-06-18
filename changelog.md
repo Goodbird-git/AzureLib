@@ -1,4 +1,3 @@
-v2.2.6
+v2.2.7
 
-- Fixes inverted firePreRenderEvent on NeoForge.
-- Port additional handling for weirdly formatted bedrock animation jsons.
+- Revert Keybinding changes
