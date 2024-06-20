@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'idea'
 }
 
 base {
@@ -118,5 +119,12 @@ publishing {
             artifactId base.archivesName.get()
             from components.java
         }
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
 }
