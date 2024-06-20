@@ -1,4 +1,3 @@
-v2.3.1
+v2.3.2
 
-- Move Keybind system to needing AzureLib.hasKeyBindsInitialized = true called to enable them.
-- Update pack.mcmeta version
+- Fixes Config Screen Scrollbar not rendering correctly/not scolling.
