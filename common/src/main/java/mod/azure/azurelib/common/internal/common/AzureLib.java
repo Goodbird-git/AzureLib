@@ -44,11 +44,6 @@ public final class AzureLib {
         hasInitialized = true;
     }
 
-    public static void initKeybinds() {
-        if (!hasKeyBindsInitialized)
-            hasKeyBindsInitialized = false;
-    }
-
     public static ResourceLocation modResource(String name) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
     }
