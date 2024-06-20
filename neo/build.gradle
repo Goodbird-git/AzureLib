@@ -5,8 +5,7 @@ plugins {
 }
 
 neoForge {
-    // We currently only support NeoForge versions later than 21.0.x
-    version = "21.0.0-beta"
+    version = "${neo_version}"
     accessTransformers = ["src/main/resources/META-INF/accesstransformer.cfg"]
 
     runs {
