@@ -48,7 +48,8 @@ public class BooleanWidget extends AbstractWidget {
                 this.getHeight()
         );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.renderString(graphics, minecraft.font, Mth.ceil(this.alpha * 255.0F) << 24);
+        int i = this.active ? 0xffffff : 0xa0a0a0;
+        this.renderString(graphics, minecraft.font, i | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     private void renderString(GuiGraphics graphics, Font font, int color) {

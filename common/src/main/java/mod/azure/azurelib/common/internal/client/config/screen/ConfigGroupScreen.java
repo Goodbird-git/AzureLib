@@ -78,29 +78,15 @@ public class ConfigGroupScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics, mouseY, mouseY, partialTicks);
+        renderBackground(graphics, mouseX, mouseY, partialTicks);
         // HEADER
         int titleWidth = this.font.width(this.title);
-        graphics.drawString(
-                this.font,
-                this.title,
-                (int) ((this.width - titleWidth) / 2.0F),
-                (int) ((HEADER_HEIGHT - this.font.lineHeight) / 2.0F),
-                0xFFFFFF,
-                true
-        );
-        graphics.fill(0, HEADER_HEIGHT, width, height - FOOTER_HEIGHT, 0x99 << 24);
-        AbstractConfigScreen.renderScrollbar(
-                graphics,
-                width - 5,
-                HEADER_HEIGHT,
-                5,
-                height - FOOTER_HEIGHT - HEADER_HEIGHT,
-                index,
-                configHolders.size(),
-                pageSize
-        );
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        graphics.drawString(font, this.title, (this.width - titleWidth) / 2, (HEADER_HEIGHT - this.font.lineHeight) / 2, 0xFFFFFF);
+        graphics.fill(0, 0, width, HEADER_HEIGHT, 0x99 << 24);
+        graphics.fill(0, height - FOOTER_HEIGHT, width, height, 0x99 << 24);
+        graphics.fill(0, HEADER_HEIGHT, width, height - FOOTER_HEIGHT, 0x55 << 24);
+        AbstractConfigScreen.renderScrollbar(graphics, width - 5, HEADER_HEIGHT, 5, height - FOOTER_HEIGHT - HEADER_HEIGHT, index, configHolders.size(), pageSize);
+        renderables.forEach(renderable -> renderable.render(graphics, mouseX, mouseY, partialTicks));
     }
 
     protected void initFooter() {

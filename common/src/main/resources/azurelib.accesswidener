@@ -30,3 +30,4 @@ accessible field net/minecraft/client/renderer/LevelRenderer renderBuffers Lnet/
 mutable field net/minecraft/client/renderer/LevelRenderer renderBuffers Lnet/minecraft/client/renderer/RenderBuffers;
 
 accessible field net/minecraft/world/level/pathfinder/NodeEvaluator currentContext Lnet/minecraft/world/level/pathfinder/PathfindingContext;
+accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;

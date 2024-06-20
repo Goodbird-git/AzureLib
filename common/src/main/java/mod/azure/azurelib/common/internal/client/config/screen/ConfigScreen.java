@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class ConfigScreen extends AbstractConfigScreen {
 
     @Override
     protected void init() {
+
         final int viewportMin = HEADER_HEIGHT;
         final int viewportHeight = this.height - viewportMin - FOOTER_HEIGHT;
         this.pageSize = (viewportHeight - 20) / 25;
@@ -53,13 +55,8 @@ public class ConfigScreen extends AbstractConfigScreen {
             errorOffset -= correct;
             offset += correct;
             ConfigValue<?> value = values.get(i);
-            ConfigEntryWidget widget = addRenderableWidget(
-                    new ConfigEntryWidget(30, viewportMin + 10 + j * 25 + offset, this.width - 60, 20, value,
-                            this.configId)
-            );
-            widget.setDescriptionRenderer(
-                    (graphics, widget1, severity, text) -> renderEntryDescription(graphics, widget1, severity, text)
-            );
+            ConfigEntryWidget widget = addRenderableWidget(new ConfigEntryWidget(30, viewportMin + 10 + j * 25 + offset, this.width - 60, 20, value, this.configId));
+            widget.setDescriptionRenderer((graphics, widget1, severity, text) -> renderEntryDescription(graphics, widget1, severity, text));
             TypeAdapter.AdapterContext context = value.getSerializationContext();
             Field field = context.getOwner();
             DisplayAdapter adapter = DisplayAdapterManager.forType(field.getType());
@@ -102,35 +99,22 @@ public class ConfigScreen extends AbstractConfigScreen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics, mouseY, mouseY, partialTicks);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(graphics, mouseX, mouseY, partialTicks);
         // HEADER
         int titleWidth = this.font.width(this.title);
-        graphics.drawString(
-                this.font,
-                this.title,
-                (int) ((this.width - titleWidth) / 2.0F),
-                (int) ((HEADER_HEIGHT - this.font.lineHeight) / 2.0F),
-                0xFFFFFF,
-                true
-        );
-        graphics.fill(0, HEADER_HEIGHT, width, height - FOOTER_HEIGHT, 0x99 << 24);
-        renderScrollbar(
-                graphics,
-                width - 5,
-                HEADER_HEIGHT,
-                5,
-                height - FOOTER_HEIGHT - HEADER_HEIGHT,
-                index,
-                valueMap.size(),
-                pageSize
-        );
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        graphics.drawString(font, this.title, (this.width - titleWidth) / 2, (HEADER_HEIGHT - this.font.lineHeight) / 2, 0xFFFFFF, true);
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.fill(0, 0, width, HEADER_HEIGHT, 0x99 << 24);
+        graphics.fill(0, height - FOOTER_HEIGHT, width, height, 0x99 << 24);
+        graphics.fill(0, HEADER_HEIGHT, width, height - FOOTER_HEIGHT, 0x55 << 24);
+        renderScrollbar(graphics, width - 5, HEADER_HEIGHT, 5, height - FOOTER_HEIGHT - HEADER_HEIGHT, index, valueMap.size(), pageSize);
+        renderables.forEach(renderable -> renderable.render(graphics, mouseX, mouseY, partialTicks));
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount, double g) {
-        int scale = (int) -amount;
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount, double amountY) {
+        int scale = (int) -amountY;
         int next = this.index + scale;
         if (next >= 0 && next + this.pageSize <= this.valueMap.size()) {
             this.index = next;
