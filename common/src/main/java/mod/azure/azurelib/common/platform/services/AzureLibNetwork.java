@@ -10,10 +10,8 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -40,17 +38,16 @@ public interface AzureLibNetwork {
     Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
 
     static void init() {
-        registerPacket(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
-        registerPacket(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
-        registerPacket(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
-        registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
-        registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
-        registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
-        registerPacket(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC);
+        registerPacket(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC, true);
+        registerPacket(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC, true);
+        registerPacket(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC, true);
+        registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC, true);
+        registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC, true);
+        registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC, true);
     }
 
-    private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec) {
-        Services.NETWORK.registerPacketInternal(payloadType, codec, true);
+    private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean isClientBound) {
+        Services.NETWORK.registerPacketInternal(payloadType, codec, isClientBound);
     }
 
     static void sendWithCallback(AbstractPacket packet, IPacketCallback callback) {

@@ -36,6 +36,5 @@ public final class ClientListener implements ClientModInitializer {
             );
             KeyBindingHelper.registerKeyBinding(ClientUtils.FIRE_WEAPON);
         }
-        AzureLibNetwork.init();
     }
 }
