@@ -47,6 +47,15 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
+	 * Register this as a synched {@code GeoAnimatable} instance with AzureLib's networking functions
+	 * <p>
+	 * This should be called inside the constructor of your object.
+	 */
+	static void registerSyncedAnimatable(GeoAnimatable animatable) {
+		SingletonGeoAnimatable.registerSyncedAnimatable(animatable);
+	}
+
+	/**
 	 * Gets the unique identifying number from this ItemStack's {@link net.minecraft.nbt.Tag NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
 	 */
 	static long getId(ItemStack stack) {
@@ -89,7 +98,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link net.minecraft.world.item.ItemDisplayContext render perspective}
+	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link net.minecraft.client.renderer.block.model.ItemTransforms.TransformType render perspective}
 	 */
 	default boolean isPerspectiveAware() {
 		return false;
