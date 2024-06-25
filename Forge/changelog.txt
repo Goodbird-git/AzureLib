@@ -1,3 +1,7 @@
-v1.0.38
+v1.0.39
 
-- Port additional handling for weirdly formatted bedrock animation jsons.
+- Port Easing Fix
+- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
+- Fixes isPerspectiveAware JavaDoc
+- Fix stale buffer on Entities/Layers
+- Add support for scale attribute/missing shaking for GeoReplaced
