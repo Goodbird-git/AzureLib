@@ -1,3 +1,3 @@
-v2.2.7
+v2.2.8
 
-- Revert Keybinding changes
+- Fixes Config packet breaking server connections.
