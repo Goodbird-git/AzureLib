@@ -27,3 +27,4 @@ accessible field net/minecraft/client/model/AgeableListModel bodyYOffset F
 
 accessible field net/minecraft/client/renderer/LevelRenderer renderBuffers Lnet/minecraft/client/renderer/RenderBuffers;
 mutable field net/minecraft/client/renderer/LevelRenderer renderBuffers Lnet/minecraft/client/renderer/RenderBuffers;
+accessible field com/mojang/blaze3d/vertex/BufferBuilder building Z
