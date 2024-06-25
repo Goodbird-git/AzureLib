@@ -87,8 +87,6 @@ public class BlockAndItemGeoLayer<T extends GeoAnimatable> extends GeoRenderLaye
             renderBlockForBone(poseStack, bone, blockState, animatable, bufferSource, partialTick, packedLight,
                     packedOverlay);
 
-        buffer = bufferSource.getBuffer(renderType);
-
         poseStack.popPose();
     }
 

@@ -13,6 +13,7 @@ import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
@@ -334,9 +335,12 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
         renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-        if (!isReRender)
+        if (!isReRender) {
             applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick,
                     packedLight, packedOverlay);
+            if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
+                buffer = bufferSource.getBuffer(renderType);
+        }
 
         renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);

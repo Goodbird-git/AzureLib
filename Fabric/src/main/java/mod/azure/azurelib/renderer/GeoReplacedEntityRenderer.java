@@ -2,6 +2,7 @@ package mod.azure.azurelib.renderer;
 
 import java.util.List;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -302,8 +303,11 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
 		renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-		if (!isReRender)
+		if (!isReRender) {
 			applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+			if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
+				buffer = bufferSource.getBuffer(renderType);
+		}
 
 		renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 

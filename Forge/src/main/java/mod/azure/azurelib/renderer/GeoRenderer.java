@@ -9,6 +9,7 @@ import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -225,9 +226,12 @@ public interface GeoRenderer<T extends GeoAnimatable> {
         RenderUtils.prepMatrixForBone(poseStack, bone);
         renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-        if (!isReRender)
+        if (!isReRender) {
             applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick,
                     packedLight, packedOverlay);
+            if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
+                buffer = bufferSource.getBuffer(renderType);
+        }
 
         renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
