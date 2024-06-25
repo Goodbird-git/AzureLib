@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.api.client.renderer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -15,7 +16,6 @@ import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.common.internal.common.constant.DataTickets;
-import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.minecraft.ChatFormatting;
@@ -489,7 +489,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
         renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-        if (!isReRender)
+        if (!isReRender) {
             applyRenderLayersForBone(
                     poseStack,
                     animatable,
@@ -501,6 +501,9 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
                     packedLight,
                     packedOverlay
             );
+            if (buffer instanceof BufferBuilder builder && !builder.building)
+                buffer = bufferSource.getBuffer(renderType);
+        }
 
         renderChildBones(
                 poseStack,
