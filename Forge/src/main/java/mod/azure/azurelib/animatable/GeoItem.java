@@ -38,6 +38,15 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
+	 * Register this as a synched {@code GeoAnimatable} instance with AzureLib's networking functions
+	 * <p>
+	 * This should be called inside the constructor of your object.
+	 */
+	static void registerSyncedAnimatable(GeoAnimatable animatable) {
+		SingletonGeoAnimatable.registerSyncedAnimatable(animatable);
+	}
+
+	/**
 	 * Gets the unique identifying number from this ItemStack's {@link net.minecraft.nbt.Tag NBT}.<br>
 	 * If no ID has been reserved for this stack yet, it will reserve a new id and assign it
 	 */
