@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.base.Suppliers;
 
 import mod.azure.azurelib.cache.AnimatableIdCache;
@@ -44,6 +42,15 @@ public interface GeoItem extends SingletonGeoAnimatable {
 			item.createRenderer(renderProvider::set);
 			return renderProvider.get();
 		});
+	}
+
+	/**
+	 * Register this as a synched {@code GeoAnimatable} instance with AzureLib's networking functions
+	 * <p>
+	 * This should be called inside the constructor of your object.
+	 */
+	static void registerSyncedAnimatable(GeoAnimatable animatable) {
+		SingletonGeoAnimatable.registerSyncedAnimatable(animatable);
 	}
 
 	/**
@@ -98,7 +105,6 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	/**
 	 * Replaces the default AnimatableInstanceCache for GeoItems if {@link GeoItem#isPerspectiveAware()} is true, for perspective-dependent handling
 	 */
-	@Nullable
 	@Override
 	default AnimatableInstanceCache animatableCacheOverride() {
 		if (isPerspectiveAware())
