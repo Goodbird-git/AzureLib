@@ -127,7 +127,7 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 			List<Pair<String, JsonElement>> list = new ObjectArrayList<>();
 
 			for (Map.Entry<String, JsonElement> entry : ((JsonObject) element).entrySet()) {
-				if (entry.getValue() instanceof JsonObject) {
+				if (entry.getValue() instanceof JsonObject && !((JsonObject) entry.getValue()).has("vector")) {
 					list.add(getTripletObjBedrock(entry.getKey(), (JsonObject) entry.getValue()));
 
 					continue;
@@ -143,34 +143,19 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 	}
 
 	private static Pair<String, JsonElement> getTripletObjBedrock(String timestamp, JsonObject keyframe) {
-		if (keyframe.has("vector")) {
-			JsonElement values = keyframe.get("vector");
+		JsonArray keyframeValues = null;
 
-			if (values instanceof JsonPrimitive) {
-				JsonArray array = new JsonArray();
-
-				array.add((JsonPrimitive) values);
-				array.add((JsonPrimitive) values);
-				array.add((JsonPrimitive) values);
-
-				return Pair.of(timestamp, array);
-			}
-
-			if (values instanceof JsonArray)
-				return Pair.of(timestamp, (JsonArray) values);
-		}
-		else if (keyframe.has("pre")) {
-			JsonElement postElement = keyframe.get("pre");
-			JsonArray array = postElement.isJsonArray() ? postElement.getAsJsonArray() : GsonHelper.getAsJsonArray(postElement.getAsJsonObject(), "vector");
-
-			return Pair.of(timestamp, array);
+		if (keyframe.has("pre")) {
+			JsonElement pre = keyframe.get("pre");
+			keyframeValues = pre.isJsonArray() ? pre.getAsJsonArray() : GsonHelper.getAsJsonArray(pre.getAsJsonObject(), "vector");
 		}
 		else if (keyframe.has("post")) {
-			JsonElement postElement = keyframe.get("post");
-			JsonArray array = postElement.isJsonArray() ? postElement.getAsJsonArray() : GsonHelper.getAsJsonArray(postElement.getAsJsonObject(), "vector");
-
-			return Pair.of(String.valueOf(NumberUtils.isCreatable(timestamp) ? Double.parseDouble(timestamp) : 0 + 0.0000001), array);
+			JsonElement post = keyframe.get("post");
+			keyframeValues = post.isJsonArray() ? post.getAsJsonArray() : GsonHelper.getAsJsonArray(post.getAsJsonObject(), "vector");
 		}
+
+		if (keyframeValues != null)
+			return Pair.of(NumberUtils.isCreatable(timestamp) ? timestamp : "0", keyframeValues);
 
 		throw new JsonParseException("Invalid keyframe data - expected array, found " + keyframe);
 	}
