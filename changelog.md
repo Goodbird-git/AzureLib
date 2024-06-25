@@ -1,3 +1,7 @@
-v2.2.8
+v2.2.9
 
-- Fixes Config packet breaking server connections.
+- Port Easing Fix
+- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
+- Fixes isPerspectiveAware JavaDoc
+- Fix stale buffer on Entities/Layers
+- Add support for scale attribute/missing shaking for GeoReplaced
