@@ -2,6 +2,7 @@ package mod.azure.azurelib.common.internal.client.renderer;
 
 import java.util.List;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import mod.azure.azurelib.common.api.common.animatable.GeoBlockEntity;
 import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
@@ -229,8 +230,11 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 		RenderUtils.prepMatrixForBone(poseStack, bone);
 		renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-		if (!isReRender)
+		if (!isReRender) {
 			applyRenderLayersForBone(poseStack, getAnimatable(), bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+			if (buffer instanceof BufferBuilder builder && !builder.building)
+				buffer = bufferSource.getBuffer(renderType);
+		}
 
 		renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 		poseStack.popPose();
@@ -305,7 +309,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 
 	/**
 	 * Create and fire the relevant {@code Pre-Render} event hook for this renderer.<br>
-	 * 
+	 *
 	 * @return Whether the renderer should proceed based on the cancellation state of the event
 	 */
 	boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight);
@@ -327,7 +331,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 	/**
 	 * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this GeoRenderer.<br>
 	 * This should only be called immediately prior to rendering, and only
-	 * 
+	 *
 	 * @see AnimatableTexture#setAndUpdate(ResourceLocation, int)
 	 */
 	void updateAnimatedTextureFrame(T animatable);

@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.api.client.renderer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -74,7 +75,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
 	/**
 	 * Gets the {@link GeoAnimatable} instance currently being rendered
-	 * 
+	 *
 	 * @see GeoReplacedEntityRenderer#getCurrentEntity()
 	 */
 	@Override
@@ -84,7 +85,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
 	/**
 	 * Returns the current entity having its rendering replaced by this renderer
-	 * 
+	 *
 	 * @see GeoReplacedEntityRenderer#getAnimatable()
 	 */
 	public E getCurrentEntity() {
@@ -297,8 +298,11 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
 		renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-		if (!isReRender)
+		if (!isReRender) {
 			applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+			if (buffer instanceof BufferBuilder builder && !builder.building)
+				buffer = bufferSource.getBuffer(renderType);
+		}
 
 		renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
@@ -495,7 +499,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
 	/**
 	 * Create and fire the relevant {@code Pre-Render} event hook for this renderer.<br>
-	 * 
+	 *
 	 * @return Whether the renderer should proceed based on the cancellation state of the event
 	 */
 	@Override
