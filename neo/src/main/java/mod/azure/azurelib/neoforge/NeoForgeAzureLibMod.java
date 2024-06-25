@@ -8,6 +8,7 @@ import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
 import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
+import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.neoforge.platform.NeoForgeAzureLibNetwork;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,10 +40,17 @@ public final class NeoForgeAzureLibMod {
         AzureEnchantments.ENCHANTMENTS.register(modEventBus);
         AzureBlocks.BLOCKS.register(modEventBus);
         AzureEntities.TILE_TYPES.register(modEventBus);
+        modEventBus.addListener(this::registerMessages);
     }
 
     private void init(FMLCommonSetupEvent event) {
         ConfigIO.FILE_WATCH_MANAGER.startService();
+    }
+
+    public void registerMessages(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(AzureLib.MOD_ID);
+
+        registrar.playToClient(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC, (msg, ctx) -> {});
     }
 
     public record AzureEnchantments() {

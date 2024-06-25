@@ -8,8 +8,11 @@ import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
 import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
+import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
+import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -57,5 +60,7 @@ public final class FabricAzureLibMod implements ModInitializer {
                 AzureLib.modResource("incendiaryenchantment"),
                 INCENDIARYENCHANTMENT
         );
+        AzureLibNetwork.init();
+        PayloadTypeRegistry.playS2C().register(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC);
     }
 }

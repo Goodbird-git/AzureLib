@@ -39,17 +39,16 @@ public interface AzureLibNetwork {
     Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
 
     static void init() {
-        registerPacket(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
-        registerPacket(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
-        registerPacket(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
-        registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
-        registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
-        registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
-        registerPacket(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC);
+        registerPacket(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC, true);
+        registerPacket(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC, true);
+        registerPacket(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC, true);
+        registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC, true);
+        registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC, true);
+        registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC, true);
     }
 
-    private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec) {
-        Services.NETWORK.registerPacketInternal(payloadType, codec, true);
+    private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean isClientBound) {
+        Services.NETWORK.registerPacketInternal(payloadType, codec, isClientBound);
     }
 
     static void sendWithCallback(AbstractPacket packet, IPacketCallback callback) {
