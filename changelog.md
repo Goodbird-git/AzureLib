@@ -1,3 +1,3 @@
-v2.3.2
+v2.3.3
 
-- Fixes Config Screen Scrollbar not rendering correctly/not scolling.
+- Fixes Config packet breaking server connections.
