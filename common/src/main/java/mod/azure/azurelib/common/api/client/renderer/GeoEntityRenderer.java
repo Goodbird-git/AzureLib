@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -307,11 +308,13 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             }
         }
 
+        float nativeScale = livingEntity != null ? livingEntity.getScale() : 1;
         float ageInTicks = animatable.tickCount + partialTick;
         float limbSwingAmount = 0;
         float limbSwing = 0;
 
-        applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick);
+        poseStack.scale(nativeScale, nativeScale, nativeScale);
+        applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick, nativeScale);
 
         if (!shouldSit && animatable.isAlive() && livingEntity != null) {
             limbSwingAmount = Mth.lerp(
@@ -520,7 +523,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
     }
 
     /**
-     * Applies rotation transformations to the renderer prior to render time to account for various entity states
+     * Applies rotation transformations to the renderer prior to render time to account for various entity states, default scale of 1
      */
     protected void applyRotations(
             T animatable,
@@ -529,47 +532,39 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float rotationYaw,
             float partialTick
     ) {
-        Pose pose = animatable.getPose();
-        LivingEntity livingEntity = animatable instanceof LivingEntity entity ? entity : null;
+        applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, 1);
+    }
 
-        if (this.isShaking(animatable)) {
-            rotationYaw += (float) (Math.cos((double) animatable.tickCount * 3.25) * Math.PI * 0.4000000059604645);
-        }
+    /**
+     * Applies rotation transformations to the renderer prior to render time to account for various entity states, scalable
+     */
+    protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw,
+                                  float partialTick, float nativeScale) {
+        if (isShaking(animatable))
+            rotationYaw += (float)(Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
 
-        if (pose != Pose.SLEEPING)
+        if (!animatable.hasPose(Pose.SLEEPING))
             poseStack.mulPose(Axis.YP.rotationDegrees(180f - rotationYaw));
 
-        if (livingEntity != null && livingEntity.deathTime > 0) {
-            float deathRotation = (livingEntity.deathTime + partialTick - 1f) / 20f * 1.6f;
+        if (animatable instanceof LivingEntity livingEntity) {
+            if (livingEntity.deathTime > 0) {
+                float deathRotation = (livingEntity.deathTime + partialTick - 1f) / 20f * 1.6f;
 
-            poseStack.mulPose(
-                    Axis.ZP.rotationDegrees(Math.min(Mth.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable))
-            );
-        } else if (livingEntity != null && livingEntity.isAutoSpinAttack()) {
-            poseStack.mulPose(Axis.XP.rotationDegrees(-90f - livingEntity.getXRot()));
-            poseStack.mulPose(Axis.YP.rotationDegrees((livingEntity.tickCount + partialTick) * -75f));
-        } else if (livingEntity != null && pose == Pose.SLEEPING) {
-            Direction bedOrientation = livingEntity.getBedOrientation();
-
-            poseStack.mulPose(
-                    Axis.YP.rotationDegrees(
-                            bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw
-                    )
-            );
-            poseStack.mulPose(Axis.ZP.rotationDegrees(getDeathMaxRotation(animatable)));
-            poseStack.mulPose(Axis.YP.rotationDegrees(270f));
-        } else if (animatable.hasCustomName() || animatable instanceof Player) {
-            String name = animatable.getName().getString();
-
-            if (animatable instanceof Player player) {
-                if (!player.isModelPartShown(PlayerModelPart.CAPE))
-                    return;
-            } else {
-                name = ChatFormatting.stripFormatting(name);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(Math.min(Mth.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable)));
             }
+            else if (livingEntity.isAutoSpinAttack()) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(-90f - livingEntity.getXRot()));
+                poseStack.mulPose(Axis.YP.rotationDegrees((livingEntity.tickCount + partialTick) * -75f));
+            }
+            else if (animatable.hasPose(Pose.SLEEPING)) {
+                Direction bedOrientation = livingEntity.getBedOrientation();
 
-            if (name != null && (name.equals("Dinnerbone") || name.equalsIgnoreCase("Grumm"))) {
-                poseStack.translate(0, animatable.getBbHeight() + 0.1f, 0);
+                poseStack.mulPose(Axis.YP.rotationDegrees(bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(getDeathMaxRotation(animatable)));
+                poseStack.mulPose(Axis.YP.rotationDegrees(270f));
+            }
+            else if (LivingEntityRenderer.isEntityUpsideDown(livingEntity)) {
+                poseStack.translate(0, (animatable.getBbHeight() + 0.1f) / nativeScale, 0);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
             }
         }
