@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new block in the game:
  * </p>
  * <pre>{@code
- * public static final Supplier<TestBlock> TEST_BLOCK = registerBlock("modid", "blockname", TestBlock::new);
+ * public static final Supplier<TestBlock> TEST_BLOCK = CommonBlockRegistryInterface.registerBlock("modid", "blockname", TestBlock::new);
  * }</pre>
  * <p>
  * In this example:

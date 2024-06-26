@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new block entity type in the game:
  * </p>
  * <pre>{@code
- * public static final Supplier<BlockEntityType<TestBlockEntity>> TEST_BLOCKENTITY = registerBlockEntity("modid", "blockentityname", () -> BlockEntityType.Builder.of(TestBlockEntity::new, TEST_BLOCK.get()).build(null));
+ * public static final Supplier<BlockEntityType<TestBlockEntity>> TEST_BLOCKENTITY = CommonBlockEntityRegistryInterface.registerBlockEntity("modid", "blockentityname", () -> BlockEntityType.Builder.of(TestBlockEntity::new, TEST_BLOCK.get()).build(null));
  * }</pre>
  * <p>
  * In this example:

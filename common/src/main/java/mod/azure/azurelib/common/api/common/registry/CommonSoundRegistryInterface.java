@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new sound event in the game:
  * </p>
  * <pre>{@code
- * public static Supplier<SoundEvent> TEST_SOUND = registerSound("modid", "test_sound", () -> SoundEvent.createVariableRangeEvent(
+ * public static Supplier<SoundEvent> TEST_SOUND = CommonSoundRegistryInterface.registerSound("modid", "test_sound", () -> SoundEvent.createVariableRangeEvent(
  *             ResourceLocation.fromNamespaceAndPath("modid", "test_sound")));
  * }</pre>
  * <p>

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new entity type in the game:
  * </p>
  * <pre>{@code
- * public static final Supplier<EntityType<TestEntity>> TEST = registerEntity("modid", "entityname", TestEntity::new, 0.7f, 1.3f, 0x1F1F1F, 0x0D0D0D);
+ * public static final Supplier<EntityType<TestEntity>> TEST = CommonEntityRegistryInterface.registerEntity("modid", "entityname", TestEntity::new, 0.7f, 1.3f, 0x1F1F1F, 0x0D0D0D);
  * }</pre>
  * <p>
  * In this example:

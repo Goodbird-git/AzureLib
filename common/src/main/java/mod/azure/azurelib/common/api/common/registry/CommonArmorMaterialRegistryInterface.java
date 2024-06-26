@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new armor material in the game:
  * </p>
  * <pre>{@code
- * public static final Holder<ArmorMaterial> TEST_ARMOR_MATERIAL = registerArmorMaterial("modid", "materialname", YOURCLASS::dummyArmorMaterial);
+ * public static final Holder<ArmorMaterial> TEST_ARMOR_MATERIAL = CommonArmorMaterialRegistryInterface.registerArmorMaterial("modid", "materialname", YOURCLASS::dummyArmorMaterial);
  *
  * private static ArmorMaterial dummyArmorMaterial() {
  *     ArmorMaterial diamond = ArmorMaterials.DIAMOND.value();
