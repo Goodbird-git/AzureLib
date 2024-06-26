@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  *         diamond.enchantmentValue(),
  *         diamond.equipSound(),
  *         diamond.repairIngredient(),
- *         List.of(), // Additional properties can be added here
+ *         List.of(), // If your Material has other layers like Player Armors inner/outer
  *         diamond.toughness(),
  *         diamond.knockbackResistance()
  *     );
