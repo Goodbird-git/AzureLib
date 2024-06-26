@@ -1,10 +1,7 @@
 package mod.azure.azurelib.common.platform;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.platform.services.AzureLibInitializer;
-import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
-import mod.azure.azurelib.common.platform.services.GeoRenderPhaseEventFactory;
-import mod.azure.azurelib.common.platform.services.IPlatformHelper;
+import mod.azure.azurelib.common.platform.services.*;
 
 import java.util.ServiceLoader;
 
@@ -19,6 +16,8 @@ public final class Services {
     public static final AzureLibNetwork NETWORK = load(AzureLibNetwork.class);
 
     public static final IPlatformHelper PLATFORM = load(IPlatformHelper.class);
+
+    public static final CommonRegistry COMMON_REGISTRY = load(CommonRegistry.class);
 
     private Services() {
         throw new UnsupportedOperationException();
