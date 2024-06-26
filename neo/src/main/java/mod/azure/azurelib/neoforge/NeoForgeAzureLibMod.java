@@ -32,12 +32,11 @@ public final class NeoForgeAzureLibMod {
 
     public NeoForgeAzureLibMod(IEventBus modEventBus) {
         AzureLib.initialize();
+        AzureLibMod.initRegistry();
         NeoForgeAzureLibNetwork.init(modEventBus);
         DATA_COMPONENTS_REGISTER.register(modEventBus);
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
-        AzureBlocks.BLOCKS.register(modEventBus);
-        AzureEntities.TILE_TYPES.register(modEventBus);
         modEventBus.addListener(this::registerMessages);
     }
 
@@ -49,25 +48,5 @@ public final class NeoForgeAzureLibMod {
         PayloadRegistrar registrar = event.registrar(AzureLib.MOD_ID);
 
         registrar.playToClient(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC, (msg, ctx) -> {});
-    }
-
-    public record AzureBlocks() {
-
-        public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, AzureLib.MOD_ID);
-
-        public static final Supplier<TickingLightBlock> TICKING_LIGHT_BLOCK = BLOCKS.register("lightblock",
-                () -> new TickingLightBlock(BlockBehaviour.Properties.of().sound(SoundType.CANDLE).lightLevel(
-                        TickingLightBlock.litBlockEmission(15)).pushReaction(PushReaction.DESTROY).noOcclusion()));
-    }
-
-    public record AzureEntities() {
-
-        public static final DeferredRegister<BlockEntityType<?>> TILE_TYPES = DeferredRegister.create(
-                Registries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID);
-
-        public static final Supplier<BlockEntityType<TickingLightEntity>> TICKING_LIGHT_ENTITY = TILE_TYPES.register(
-                "lightblock",
-                () -> BlockEntityType.Builder.of(TickingLightEntity::new, AzureBlocks.TICKING_LIGHT_BLOCK.get()).build(
-                        null));
     }
 }

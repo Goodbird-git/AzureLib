@@ -36,16 +36,6 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public TickingLightBlock getTickingLightBlock() {
-        return NeoForgeAzureLibMod.AzureBlocks.TICKING_LIGHT_BLOCK.get();
-    }
-
-    @Override
-    public BlockEntityType<TickingLightEntity> getTickingLightEntity() {
-        return NeoForgeAzureLibMod.AzureEntities.TICKING_LIGHT_ENTITY.get();
-    }
-
-    @Override
     public <T> Supplier<DataComponentType<T>> registerDataComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builder) {
         return NeoForgeAzureLibMod.DATA_COMPONENTS_REGISTER.registerComponentType(id, builder);
     }

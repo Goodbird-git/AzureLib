@@ -21,30 +21,11 @@ import net.minecraft.world.level.material.PushReaction;
 
 public final class FabricAzureLibMod implements ModInitializer {
 
-    public static final TickingLightBlock TICKING_LIGHT_BLOCK = new TickingLightBlock(
-            BlockBehaviour.Properties.of()
-                    .sound(SoundType.CANDLE)
-                    .lightLevel(TickingLightBlock.litBlockEmission(15))
-                    .pushReaction(PushReaction.DESTROY)
-                    .noOcclusion()
-    );
-    public static BlockEntityType<TickingLightEntity> TICKING_LIGHT_ENTITY;
-
     @Override
     public void onInitialize() {
         ConfigIO.FILE_WATCH_MANAGER.startService();
         AzureLib.initialize();
-        Registry.register(
-                BuiltInRegistries.BLOCK,
-                AzureLib.modResource("lightblock"),
-                FabricAzureLibMod.TICKING_LIGHT_BLOCK
-        );
-        FabricAzureLibMod.TICKING_LIGHT_ENTITY = Registry.register(
-                BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                AzureLib.MOD_ID + ":lightblock",
-                BlockEntityType.Builder.of(TickingLightEntity::new, FabricAzureLibMod.TICKING_LIGHT_BLOCK)
-                        .build(null)
-        );
+        AzureLibMod.initRegistry();
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             ConfigIO.FILE_WATCH_MANAGER.stopService();

@@ -7,6 +7,8 @@ import mod.azure.azurelib.common.internal.common.config.ConfigHolderRegistry;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.format.IConfigFormatHandler;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
+import mod.azure.azurelib.common.internal.common.registry.AzureBlocksEntityRegistry;
+import mod.azure.azurelib.common.internal.common.registry.AzureBlocksRegistry;
 
 public final class AzureLibMod {
 
@@ -14,6 +16,11 @@ public final class AzureLibMod {
 
     private AzureLibMod() {
         throw new UnsupportedOperationException();
+    }
+
+    public static void initRegistry() {
+        AzureBlocksRegistry.init();
+        AzureBlocksEntityRegistry.init();
     }
 
     /**
