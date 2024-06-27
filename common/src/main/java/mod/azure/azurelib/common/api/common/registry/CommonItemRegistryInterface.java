@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * </p>
  * <pre>{@code
  * public static final Supplier<Item> TEST_ITEM = CommonItemRegistryInterface.registerItem("modid", "itemname", () -> new Item(new Item.Properties()));
- * public static final Supplier<SpawnEggItem> TEST_SPAWN_EGG = registerItem("modid", "entityname_spawn_egg", Services.COMMON_REGISTRY.makeSpawnEggFor(TESTENTITY, 0x1F1F1F, 0x0D0D0D, new Item.Properties()));
+ * public static final Supplier<SpawnEggItem> TEST_SPAWN_EGG = CommonItemRegistryInterface.registerItem("modid", "entityname_spawn_egg", Services.COMMON_REGISTRY.makeSpawnEggFor(TESTENTITY, 0x1F1F1F, 0x0D0D0D, new Item.Properties()));
  * }</pre>
  * <p>
  * In this example:
