@@ -1,7 +1,5 @@
-v2.3.4
+v2.3.5
 
-- Port Easing Fix
-- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
-- Fixes isPerspectiveAware JavaDoc
-- Fix stale buffer on Entities/Layers
-- Add support for scale attribute/missing shaking for GeoReplaced
+- Implemented helpers for making Common Registries easier for my mods.
+- Removed AzureSpawnEgg/NeoForgeAzureSpawnEgg in favor of above system.
+- Moved Light Block/Entity to new system.
