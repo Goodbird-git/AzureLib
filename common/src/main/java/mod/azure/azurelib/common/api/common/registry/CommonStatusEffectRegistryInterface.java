@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * The {@link net.minecraft.world.effect.MobEffectCategory MobEffectCategory} class represents the category of a status effect in the game.
  * </p>
  */
-public class CommonStatusEffectRegistryInterface {
+public interface CommonStatusEffectRegistryInterface {
 
     /**
      * Registers a new Status Effect.

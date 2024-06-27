@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * The {@link net.minecraft.world.level.material.Fluid Fluid} class represents a fluid in the game.
  * </p>
  */
-public class CommonFluidRegistryInterface {
+public interface CommonFluidRegistryInterface {
 
     /**
      * Registers a new fluid.
