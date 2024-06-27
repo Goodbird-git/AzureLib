@@ -6,8 +6,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Supplier;
 
@@ -85,6 +88,16 @@ public class FabricCommonRegistry implements CommonRegistry {
     @Override
     public <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String modID, String tabName, Supplier<T> tab) {
         return registerSupplier(BuiltInRegistries.CREATIVE_MODE_TAB, modID, tabName, tab);
+    }
+
+    @Override
+    public <T extends MobEffect> Holder<T> registerStatusEffect(String modID, String effectName, Supplier<T> statusEffect) {
+        return registerHolder(BuiltInRegistries.MOB_EFFECT, modID, effectName, statusEffect);
+    }
+
+    @Override
+    public <T extends Fluid> Supplier<T> registerFluid(String modID, String fluidName, Supplier<T> fluid) {
+        return registerSupplier(BuiltInRegistries.FLUID, modID, fluidName, fluid);
     }
 
     @Override

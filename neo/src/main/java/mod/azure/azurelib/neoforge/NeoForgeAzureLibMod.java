@@ -56,6 +56,10 @@ public final class NeoForgeAzureLibMod {
             NeoForgeCommonRegistry.particleTypeDeferredRegister.register(modEventBus);
         if (NeoForgeCommonRegistry.creativeModeTabDeferredRegister != null)
             NeoForgeCommonRegistry.creativeModeTabDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.statusEffectDeferredRegister != null)
+            NeoForgeCommonRegistry.statusEffectDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.fluidDeferredRegister != null)
+            NeoForgeCommonRegistry.fluidDeferredRegister.register(modEventBus);
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerMessages);

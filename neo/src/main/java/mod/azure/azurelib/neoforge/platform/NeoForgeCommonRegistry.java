@@ -4,8 +4,10 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.platform.services.CommonRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -34,6 +37,8 @@ public class NeoForgeCommonRegistry implements CommonRegistry {
     public static DeferredRegister<StructureType<?>> structureTypeDeferredRegister;
     public static DeferredRegister<ParticleType<?>> particleTypeDeferredRegister;
     public static DeferredRegister<CreativeModeTab> creativeModeTabDeferredRegister;
+    public static DeferredRegister<MobEffect> statusEffectDeferredRegister;
+    public static DeferredRegister<Fluid> fluidDeferredRegister;
 
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(String modID, String blockEntityName, Supplier<BlockEntityType<T>> blockEntityType) {
@@ -103,6 +108,20 @@ public class NeoForgeCommonRegistry implements CommonRegistry {
         if (modID.isEmpty()) modID = "minecraft";
         creativeModeTabDeferredRegister = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, modID);
         return creativeModeTabDeferredRegister.register(tabName, tab);
+    }
+
+    @Override
+    public <T extends MobEffect> Holder<T> registerStatusEffect(String modID, String effectName, Supplier<T> statusEffect) {
+        if (modID.isEmpty()) modID = "minecraft";
+        statusEffectDeferredRegister = DeferredRegister.create(Registries.MOB_EFFECT, modID);
+        return (Holder<T>) statusEffectDeferredRegister.register(effectName, statusEffect);
+    }
+
+    @Override
+    public <T extends Fluid> Supplier<T> registerFluid(String modID, String fluidName, Supplier<T> fluid) {
+        if (modID.isEmpty()) modID = "minecraft";
+        fluidDeferredRegister = DeferredRegister.create(Registries.FLUID, modID);
+        return fluidDeferredRegister.register(fluidName, fluid);
     }
 
     @Override
