@@ -1,3 +1,4 @@
-v2.3.7
+v2.3.8
 
-- Fixes Fluid/Effect Common Registry being classes not interfaces.
+- Fixes registerEntity defaulting to Mob instead of Entity.
+- Fixes Structure registerStructure not using the proper setup. 
