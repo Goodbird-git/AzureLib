@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.api.common.helper;
 
 import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
+import mod.azure.azurelib.common.internal.common.registry.AzureBlocksRegistry;
 import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.common.platform.services.IPlatformHelper;
@@ -76,7 +77,7 @@ public record CommonUtils() {
             entity.level()
                     .setBlockAndUpdate(
                             lightBlockPos,
-                            Services.PLATFORM.getTickingLightBlock().defaultBlockState()
+                            AzureBlocksRegistry.TICKING_LIGHT_BLOCK.get().defaultBlockState()
                     );
         } else if (
                 AzureLibUtil.checkDistance(

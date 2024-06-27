@@ -40,16 +40,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public TickingLightBlock getTickingLightBlock() {
-        return FabricAzureLibMod.TICKING_LIGHT_BLOCK;
-    }
-
-    @Override
-    public BlockEntityType<TickingLightEntity> getTickingLightEntity() {
-        return FabricAzureLibMod.TICKING_LIGHT_ENTITY;
-    }
-
-    @Override
     public <T> Supplier<DataComponentType<T>> registerDataComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builder) {
         final DataComponentType<T> componentType = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
                 AzureLib.modResource(id).toString(), builder.apply(DataComponentType.builder()).build());

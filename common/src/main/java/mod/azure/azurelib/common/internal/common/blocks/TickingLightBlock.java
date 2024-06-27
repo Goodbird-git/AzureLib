@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.internal.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mod.azure.azurelib.common.internal.common.registry.AzureBlocksEntityRegistry;
 import mod.azure.azurelib.common.platform.Services;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -81,7 +82,7 @@ public class TickingLightBlock extends BaseEntityBlock {
             BlockState state,
             BlockEntityType<T> type
     ) {
-        return createTickerHelper(type, Services.PLATFORM.getTickingLightEntity(), TickingLightEntity::tick);
+        return createTickerHelper(type, AzureBlocksEntityRegistry.TICKING_LIGHT_ENTITY.get(), TickingLightEntity::tick);
     }
 
 }

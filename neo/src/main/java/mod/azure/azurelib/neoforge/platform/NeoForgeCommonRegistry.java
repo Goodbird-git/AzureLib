@@ -1,0 +1,117 @@
+package mod.azure.azurelib.neoforge.platform;
+
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.platform.services.CommonRegistry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
+
+public class NeoForgeCommonRegistry implements CommonRegistry {
+    public static DeferredRegister<BlockEntityType<?>> blockEntityTypeDeferredRegister;
+    public static DeferredRegister<Block> blockDeferredRegister;
+    public static DeferredRegister<EntityType<?>> entityTypeDeferredRegister;
+    public static DeferredRegister<ArmorMaterial> armorMaterialDeferredRegister;
+    public static DeferredRegister<Item> itemDeferredRegister;
+    public static DeferredRegister<SoundEvent> soundEventDeferredRegister;
+    public static DeferredRegister<MenuType<?>> menuTypeDeferredRegister;
+    public static DeferredRegister<StructureType<?>> structureTypeDeferredRegister;
+    public static DeferredRegister<ParticleType<?>> particleTypeDeferredRegister;
+    public static DeferredRegister<CreativeModeTab> creativeModeTabDeferredRegister;
+
+    @Override
+    public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(String modID, String blockEntityName, Supplier<BlockEntityType<T>> blockEntityType) {
+        if (modID.isEmpty()) modID = "minecraft";
+        blockEntityTypeDeferredRegister = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, modID);
+        return blockEntityTypeDeferredRegister.register(blockEntityName, blockEntityType);
+    }
+
+    @Override
+    public <T extends Block> Supplier<T> registerBlock(String modID, String blockName, Supplier<T> block) {
+        if (modID.isEmpty()) modID = "minecraft";
+        blockDeferredRegister = DeferredRegister.create(Registries.BLOCK, modID);
+        return blockDeferredRegister.register(blockName, block);
+    }
+
+    @Override
+    public <T extends Entity> Supplier<EntityType<T>> registerEntity(String modID, String entityName, Supplier<EntityType<T>> entity) {
+        if (modID.isEmpty()) modID = "minecraft";
+        entityTypeDeferredRegister = DeferredRegister.create(Registries.ENTITY_TYPE, modID);
+        return entityTypeDeferredRegister.register(entityName, entity);
+    }
+
+    @Override
+    public <T extends ArmorMaterial> Holder<T> registerArmorMaterial(String modID, String matName, Supplier<T> armorMaterial) {
+        if (modID.isEmpty()) modID = "minecraft";
+        armorMaterialDeferredRegister = DeferredRegister.create(Registries.ARMOR_MATERIAL, modID);
+        return (Holder<T>) armorMaterialDeferredRegister.register(matName, armorMaterial);
+    }
+
+    @Override
+    public <T extends Item> Supplier<T> registerItem(String modID, String itemName, Supplier<T> item) {
+        if (modID.isEmpty()) modID = "minecraft";
+        itemDeferredRegister = DeferredRegister.create(Registries.ITEM, modID);
+        return itemDeferredRegister.register(itemName, item);
+    }
+
+    @Override
+    public <T extends SoundEvent> Supplier<T> registerSound(String modID, String soundName, Supplier<T> sound) {
+        if (modID.isEmpty()) modID = "minecraft";
+        soundEventDeferredRegister = DeferredRegister.create(Registries.SOUND_EVENT, modID);
+        return soundEventDeferredRegister.register(soundName, sound);
+    }
+
+    @Override
+    public <T extends MenuType<?>> Supplier<T> registerScreen(String modID, String screenName, Supplier<T> menuType) {
+        if (modID.isEmpty()) modID = "minecraft";
+        menuTypeDeferredRegister = DeferredRegister.create(Registries.MENU, modID);
+        return menuTypeDeferredRegister.register(screenName, menuType);
+    }
+
+    @Override
+    public <T extends StructureType<?>> Supplier<T> registerStructure(String modID, String structureName, Supplier<T> structure) {
+        if (modID.isEmpty()) modID = "minecraft";
+        structureTypeDeferredRegister = DeferredRegister.create(Registries.STRUCTURE_TYPE, modID);
+        return structureTypeDeferredRegister.register(structureName, structure);
+    }
+
+    @Override
+    public <T extends ParticleType<?>> Supplier<T> registerParticle(String modID, String particleName, Supplier<T> particle) {
+        if (modID.isEmpty()) modID = "minecraft";
+        particleTypeDeferredRegister = DeferredRegister.create(Registries.PARTICLE_TYPE, modID);
+        return particleTypeDeferredRegister.register(particleName, particle);
+    }
+
+    @Override
+    public <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String modID, String tabName, Supplier<T> tab) {
+        if (modID.isEmpty()) modID = "minecraft";
+        creativeModeTabDeferredRegister = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, modID);
+        return creativeModeTabDeferredRegister.register(tabName, tab);
+    }
+
+    @Override
+    public <E extends Mob> Supplier<SpawnEggItem> makeSpawnEggFor(Supplier<EntityType<E>> entityType, int primaryEggColour, int secondaryEggColour, Item.Properties itemProperties) {
+        return () -> new DeferredSpawnEggItem(entityType, primaryEggColour, secondaryEggColour, itemProperties);
+    }
+
+    @Override
+    public CreativeModeTab.Builder newCreativeTabBuilder() {
+        return CreativeModeTab.builder();
+    }
+}

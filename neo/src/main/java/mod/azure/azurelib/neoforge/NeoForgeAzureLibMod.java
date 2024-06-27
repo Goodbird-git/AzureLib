@@ -9,6 +9,7 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.neoforge.platform.NeoForgeAzureLibNetwork;
+import mod.azure.azurelib.neoforge.platform.NeoForgeCommonRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -32,12 +33,31 @@ public final class NeoForgeAzureLibMod {
 
     public NeoForgeAzureLibMod(IEventBus modEventBus) {
         AzureLib.initialize();
+        AzureLibMod.initRegistry();
         NeoForgeAzureLibNetwork.init(modEventBus);
         DATA_COMPONENTS_REGISTER.register(modEventBus);
+        if (NeoForgeCommonRegistry.blockEntityTypeDeferredRegister != null)
+            NeoForgeCommonRegistry.blockEntityTypeDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.blockDeferredRegister != null)
+            NeoForgeCommonRegistry.blockDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.entityTypeDeferredRegister != null)
+            NeoForgeCommonRegistry.entityTypeDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.armorMaterialDeferredRegister != null)
+            NeoForgeCommonRegistry.armorMaterialDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.itemDeferredRegister != null)
+            NeoForgeCommonRegistry.itemDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.soundEventDeferredRegister != null)
+            NeoForgeCommonRegistry.soundEventDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.menuTypeDeferredRegister != null)
+            NeoForgeCommonRegistry.menuTypeDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.structureTypeDeferredRegister != null)
+            NeoForgeCommonRegistry.structureTypeDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.particleTypeDeferredRegister != null)
+            NeoForgeCommonRegistry.particleTypeDeferredRegister.register(modEventBus);
+        if (NeoForgeCommonRegistry.creativeModeTabDeferredRegister != null)
+            NeoForgeCommonRegistry.creativeModeTabDeferredRegister.register(modEventBus);
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
-        AzureBlocks.BLOCKS.register(modEventBus);
-        AzureEntities.TILE_TYPES.register(modEventBus);
         modEventBus.addListener(this::registerMessages);
     }
 
@@ -49,25 +69,5 @@ public final class NeoForgeAzureLibMod {
         PayloadRegistrar registrar = event.registrar(AzureLib.MOD_ID);
 
         registrar.playToClient(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC, (msg, ctx) -> {});
-    }
-
-    public record AzureBlocks() {
-
-        public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, AzureLib.MOD_ID);
-
-        public static final Supplier<TickingLightBlock> TICKING_LIGHT_BLOCK = BLOCKS.register("lightblock",
-                () -> new TickingLightBlock(BlockBehaviour.Properties.of().sound(SoundType.CANDLE).lightLevel(
-                        TickingLightBlock.litBlockEmission(15)).pushReaction(PushReaction.DESTROY).noOcclusion()));
-    }
-
-    public record AzureEntities() {
-
-        public static final DeferredRegister<BlockEntityType<?>> TILE_TYPES = DeferredRegister.create(
-                Registries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID);
-
-        public static final Supplier<BlockEntityType<TickingLightEntity>> TICKING_LIGHT_ENTITY = TILE_TYPES.register(
-                "lightblock",
-                () -> BlockEntityType.Builder.of(TickingLightEntity::new, AzureBlocks.TICKING_LIGHT_BLOCK.get()).build(
-                        null));
     }
 }

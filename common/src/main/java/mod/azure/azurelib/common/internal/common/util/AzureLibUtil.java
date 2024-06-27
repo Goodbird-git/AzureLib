@@ -3,6 +3,7 @@ package mod.azure.azurelib.common.internal.common.util;
 import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.common.internal.common.loading.object.BakedModelFactory;
 import mod.azure.azurelib.common.internal.common.network.SerializableDataTicket;
+import mod.azure.azurelib.common.internal.common.registry.AzureBlocksRegistry;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -129,7 +130,7 @@ public record AzureLibUtil() {
                 for (var z : offsets) {
                     var offsetPos = blockPos.offset(x, y, z);
                     var state = world.getBlockState(offsetPos);
-                    if (state.isAir() || state.getBlock().equals(Services.PLATFORM.getTickingLightBlock()))
+                    if (state.isAir() || state.getBlock().equals(AzureBlocksRegistry.TICKING_LIGHT_BLOCK.get()))
                         return offsetPos;
                 }
         return null;

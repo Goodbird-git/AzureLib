@@ -22,13 +22,5 @@ public interface IPlatformHelper {
 
     boolean isEnvironmentClient();
 
-    default BlockEntityType<TickingLightEntity> getTickingLightEntity() {
-        return null;
-    }
-
-    default TickingLightBlock getTickingLightBlock() {
-        return null;
-    }
-
     <T> Supplier<DataComponentType<T>> registerDataComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builder);
 }
