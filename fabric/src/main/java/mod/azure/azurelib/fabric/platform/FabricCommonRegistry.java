@@ -1,12 +1,12 @@
 package mod.azure.azurelib.fabric.platform;
 
+import com.mojang.serialization.MapCodec;
 import mod.azure.azurelib.common.platform.services.CommonRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -21,6 +21,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.material.Fluid;
 
@@ -76,8 +77,12 @@ public class FabricCommonRegistry implements CommonRegistry {
     }
 
     @Override
-    public <T extends StructureType<?>> Supplier<T> registerStructure(String modID, String structureName, Supplier<T> structure) {
-        return registerSupplier(BuiltInRegistries.STRUCTURE_TYPE, modID, structureName, structure);
+    public <T extends Structure> Supplier<StructureType<T>> registerStructure(String modID, String structureName, MapCodec<T> structure) {
+        return registerSupplier(BuiltInRegistries.STRUCTURE_TYPE, modID, structureName, () -> typeConvert(structure));
+    }
+
+    private static <S extends Structure> StructureType<S> typeConvert(MapCodec<S> codec) {
+        return () -> codec;
     }
 
     @Override

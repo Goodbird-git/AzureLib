@@ -1,10 +1,9 @@
 package mod.azure.azurelib.neoforge.platform;
 
-import mod.azure.azurelib.common.internal.common.AzureLib;
+import com.mojang.serialization.MapCodec;
 import mod.azure.azurelib.common.platform.services.CommonRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -19,6 +18,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
@@ -90,10 +90,14 @@ public class NeoForgeCommonRegistry implements CommonRegistry {
     }
 
     @Override
-    public <T extends StructureType<?>> Supplier<T> registerStructure(String modID, String structureName, Supplier<T> structure) {
+    public <T extends Structure> Supplier<StructureType<T>> registerStructure(String modID, String structureName, MapCodec<T> structure) {
         if (modID.isEmpty()) modID = "minecraft";
         structureTypeDeferredRegister = DeferredRegister.create(Registries.STRUCTURE_TYPE, modID);
-        return structureTypeDeferredRegister.register(structureName, structure);
+        return structureTypeDeferredRegister.register(structureName, () -> typeConvert(structure));
+    }
+
+    private static <S extends Structure> StructureType<S> typeConvert(MapCodec<S> codec) {
+        return () -> codec;
     }
 
     @Override

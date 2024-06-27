@@ -1,5 +1,6 @@
 package mod.azure.azurelib.common.platform.services;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.sounds.SoundEvent;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.material.Fluid;
 
@@ -36,7 +38,7 @@ public interface CommonRegistry {
 
     <T extends MenuType<?>> Supplier<T> registerScreen(String modID, String screenName, Supplier<T> menuType);
 
-    <T extends StructureType<?>> Supplier<T> registerStructure(String modID, String structureName, Supplier<T> structure);
+    <T extends Structure> Supplier<StructureType<T>> registerStructure(String modID, String structureName, MapCodec<T> structure);
 
     <T extends ParticleType<?>> Supplier<T> registerParticle(String modID, String particleName, Supplier<T> particle);
 
