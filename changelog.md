@@ -1,3 +1,3 @@
-v2.3.6
+v2.3.7
 
-- Adds Fluid/Effect Common Registry.
+- Fixes Fluid/Effect Common Registry being classes not interfaces.
