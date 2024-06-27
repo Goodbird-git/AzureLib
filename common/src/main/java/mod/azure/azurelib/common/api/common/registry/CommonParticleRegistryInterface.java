@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new particle type in the game:
  * </p>
  * <pre>{@code
- * public static final Supplier<ParticleType> TEST = CommonParticleRegistryInterface.registerParticle("modid", "particlename", () -> new SimpleParticleType(true));
+ * public static final Supplier<SimpleParticleType> TEST = CommonParticleRegistryInterface.registerParticle("modid", "particlename", () -> new SimpleParticleType(true));
  * }</pre>
  * <p>
  * In this example:

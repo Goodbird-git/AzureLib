@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new Status Effect in the game:
  * </p>
  * <pre>{@code
- * public static final Supplier<MobEffect> TEST_EFFECT = CommonStatusEffectRegistryInterface.registerStatusEffect("modid", "effectName", () -> new CustomMobEffect(
+ * public static final Holder<MobEffect> TEST_EFFECT = CommonStatusEffectRegistryInterface.registerStatusEffect("modid", "effectName", () -> new CustomMobEffect(
  *             MobEffectCategory.HARMFUL, Color.BLACK.getColor()));
  * }</pre>
  * <p>
