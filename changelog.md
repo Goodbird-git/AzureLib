@@ -1,5 +1,3 @@
-v2.3.5
+v2.3.6
 
-- Implemented helpers for making Common Registries easier for my mods.
-- Removed AzureSpawnEgg/NeoForgeAzureSpawnEgg in favor of above system.
-- Moved Light Block/Entity to new system.
+- Adds Fluid/Effect Common Registry.
