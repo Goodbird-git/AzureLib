@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * The following code demonstrates how to register a new entity type in the game:
  * </p>
  * <pre>{@code
- * public static final Supplier<EntityType<TestEntity>> TEST = CommonEntityRegistryInterface.registerEntity("modid", "entityname", TestEntity::new, 0.7f, 1.3f);
+ * public static final Supplier<EntityType<TestEntity>> TEST = CommonEntityRegistryInterface.registerEntity("modid", "entityname", TestEntity::new, MobCategory.CREATURE, 0.7f, 1.3f);
  * }</pre>
  * <p>
  * In this example:
@@ -41,8 +41,8 @@ public interface CommonEntityRegistryInterface {
      * @param <T>        The type of the entity.
      * @return A supplier for the registered entity type.
      */
-    static <T extends Mob> Supplier<EntityType<T>> registerEntity(String modID, String entityName, EntityType.EntityFactory<T> entity, float width, float height) {
+    static <T extends Mob> Supplier<EntityType<T>> registerEntity(String modID, String entityName, EntityType.EntityFactory<T> entity, MobCategory mobCategory, float width, float height) {
         return Services.COMMON_REGISTRY.registerEntity(modID, entityName,
-                () -> EntityType.Builder.of(entity, MobCategory.CREATURE).sized(width, height).build(entityName));
+                () -> EntityType.Builder.of(entity, mobCategory).sized(width, height).build(entityName));
     }
 }
