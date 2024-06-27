@@ -1,6 +1,7 @@
 package mod.azure.azurelib.common.api.common.registry;
 
 import mod.azure.azurelib.common.platform.Services;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
@@ -41,7 +42,7 @@ public interface CommonEntityRegistryInterface {
      * @param <T>        The type of the entity.
      * @return A supplier for the registered entity type.
      */
-    static <T extends Mob> Supplier<EntityType<T>> registerEntity(String modID, String entityName, EntityType.EntityFactory<T> entity, MobCategory mobCategory, float width, float height) {
+    static <T extends Entity> Supplier<EntityType<T>> registerEntity(String modID, String entityName, EntityType.EntityFactory<T> entity, MobCategory mobCategory, float width, float height) {
         return Services.COMMON_REGISTRY.registerEntity(modID, entityName,
                 () -> EntityType.Builder.of(entity, mobCategory).sized(width, height).build(entityName));
     }
