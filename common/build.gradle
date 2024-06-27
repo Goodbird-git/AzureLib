@@ -1,11 +1,10 @@
 plugins {
     id 'multiloader-common'
-    id 'net.neoforged.moddev' version "${neo_moddev}"
+    id 'net.neoforged.moddev'
 }
 
 neoForge {
     neoFormVersion = "1.21-20240613.152323"
-
     accessTransformers = ["../neo/src/main/resources/META-INF/accesstransformer.cfg"]
 
     parchment {
@@ -42,4 +41,3 @@ artifacts {
     commonJava sourceSets.main.java.sourceDirectories.singleFile
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }
-
