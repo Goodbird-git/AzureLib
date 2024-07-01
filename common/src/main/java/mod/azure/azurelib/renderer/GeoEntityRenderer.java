@@ -228,8 +228,6 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             this.model.handleAnimations(animatable, instanceId, animationState);
         }
 
-        poseStack.translate(0, 0.01f, 0);
-
         this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         if (!animatable.isInvisibleTo(Minecraft.getInstance().player))
