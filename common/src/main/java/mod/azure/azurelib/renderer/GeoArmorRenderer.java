@@ -2,8 +2,6 @@ package mod.azure.azurelib.renderer;
 
 import java.util.List;
 
-import mod.azure.azurelib.event.GeoRenderArmorEvent;
-import mod.azure.azurelib.event.GeoRenderReplacedEntityEvent;
 import mod.azure.azurelib.platform.Services;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -561,7 +559,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
 	 */
 	@Override
 	public void fireCompileRenderLayersEvent() {
-		GeoRenderArmorEvent.CompileRenderLayers.EVENT.handle(new GeoRenderArmorEvent.CompileRenderLayers(this));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileArmorRenderLayers(this);
 	}
 
 	/**
@@ -571,7 +569,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-        return GeoRenderArmorEvent.Pre.EVENT.handle(new GeoRenderArmorEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
+		return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireArmorPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 
 	/**
@@ -579,6 +577,6 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
 	 */
 	@Override
 	public void firePostRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		GeoRenderArmorEvent.Post.EVENT.handle(new GeoRenderArmorEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireArmorPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 }

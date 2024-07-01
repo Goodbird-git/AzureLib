@@ -2,8 +2,6 @@ package mod.azure.azurelib.renderer;
 
 import java.util.List;
 
-import mod.azure.azurelib.event.GeoRenderBlockEvent;
-import mod.azure.azurelib.event.GeoRenderReplacedEntityEvent;
 import mod.azure.azurelib.platform.Services;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,7 +17,6 @@ import mod.azure.azurelib.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.event.GeoRenderEvent;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
@@ -222,7 +219,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
 	 */
 	@Override
 	public void fireCompileRenderLayersEvent() {
-		GeoRenderBlockEvent.CompileRenderLayers.EVENT.handle(new GeoRenderBlockEvent.CompileRenderLayers(this));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileBlockRenderLayers(this);
 	}
 
 	/**
@@ -232,7 +229,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-        return GeoRenderBlockEvent.Pre.EVENT.handle(new GeoRenderBlockEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
+		return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireBlockPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 
 	/**
@@ -240,6 +237,6 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
 	 */
 	@Override
 	public void firePostRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		GeoRenderBlockEvent.Post.EVENT.handle(new GeoRenderBlockEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireBlockPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 }

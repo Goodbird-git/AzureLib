@@ -2,8 +2,6 @@ package mod.azure.azurelib.renderer;
 
 import java.util.List;
 
-import mod.azure.azurelib.event.GeoRenderItemEvent;
-import mod.azure.azurelib.event.GeoRenderReplacedEntityEvent;
 import mod.azure.azurelib.platform.Services;
 import org.joml.Matrix4f;
 
@@ -19,7 +17,6 @@ import mod.azure.azurelib.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.event.GeoRenderEvent;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
@@ -265,7 +262,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 	 */
 	@Override
 	public void fireCompileRenderLayersEvent() {
-		GeoRenderItemEvent.CompileRenderLayers.EVENT.handle(new GeoRenderItemEvent.CompileRenderLayers(this));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileItemRenderLayers(this);
 	}
 
 	/**
@@ -275,7 +272,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-        return GeoRenderItemEvent.Pre.EVENT.handle(new GeoRenderItemEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
+		return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireItemPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 
 	/**
@@ -283,6 +280,6 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
 	 */
 	@Override
 	public void firePostRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		GeoRenderItemEvent.Post.EVENT.handle(new GeoRenderItemEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireItemPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 }

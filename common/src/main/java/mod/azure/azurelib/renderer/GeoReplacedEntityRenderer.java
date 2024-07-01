@@ -12,13 +12,11 @@ import mod.azure.azurelib.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.event.GeoRenderReplacedEntityEvent;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.platform.Services;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,8 +33,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -502,7 +498,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 	 */
 	@Override
 	public void fireCompileRenderLayersEvent() {
-		GeoRenderReplacedEntityEvent.CompileRenderLayers.EVENT.handle(new GeoRenderReplacedEntityEvent.CompileRenderLayers(this));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileReplacedEntityRenderLayers(this);
 	}
 
 	/**
@@ -512,7 +508,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-        return GeoRenderReplacedEntityEvent.Pre.EVENT.handle(new GeoRenderReplacedEntityEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
+		return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireReplacedEntityPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 
 	/**
@@ -520,6 +516,6 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 	 */
 	@Override
 	public void firePostRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		GeoRenderReplacedEntityEvent.Post.EVENT.handle(new GeoRenderReplacedEntityEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireReplacedEntityPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 }
