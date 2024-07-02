@@ -7,7 +7,6 @@ import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
-import mod.azure.azurelib.common.api.common.event.GeoRenderEntityEvent;
 import mod.azure.azurelib.common.internal.client.model.data.EntityModelData;
 import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
@@ -743,7 +742,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      */
     @Override
     public void fireCompileRenderLayersEvent() {
-        GeoRenderEntityEvent.CompileRenderLayers.EVENT.handle(new GeoRenderEntityEvent.CompileRenderLayers(this));
+        Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileEntityRenderLayers(this);
     }
 
     /**
@@ -759,9 +758,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float partialTick,
             int packedLight
     ) {
-        return GeoRenderEntityEvent.Pre.EVENT.handle(
-                new GeoRenderEntityEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight)
-        );
+        return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireEntityPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
     }
 
     /**
@@ -775,8 +772,6 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float partialTick,
             int packedLight
     ) {
-        GeoRenderEntityEvent.Post.EVENT.handle(
-                new GeoRenderEntityEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight)
-        );
+        Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireEntityPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
     }
 }

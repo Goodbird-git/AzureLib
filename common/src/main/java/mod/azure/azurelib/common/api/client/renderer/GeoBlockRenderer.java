@@ -7,7 +7,6 @@ import com.mojang.math.Axis;
 import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayersContainer;
-import mod.azure.azurelib.common.api.common.event.GeoRenderBlockEvent;
 import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
@@ -332,7 +331,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
      */
     @Override
     public void fireCompileRenderLayersEvent() {
-        GeoRenderBlockEvent.CompileRenderLayers.EVENT.handle(new GeoRenderBlockEvent.CompileRenderLayers(this));
+        Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileBlockRenderLayers(this);
     }
 
     /**
@@ -348,9 +347,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
             float partialTick,
             int packedLight
     ) {
-        return GeoRenderBlockEvent.Pre.EVENT.handle(
-                new GeoRenderBlockEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight)
-        );
+        return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireBlockPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
     }
 
     /**
@@ -364,8 +361,6 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
             float partialTick,
             int packedLight
     ) {
-        GeoRenderBlockEvent.Post.EVENT.handle(
-                new GeoRenderBlockEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight)
-        );
+        Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireBlockPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
     }
 }
