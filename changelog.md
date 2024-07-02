@@ -1,7 +1,4 @@
-v2.2.9
+v2.2.10
 
-- Port Easing Fix
-- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
-- Fixes isPerspectiveAware JavaDoc
-- Fix stale buffer on Entities/Layers
-- Add support for scale attribute/missing shaking for GeoReplaced
+- Remove unneeded 0.01f translate in GeoEntityRenderer
+- Rewrite events using Services
