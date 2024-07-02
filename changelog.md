@@ -1,4 +1,4 @@
-v2.3.8
+v2.3.9
 
-- Fixes registerEntity defaulting to Mob instead of Entity.
-- Fixes Structure registerStructure not using the proper setup. 
+- Remove unneeded 0.01f translate in GeoEntityRenderer
+- Rewrite events using Services
