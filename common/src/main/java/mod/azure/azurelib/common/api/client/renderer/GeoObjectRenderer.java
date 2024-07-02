@@ -2,7 +2,6 @@ package mod.azure.azurelib.common.api.client.renderer;
 
 import java.util.List;
 
-import mod.azure.azurelib.common.api.common.event.GeoRenderObjectEvent;
 import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 import mod.azure.azurelib.common.platform.Services;
@@ -200,7 +199,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
 	 */
 	@Override
 	public void fireCompileRenderLayersEvent() {
-		GeoRenderObjectEvent.CompileRenderLayers.EVENT.handle(new GeoRenderObjectEvent.CompileRenderLayers(this));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileObjectRenderLayers(this);
 	}
 
 	/**
@@ -210,7 +209,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
 	 */
 	@Override
 	public boolean firePreRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-        return GeoRenderObjectEvent.Pre.EVENT.handle(new GeoRenderObjectEvent.Pre(this, poseStack, model, bufferSource, partialTick, packedLight));
+		return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireObjectPreRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 
 	/**
@@ -218,6 +217,6 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
 	 */
 	@Override
 	public void firePostRenderEvent(PoseStack poseStack, BakedGeoModel model, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-		GeoRenderObjectEvent.Post.EVENT.handle(new GeoRenderObjectEvent.Post(this, poseStack, model, bufferSource, partialTick, packedLight));
+		Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireObjectPostRender(this, poseStack, model, bufferSource, partialTick, packedLight);
 	}
 }
