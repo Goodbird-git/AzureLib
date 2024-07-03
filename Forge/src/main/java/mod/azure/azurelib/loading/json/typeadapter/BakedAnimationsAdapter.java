@@ -137,22 +137,7 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 
 			for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
 				if (entry.getValue() instanceof JsonObject entryObj && !entryObj.has("vector")) {
-					String timestamp = entry.getKey();
-					double time = NumberUtils.isCreatable(timestamp) ? Double.parseDouble(timestamp) : 0;
-
-					if (entryObj.has("pre")) {
-						JsonElement postElement = entryObj.get("pre");
-						JsonArray array = postElement.isJsonArray() ? postElement.getAsJsonArray() : GsonHelper.getAsJsonArray(postElement.getAsJsonObject(), "vector");
-
-						list.add(Pair.of(timestamp, array));
-					}
-
-					if (entryObj.has("post")) {
-						JsonElement postElement = entryObj.get("post");
-						JsonArray array = postElement.isJsonArray() ? postElement.getAsJsonArray() : GsonHelper.getAsJsonArray(postElement.getAsJsonObject(), "vector");
-
-						list.add(Pair.of(String.valueOf(time + 0.0000001), array));
-					}
+					list.add(getTripletObjBedrock(entry.getKey(), (JsonObject) entry.getValue()));
 
 					continue;
 				}
@@ -164,6 +149,24 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 		}
 
 		throw new JsonParseException("Invalid object type provided to getTripletObj, got: " + element);
+	}
+
+	private static Pair<String, JsonElement> getTripletObjBedrock(String timestamp, JsonObject keyframe) {
+		JsonArray keyframeValues = null;
+
+		if (keyframe.has("pre")) {
+			JsonElement pre = keyframe.get("pre");
+			keyframeValues = pre.isJsonArray() ? pre.getAsJsonArray() : GsonHelper.getAsJsonArray(pre.getAsJsonObject(), "vector");
+		}
+		else if (keyframe.has("post")) {
+			JsonElement post = keyframe.get("post");
+			keyframeValues = post.isJsonArray() ? post.getAsJsonArray() : GsonHelper.getAsJsonArray(post.getAsJsonObject(), "vector");
+		}
+
+		if (keyframeValues != null)
+			return Pair.of(NumberUtils.isCreatable(timestamp) ? timestamp : "0", keyframeValues);
+
+		throw new JsonParseException("Invalid keyframe data - expected array, found " + keyframe);
 	}
 
 	private KeyframeStack<Keyframe<IValue>> buildKeyframeStack(List<Pair<String, JsonElement>> entries, boolean isForRotation) throws MolangException {
