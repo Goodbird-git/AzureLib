@@ -2,6 +2,7 @@ package mod.azure.azurelib.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.GeoReplacedEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.renderer.*;
@@ -317,8 +318,7 @@ public interface GeoRenderEvent {
     }
 
     /**
-     * Renderer events for {@link net.minecraft.world.entity.Entity Entities} being rendered by {@link GeoEntityRenderer}, as well as
-     * {@link specialty.DynamicGeoEntityRenderer DynamicGeoEntityRenderer}
+     * Renderer events for {@link net.minecraft.world.entity.Entity Entities} being rendered by {@link GeoEntityRenderer}
      */
     abstract class Entity extends Event implements GeoRenderEvent {
         private final GeoEntityRenderer<?> renderer;
@@ -719,7 +719,7 @@ public interface GeoRenderEvent {
     }
 
     /**
-     * Renderer events for miscellaneous {@link software.bernie.geckolib.animatable.GeoReplacedEntity replaced entities} being rendered by {@link GeoReplacedEntityRenderer}
+     * Renderer events for miscellaneous {@link GeoReplacedEntity replaced entities} being rendered by {@link GeoReplacedEntityRenderer}
      */
     abstract class ReplacedEntity extends Event implements GeoRenderEvent {
         private final GeoReplacedEntityRenderer<?, ?> renderer;
