@@ -1,22 +1,11 @@
-buildscript {
-    repositories {
-    	maven { url  = 'https://plugins.gradle.org/m2/' }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-    }
-}
-
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id "com.modrinth.minotaur" version "2.+"
+    id "me.modmuss50.mod-publish-plugin" version "0.4.0"
 }
 
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
-import com.modrinth.minotaur.dependencies.ModDependency
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -27,13 +16,10 @@ group = project.maven_group
 
 repositories {
     mavenCentral()
-    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/' }
     maven { url 'https://maven.blamejared.com' }
 	maven { url "https://cfa2.cursemaven.com" }
-    maven { url "https://maven.cloudsmith.io/azuredoom-mods/azurelib/" }
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url "https://maven.shedaniel.me/" }
-	maven { url = "https://ladysnake.jfrog.io/artifactory/mods" }
 	maven { url = "https://maven.terraformersmc.com/" }
 }
 
@@ -83,20 +69,6 @@ jar {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-			from components.java
-            artifactId = project.archives_base_name
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
-publishing {
   repositories {
     maven {
       name = "azurelib"
@@ -134,55 +106,31 @@ processResources {
 }
 
 if (file('key.properties').exists()) {
-    curseforge {
+    publishMods {
+        def releaseProp = new Properties()
+        File secretPropsFile = file("key.properties")
+        releaseProp.load(secretPropsFile.newInputStream())
+        file = jar.archiveFile
+        changelog = rootProject.file("changelog.txt").text
+        type = STABLE
+        modLoaders.add("forge")
 
-    def curseProp = new Properties()
-    File secretPropsFile = file("key.properties")
-    curseProp.load(secretPropsFile.newInputStream())
-
-    project {
-        apiKey = curseProp.getProperty('curseKey')
-        id = "817423"
-        releaseType = "release"
-        changelogType = 'text'
-        changelog = file('changelog.txt')
-		addGameVersion("1.18.2")
-        addGameVersion("Fabric")
-        addGameVersion("Quilt")
-        addGameVersion("Java 17")
-
-        relations {
-            requiredDependency 'fabric-api'      
+        curseforge {
+            projectId = "817423"
+            projectSlug = "azurelib"
+            accessToken = releaseProp.getProperty("curseKey")
+            minecraftVersions.add("1.18.2")
+            requires {
+                slug = "fabric-api"
+            }
         }
-        mainArtifact(remapJar)
-
-        afterEvaluate {
-            uploadTask.dependsOn("remapJar")
+        modrinth {
+            projectId = "7zlUOZvb"
+            accessToken = releaseProp.getProperty('modrinthKey')
+            minecraftVersions.add("1.18.2")
+            requires {
+                slug = "fabric-api"
+            }
         }
     }
-    options {
-    	//debug = true
-        forgeGradleIntegration = false
-    }
-   }
-}
-
-if (file('key.properties').exists()) {
-	modrinth {
-		def modrinthProp = new Properties()
-		File secretPropsFile = file("key.properties")
-		modrinthProp.load(secretPropsFile.newInputStream())
-		
-		token = modrinthProp.getProperty('modrinthKey')
-		projectId = '7zlUOZvb' 
-		versionNumber = project.mod_version 
-		uploadFile = remapJar 
-		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.18.2']
-		versionType = "release"
-		loaders = ['fabric','quilt']
-		dependencies { 
-        	required.project "fabric-api"
-   		}
-	}
 }
