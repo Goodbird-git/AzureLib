@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -514,7 +515,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     }
 
     /**
-     * Apply custom scaling to account for {@link net.minecraft.client.model.AgeableListModel AgeableListModel} baby models
+     * Apply custom scaling to account for {@link AgeableModel AgeableModel} baby models
      */
     public void scaleModelForBaby(MatrixStack poseStack, T animatable, float partialTick, boolean isReRender) {
         if (!this.young || isReRender)

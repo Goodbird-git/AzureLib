@@ -23,6 +23,7 @@ import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.model.ModelRenderer.ModelBox;
@@ -46,7 +47,7 @@ import java.util.UUID;
 
 /**
  * Builtin class for handling dynamic armor rendering on AzureLib entities.<br>
- * Supports both {@link mod.azure.azurelib.animatable.GeoItem AzureLib} and {@link net.minecraft.world.item.ArmorItem Vanilla} armor models.<br>
+ * Supports both {@link mod.azure.azurelib.animatable.GeoItem AzureLib} and {@link ArmorItem Vanilla} armor models.<br>
  * Unlike a traditional armor renderer, this renderer renders per-bone, giving much more flexible armor rendering.
  */
 public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends GeoRenderLayer<T> {
@@ -213,7 +214,7 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
 
     /**
      * Gets a cached resource path for the vanilla armor layer texture for this armor piece.<br>
-     * Equivalent to {@link net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer#getArmorLocation HumanoidArmorLayer.getArmorLocation}
+     * Equivalent to {@link BipedArmorLayer#getArmorLocation HumanoidArmorLayer.getArmorLocation}
      */
     public ResourceLocation getVanillaArmorResource(Entity entity, ItemStack stack, EquipmentSlotType slot, String type) {
         String domain = "minecraft";
