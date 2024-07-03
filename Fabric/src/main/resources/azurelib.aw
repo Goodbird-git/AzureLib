@@ -3,10 +3,10 @@ accessible field net/minecraft/world/entity/Entity yRot F
 accessible field net/minecraft/world/entity/Entity xRot F
 accessible method net/minecraft/world/entity/Entity getLeashOffset ()Lnet/minecraft/world/phys/Vec3;
 
-accessible field net/minecraft/client/model/geom/ModelPart cubes Ljava/util/List;
+accessible field net/minecraft/client/model/geom/ModelPart cubes Lit/unimi/dsi/fastutil/objects/ObjectList;
 accessible method net/minecraft/client/renderer/LevelRenderer shouldShowEntityOutlines ()Z
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher renderers Ljava/util/Map;
-accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
+accessible class net/minecraft/client/renderer/RenderStateShard$ShadeModelStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard
@@ -31,8 +31,8 @@ accessible field com/mojang/math/Matrix4f m33 F
 accessible class net/minecraft/client/model/geom/ModelPart$Cube
 accessible field net/minecraft/client/model/geom/ModelPart cubes Lit/unimi/dsi/fastutil/objects/ObjectList;
 
-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;IILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;IIZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 
 accessible field net/minecraft/client/model/AgeableListModel scaleHead Z
 accessible field net/minecraft/client/model/AgeableListModel yHeadOffset F

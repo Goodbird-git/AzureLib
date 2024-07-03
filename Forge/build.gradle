@@ -4,8 +4,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.spongepowered.mixin' version '0.7.+'
-    id "com.modrinth.minotaur" version "2.+"
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "me.modmuss50.mod-publish-plugin" version "0.4.0"
 }
 
 import groovy.json.JsonOutput
@@ -15,7 +14,7 @@ version = mod_version
 group = maven_group
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = "${mod_id}-forge-${minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
@@ -128,36 +127,25 @@ processResources {
 }
 
 if (file('key.properties').exists()) {
-    curseforge {
-        def curseProp = new Properties()
+    publishMods {
+        def releaseProp = new Properties()
         File secretPropsFile = file("key.properties")
-        curseProp.load(secretPropsFile.newInputStream())
+        releaseProp.load(secretPropsFile.newInputStream())
+        file = jar.archiveFile
+        changelog = rootProject.file("changelog.txt").text
+        type = STABLE
+        modLoaders.add("forge")
 
-        project {
-            apiKey = curseProp.getProperty('curseKey')
-            id = "817423"
-            releaseType = "release"
-            changelogType = 'text'
-            changelog = file('changelog.txt')
-            addGameVersion("1.16.5")
-            addGameVersion("Forge")
-            addGameVersion("Java 8")
+        curseforge {
+            projectId = "817423"
+            projectSlug = "azurelib"
+            accessToken = releaseProp.getProperty("curseKey")
+            minecraftVersions.add("1.16.5")
+        }
+        modrinth {
+            projectId = "7zlUOZvb"
+            accessToken = releaseProp.getProperty('modrinthKey')
+            minecraftVersions.add("1.16.5")
         }
     }
-}
-
-if (file('key.properties').exists()) {
-	modrinth {
-		def modrinthProp = new Properties()
-		File secretPropsFile = file("key.properties")
-		modrinthProp.load(secretPropsFile.newInputStream())
-		
-		token = modrinthProp.getProperty('modrinthKey')
-		projectId = '7zlUOZvb' 
-		versionNumber = project.mod_version 
-		uploadFile = jar 
-		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.16.5']
-		loaders = ['forge']
-	}
 }
