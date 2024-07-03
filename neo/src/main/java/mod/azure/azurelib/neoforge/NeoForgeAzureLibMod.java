@@ -10,6 +10,7 @@ import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.neoforge.platform.NeoForgeAzureLibNetwork;
 import mod.azure.azurelib.neoforge.platform.NeoForgeCommonRegistry;
+import mod.azure.azurelib.sblforked.SBLConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -63,6 +64,7 @@ public final class NeoForgeAzureLibMod {
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerMessages);
+        SBLConstants.SBL_LOADER.init(modEventBus);
     }
 
     private void init(FMLCommonSetupEvent event) {

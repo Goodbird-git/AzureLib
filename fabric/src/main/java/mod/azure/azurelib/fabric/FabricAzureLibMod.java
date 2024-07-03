@@ -9,6 +9,7 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.sblforked.SBLConstants;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -23,6 +24,7 @@ public final class FabricAzureLibMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        SBLConstants.SBL_LOADER.init(null);
         ConfigIO.FILE_WATCH_MANAGER.startService();
         AzureLib.initialize();
         AzureLibMod.initRegistry();
