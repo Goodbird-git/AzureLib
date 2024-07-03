@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.typeadapter;
 
 import java.lang.reflect.Type;
@@ -78,9 +85,9 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 	}
 
 	private Animation bakeAnimation(String name, JsonObject animationObj, JsonDeserializationContext context) throws MolangException {
-		double length = animationObj.has("animation_length") ? JSONUtils.getAsFloat(animationObj, "animation_length") * 20d : -1;
+		double length = animationObj.has("animation_length") ? JSONUtils.getFloat(animationObj, "animation_length") * 20d : -1;
 		Animation.LoopType loopType = Animation.LoopType.fromJson(animationObj.get("loop"));
-		BoneAnimation[] boneAnimations = bakeBoneAnimations(JSONUtils.getAsJsonObject(animationObj, "bones", new JsonObject()));
+		BoneAnimation[] boneAnimations = bakeBoneAnimations(JSONUtils.getJsonObject(animationObj, "bones", new JsonObject()));
 		Animation.Keyframes keyframes = context.deserialize(animationObj, Animation.Keyframes.class);
 
 		if (length == -1)
@@ -116,9 +123,9 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 		if (element instanceof JsonPrimitive) {
 			JsonArray array = new JsonArray();
 
-			array.add(((JsonPrimitive)element));
-			array.add(((JsonPrimitive)element));
-			array.add(((JsonPrimitive)element));
+			array.add(element);
+			array.add(element);
+			array.add(element);
 
 			element = array;
 		}
@@ -150,11 +157,11 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 
 		if (keyframe.has("pre")) {
 			JsonElement pre = keyframe.get("pre");
-			keyframeValues = pre.isJsonArray() ? pre.getAsJsonArray() : JSONUtils.getAsJsonArray(pre.getAsJsonObject(), "vector");
+			keyframeValues = pre.isJsonArray() ? pre.getAsJsonArray() : JSONUtils.getJsonArray(pre.getAsJsonObject(), "vector");
 		}
 		else if (keyframe.has("post")) {
 			JsonElement post = keyframe.get("post");
-			keyframeValues = post.isJsonArray() ? post.getAsJsonArray() : JSONUtils.getAsJsonArray(post.getAsJsonObject(), "vector");
+			keyframeValues = post.isJsonArray() ? post.getAsJsonArray() : JSONUtils.getJsonArray(post.getAsJsonObject(), "vector");
 		}
 
 		if (keyframeValues != null)
@@ -187,7 +194,7 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 			double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(entry.getFirst()) : 0;
 			double timeDelta = curTime - prevTime;
 
-			JsonArray keyFrameVector = element instanceof JsonArray ?  ((JsonArray)element) : JSONUtils.getAsJsonArray(element.getAsJsonObject(), "vector");
+			JsonArray keyFrameVector = element instanceof JsonArray ?  ((JsonArray)element) : JSONUtils.getJsonArray(element.getAsJsonObject(), "vector");
 			MolangValue rawXValue = MolangParser.parseJson(keyFrameVector.get(0));
 			MolangValue rawYValue = MolangParser.parseJson(keyFrameVector.get(1));
 			MolangValue rawZValue = MolangParser.parseJson(keyFrameVector.get(2));
@@ -198,7 +205,7 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 			JsonObject entryObj = element instanceof JsonObject ? ((JsonObject)element) : null;
 			EasingType easingType = entryObj != null && entryObj.has("easing") ? EasingType.fromJson(entryObj.get("easing")) : EasingType.LINEAR;
 			List<IValue> easingArgs = entryObj != null && entryObj.has("easingArgs") ?
-					JsonUtil.jsonArrayToList(JSONUtils.getAsJsonArray(entryObj, "easingArgs"), ele -> new Constant(ele.getAsDouble())) :
+					JsonUtil.jsonArrayToList(JSONUtils.getJsonArray(entryObj, "easingArgs"), ele -> new Constant(ele.getAsDouble())) :
 					new ObjectArrayList<>();
 
 			xFrames.add(new Keyframe<>(timeDelta * 20, prevEntry == null ? xValue : xPrev, xValue, easingType, easingArgs));

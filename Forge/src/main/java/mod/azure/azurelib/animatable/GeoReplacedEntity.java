@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.animatable;
 
 import javax.annotation.Nullable;
@@ -33,7 +40,7 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 	 */
 	@Nullable
 	default <D> D getAnimData(Entity entity, SerializableDataTicket<D> dataTicket) {
-		return getAnimatableInstanceCache().getManagerForId(entity.getId()).getData(dataTicket);
+		return getAnimatableInstanceCache().getManagerForId(entity.getEntityId()).getData(dataTicket);
 	}
 
 	/**
@@ -45,10 +52,10 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 	 * @param data          The data to sync
 	 */
 	default <D> void setAnimData(Entity relatedEntity, SerializableDataTicket<D> dataTicket, D data) {
-		if (relatedEntity.getCommandSenderWorld().isClientSide()) {
-			getAnimatableInstanceCache().getManagerForId(relatedEntity.getId()).setData(dataTicket, data);
+		if (relatedEntity.getEntityWorld().isRemote()) {
+			getAnimatableInstanceCache().getManagerForId(relatedEntity.getEntityId()).setData(dataTicket, data);
 		} else {
-			AzureLibNetwork.send(new EntityAnimDataSyncPacket<>(relatedEntity.getId(), dataTicket, data), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> relatedEntity));
+			AzureLibNetwork.send(new EntityAnimDataSyncPacket<>(relatedEntity.getEntityId(), dataTicket, data), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> relatedEntity));
 		}
 	}
 
@@ -61,10 +68,10 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 	 * @param animName       The name of animation to trigger. This needs to have been registered with the controller via {@link mod.azure.azurelib.core.animation.AnimationController#triggerableAnim AnimationController.triggerableAnim}
 	 */
 	default void triggerAnim(Entity relatedEntity, @Nullable String controllerName, String animName) {
-		if (relatedEntity.getCommandSenderWorld().isClientSide()) {
-			getAnimatableInstanceCache().getManagerForId(relatedEntity.getId()).tryTriggerAnimation(controllerName, animName);
+		if (relatedEntity.getEntityWorld().isRemote()) {
+			getAnimatableInstanceCache().getManagerForId(relatedEntity.getEntityId()).tryTriggerAnimation(controllerName, animName);
 		} else {
-			AzureLibNetwork.send(new EntityAnimTriggerPacket<>(relatedEntity.getId(), controllerName, animName), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> relatedEntity));
+			AzureLibNetwork.send(new EntityAnimTriggerPacket<>(relatedEntity.getEntityId(), controllerName, animName), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> relatedEntity));
 		}
 	}
 
@@ -77,6 +84,6 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 	 */
 	@Override
 	default double getTick(Object entity) {
-		return ((Entity) entity).tickCount;
+		return ((Entity) entity).ticksExisted;
 	}
 }

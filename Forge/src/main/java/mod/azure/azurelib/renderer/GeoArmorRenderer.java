@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -15,7 +22,9 @@ import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -23,7 +32,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -65,7 +73,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
         super(1.0f);
 
         this.model = model;
-        this.young = false;
+        this.isChild = false;
     }
 
     /**
@@ -109,17 +117,17 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      */
     @Override
     public long getInstanceId(T animatable) {
-        return GeoItem.getId(this.currentStack) + this.currentEntity.getId();
+        return GeoItem.getId(this.currentStack) + this.currentEntity.getEntityId();
     }
 
     /**
      * Gets the {@link RenderType} to render the given animatable with.<br>
-     * Uses the {@link RenderType#armorCutoutNoCull} {@code RenderType} by default.<br>
+     * Uses the {@link RenderType#getEntityCutoutNoCull} {@code RenderType} by default.<br>
      * Override this to change the way a model will render (such as translucent models, etc)
      */
     @Override
     public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable IRenderTypeBuffer bufferSource, float partialTick) {
-        return RenderType.armorCutoutNoCull(texture);
+        return RenderType.getEntityCutoutNoCull(texture);
     }
 
     /**
@@ -250,7 +258,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      */
     @Override
     public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, @Nullable IRenderTypeBuffer bufferSource, @Nullable IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.entityRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         applyBaseModel(this.baseModel);
         grabRelevantBones(getGeoModel().getBakedModel(getGeoModel().getModelResource(this.animatable)));
@@ -264,17 +272,17 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     }
 
     @Override
-    public void renderToBuffer(MatrixStack poseStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void render(MatrixStack poseStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         Minecraft mc = Minecraft.getInstance();
-        IRenderTypeBuffer bufferSource = mc.levelRenderer.renderBuffers.bufferSource();
+        IRenderTypeBuffer bufferSource = mc.worldRenderer.renderTypeTextures.getBufferSource();
 
-        if (mc.levelRenderer.shouldShowEntityOutlines() && mc.shouldEntityAppearGlowing(this.currentEntity))
-            bufferSource = mc.levelRenderer.renderBuffers.outlineBufferSource();
+        if (mc.worldRenderer.isRenderEntityOutlines())
+            bufferSource = mc.worldRenderer.renderTypeTextures.getOutlineBufferSource();
 
-        float partialTick = mc.getFrameTime();
+        float partialTick = mc.getRenderPartialTicks();
         RenderType renderType = getRenderType(this.animatable, getTextureLocation(this.animatable), bufferSource,
                 partialTick);
-        buffer = ItemRenderer.getArmorFoilBuffer(bufferSource, renderType, false, this.currentStack.hasFoil());
+        buffer = ItemRenderer.getBuffer(bufferSource, renderType, false, this.currentStack.hasEffect());
 
         defaultRender(poseStack, this.animatable, bufferSource, null, buffer, 0, partialTick, packedLight);
     }
@@ -285,7 +293,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      */
     @Override
     public void actuallyRender(MatrixStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
         poseStack.translate(0, 24 / 16f, 0);
         poseStack.scale(-1, -1, 1);
 
@@ -301,11 +309,11 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
             this.model.handleAnimations(animatable, instanceId, animationState);
         }
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.modelRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         GeoRenderer.super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender,
                 partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -314,7 +322,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f poseState = new Matrix4f(poseStack.getLast().getMatrix());
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations));
@@ -367,9 +375,9 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      * Applies settings and transformations pre-render based on the default model
      */
     protected void applyBaseModel(BipedModel<?> baseModel) {
-        this.young = baseModel.young;
-        this.crouching = baseModel.crouching;
-        this.riding = baseModel.riding;
+        this.isChild = baseModel.isChild;
+        this.isSneak = baseModel.isSneak;
+        this.isSitting = baseModel.isSitting;
         this.rightArmPose = baseModel.rightArmPose;
         this.leftArmPose = baseModel.leftArmPose;
     }
@@ -380,7 +388,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      * This is only called by default for non-geo entities (I.E. players or vanilla mobs)
      */
     protected void applyBoneVisibilityBySlot(EquipmentSlotType currentSlot) {
-        setAllVisible(false);
+        setVisible(false);
 
         switch (currentSlot) {
             case HEAD:
@@ -412,22 +420,22 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      * If you are rendering a geo entity with armor, you should probably be calling this prior to rendering
      */
     public void applyBoneVisibilityByPart(EquipmentSlotType currentSlot, ModelRenderer currentPart, BipedModel<?> model) {
-        setAllVisible(false);
+        setVisible(false);
 
-        currentPart.visible = true;
+        currentPart.showModel = true;
         GeoBone bone = null;
 
-        if (currentPart == model.hat || currentPart == model.head) {
+        if (currentPart == model.bipedHeadwear || currentPart == model.bipedHead) {
             bone = this.head;
-        } else if (currentPart == model.body) {
+        } else if (currentPart == model.bipedBody) {
             bone = this.body;
-        } else if (currentPart == model.leftArm) {
+        } else if (currentPart == model.bipedLeftArm) {
             bone = this.leftArm;
-        } else if (currentPart == model.rightArm) {
+        } else if (currentPart == model.bipedRightArm) {
             bone = this.rightArm;
-        } else if (currentPart == model.leftLeg) {
+        } else if (currentPart == model.bipedLeftLeg) {
             bone = currentSlot == EquipmentSlotType.FEET ? this.leftBoot : this.leftLeg;
-        } else if (currentPart == model.rightLeg) {
+        } else if (currentPart == model.bipedRightLeg) {
             bone = currentSlot == EquipmentSlotType.FEET ? this.rightBoot : this.rightLeg;
         }
 
@@ -440,61 +448,61 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      */
     protected void applyBaseTransformations(BipedModel<?> baseModel) {
         if (this.head != null) {
-            ModelRenderer headPart = baseModel.head;
+            ModelRenderer headPart = baseModel.bipedHead;
 
             RenderUtils.matchModelPartRot(headPart, this.head);
-            this.head.updatePosition(headPart.x, -headPart.y, headPart.z);
+            this.head.updatePosition(headPart.rotationPointX, -headPart.rotationPointY, headPart.rotationPointZ);
         }
 
         if (this.body != null) {
-            ModelRenderer bodyPart = baseModel.body;
+            ModelRenderer bodyPart = baseModel.bipedBody;
 
             RenderUtils.matchModelPartRot(bodyPart, this.body);
-            this.body.updatePosition(bodyPart.x, -bodyPart.y, bodyPart.z);
+            this.body.updatePosition(bodyPart.rotationPointX, -bodyPart.rotationPointY, bodyPart.rotationPointZ);
         }
 
         if (this.rightArm != null) {
-            ModelRenderer rightArmPart = baseModel.rightArm;
+            ModelRenderer rightArmPart = baseModel.bipedRightArm;
 
             RenderUtils.matchModelPartRot(rightArmPart, this.rightArm);
-            this.rightArm.updatePosition(rightArmPart.x + 5, 2 - rightArmPart.y, rightArmPart.z);
+            this.rightArm.updatePosition(rightArmPart.rotationPointX + 5, 2 - rightArmPart.rotationPointY, rightArmPart.rotationPointZ);
         }
 
         if (this.leftArm != null) {
-            ModelRenderer leftArmPart = baseModel.leftArm;
+            ModelRenderer leftArmPart = baseModel.bipedLeftArm;
 
             RenderUtils.matchModelPartRot(leftArmPart, this.leftArm);
-            this.leftArm.updatePosition(leftArmPart.x - 5f, 2f - leftArmPart.y, leftArmPart.z);
+            this.leftArm.updatePosition(leftArmPart.rotationPointX - 5f, 2f - leftArmPart.rotationPointY, leftArmPart.rotationPointZ);
         }
 
         if (this.rightLeg != null) {
-            ModelRenderer rightLegPart = baseModel.rightLeg;
+            ModelRenderer rightLegPart = baseModel.bipedRightLeg;
 
             RenderUtils.matchModelPartRot(rightLegPart, this.rightLeg);
-            this.rightLeg.updatePosition(rightLegPart.x + 2, 12 - rightLegPart.y, rightLegPart.z);
+            this.rightLeg.updatePosition(rightLegPart.rotationPointX + 2, 12 - rightLegPart.rotationPointY, rightLegPart.rotationPointZ);
 
             if (this.rightBoot != null) {
                 RenderUtils.matchModelPartRot(rightLegPart, this.rightBoot);
-                this.rightBoot.updatePosition(rightLegPart.x + 2, 12 - rightLegPart.y, rightLegPart.z);
+                this.rightBoot.updatePosition(rightLegPart.rotationPointX + 2, 12 - rightLegPart.rotationPointY, rightLegPart.rotationPointZ);
             }
         }
 
         if (this.leftLeg != null) {
-            ModelRenderer leftLegPart = baseModel.leftLeg;
+            ModelRenderer leftLegPart = baseModel.bipedLeftLeg;
 
             RenderUtils.matchModelPartRot(leftLegPart, this.leftLeg);
-            this.leftLeg.updatePosition(leftLegPart.x - 2, 12 - leftLegPart.y, leftLegPart.z);
+            this.leftLeg.updatePosition(leftLegPart.rotationPointX - 2, 12 - leftLegPart.rotationPointY, leftLegPart.rotationPointZ);
 
             if (this.leftBoot != null) {
                 RenderUtils.matchModelPartRot(leftLegPart, this.leftBoot);
-                this.leftBoot.updatePosition(leftLegPart.x - 2, 12 - leftLegPart.y, leftLegPart.z);
+                this.leftBoot.updatePosition(leftLegPart.rotationPointX - 2, 12 - leftLegPart.rotationPointY, leftLegPart.rotationPointZ);
             }
         }
     }
 
     @Override
-    public void setAllVisible(boolean pVisible) {
-        super.setAllVisible(pVisible);
+    public void setVisible(boolean pVisible) {
+        super.setVisible(pVisible);
 
         setBoneVisible(this.head, pVisible);
         setBoneVisible(this.body, pVisible);
@@ -507,25 +515,25 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     }
 
     /**
-     * Apply custom scaling to account for {@link net.minecraft.client.model.AgeableListModel AgeableListModel} baby models
+     * Apply custom scaling to account for {@link AgeableModel AgeableModel} baby models
      */
     public void scaleModelForBaby(MatrixStack poseStack, T animatable, float partialTick, boolean isReRender) {
-        if (!this.young || isReRender)
+        if (!this.isChild || isReRender)
             return;
 
         if (this.currentSlot == EquipmentSlotType.HEAD) {
-            if (this.baseModel.scaleHead) {
-                float headScale = 1.5f / this.baseModel.babyHeadScale;
+            if (this.baseModel.isChildHeadScaled) {
+                float headScale = 1.5f / this.baseModel.childHeadScale;
 
                 poseStack.scale(headScale, headScale, headScale);
             }
 
-            poseStack.translate(0, this.baseModel.yHeadOffset / 16f, this.baseModel.zHeadOffset / 16f);
+            poseStack.translate(0, this.baseModel.childHeadOffsetY / 16f, this.baseModel.childHeadOffsetZ / 16f);
         } else {
-            float bodyScale = 1 / this.baseModel.babyBodyScale;
+            float bodyScale = 1 / this.baseModel.childBodyScale;
 
             poseStack.scale(bodyScale, bodyScale, bodyScale);
-            poseStack.translate(0, this.baseModel.bodyYOffset / 16f, 0);
+            poseStack.translate(0, this.baseModel.childBodyOffsetY / 16f, 0);
         }
     }
 

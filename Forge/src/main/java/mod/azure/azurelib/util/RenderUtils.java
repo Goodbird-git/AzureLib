@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.util;
 
 import javax.annotation.Nullable;
@@ -13,6 +20,9 @@ import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.GeoReplacedEntityRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -30,10 +40,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Helper class for various methods and functions useful while rendering
@@ -45,21 +52,21 @@ public final class RenderUtils {
 
 	public static void rotateMatrixAroundBone(MatrixStack poseStack, CoreGeoBone bone) {
 		if (bone.getRotZ() != 0)
-			poseStack.mulPose(Vector3f.ZP.rotation(bone.getRotZ()));
+			poseStack.rotate(Vector3f.ZP.rotation(bone.getRotZ()));
 
 		if (bone.getRotY() != 0)
-			poseStack.mulPose(Vector3f.YP.rotation(bone.getRotY()));
+			poseStack.rotate(Vector3f.YP.rotation(bone.getRotY()));
 
 		if (bone.getRotX() != 0)
-			poseStack.mulPose(Vector3f.XP.rotation(bone.getRotX()));
+			poseStack.rotate(Vector3f.XP.rotation(bone.getRotX()));
 	}
 
 	public static void rotateMatrixAroundCube(MatrixStack poseStack, GeoCube cube) {
-		Vector3d rotation = cube.rotation();
+		Vec3d rotation = cube.rotation();
 
-		poseStack.mulPose(new Quaternion(0, 0, (float) rotation.z(), false));
-		poseStack.mulPose(new Quaternion(0, (float) rotation.y(), 0, false));
-		poseStack.mulPose(new Quaternion((float) rotation.x(), 0, 0, false));
+		poseStack.rotate(new Quaternion(0, 0, (float) rotation.z, false));
+		poseStack.rotate(new Quaternion(0, (float) rotation.y, 0, false));
+		poseStack.rotate(new Quaternion((float) rotation.x, 0, 0, false));
 	}
 
 	public static void scaleMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
@@ -67,8 +74,8 @@ public final class RenderUtils {
 	}
 
 	public static void translateToPivotPoint(MatrixStack poseStack, GeoCube cube) {
-		Vector3d pivot = cube.pivot();
-		poseStack.translate(pivot.x() / 16f, pivot.y() / 16f, pivot.z() / 16f);
+		Vec3d pivot = cube.pivot();
+		poseStack.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
 	}
 
 	public static void translateToPivotPoint(MatrixStack poseStack, CoreGeoBone bone) {
@@ -76,9 +83,9 @@ public final class RenderUtils {
 	}
 
 	public static void translateAwayFromPivotPoint(MatrixStack poseStack, GeoCube cube) {
-		Vector3d pivot = cube.pivot();
+		Vec3d pivot = cube.pivot();
 
-		poseStack.translate(-pivot.x() / 16f, -pivot.y() / 16f, -pivot.z() / 16f);
+		poseStack.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
 	}
 
 	public static void translateAwayFromPivotPoint(MatrixStack poseStack, CoreGeoBone bone) {
@@ -102,7 +109,7 @@ public final class RenderUtils {
 		inputMatrix = new Matrix4f(inputMatrix);
 
 		inputMatrix.invert();
-		inputMatrix.multiply(baseMatrix);
+		inputMatrix.mul(baseMatrix);
 
 		return inputMatrix;
 	}
@@ -112,8 +119,8 @@ public final class RenderUtils {
 	 * Usually used for rotating projectiles towards their trajectory, in an {@link GeoRenderer#preRender} override.<br>
 	 */
 	public static void faceRotation(MatrixStack poseStack, Entity animatable, float partialTick) {
-		poseStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.yRotO, animatable.yRot) - 90));
-		poseStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.xRotO, animatable.xRot)));
+		poseStack.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
+		poseStack.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
 	}
 
 	/**
@@ -132,7 +139,7 @@ public final class RenderUtils {
 		Minecraft mc = Minecraft.getInstance();
 
 		try {
-			originalTexture = mc.submit(() -> mc.getTextureManager().getTexture(texture)).get();
+			originalTexture = mc.supplyAsync(() -> mc.getTextureManager().getTexture(texture)).get();
 		} catch (Exception e) {
 			AzureLib.LOGGER.warn("Failed to load image for id {}", texture);
 			e.printStackTrace();
@@ -144,7 +151,7 @@ public final class RenderUtils {
 		NativeImage image = null;
 
 		try {
-			image = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getPixels() : NativeImage.read(mc.getResourceManager().getResource(texture).getInputStream());
+			image = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getTextureData() : NativeImage.read(mc.getResourceManager().getResource(texture).getInputStream());
 		} catch (Exception e) {
 			AzureLib.LOGGER.error("Failed to read image for id {}", texture);
 			e.printStackTrace();
@@ -177,10 +184,10 @@ public final class RenderUtils {
 	}
 
 	/**
-	 * Converts a given double array to its {@link Vector3d} equivalent
+	 * Converts a given double array to its {@link Vec3d} equivalent
 	 */
-	public static Vector3d arrayToVec(double[] array) {
-		return new Vector3d(array[0], array[1], array[2]);
+	public static Vec3d arrayToVec(double[] array) {
+		return new Vec3d(array[0], array[1], array[2]);
 	}
 
 	/**
@@ -188,7 +195,7 @@ public final class RenderUtils {
 	 * Usually used for items or armor rendering to match the rotations of other non-geo model parts.
 	 */
 	public static void matchModelPartRot(ModelRenderer from, CoreGeoBone to) {
-		to.updateRotation(-from.xRot, -from.yRot, from.zRot);
+		to.updateRotation(-from.rotateAngleX, -from.rotateAngleY, from.rotateAngleZ);
 	}
 
 	/**
@@ -196,13 +203,13 @@ public final class RenderUtils {
 	 * This performs a pseudo-ABS function to help resolve some of those issues.
 	 */
 	public static void fixInvertedFlatCube(GeoCube cube, Vector3f normal) {
-		if (normal.x() < 0 && (cube.size().y() == 0 || cube.size().z() == 0))
+		if (normal.getX() < 0 && (cube.size().y == 0 || cube.size().z == 0))
 			normal.mul(-1, 1, 1);
 
-		if (normal.y() < 0 && (cube.size().x() == 0 || cube.size().z() == 0))
+		if (normal.getY() < 0 && (cube.size().x == 0 || cube.size().z == 0))
 			normal.mul(1, -1, 1);
 
-		if (normal.z() < 0 && (cube.size().x() == 0 || cube.size().y() == 0))
+		if (normal.getZ() < 0 && (cube.size().x == 0 || cube.size().y == 0))
 			normal.mul(1, 1, -1);
 	}
 
@@ -230,7 +237,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoModel<?> getGeoModelForEntityType(EntityType<?> entityType) {
-		EntityRenderer<?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(entityType);
+		EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().renderers.get(entityType);
 
 		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
 	}
@@ -243,7 +250,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoAnimatable getReplacedAnimatable(EntityType<?> entityType) {
-		EntityRenderer<?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(entityType);
+		EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().renderers.get(entityType);
 
 		return renderer instanceof GeoReplacedEntityRenderer<?, ?> ? ((GeoReplacedEntityRenderer<?, ?>) renderer).getAnimatable() : null;
 	}
@@ -258,7 +265,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoModel<?> getGeoModelForEntity(Entity entity) {
-		EntityRenderer<?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+		EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().getRenderer(entity);
 
 		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
 	}

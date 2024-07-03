@@ -1,10 +1,18 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.model;
 
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * {@link DefaultedGeoModel} specific to {@link net.minecraft.world.item.Item Items}. Using this class pre-sorts provided asset paths into the "item" subdirectory
+ * {@link DefaultedGeoModel} specific to {@link Item Items}. Using this class pre-sorts provided asset paths into the "item" subdirectory
  */
 public class DefaultedItemGeoModel<T extends GeoAnimatable> extends DefaultedGeoModel<T> {
 	/**

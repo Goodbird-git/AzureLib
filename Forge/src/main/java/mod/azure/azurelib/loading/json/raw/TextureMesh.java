@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -49,11 +56,11 @@ public class TextureMesh {
 	public static JsonDeserializer<TextureMesh> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			double[] pivot = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "local_pivot", null));
-			double[] position = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "position", null));
-			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "rotation", null));
-			double[] scale = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "scale", null));
-			String texture = JSONUtils.getAsString(obj, "texture", null);
+			double[] pivot = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "local_pivot", null));
+			double[] position = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "position", null));
+			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "rotation", null));
+			double[] scale = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "scale", null));
+			String texture = JSONUtils.getString(obj, "texture", null);
 			return new TextureMesh(pivot, position, rotation, scale, texture);
 		};
 	}

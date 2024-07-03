@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network.packet;
 
 import java.util.function.Supplier;
@@ -11,7 +18,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
- * Packet for syncing user-definable animation data for {@link net.minecraft.world.entity.Entity Entities}
+ * Packet for syncing user-definable animation data for {@link Entity Entities}
  */
 public class EntityAnimDataSyncPacket<D> {
 	private final int entityId;
@@ -26,13 +33,13 @@ public class EntityAnimDataSyncPacket<D> {
 
 	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(this.entityId);
-		buffer.writeUtf(this.dataTicket.id());
+		buffer.writeString(this.dataTicket.id());
 		this.dataTicket.encode(this.data, buffer);
 	}
 
 	public static <D> EntityAnimDataSyncPacket<D> decode(PacketBuffer buffer) {
 		int entityId = buffer.readVarInt();
-		SerializableDataTicket<D> dataTicket = (SerializableDataTicket<D>) DataTickets.byName(buffer.readUtf());
+		SerializableDataTicket<D> dataTicket = (SerializableDataTicket<D>) DataTickets.byName(buffer.readString());
 
 		return new EntityAnimDataSyncPacket<>(entityId, dataTicket, dataTicket.decode(buffer));
 	}
@@ -41,7 +48,7 @@ public class EntityAnimDataSyncPacket<D> {
 		NetworkEvent.Context handler = context.get();
 
 		handler.enqueueWork(() -> {
-			Entity entity = ClientUtils.getLevel().getEntity(this.entityId);
+			Entity entity = ClientUtils.getLevel().getEntityByID(this.entityId);
 
 			if (entity instanceof GeoEntity)
 				((GeoEntity) entity).setAnimData(this.dataTicket, this.data);

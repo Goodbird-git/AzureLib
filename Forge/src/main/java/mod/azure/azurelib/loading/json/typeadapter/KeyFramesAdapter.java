@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.typeadapter;
 
 import java.lang.reflect.Type;
@@ -36,12 +43,12 @@ public class KeyFramesAdapter implements JsonDeserializer<Animation.Keyframes> {
 	}
 
 	private static SoundKeyframeData[] buildSoundFrameData(JsonObject rootObj) {
-		JsonObject soundsObj = JSONUtils.getAsJsonObject(rootObj, "sound_effects", new JsonObject());
+		JsonObject soundsObj = JSONUtils.getJsonObject(rootObj, "sound_effects", new JsonObject());
 		SoundKeyframeData[] sounds = new SoundKeyframeData[soundsObj.size()];
 		int index = 0;
 
 		for (Map.Entry<String, JsonElement> entry : soundsObj.entrySet()) {
-			sounds[index] = new SoundKeyframeData(Double.parseDouble(entry.getKey()) * 20d, JSONUtils.getAsString(entry.getValue().getAsJsonObject(), "effect"));
+			sounds[index] = new SoundKeyframeData(Double.parseDouble(entry.getKey()) * 20d, JSONUtils.getString(entry.getValue().getAsJsonObject(), "effect"));
 			index++;
 		}
 
@@ -49,15 +56,15 @@ public class KeyFramesAdapter implements JsonDeserializer<Animation.Keyframes> {
 	}
 
 	private static ParticleKeyframeData[] buildParticleFrameData(JsonObject rootObj) {
-		JsonObject particlesObj = JSONUtils.getAsJsonObject(rootObj, "particle_effects", new JsonObject());
+		JsonObject particlesObj = JSONUtils.getJsonObject(rootObj, "particle_effects", new JsonObject());
 		ParticleKeyframeData[] particles = new ParticleKeyframeData[particlesObj.size()];
 		int index = 0;
 
 		for (Map.Entry<String, JsonElement> entry : particlesObj.entrySet()) {
 			JsonObject obj = entry.getValue().getAsJsonObject();
-			String effect = JSONUtils.getAsString(obj, "effect", "");
-			String locator = JSONUtils.getAsString(obj, "locator", "");
-			String script = JSONUtils.getAsString(obj, "pre_effect_script", "");
+			String effect = JSONUtils.getString(obj, "effect", "");
+			String locator = JSONUtils.getString(obj, "locator", "");
+			String script = JSONUtils.getString(obj, "pre_effect_script", "");
 
 			particles[index] = new ParticleKeyframeData(Double.parseDouble(entry.getKey()) * 20d, effect, locator, script);
 			index++;
@@ -67,7 +74,7 @@ public class KeyFramesAdapter implements JsonDeserializer<Animation.Keyframes> {
 	}
 
 	private static CustomInstructionKeyframeData[] buildCustomFrameData(JsonObject rootObj) {
-		JsonObject customInstructionsObj = JSONUtils.getAsJsonObject(rootObj, "timeline", new JsonObject());
+		JsonObject customInstructionsObj = JSONUtils.getJsonObject(rootObj, "timeline", new JsonObject());
 		CustomInstructionKeyframeData[] customInstructions = new CustomInstructionKeyframeData[customInstructionsObj.size()];
 		int index = 0;
 

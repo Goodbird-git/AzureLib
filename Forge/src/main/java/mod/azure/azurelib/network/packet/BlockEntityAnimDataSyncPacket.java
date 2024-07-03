@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network.packet;
 
 import java.util.function.Supplier;
@@ -27,13 +34,13 @@ public class BlockEntityAnimDataSyncPacket<D> {
 
 	public void encode(PacketBuffer buffer) {
 		buffer.writeBlockPos(this.pos);
-		buffer.writeUtf(this.dataTicket.id());
+		buffer.writeString(this.dataTicket.id());
 		this.dataTicket.encode(this.data, buffer);
 	}
 
 	public static <D> BlockEntityAnimDataSyncPacket<D> decode(PacketBuffer buffer) {
 		BlockPos pos = buffer.readBlockPos();
-		SerializableDataTicket<D> dataTicket = (SerializableDataTicket<D>) DataTickets.byName(buffer.readUtf());
+		SerializableDataTicket<D> dataTicket = (SerializableDataTicket<D>) DataTickets.byName(buffer.readString());
 
 		return new BlockEntityAnimDataSyncPacket<>(pos, dataTicket, dataTicket.decode(buffer));
 	}
@@ -42,7 +49,7 @@ public class BlockEntityAnimDataSyncPacket<D> {
 		NetworkEvent.Context handler = context.get();
 
 		handler.enqueueWork(() -> {
-			TileEntity blockEntity = ClientUtils.getLevel().getBlockEntity(this.pos);
+			TileEntity blockEntity = ClientUtils.getLevel().getTileEntity(this.pos);
 
 			if (blockEntity instanceof GeoBlockEntity)
 				((GeoBlockEntity) blockEntity).setAnimData(this.dataTicket, this.data);

@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network.packet;
 
 import java.util.function.Supplier;
@@ -14,7 +21,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
- * Packet for syncing user-definable animations that can be triggered from the server for {@link net.minecraft.world.entity.Entity Entities}
+ * Packet for syncing user-definable animations that can be triggered from the server for {@link Entity Entities}
  */
 public class EntityAnimTriggerPacket<D> {
 	private final int entityId;
@@ -36,19 +43,19 @@ public class EntityAnimTriggerPacket<D> {
 	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(this.entityId);
 		buffer.writeBoolean(this.isReplacedEntity);
-		buffer.writeUtf(this.controllerName);
-		buffer.writeUtf(this.animName);
+		buffer.writeString(this.controllerName);
+		buffer.writeString(this.animName);
 	}
 
 	public static <D> EntityAnimTriggerPacket<D> decode(PacketBuffer buffer) {
-		return new EntityAnimTriggerPacket<>(buffer.readVarInt(), buffer.readBoolean(), buffer.readUtf(), buffer.readUtf());
+		return new EntityAnimTriggerPacket<>(buffer.readVarInt(), buffer.readBoolean(), buffer.readString(), buffer.readString());
 	}
 
 	public void receivePacket(Supplier<NetworkEvent.Context> context) {
 		NetworkEvent.Context handler = context.get();
 
 		handler.enqueueWork(() -> {
-			Entity entity = ClientUtils.getLevel().getEntity(this.entityId);
+			Entity entity = ClientUtils.getLevel().getEntityByID(this.entityId);
 
 			if (entity == null)
 				return;

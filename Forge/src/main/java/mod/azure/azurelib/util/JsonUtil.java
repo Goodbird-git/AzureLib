@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.util;
 
 import java.lang.reflect.Array;
@@ -121,7 +128,7 @@ public final class JsonUtil {
 	 */
 	@Nullable
 	public static Long getOptionalLong(JsonObject obj, String elementName) {
-		return obj.has(elementName) ? JSONUtils.getAsLong(obj, elementName) : null;
+		return obj.has(elementName) ? JSONUtils.func_226161_m_(obj, elementName) : null;
 	}
 
 	/**
@@ -129,7 +136,7 @@ public final class JsonUtil {
 	 */
 	@Nullable
 	public static Boolean getOptionalBoolean(JsonObject obj, String elementName) {
-		return obj.has(elementName) ? JSONUtils.getAsBoolean(obj, elementName) : null;
+		return obj.has(elementName) ? JSONUtils.getBoolean(obj, elementName) : null;
 	}
 
 	/**
@@ -145,7 +152,7 @@ public final class JsonUtil {
 	 */
 	@Nullable
 	public static Float getOptionalFloat(JsonObject obj, String elementName) {
-		return obj.has(elementName) ? JSONUtils.getAsFloat(obj, elementName) : null;
+		return obj.has(elementName) ? JSONUtils.getFloat(obj, elementName) : null;
 	}
 
 	/**
@@ -153,14 +160,14 @@ public final class JsonUtil {
 	 */
 	@Nullable
 	public static Integer getOptionalInteger(JsonObject obj, String elementName) {
-		return obj.has(elementName) ? JSONUtils.getAsInt(obj, elementName) : null;
+		return obj.has(elementName) ? JSONUtils.getInt(obj, elementName) : null;
 	}
 
 	public static double convertToDouble(JsonElement jsonElement, String string) {
 		if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber()) {
 			return jsonElement.getAsDouble();
 		} else {
-			throw new JsonSyntaxException("Expected " + string + " to be a Double, was " + JSONUtils.getType(jsonElement));
+			throw new JsonSyntaxException("Expected " + string + " to be a Double, was " + JSONUtils.toString(jsonElement));
 		}
 	}
 

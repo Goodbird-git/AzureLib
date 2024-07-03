@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.model;
 
 import java.util.Optional;
@@ -22,10 +29,11 @@ import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Base class for all code-based model objects.<br>
@@ -66,7 +74,7 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 	 * Gets the default render type for this animatable, to be selected by default by the renderer using it
 	 */
 	public RenderType getRenderType(T animatable, ResourceLocation texture) {
-		return RenderType.entityCutoutNoCull(texture);
+		return RenderType.getEntityCutoutNoCull(texture);
 	}
 
 	@Override
@@ -137,10 +145,10 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 		Double currentTick = animationState.getData(DataTickets.TICK);
 
 		if (currentTick == null)
-			currentTick = animatable instanceof LivingEntity ? (double) ((LivingEntity)animatable).tickCount : RenderUtils.getCurrentTick();
+			currentTick = animatable instanceof LivingEntity ? (double) ((LivingEntity)animatable).ticksExisted : RenderUtils.getCurrentTick();
 
 		if (animatableManager.getFirstTickTime() == -1)
-			animatableManager.startedAt(currentTick + mc.getFrameTime());
+			animatableManager.startedAt(currentTick + mc.getRenderPartialTicks());
 
 		double currentFrameTime = currentTick - animatableManager.getFirstTickTime();
 		boolean isReRender = !animatableManager.isFirstTick() && currentFrameTime == animatableManager.getLastUpdateTime();
@@ -148,7 +156,7 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 		if (isReRender && instanceId == this.lastRenderedInstance)
 			return;
 
-		if (!isReRender && (!mc.isPaused() || animatable.shouldPlayAnimsWhileGamePaused())) {
+		if (!isReRender && (!mc.isGamePaused() || animatable.shouldPlayAnimsWhileGamePaused())) {
 			if (animatable instanceof LivingEntity) {
 				animatableManager.updatedAt(currentFrameTime);
 			} else {
@@ -177,26 +185,26 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 		Minecraft mc = Minecraft.getInstance();
 
 		parser.setMemoizedValue(MolangQueries.LIFE_TIME, () -> animTime / 20d);
-		parser.setMemoizedValue(MolangQueries.ACTOR_COUNT, mc.level::getEntityCount);
-		parser.setMemoizedValue(MolangQueries.TIME_OF_DAY, () -> mc.level.getDayTime() / 24000f);
-		parser.setMemoizedValue(MolangQueries.MOON_PHASE, mc.level::getMoonPhase);
+		parser.setMemoizedValue(MolangQueries.ACTOR_COUNT, mc.world::getCountLoadedEntities);
+		parser.setMemoizedValue(MolangQueries.TIME_OF_DAY, () -> mc.world.getDayTime() / 24000f);
+		parser.setMemoizedValue(MolangQueries.MOON_PHASE, mc.world::getMoonPhase);
 
 		if (animatable instanceof Entity) {
-			parser.setMemoizedValue(MolangQueries.DISTANCE_FROM_CAMERA, () -> mc.gameRenderer.getMainCamera().getPosition().distanceTo(((Entity) animatable).position()));
-			parser.setMemoizedValue(MolangQueries.IS_ON_GROUND, () -> RenderUtils.booleanToFloat(((Entity) animatable).isOnGround()));
+			parser.setMemoizedValue(MolangQueries.DISTANCE_FROM_CAMERA, () -> mc.gameRenderer.getActiveRenderInfo().getProjectedView().distanceTo(((Entity) animatable).getPositionVec()));
+			parser.setMemoizedValue(MolangQueries.IS_ON_GROUND, () -> RenderUtils.booleanToFloat(((Entity) animatable).onGround));
 			parser.setMemoizedValue(MolangQueries.IS_IN_WATER, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWater()));
-			parser.setMemoizedValue(MolangQueries.IS_IN_WATER_OR_RAIN, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWaterRainOrBubble()));
+			parser.setMemoizedValue(MolangQueries.IS_IN_WATER_OR_RAIN, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWaterRainOrBubbleColumn()));
 
 			if (animatable instanceof LivingEntity) {
 				parser.setMemoizedValue(MolangQueries.HEALTH, ((LivingEntity) animatable)::getHealth);
 				parser.setMemoizedValue(MolangQueries.MAX_HEALTH, ((LivingEntity) animatable)::getMaxHealth);
-				parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((LivingEntity) animatable).isOnFire()));
+				parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((LivingEntity) animatable).isBurning()));
 				parser.setMemoizedValue(MolangQueries.GROUND_SPEED, () -> {
-					Vector3d velocity = ((LivingEntity) animatable).getDeltaMovement();
+					Vec3d velocity = ((LivingEntity) animatable).getMotion();
 
 					return Math.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
 				});
-				parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> ((LivingEntity) animatable).getViewYRot((float) animTime - ((LivingEntity) animatable).getViewYRot((float) animTime - 0.1f)));
+				parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> ((LivingEntity) animatable).getYaw((float) animTime - ((LivingEntity) animatable).getYaw((float) animTime - 0.1f)));
 			}
 		}
 	}

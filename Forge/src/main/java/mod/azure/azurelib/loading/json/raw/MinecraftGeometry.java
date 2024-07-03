@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -38,9 +45,9 @@ public class MinecraftGeometry {
 	public static JsonDeserializer<MinecraftGeometry> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			Bone[] bones = JsonUtil.jsonArrayToObjectArray(JSONUtils.getAsJsonArray(obj, "bones", new JsonArray()), context, Bone.class);
-			String cape = JSONUtils.getAsString(obj, "cape", null);
-			ModelProperties modelProperties = JSONUtils.getAsObject(obj, "description", null, context, ModelProperties.class);
+			Bone[] bones = JsonUtil.jsonArrayToObjectArray(JSONUtils.getJsonArray(obj, "bones", new JsonArray()), context, Bone.class);
+			String cape = JSONUtils.getString(obj, "cape", null);
+			ModelProperties modelProperties = JSONUtils.deserializeClass(obj, "description", null, context, ModelProperties.class);
 
 			return new MinecraftGeometry(bones, cape, modelProperties);
 		};

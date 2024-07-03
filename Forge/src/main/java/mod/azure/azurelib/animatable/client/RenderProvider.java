@@ -36,7 +36,7 @@ public interface RenderProvider {
         BipedModel<LivingEntity> replacement = getHumanoidArmorModel(livingEntity, itemStack, equipmentSlot, original);
 
         if (replacement != original) {
-            original.copyPropertiesTo(replacement);
+            original.setModelAttributes(replacement);
             return replacement;
         }
 

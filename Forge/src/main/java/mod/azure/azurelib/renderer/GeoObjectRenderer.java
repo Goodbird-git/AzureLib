@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -12,10 +19,11 @@ import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,7 +67,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
     }
 
     /**
-     * Shadowing override of {@link EntityRenderer#getTextureLocation}.<br>
+     * Shadowing override of {@link EntityRenderer#getEntityTexture(Entity)}.<br>
      * This redirects the call to {@link GeoRenderer#getTextureLocation}
      */
     @Override
@@ -117,9 +125,9 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
         Minecraft mc = Minecraft.getInstance();
 
         if (buffer == null)
-            bufferSource = mc.levelRenderer.renderBuffers.bufferSource();
+            bufferSource = mc.worldRenderer.renderTypeTextures.getBufferSource();
 
-        defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, mc.getFrameTime(), packedLight);
+        defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, mc.getRenderPartialTicks(), packedLight);
     }
 
     /**
@@ -128,7 +136,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
      */
     @Override
     public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.objectRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.objectRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         scaleModelForRender(this.scaleWidth, this.scaleHeight, poseStack, animatable, model, isReRender, partialTick,
                 packedLight, packedOverlay);
@@ -142,7 +150,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
      */
     @Override
     public void actuallyRender(MatrixStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
 
         if (!isReRender) {
             AnimationState<T> animationState = new AnimationState<>(animatable, 0, 0, partialTick, false);
@@ -152,11 +160,11 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
             this.model.handleAnimations(animatable, instanceId, animationState);
         }
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.modelRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         GeoRenderer.super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender,
                 partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -165,7 +173,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f poseState = new Matrix4f(poseStack.getLast().getMatrix());
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.objectRenderTranslations));

@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.resource;
 
 import java.util.List;
@@ -20,13 +27,13 @@ import net.minecraft.util.JSONUtils;
 public class GeoGlowingTextureMeta {
 	public static final IMetadataSectionSerializer<GeoGlowingTextureMeta> DESERIALIZER = new IMetadataSectionSerializer<GeoGlowingTextureMeta>() {
 		@Override
-		public String getMetadataSectionName() {
+		public String getSectionName() {
 			return "glowsections";
 		}
 
 		@Override
-		public GeoGlowingTextureMeta fromJson(JsonObject json) {
-			List<Pixel> pixels = fromSections(JSONUtils.getAsJsonArray(json, "sections", null));
+		public GeoGlowingTextureMeta deserialize(JsonObject json) {
+			List<Pixel> pixels = fromSections(JSONUtils.getJsonArray(json, "sections", null));
 
 			if (pixels.isEmpty())
 				throw new JsonParseException("Empty glowlayer sections file. Must have at least one glow section!");
@@ -47,11 +54,11 @@ public class GeoGlowingTextureMeta {
 				if (!(element instanceof JsonObject))
 					throw new JsonParseException("Invalid glowsections json format, expected a JsonObject, found: " + element.getClass());
 
-				int x1 = JSONUtils.getAsInt((JsonObject) element, "x1", JSONUtils.getAsInt((JsonObject) element, "x", 0));
-				int y1 = JSONUtils.getAsInt((JsonObject) element, "y1", JSONUtils.getAsInt((JsonObject) element, "y", 0));
-				int x2 = JSONUtils.getAsInt((JsonObject) element, "x2", JSONUtils.getAsInt((JsonObject) element, "w", 0) + x1);
-				int y2 = JSONUtils.getAsInt((JsonObject) element, "y2", JSONUtils.getAsInt((JsonObject) element, "h", 0) + y1);
-				int alpha = JSONUtils.getAsInt((JsonObject) element, "alpha", JSONUtils.getAsInt((JsonObject) element, "a", 0));
+				int x1 = JSONUtils.getInt((JsonObject) element, "x1", JSONUtils.getInt((JsonObject) element, "x", 0));
+				int y1 = JSONUtils.getInt((JsonObject) element, "y1", JSONUtils.getInt((JsonObject) element, "y", 0));
+				int x2 = JSONUtils.getInt((JsonObject) element, "x2", JSONUtils.getInt((JsonObject) element, "w", 0) + x1);
+				int y2 = JSONUtils.getInt((JsonObject) element, "y2", JSONUtils.getInt((JsonObject) element, "h", 0) + y1);
+				int alpha = JSONUtils.getInt((JsonObject) element, "alpha", JSONUtils.getInt((JsonObject) element, "a", 0));
 
 				if (x1 + y1 + x2 + y2 == 0)
 					throw new IllegalArgumentException("Invalid glowsections section object, section must be at least one pixel in size");
@@ -84,7 +91,7 @@ public class GeoGlowingTextureMeta {
 				int color = glowLayer.getPixelRGBA(x, y);
 
 				if (color != 0)
-					pixels.add(new Pixel(x, y, NativeImage.getA(color)));
+					pixels.add(new Pixel(x, y, NativeImage.getAlpha(color)));
 			}
 		}
 
@@ -102,7 +109,7 @@ public class GeoGlowingTextureMeta {
 			int color = originalImage.getPixelRGBA(pixel.x, pixel.y);
 
 			if (pixel.alpha > 0)
-				color = NativeImage.combine(pixel.alpha, NativeImage.getB(color), NativeImage.getG(color), NativeImage.getR(color));
+				color = NativeImage.getCombined(pixel.alpha, NativeImage.getBlue(color), NativeImage.getGreen(color), NativeImage.getRed(color));
 
 			newImage.setPixelRGBA(pixel.x, pixel.y, color);
 			originalImage.setPixelRGBA(pixel.x, pixel.y, 0);

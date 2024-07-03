@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -21,7 +28,7 @@ public class AutoGlowingGeoLayer<T extends GeoAnimatable> extends GeoRenderLayer
 
     /**
      * Get the render type to use for this glowlayer renderer.<br>
-     * Uses {@link RenderType#eyes(ResourceLocation)} by default, which may not be ideal in all circumstances.
+     * Uses {@link RenderType#getEyes(ResourceLocation)} by default, which may not be ideal in all circumstances.
      */
     protected RenderType getRenderType(T animatable) {
         return AutoGlowingTexture.getRenderType(getTextureResource(animatable));

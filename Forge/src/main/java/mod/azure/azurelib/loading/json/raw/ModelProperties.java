@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -136,13 +143,13 @@ public class ModelProperties {
 			Boolean animationStationaryLegs = JsonUtil.getOptionalBoolean(obj, "animationStationaryLegs");
 			Boolean animationStatueOfLibertyArms = JsonUtil.getOptionalBoolean(obj, "animationStatueOfLibertyArms");
 			Boolean animationUpsideDown = JsonUtil.getOptionalBoolean(obj, "animationUpsideDown");
-			String identifier = JSONUtils.getAsString(obj, "identifier", null);
+			String identifier = JSONUtils.getString(obj, "identifier", null);
 			Boolean preserveModelPose = JsonUtil.getOptionalBoolean(obj, "preserve_model_pose");
 			double textureHeight = JsonUtil.getAsDouble(obj, "texture_height");
 			double textureWidth = JsonUtil.getAsDouble(obj, "texture_width");
 			Double visibleBoundsHeight = JsonUtil.getOptionalDouble(obj, "visible_bounds_height");
 			double[] visibleBoundsOffset = JsonUtil.jsonArrayToDoubleArray(
-					JSONUtils.getAsJsonArray(obj, "visible_bounds_offset", null));
+					JSONUtils.getJsonArray(obj, "visible_bounds_offset", null));
 			Double visibleBoundsWidth = JsonUtil.getOptionalDouble(obj, "visible_bounds_width");
 
 			return new ModelProperties(animationArmsDown, animationArmsOutFront, animationDontShowArmor, animationInvertedCrouch,

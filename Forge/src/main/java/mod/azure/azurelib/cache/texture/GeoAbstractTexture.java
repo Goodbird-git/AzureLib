@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.cache.texture;
 
 import java.io.File;
@@ -37,7 +44,7 @@ public abstract class GeoAbstractTexture extends Texture {
 	}
 
 	@Override
-	public final void load(IResourceManager resourceManager) throws IOException {
+	public final void loadTexture(IResourceManager resourceManager) throws IOException {
 		IRenderCall renderCall = loadTexture(resourceManager, Minecraft.getInstance());
 
 		if (renderCall == null)
@@ -69,7 +76,7 @@ public abstract class GeoAbstractTexture extends Texture {
 			if (!file.exists())
 				file.createNewFile();
 
-			newImage.writeToFile(file);
+			newImage.write(file);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -88,7 +95,7 @@ public abstract class GeoAbstractTexture extends Texture {
 	 */
 	public static void uploadSimple(int texture, NativeImage image, boolean blur, boolean clamp) {
 		TextureUtil.prepareImage(texture, 0, image.getWidth(), image.getHeight());
-		image.upload(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, true);
+		image.uploadTextureSub(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, true);
 	}
 
 	public static ResourceLocation appendToPath(ResourceLocation location, String suffix) {

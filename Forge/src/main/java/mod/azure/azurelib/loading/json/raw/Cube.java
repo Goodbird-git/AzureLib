@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -63,11 +70,11 @@ public class Cube {
 			JsonObject obj = json.getAsJsonObject();
 			Double inflate = JsonUtil.getOptionalDouble(obj, "inflate");
 			Boolean mirror = JsonUtil.getOptionalBoolean(obj, "mirror");
-			double[] origin = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "origin", null));
-			double[] pivot = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "pivot", null));
-			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "rotation", null));
-			double[] size = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "size", null));
-			UVUnion uvUnion = JSONUtils.getAsObject(obj, "uv", null, context, UVUnion.class);
+			double[] origin = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "origin", null));
+			double[] pivot = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "pivot", null));
+			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "rotation", null));
+			double[] size = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "size", null));
+			UVUnion uvUnion = JSONUtils.deserializeClass(obj, "uv", null, context, UVUnion.class);
 
 			return new Cube(inflate, mirror, origin, pivot, rotation, size, uvUnion);
 		};

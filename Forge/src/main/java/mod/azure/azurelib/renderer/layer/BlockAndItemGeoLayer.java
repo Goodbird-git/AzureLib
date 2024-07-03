@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -76,7 +83,7 @@ public class BlockAndItemGeoLayer<T extends GeoAnimatable> extends GeoRenderLaye
         if (stack == null && blockState == null)
             return;
 
-        poseStack.pushPose();
+        poseStack.push();
         RenderUtils.translateAndRotateMatrixForBone(poseStack, bone);
 
         if (stack != null)
@@ -87,7 +94,7 @@ public class BlockAndItemGeoLayer<T extends GeoAnimatable> extends GeoRenderLaye
             renderBlockForBone(poseStack, bone, blockState, animatable, bufferSource, partialTick, packedLight,
                     packedOverlay);
 
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -95,11 +102,11 @@ public class BlockAndItemGeoLayer<T extends GeoAnimatable> extends GeoRenderLaye
      */
     protected void renderStackForBone(MatrixStack poseStack, GeoBone bone, ItemStack stack, T animatable, IRenderTypeBuffer bufferSource, float partialTick, int packedLight, int packedOverlay) {
         if (animatable instanceof LivingEntity) {
-            Minecraft.getInstance().getItemRenderer().renderStatic(((LivingEntity) animatable), stack,
+            Minecraft.getInstance().getItemRenderer().renderItem(((LivingEntity) animatable), stack,
                     getTransformTypeForStack(bone, stack, animatable), false, poseStack, bufferSource,
-                    ((LivingEntity) animatable).level, packedLight, packedOverlay);
+                    ((LivingEntity) animatable).world, packedLight, packedOverlay);
         } else {
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack,
+            Minecraft.getInstance().getItemRenderer().renderItem(stack,
                     getTransformTypeForStack(bone, stack, animatable), packedLight, packedOverlay, poseStack,
                     bufferSource);
         }
@@ -109,11 +116,11 @@ public class BlockAndItemGeoLayer<T extends GeoAnimatable> extends GeoRenderLaye
      * Render the given {@link BlockState} for the provided {@link GeoBone}.
      */
     protected void renderBlockForBone(MatrixStack poseStack, GeoBone bone, BlockState state, T animatable, IRenderTypeBuffer bufferSource, float partialTick, int packedLight, int packedOverlay) {
-        poseStack.pushPose();
+        poseStack.push();
         poseStack.translate(-0.25f, -0.25f, -0.25f);
         poseStack.scale(0.5f, 0.5f, 0.5f);
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, packedLight,
+        Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(state, poseStack, bufferSource, packedLight,
                 packedOverlay);
-        poseStack.popPose();
+        poseStack.pop();
     }
 }

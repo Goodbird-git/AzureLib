@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network.packet;
 
 import java.util.function.Supplier;
@@ -27,19 +34,19 @@ public class BlockEntityAnimTriggerPacket<D> {
 
 	public void encode(PacketBuffer buffer) {
 		buffer.writeBlockPos(this.pos);
-		buffer.writeUtf(this.controllerName);
-		buffer.writeUtf(this.animName);
+		buffer.writeString(this.controllerName);
+		buffer.writeString(this.animName);
 	}
 
 	public static <D> BlockEntityAnimTriggerPacket<D> decode(PacketBuffer buffer) {
-		return new BlockEntityAnimTriggerPacket<>(buffer.readBlockPos(), buffer.readUtf(), buffer.readUtf());
+		return new BlockEntityAnimTriggerPacket<>(buffer.readBlockPos(), buffer.readString(), buffer.readString());
 	}
 
 	public void receivePacket(Supplier<NetworkEvent.Context> context) {
 		NetworkEvent.Context handler = context.get();
 
 		handler.enqueueWork(() -> {
-			TileEntity blockEntity = ClientUtils.getLevel().getBlockEntity(this.pos);
+			TileEntity blockEntity = ClientUtils.getLevel().getTileEntity(this.pos);
 
 			if (blockEntity instanceof GeoBlockEntity)
 				((GeoBlockEntity) blockEntity).triggerAnim(this.controllerName.isEmpty() ? null : this.controllerName, this.animName);

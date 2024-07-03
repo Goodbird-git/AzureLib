@@ -80,7 +80,7 @@ public class AzureAnimationMetadataSection extends AnimationMetadataSection {
 
 	public void forEachFrame(AzureAnimationMetadataSection.FrameOutput p_174862_) {
 		for (AnimationFrame animationframe : this.frames) {
-			p_174862_.accept(animationframe.getIndex(), animationframe.getTime());
+			p_174862_.accept(animationframe.getFrameIndex(), animationframe.getFrameTime());
 		}
 
 	}

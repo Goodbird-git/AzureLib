@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import com.google.gson.JsonDeserializer;
@@ -37,8 +44,8 @@ public class LocatorClass {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 			Boolean ignoreInheritedScale = JsonUtil.getOptionalBoolean(obj, "ignore_inherited_scale");
-			double[] offset = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "offset", null));
-			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "rotation", null));
+			double[] offset = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "offset", null));
+			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "rotation", null));
 
 			return new LocatorClass(ignoreInheritedScale, offset, rotation);
 		};

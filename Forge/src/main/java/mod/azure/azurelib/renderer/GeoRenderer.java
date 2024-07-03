@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -9,15 +16,10 @@ import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector4f;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 
     /**
      * Gets the {@link RenderType} to render the given animatable with.<br>
-     * Uses the {@link RenderType#entityCutoutNoCull} {@code RenderType} by default.<br>
+     * Uses the {@link RenderType#getEntityCutoutNoCull(ResourceLocation)} {@code RenderType} by default.<br>
      * Override this to change the way a model will render (such as translucent models, etc)
      */
     default RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable IRenderTypeBuffer bufferSource, float partialTick) {
@@ -70,7 +72,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 
     /**
      * Gets a packed overlay coordinate pair for rendering.<br>
-     * Mostly just used for the red tint when an entity is hurt, but can be used for other things like the {@link net.minecraft.world.entity.monster.Creeper} white tint when exploding.
+     * Mostly just used for the red tint when an entity is hurt, but can be used for other things like the {@link CreeperEntity} white tint when exploding.
      */
     @Deprecated()
     default int getPackedOverlay(T animatable, float u) {
@@ -79,7 +81,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 
     /**
      * Gets a packed overlay coordinate pair for rendering.<br>
-     * Mostly just used for the red tint when an entity is hurt, but can be used for other things like the {@link net.minecraft.world.entity.monster.Creeper} white tint when exploding.
+     * Mostly just used for the red tint when an entity is hurt, but can be used for other things like the {@link CreeperEntity} white tint when exploding.
      */
     default int getPackedOverlay(T animatable, float u, float partialTick) {
         return getPackedOverlay(animatable, u);
@@ -111,7 +113,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      * All AzureLib renderers should immediately defer their respective default {@code render} calls to this, for consistent handling
      */
     default void defaultRender(MatrixStack poseStack, T animatable, IRenderTypeBuffer bufferSource, @Nullable RenderType renderType, @Nullable IVertexBuilder buffer, float yaw, float partialTick, int packedLight) {
-        poseStack.pushPose();
+        poseStack.push();
 
         Color renderColor = getRenderColor(animatable, partialTick, packedLight);
         float red = renderColor.getRedFloat();
@@ -139,7 +141,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
         postRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay,
                 red, green, blue, alpha);
 
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -147,14 +149,14 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      * Usually you'd use this for rendering alternate {@link RenderType} layers or for sub-model rendering whilst inside a {@link GeoRenderLayer} or similar
      */
     default void reRender(BakedGeoModel model, MatrixStack poseStack, IRenderTypeBuffer bufferSource, T animatable, RenderType renderType, IVertexBuilder buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
         preRender(poseStack, animatable, model, bufferSource, buffer, true, partialTick, packedLight, packedOverlay,
                 red, green, blue, alpha);
         actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, true, partialTick, packedLight,
                 packedOverlay, red, green, blue, alpha);
         postRender(poseStack, animatable, model, bufferSource, buffer, true, partialTick, packedLight, packedOverlay,
                 red, green, blue, alpha);
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -222,20 +224,20 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      * Renders the provided {@link GeoBone} and its associated child bones
      */
     default void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
         RenderUtils.prepMatrixForBone(poseStack, bone);
         renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
         if (!isReRender) {
             applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick,
                     packedLight, packedOverlay);
-            if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
+            if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).isDrawing)
                 buffer = bufferSource.getBuffer(renderType);
         }
 
         renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -246,9 +248,9 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             return;
 
         for (GeoCube cube : bone.getCubes()) {
-            poseStack.pushPose();
+            poseStack.push();
             renderCube(poseStack, cube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            poseStack.popPose();
+            poseStack.pop();
         }
     }
 
@@ -275,8 +277,8 @@ public interface GeoRenderer<T extends GeoAnimatable> {
         RenderUtils.rotateMatrixAroundCube(poseStack, cube);
         RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
 
-        Matrix3f normalisedPoseState = poseStack.last().normal();
-        Matrix4f poseState = poseStack.last().pose();
+        Matrix3f normalisedPoseState = poseStack.getLast().getNormal();
+        Matrix4f poseState = poseStack.getLast().getMatrix();
 
         for (GeoQuad quad : cube.quads()) {
             if (quad == null)
@@ -296,12 +298,12 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      */
     default void createVerticesOfQuad(GeoQuad quad, Matrix4f poseState, Vector3f normal, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         for (GeoVertex vertex : quad.vertices()) {
-            Vector4f vector4f = new Vector4f(vertex.position().x(), vertex.position().y(), vertex.position().z(), 1);
+            Vector4f vector4f = new Vector4f(vertex.position().getX(), vertex.position().getY(), vertex.position().getZ(), 1);
 
             vector4f.transform(poseState);
 
-            buffer.vertex(vector4f.x(), vector4f.y(), vector4f.z(), red, green, blue, alpha, vertex.texU(),
-                    vertex.texV(), packedOverlay, packedLight, normal.x(), normal.y(), normal.z());
+            buffer.addVertex(vector4f.getX(), vector4f.getY(), vector4f.getZ(), red, green, blue, alpha, vertex.texU(),
+                    vertex.texV(), packedOverlay, packedLight, normal.getX(), normal.getY(), normal.getZ());
         }
     }
 

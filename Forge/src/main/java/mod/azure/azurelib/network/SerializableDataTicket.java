@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network;
 
 import mod.azure.azurelib.core.object.DataTicket;
@@ -109,12 +116,12 @@ public abstract class SerializableDataTicket<D> extends DataTicket<D> {
 		return new SerializableDataTicket(id.toString(), String.class) {
 			@Override
 			public void encode(Object data, PacketBuffer buffer) {
-				buffer.writeUtf((String) data);
+				buffer.writeString((String) data);
 			}
 
 			@Override
 			public String decode(PacketBuffer buffer) {
-				return buffer.readUtf();
+				return buffer.readString();
 			}
 		};
 	}
@@ -127,12 +134,12 @@ public abstract class SerializableDataTicket<D> extends DataTicket<D> {
 		return new SerializableDataTicket(id.toString(), enumClass) {
 			@Override
 			public void encode(Object data, PacketBuffer buffer) {
-				buffer.writeUtf(data.toString());
+				buffer.writeString(data.toString());
 			}
 
 			@Override
 			public E decode(PacketBuffer buffer) {
-				return Enum.valueOf(enumClass, buffer.readUtf());
+				return Enum.valueOf(enumClass, buffer.readString());
 			}
 		};
 	}

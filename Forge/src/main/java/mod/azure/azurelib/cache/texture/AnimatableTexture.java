@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.cache.texture;
 
 import com.mojang.blaze3d.systems.IRenderCall;
@@ -51,8 +58,8 @@ public class AnimatableTexture extends SimpleTexture {
     }
 
     @Override
-    public void load(IResourceManager manager) throws IOException {
-        IResource resource = manager.getResource(this.location);
+    public void loadTexture(IResourceManager manager) throws IOException {
+        IResource resource = manager.getResource(this.textureLocation);
 
         NativeImage nativeImage;
         TextureMetadataSection simpleTextureMeta = new TextureMetadataSection(false, false);
@@ -86,9 +93,9 @@ public class AnimatableTexture extends SimpleTexture {
                     }
 
                     onRenderThread(() -> {
-                        TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.getFirst(),
+                        TextureUtil.prepareImage(getGlTextureId(), 0, this.animationContents.frameSize.getFirst(),
                                 this.animationContents.frameSize.getSecond());
-                        nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(),
+                        nativeImage.uploadTextureSub(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(),
                                 this.animationContents.frameSize.getSecond(), false, false);
                     });
 
@@ -96,13 +103,13 @@ public class AnimatableTexture extends SimpleTexture {
                 }
             }
         } catch (RuntimeException exception) {
-            AzureLib.LOGGER.warn("Failed reading metadata of: {}", this.location, exception);
+            AzureLib.LOGGER.warn("Failed reading metadata of: {}", this.textureLocation, exception);
         }
 
-        boolean blur = simpleTextureMeta.isBlur();
-        boolean clamp = simpleTextureMeta.isClamp();
+        boolean blur = simpleTextureMeta.getTextureBlur();
+        boolean clamp = simpleTextureMeta.getTextureClamp();
 
-        onRenderThread(() -> GeoAbstractTexture.uploadSimple(getId(), nativeImage, blur, clamp));
+        onRenderThread(() -> GeoAbstractTexture.uploadSimple(getGlTextureId(), nativeImage, blur, clamp));
     }
 
     public void setAnimationFrame(int tick) {
@@ -127,7 +134,7 @@ public class AnimatableTexture extends SimpleTexture {
             if (!AzureLibUtil.isMultipleOf(image.getWidth(), this.frameSize.getFirst()) || !AzureLibUtil.isMultipleOf(
                     image.getHeight(), this.frameSize.getSecond())) {
                 AzureLib.LOGGER.error("Image {} size {},{} is not multiple of frame size {},{}",
-                        AnimatableTexture.this.location, image.getWidth(), image.getHeight(), this.frameSize.getFirst(),
+                        AnimatableTexture.this.textureLocation, image.getWidth(), image.getHeight(), this.frameSize.getFirst(),
                         this.frameSize.getSecond());
 
                 return null;
@@ -151,11 +158,11 @@ public class AnimatableTexture extends SimpleTexture {
                 for (Frame frame : frames) {
                     if (frame.time <= 0) {
                         AzureLib.LOGGER.warn("Invalid frame duration on sprite {} frame {}: {}",
-                                AnimatableTexture.this.location, index, frame.time);
+                                AnimatableTexture.this.textureLocation, index, frame.time);
                         unusedFrames.add(frame.index);
                     } else if (frame.index < 0 || frame.index >= frameCount) {
                         AzureLib.LOGGER.warn("Invalid frame index on sprite {} frame {}: {}",
-                                AnimatableTexture.this.location, index, frame.index);
+                                AnimatableTexture.this.textureLocation, index, frame.index);
                         unusedFrames.add(frame.index);
                     }
 
@@ -163,7 +170,7 @@ public class AnimatableTexture extends SimpleTexture {
                 }
 
                 if (!unusedFrames.isEmpty())
-                    AzureLib.LOGGER.warn("Unused frames in sprite {}: {}", AnimatableTexture.this.location,
+                    AzureLib.LOGGER.warn("Unused frames in sprite {}: {}", AnimatableTexture.this.textureLocation,
                             Arrays.toString(unusedFrames.toArray()));
             }
 
@@ -240,10 +247,10 @@ public class AnimatableTexture extends SimpleTexture {
 
                 if (this.currentFrame != lastFrame && this.currentSubframe == 0) {
                     onRenderThread(() -> {
-                        TextureUtil.prepareImage(AnimatableTexture.this.getId(), 0,
+                        TextureUtil.prepareImage(AnimatableTexture.this.getGlTextureId(), 0,
                                 AnimationContents.this.frameSize.getFirst(),
                                 AnimationContents.this.frameSize.getSecond());
-                        this.baseImage.upload(0, 0, 0,
+                        this.baseImage.uploadTextureSub(0, 0, 0,
                                 getFrameX(this.currentFrame) * AnimationContents.this.frameSize.getFirst(),
                                 getFrameY(this.currentFrame) * AnimationContents.this.frameSize.getSecond(),
                                 AnimationContents.this.frameSize.getFirst(),
@@ -275,9 +282,9 @@ public class AnimatableTexture extends SimpleTexture {
                         }
                     }
 
-                    TextureUtil.prepareImage(AnimatableTexture.this.getId(), 0,
+                    TextureUtil.prepareImage(AnimatableTexture.this.getGlTextureId(), 0,
                             AnimationContents.this.frameSize.getFirst(), AnimationContents.this.frameSize.getSecond());
-                    this.interpolatedFrame.upload(0, 0, 0, 0, 0, AnimationContents.this.frameSize.getFirst(),
+                    this.interpolatedFrame.uploadTextureSub(0, 0, 0, 0, 0, AnimationContents.this.frameSize.getFirst(),
                             AnimationContents.this.frameSize.getSecond(), false, false);
                 }
             }

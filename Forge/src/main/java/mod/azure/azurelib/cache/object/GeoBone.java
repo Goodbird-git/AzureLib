@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.cache.object;
 
 import java.util.List;
@@ -6,10 +13,10 @@ import java.util.Objects;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector4f;
+import net.minecraft.client.renderer.Matrix3f;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Vector4f;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Mutable bone object representing a set of cubes, as well as child bones.<br>
@@ -366,36 +373,36 @@ public class GeoBone implements CoreGeoBone {
 	/**
 	 * Get the position of the bone relative to its owner
 	 */
-	public Vector3d getLocalPosition() {
+	public Vec3d getLocalPosition() {
 		Matrix4f matrix = getLocalSpaceMatrix();
 		Vector4f vec = new Vector4f(0, 0, 0, 1);
 		vec.transform(matrix);
-		return new Vector3d(vec.x(), vec.y(), vec.z());
+		return new Vec3d(vec.getX(), vec.getY(), vec.getZ());
 	}
 
 	/**
 	 * Get the position of the bone relative to the model it belongs to
 	 */
-	public Vector3d getModelPosition() {
+	public Vec3d getModelPosition() {
 		Matrix4f matrix = getModelSpaceMatrix();
 		Vector4f vec = new Vector4f(0, 0, 0, 1);
 		vec.transform(matrix);
 
-		return new Vector3d(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
+		return new Vec3d(-vec.getX() * 16f, vec.getY() * 16f, vec.getZ() * 16f);
 	}
 
 	/**
 	 * Get the position of the bone relative to the world
 	 */
-	public Vector3d getWorldPosition() {
+	public Vec3d getWorldPosition() {
 		Matrix4f matrix = getWorldSpaceMatrix();
 		Vector4f vec = new Vector4f(0, 0, 0, 1);
 		vec.transform(matrix);
 
-		return new Vector3d(vec.x(), vec.y(), vec.z());
+		return new Vec3d(vec.getX(), vec.getY(), vec.getZ());
 	}
 
-//	public void setModelPosition(Vector3d pos) {
+//	public void setModelPosition(Vec3d pos) {
 //		// Doesn't work on bones with parent transforms
 //		GeoBone parent = getParent();
 //		Matrix4f matrix = (parent == null ? new Matrix4f().identity() : new Matrix4f(parent.getModelSpaceMatrix())).invert();
@@ -413,16 +420,16 @@ public class GeoBone implements CoreGeoBone {
 //		return matrix;
 //	}
 
-	public Vector3d getPositionVector() {
-		return new Vector3d(getPosX(), getPosY(), getPosZ());
+	public Vec3d getPositionVector() {
+		return new Vec3d(getPosX(), getPosY(), getPosZ());
 	}
 
-	public Vector3d getRotationVector() {
-		return new Vector3d(getRotX(), getRotY(), getRotZ());
+	public Vec3d getRotationVector() {
+		return new Vec3d(getRotX(), getRotY(), getRotZ());
 	}
 
-	public Vector3d getScaleVector() {
-		return new Vector3d(getScaleX(), getScaleY(), getScaleZ());
+	public Vec3d getScaleVector() {
+		return new Vec3d(getScaleX(), getScaleY(), getScaleZ());
 	}
 
 	public void addRotationOffsetFromBone(GeoBone source) {

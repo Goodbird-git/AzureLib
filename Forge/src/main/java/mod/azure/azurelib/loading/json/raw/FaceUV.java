@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -37,9 +44,9 @@ public class FaceUV {
 	public static JsonDeserializer<FaceUV> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			String materialInstance = JSONUtils.getAsString(obj, "material_instance", null);
-			double[] uv = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "uv", null));
-			double[] uvSize = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "uv_size", null));
+			String materialInstance = JSONUtils.getString(obj, "material_instance", null);
+			double[] uv = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "uv", null));
+			double[] uvSize = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "uv_size", null));
 
 			return new FaceUV(materialInstance, uv, uvSize);
 		};

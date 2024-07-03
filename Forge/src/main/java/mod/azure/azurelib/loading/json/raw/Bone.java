@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import java.util.Map;
@@ -113,22 +120,22 @@ public class Bone {
 	public static JsonDeserializer<Bone> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			double[] bindPoseRotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "bind_pose_rotation", null));
-			Cube[] cubes = JsonUtil.jsonArrayToObjectArray(JSONUtils.getAsJsonArray(obj, "cubes", new JsonArray()), context, Cube.class);
+			double[] bindPoseRotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "bind_pose_rotation", null));
+			Cube[] cubes = JsonUtil.jsonArrayToObjectArray(JSONUtils.getJsonArray(obj, "cubes", new JsonArray()), context, Cube.class);
 			Boolean debug = JsonUtil.getOptionalBoolean(obj, "debug");
 			Double inflate = JsonUtil.getOptionalDouble(obj, "inflate");
-			Map<String, LocatorValue> locators = obj.has("locators") ? JsonUtil.jsonObjToMap(JSONUtils.getAsJsonObject(obj, "locators"), context, LocatorValue.class) : null;
+			Map<String, LocatorValue> locators = obj.has("locators") ? JsonUtil.jsonObjToMap(JSONUtils.getJsonObject(obj, "locators"), context, LocatorValue.class) : null;
 			Boolean mirror = JsonUtil.getOptionalBoolean(obj, "mirror");
-			String name = JSONUtils.getAsString(obj, "name", null);
+			String name = JSONUtils.getString(obj, "name", null);
 			Boolean neverRender = JsonUtil.getOptionalBoolean(obj, "neverRender");
-			String parent = JSONUtils.getAsString(obj, "parent", null);
-			double[] pivot = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "pivot", new JsonArray()));
-			PolyMesh polyMesh = JSONUtils.getAsObject(obj, "poly_mesh", null, context, PolyMesh.class);
+			String parent = JSONUtils.getString(obj, "parent", null);
+			double[] pivot = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "pivot", new JsonArray()));
+			PolyMesh polyMesh = JSONUtils.deserializeClass(obj, "poly_mesh", null, context, PolyMesh.class);
 			Long renderGroupId = JsonUtil.getOptionalLong(obj, "render_group_id");
 			Boolean reset = JsonUtil.getOptionalBoolean(obj, "reset");
-			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "rotation", null));
+			double[] rotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "rotation", null));
 			TextureMesh[] textureMeshes = JsonUtil.jsonArrayToObjectArray(
-					JSONUtils.getAsJsonArray(obj, "texture_meshes", new JsonArray()), context, TextureMesh.class);
+					JSONUtils.getJsonArray(obj, "texture_meshes", new JsonArray()), context, TextureMesh.class);
 
 			return new Bone(bindPoseRotation, cubes, debug, inflate, locators, mirror, name, neverRender, parent, pivot, polyMesh, renderGroupId, reset, rotation, textureMeshes);
 		};

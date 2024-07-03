@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network.packet;
 
 import java.util.function.Supplier;
@@ -28,16 +35,16 @@ public class AnimDataSyncPacket<D> {
 	}
 
 	public void encode(PacketBuffer buffer) {
-		buffer.writeUtf(this.syncableId);
+		buffer.writeString(this.syncableId);
 		buffer.writeVarLong(this.instanceId);
-		buffer.writeUtf(this.dataTicket.id());
+		buffer.writeString(this.dataTicket.id());
 		this.dataTicket.encode(this.data, buffer);
 	}
 
 	public static <D> AnimDataSyncPacket<D> decode(PacketBuffer buffer) {
-		String syncableId = buffer.readUtf();
+		String syncableId = buffer.readString();
 		long instanceId = buffer.readVarLong();
-		SerializableDataTicket<D> dataTicket = (SerializableDataTicket<D>) DataTickets.byName(buffer.readUtf());
+		SerializableDataTicket<D> dataTicket = (SerializableDataTicket<D>) DataTickets.byName(buffer.readString());
 		D data = dataTicket.decode(buffer);
 
 		return new AnimDataSyncPacket<>(syncableId, instanceId, dataTicket, data);

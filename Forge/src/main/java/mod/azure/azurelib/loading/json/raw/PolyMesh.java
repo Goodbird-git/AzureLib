@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -50,10 +57,10 @@ public class PolyMesh {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 			Boolean normalizedUVs = JsonUtil.getOptionalBoolean(obj, "normalized_uvs");
-			double[] normals = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "normals", null));
-			PolysUnion polysUnion = JSONUtils.getAsObject(obj, "polys", null, context, PolysUnion.class);
-			double[] positions = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "positions", null));
-			double[] uvs = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getAsJsonArray(obj, "uvs", null));
+			double[] normals = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "normals", null));
+			PolysUnion polysUnion = JSONUtils.deserializeClass(obj, "polys", null, context, PolysUnion.class);
+			double[] positions = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "positions", null));
+			double[] uvs = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "uvs", null));
 
 			return new PolyMesh(normalizedUVs, normals, polysUnion, positions, uvs);
 		};

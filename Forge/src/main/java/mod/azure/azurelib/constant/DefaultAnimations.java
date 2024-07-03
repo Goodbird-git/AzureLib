@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.constant;
 
 import java.util.function.BiFunction;
@@ -125,7 +132,7 @@ public final class DefaultAnimations {
 
 	/**
 	 * Generic attack controller.<br>
-	 * Plays an attack animation if the animatable is {@link net.minecraft.world.entity.LivingEntity#swinging}.<br>
+	 * Plays an attack animation if the animatable is {@link LivingEntity#isSwingInProgress}.<br>
 	 * Resets the animation each time it stops, ready for the next swing
 	 * @param animatable The entity that should swing
 	 * @param attackAnimation The attack animation to play (E.G. swipe, strike, stomp, swing, etc)
@@ -133,7 +140,7 @@ public final class DefaultAnimations {
 	 */
 	public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericAttackAnimation(T animatable, RawAnimation attackAnimation) {
 		return new AnimationController<>(animatable, "Attack", 5, state -> {
-			if (animatable.swinging)
+			if (animatable.isSwingInProgress)
 				return state.setAndContinue(attackAnimation);
 
 			state.getController().forceAnimationReset();

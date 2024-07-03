@@ -1,7 +1,14 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.cache.object;
 
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
 
 /**
  * Quad data holder
@@ -39,7 +46,7 @@ public class GeoQuad {
 		float vHeight = (v + vSize) / texHeight;
 		u /= texWidth;
 		v /= texHeight;
-		Vector3f normal = direction.step();
+		Vector3f normal = direction.toVector3f();
 
 		if (!mirror) {
 			float tempWidth = uWidth;

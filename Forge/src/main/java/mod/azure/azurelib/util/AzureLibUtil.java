@@ -108,14 +108,13 @@ public final class AzureLibUtil {
 	 * @param effectTime How long the effect should be applied for?
 	 */
 	public static void summonAoE(LivingEntity entity, IParticleData particle, int yOffset, int duration, float radius, boolean hasEffect, @Nullable Effect effect, int effectTime) {
-		AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(entity.level, entity.getX(), entity.getY() + yOffset, entity.getZ());
+		AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(entity.world, entity.getPosX(), entity.getPosY() + yOffset, entity.getPosZ());
 		areaEffectCloudEntity.setRadius(radius);
 		areaEffectCloudEntity.setDuration(duration);
-		areaEffectCloudEntity.setParticle(particle);
-		areaEffectCloudEntity.setRadiusPerTick(-areaEffectCloudEntity.getRadius() / (float) areaEffectCloudEntity.getDuration());
-		if (hasEffect == true)
-			if (!entity.hasEffect(effect))
-				areaEffectCloudEntity.addEffect(new EffectInstance(effect, effectTime, 0));
-		entity.level.addFreshEntity(areaEffectCloudEntity);
+		areaEffectCloudEntity.setParticleData(particle);
+		areaEffectCloudEntity.setRadiusPerTick(-areaEffectCloudEntity.getRadius() / areaEffectCloudEntity.getDuration());
+		if (hasEffect && !entity.isPotionActive(effect))
+			areaEffectCloudEntity.addEffect(new EffectInstance(effect, effectTime, 0));
+		entity.world.addEntity(areaEffectCloudEntity);
 	}
 }

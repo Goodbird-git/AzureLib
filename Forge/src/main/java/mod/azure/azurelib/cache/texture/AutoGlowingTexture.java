@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.cache.texture;
 
 import java.io.IOException;
@@ -5,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.renderer.RenderState;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.systems.IRenderCall;
@@ -37,7 +45,7 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 		}
 
 		public static RenderType emissive(ResourceLocation texture) {
-			return RenderType.create("geo_glowing_layer", DefaultVertexFormats.NEW_ENTITY, GL11.GL_QUADS, 256, State.builder().setAlphaState(RenderType.DEFAULT_ALPHA).setCullState(RenderType.NO_CULL).setTextureState(new TextureState(texture, false, false)).setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY).setOverlayState(RenderType.OVERLAY).createCompositeState(true));
+			return RenderType.makeType("geo_glowing_layer", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, State.getBuilder().alpha(RenderType.DEFAULT_ALPHA).cull(new RenderState.CullState(false)).texture(new TextureState(texture, false, false)).transparency(RenderType.TRANSLUCENT_TRANSPARENCY).overlay(new RenderState.OverlayState(true)).build(true));
 		}
 	}
 
@@ -60,7 +68,7 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 	protected static ResourceLocation getEmissiveResource(ResourceLocation baseResource) {
 		ResourceLocation path = appendToPath(baseResource, APPENDIX);
 
-		generateTexture(path, textureManager -> textureManager.register(path, new AutoGlowingTexture(baseResource, path)));
+		generateTexture(path, textureManager -> textureManager.loadTexture(path, new AutoGlowingTexture(baseResource, path)));
 
 		return path;
 	}
@@ -74,17 +82,17 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 		Texture originalTexture;
 
 		try {
-			originalTexture = mc.submit(() -> mc.getTextureManager().getTexture(this.textureBase)).get();
+			originalTexture = mc.supplyAsync(() -> mc.getTextureManager().getTexture(this.textureBase)).get();
 		} catch (InterruptedException | ExecutionException e) {
 			throw new IOException("Failed to load original texture: " + this.textureBase, e);
 		}
 
 		IResource textureBaseResource = resourceManager.getResource(this.textureBase);
-		NativeImage baseImage = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getPixels() : NativeImage.read(textureBaseResource.getInputStream());
+		NativeImage baseImage = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getTextureData() : NativeImage.read(textureBaseResource.getInputStream());
 		NativeImage glowImage = null;
 		TextureMetadataSection textureBaseMeta = textureBaseResource.getMetadata(TextureMetadataSection.SERIALIZER);
-		boolean blur = textureBaseMeta != null && textureBaseMeta.isBlur();
-		boolean clamp = textureBaseMeta != null && textureBaseMeta.isClamp();
+		boolean blur = textureBaseMeta != null && textureBaseMeta.getTextureBlur();
+		boolean clamp = textureBaseMeta != null && textureBaseMeta.getTextureClamp();
 
 		try {
 			IResource glowLayerResource = resourceManager.getResource(this.glowLayer);
@@ -120,12 +128,12 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 			return null;
 
 		return () -> {
-			uploadSimple(getId(), mask, blur, clamp);
+			uploadSimple(getGlTextureId(), mask, blur, clamp);
 
 			if (originalTexture instanceof DynamicTexture) {
-				((DynamicTexture) originalTexture).upload();
+				((DynamicTexture) originalTexture).updateDynamicTexture();
 			} else {
-				uploadSimple(originalTexture.getId(), baseImage, blur, clamp);
+				uploadSimple(originalTexture.getGlTextureId(), baseImage, blur, clamp);
 			}
 		};
 	}

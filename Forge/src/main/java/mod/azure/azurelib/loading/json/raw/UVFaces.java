@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import com.google.gson.JsonDeserializer;
@@ -52,12 +59,12 @@ public class UVFaces {
 	public static JsonDeserializer<UVFaces> deserializer() {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			FaceUV north = JSONUtils.getAsObject(obj, "north", null, context, FaceUV.class);
-			FaceUV south = JSONUtils.getAsObject(obj, "south", null, context, FaceUV.class);
-			FaceUV east = JSONUtils.getAsObject(obj, "east", null, context, FaceUV.class);
-			FaceUV west = JSONUtils.getAsObject(obj, "west", null, context, FaceUV.class);
-			FaceUV up = JSONUtils.getAsObject(obj, "up", null, context, FaceUV.class);
-			FaceUV down = JSONUtils.getAsObject(obj, "down", null, context, FaceUV.class);
+			FaceUV north = JSONUtils.deserializeClass(obj, "north", null, context, FaceUV.class);
+			FaceUV south = JSONUtils.deserializeClass(obj, "south", null, context, FaceUV.class);
+			FaceUV east = JSONUtils.deserializeClass(obj, "east", null, context, FaceUV.class);
+			FaceUV west = JSONUtils.deserializeClass(obj, "west", null, context, FaceUV.class);
+			FaceUV up = JSONUtils.deserializeClass(obj, "up", null, context, FaceUV.class);
+			FaceUV down = JSONUtils.deserializeClass(obj, "down", null, context, FaceUV.class);
 
 			return new UVFaces(north, south, east, west, up, down);
 		};

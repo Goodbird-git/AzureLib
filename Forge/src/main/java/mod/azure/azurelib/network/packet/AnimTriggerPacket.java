@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.network.packet;
 
 import java.util.function.Supplier;
@@ -27,14 +34,14 @@ public class AnimTriggerPacket<D> {
 	}
 
 	public void encode(PacketBuffer buffer) {
-		buffer.writeUtf(this.syncableId);
+		buffer.writeString(this.syncableId);
 		buffer.writeVarLong(this.instanceId);
-		buffer.writeUtf(this.controllerName);
-		buffer.writeUtf(this.animName);
+		buffer.writeString(this.controllerName);
+		buffer.writeString(this.animName);
 	}
 
 	public static <D> AnimTriggerPacket<D> decode(PacketBuffer buffer) {
-		return new AnimTriggerPacket<>(buffer.readUtf(), buffer.readVarLong(), buffer.readUtf(), buffer.readUtf());
+		return new AnimTriggerPacket<>(buffer.readString(), buffer.readVarLong(), buffer.readString(), buffer.readString());
 	}
 
 	public void receivePacket(Supplier<NetworkEvent.Context> context) {

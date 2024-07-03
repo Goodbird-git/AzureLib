@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -7,15 +14,11 @@ import mod.azure.azurelib.cache.object.*;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector4f;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -76,14 +79,14 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
      */
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
         RenderUtils.translateMatrixToBone(poseStack, bone);
         RenderUtils.translateToPivotPoint(poseStack, bone);
         RenderUtils.rotateMatrixAroundBone(poseStack, bone);
         RenderUtils.scaleMatrixForBone(poseStack, bone);
 
         if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f poseState = new Matrix4f(poseStack.getLast().getMatrix());
             Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations);
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
@@ -92,7 +95,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
 
             Matrix4f worldState = new Matrix4f(localMatrix);
 
-            worldState.translate(new Vector3f(this.animatable.position()));
+            worldState.translate(new Vector3f(this.animatable.getPositionVec()));
             bone.setWorldSpaceMatrix(worldState);
         }
 
@@ -125,12 +128,12 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
         super.renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
 
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
      * Called after rendering the model to buffer. Post-render modifications should be performed here.<br>
-     * {@link PoseStack} transformations will be unused and lost once this method ends
+     * {@link MatrixStack} transformations will be unused and lost once this method ends
      */
     @Override
     public void postRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
@@ -141,7 +144,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
     }
 
     /**
-     * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link VertexConsumer buffer} for rendering.<br>
+     * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link IVertexBuilder buffer} for rendering.<br>
      * Custom override to handle custom non-baked textures for ExtendedGeoEntityRenderer
      */
     @Override
@@ -165,12 +168,12 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
         }
 
         for (GeoVertex vertex : quad.vertices()) {
-            Vector4f vector4f = new Vector4f(vertex.position().x(), vertex.position().y(), vertex.position().z(), 1);
+            Vector4f vector4f = new Vector4f(vertex.position().getX(), vertex.position().getY(), vertex.position().getZ(), 1);
             float texU = (vertex.texU() * entityTextureSize.getA()) / boneTextureSize.getA();
             float texV = (vertex.texV() * entityTextureSize.getB()) / boneTextureSize.getB();
 
-            buffer.vertex(vector4f.x(), vector4f.y(), vector4f.z(), red, green, blue, alpha, texU, texV,
-                    packedOverlay, packedLight, normal.x(), normal.y(), normal.z());
+            buffer.addVertex(vector4f.getX(), vector4f.getX(), vector4f.getZ(), red, green, blue, alpha, texU, texV,
+                    packedOverlay, packedLight, normal.getX(), normal.getX(), normal.getZ());
         }
     }
 

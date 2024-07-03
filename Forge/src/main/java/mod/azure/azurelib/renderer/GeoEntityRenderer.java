@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -13,10 +20,7 @@ import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -25,20 +29,19 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.Pose;
+import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerModelPart;
-import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.scoreboard.Team.Visible;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.LightType;
 
@@ -47,7 +50,7 @@ import java.util.List;
 /**
  * Base {@link GeoRenderer} class for rendering {@link Entity Entities} specifically.<br>
  * All entities added to be rendered by AzureLib should use an instance of this class.<br>
- * This also includes {@link ProjectileEntity Projectiles}
+ * This also includes {@link AbstractArrowEntity Projectiles}
  */
 public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityRenderer<T> implements GeoRenderer<T> {
     protected final List<GeoRenderLayer<T>> renderLayers = new ObjectArrayList<>();
@@ -87,11 +90,11 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      */
     @Override
     public long getInstanceId(T animatable) {
-        return animatable.getId();
+        return animatable.getEntityId();
     }
 
     /**
-     * Shadowing override of {@link EntityRenderer#getTextureLocation}.<br>
+     * Shadowing override of {@link EntityRenderer#getEntityTexture(Entity)}.<br>
      * This redirects the call to {@link GeoRenderer#getTextureLocation}
      */
     @Override
@@ -139,7 +142,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      */
     @Override
     public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.entityRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         scaleModelForRender(this.scaleWidth, this.scaleHeight, poseStack, animatable, model, isReRender, partialTick,
                 packedLight, packedOverlay);
@@ -158,7 +161,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      */
     @Override
     public void actuallyRender(MatrixStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
 
         LivingEntity livingEntity;
         if (animatable instanceof LivingEntity) {
@@ -167,15 +170,15 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             livingEntity = null;
         }
 
-        boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);
-        float lerpBodyRot = livingEntity == null ? 0 : MathHelper.rotLerp(partialTick, livingEntity.yBodyRotO,
-                livingEntity.yBodyRot);
-        float lerpHeadRot = livingEntity == null ? 0 : MathHelper.rotLerp(partialTick, livingEntity.yHeadRotO,
-                livingEntity.yHeadRot);
+        boolean shouldSit = animatable.isPassenger() && (animatable.getRidingEntity() != null);
+        float lerpBodyRot = livingEntity == null ? 0 : MathHelper.rotLerp(partialTick, livingEntity.prevRenderYawOffset,
+                livingEntity.renderYawOffset);
+        float lerpHeadRot = livingEntity == null ? 0 : MathHelper.rotLerp(partialTick, livingEntity.prevRotationYawHead,
+                livingEntity.rotationYawHead);
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
 
-        if (shouldSit && animatable.getVehicle() instanceof LivingEntity) {
-            lerpBodyRot = MathHelper.rotLerp(partialTick, ((LivingEntity)animatable.getVehicle()).yBodyRotO, ((LivingEntity)animatable.getVehicle()).yBodyRot);
+        if (shouldSit && animatable.getRidingEntity() instanceof LivingEntity) {
+            lerpBodyRot = MathHelper.rotLerp(partialTick, ((LivingEntity)animatable.getRidingEntity()).prevRenderYawOffset, ((LivingEntity)animatable.getRidingEntity()).renderYawOffset);
             netHeadYaw = lerpHeadRot - lerpBodyRot;
             float clampedHeadYaw = MathHelper.clamp(MathHelper.wrapDegrees(netHeadYaw), -85, 85);
             lerpBodyRot = lerpHeadRot - clampedHeadYaw;
@@ -187,18 +190,18 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         }
 
         if (animatable.getPose() == Pose.SLEEPING && livingEntity != null) {
-            Direction bedDirection = livingEntity.getBedOrientation();
+            Direction bedDirection = livingEntity.getBedDirection();
 
             if (bedDirection != null) {
                 float eyePosOffset = livingEntity.getEyeHeight(Pose.STANDING) - 0.1F;
 
-                poseStack.translate(-bedDirection.getStepX() * eyePosOffset, 0,
-                        -bedDirection.getStepZ() * eyePosOffset);
+                poseStack.translate(-bedDirection.getXOffset() * eyePosOffset, 0,
+                        -bedDirection.getZOffset() * eyePosOffset);
             }
         }
 
-        float nativeScale = livingEntity != null ? livingEntity.getScale() : 1;
-        float ageInTicks = animatable.tickCount + partialTick;
+        float nativeScale = livingEntity != null ? livingEntity.getRenderScale() : 1;
+        float ageInTicks = animatable.ticksExisted + partialTick;
         float limbSwingAmount = 0;
         float limbSwing = 0;
 
@@ -206,11 +209,11 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick, nativeScale);
 
         if (!shouldSit && animatable.isAlive() && livingEntity != null) {
-            limbSwingAmount = MathHelper.lerp(partialTick, livingEntity.animationSpeedOld,
-                    livingEntity.animationSpeed);
-            limbSwing = livingEntity.animationPosition - livingEntity.animationSpeed * (1 - partialTick);
+            limbSwingAmount = MathHelper.lerp(partialTick, livingEntity.prevLimbSwingAmount,
+                    livingEntity.limbSwingAmount);
+            limbSwing = livingEntity.limbSwing - livingEntity.limbSwingAmount * (1 - partialTick);
 
-            if (livingEntity.isBaby())
+            if (livingEntity.isChild())
                 limbSwing *= 3f;
 
             if (limbSwingAmount > 1f)
@@ -218,9 +221,9 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         }
 
         if (!isReRender) {
-            float headPitch = MathHelper.lerp(partialTick, animatable.xRotO, animatable.xRot);
+            float headPitch = MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch);
             float motionThreshold = getMotionAnimThreshold(animatable);
-            Vector3d velocity = animatable.getDeltaMovement();
+            Vec3d velocity = animatable.getMotion();
             float avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
             AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount,
                     partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
@@ -229,7 +232,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
             animationState.setData(DataTickets.ENTITY, animatable);
             animationState.setData(DataTickets.ENTITY_MODEL_DATA,
-                    new EntityModelData(shouldSit, livingEntity != null && livingEntity.isBaby(), -netHeadYaw,
+                    new EntityModelData(shouldSit, livingEntity != null && livingEntity.isChild(), -netHeadYaw,
                             -headPitch));
             this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
             this.model.handleAnimations(animatable, instanceId, animationState);
@@ -237,14 +240,14 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
 
         poseStack.translate(0, 0.01f, 0);
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.modelRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         assert Minecraft.getInstance().player != null;
-        if (!animatable.isInvisibleTo(Minecraft.getInstance().player))
+        if (!animatable.isInvisibleToPlayer(Minecraft.getInstance().player))
             GeoRenderer.super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender,
                     partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -277,14 +280,14 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      */
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.pushPose();
+        poseStack.push();
         RenderUtils.translateMatrixToBone(poseStack, bone);
         RenderUtils.translateToPivotPoint(poseStack, bone);
         RenderUtils.rotateMatrixAroundBone(poseStack, bone);
         RenderUtils.scaleMatrixForBone(poseStack, bone);
 
         if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = poseStack.last().pose().copy();
+            Matrix4f poseState = poseStack.getLast().getMatrix().copy();
             Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations);
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
@@ -292,7 +295,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             bone.setLocalSpaceMatrix(localMatrix);
             Matrix4f worldState = localMatrix.copy();
 
-            worldState.translate(new Vector3f(this.animatable.position()));
+            worldState.translate(new Vector3f(this.animatable.getPositionVec()));
             bone.setWorldSpaceMatrix(worldState);
         }
 
@@ -303,14 +306,14 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         if (!isReRender) {
             applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick,
                     packedLight, packedOverlay);
-            if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
+            if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).isDrawing)
                 buffer = bufferSource.getBuffer(renderType);
         }
 
         renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
 
-        poseStack.popPose();
+        poseStack.pop();
     }
 
     /**
@@ -326,40 +329,40 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
     protected void applyRotations(T animatable, MatrixStack poseStack, float ageInTicks, float rotationYaw,
                                   float partialTick, float nativeScale) {
         if (isShaking(animatable))
-            rotationYaw += (float)(Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
+            rotationYaw += (float)(Math.cos(animatable.ticksExisted * 3.25d) * Math.PI * 0.4d);
 
         if (animatable.getPose() != Pose.SLEEPING)
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(180f - rotationYaw));
+            poseStack.rotate(Vector3f.YP.rotationDegrees(180f - rotationYaw));
 
         if (animatable instanceof LivingEntity) {
             if (((LivingEntity) animatable).deathTime > 0) {
                 float deathRotation = (((LivingEntity) animatable).deathTime + partialTick - 1f) / 20f * 1.6f;
 
-                poseStack.mulPose(Vector3f.ZP.rotationDegrees(Math.min(MathHelper.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable)));
+                poseStack.rotate(Vector3f.ZP.rotationDegrees(Math.min(MathHelper.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable)));
             }
-            else if (((LivingEntity) animatable).isAutoSpinAttack()) {
-                poseStack.mulPose(Vector3f.XP.rotationDegrees(-90f - animatable.xRot));
-                poseStack.mulPose(Vector3f.YP.rotationDegrees((animatable.tickCount + partialTick) * -75f));
+            else if (((LivingEntity) animatable).isSpinAttacking()) {
+                poseStack.rotate(Vector3f.XP.rotationDegrees(-90f - animatable.rotationPitch));
+                poseStack.rotate(Vector3f.YP.rotationDegrees((animatable.ticksExisted + partialTick) * -75f));
             }
             else if (animatable.getPose() == Pose.SLEEPING) {
-                Direction bedOrientation = ((LivingEntity) animatable).getBedOrientation();
+                Direction bedOrientation = ((LivingEntity) animatable).getBedDirection();
 
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw));
-                poseStack.mulPose(Vector3f.ZP.rotationDegrees(getDeathMaxRotation(animatable)));
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(270f));
+                poseStack.rotate(Vector3f.YP.rotationDegrees(bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw));
+                poseStack.rotate(Vector3f.ZP.rotationDegrees(getDeathMaxRotation(animatable)));
+                poseStack.rotate(Vector3f.YP.rotationDegrees(270f));
             }
             else if (isEntityUpsideDown(((LivingEntity) animatable))) {
-                poseStack.translate(0, (animatable.getBbHeight() + 0.1f) / nativeScale, 0);
-                poseStack.mulPose(Vector3f.ZP.rotationDegrees(180f));
+                poseStack.translate(0, (animatable.getHeight() + 0.1f) / nativeScale, 0);
+                poseStack.rotate(Vector3f.ZP.rotationDegrees(180f));
             }
         }
     }
 
     public static boolean isEntityUpsideDown(LivingEntity livingEntity) {
         if (livingEntity instanceof PlayerEntity || livingEntity.hasCustomName()) {
-            String s = TextFormatting.stripFormatting(livingEntity.getName().getString());
+            String s = TextFormatting.getTextWithoutFormattingCodes(livingEntity.getName().getString());
             if ("Dinnerbone".equals(s) || "Grumm".equals(s)) {
-                return !(livingEntity instanceof PlayerEntity) || ((PlayerEntity)livingEntity).isModelPartShown(PlayerModelPart.CAPE);
+                return !(livingEntity instanceof PlayerEntity) || ((PlayerEntity)livingEntity).isWearing(PlayerModelPart.CAPE);
             }
         }
         return false;
@@ -368,7 +371,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
     /**
      * Gets the max rotation value for dying entities.<br>
      * You might want to modify this for different aesthetics, such as a {@link SpiderEntity} flipping upside down on death.<br>
-     * Functionally equivalent to {@link LivingRenderer#getFlipDegrees}
+     * Functionally equivalent to {@link LivingRenderer#getDeathMaxRotation}
      */
     protected float getDeathMaxRotation(T animatable) {
         return 90f;
@@ -376,41 +379,46 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
 
     /**
      * Whether the entity's nametag should be rendered or not.<br>
-     * Pretty much exclusively used in {@link EntityRenderer#renderNameTag}
+     * Pretty much exclusively used in {@link EntityRenderer#renderName}
      */
     @Override
-    public boolean shouldShowName(T animatable) {
+    public boolean canRenderName(T animatable) {
         double nameRenderDistance = animatable.isDiscrete() ? 32d : 64d;
 
         if (!(animatable instanceof LivingEntity))
             return false;
 
-        if (this.entityRenderDispatcher.distanceToSqr(animatable) >= nameRenderDistance * nameRenderDistance)
+        if (this.renderManager.squareDistanceTo(animatable) >= nameRenderDistance * nameRenderDistance)
             return false;
 
-        if (animatable instanceof MobEntity && (!animatable.shouldShowName() && (!animatable.hasCustomName() || animatable != this.entityRenderDispatcher.crosshairPickEntity)))
+        if (animatable instanceof MobEntity && (!animatable.getAlwaysRenderNameTagForRender() && (!animatable.hasCustomName() || animatable != this.renderManager.pointedEntity)))
             return false;
 
         Minecraft minecraft = Minecraft.getInstance();
         assert minecraft.player != null;
-        boolean visibleToClient = !animatable.isInvisibleTo(minecraft.player);
+        boolean visibleToClient = !animatable.isInvisibleToPlayer(minecraft.player);
         Team entityTeam = animatable.getTeam();
 
         if (entityTeam == null)
-            return Minecraft.renderNames() && animatable != minecraft.getCameraEntity() && visibleToClient && !animatable.isVehicle();
+            return Minecraft.isGuiEnabled() && animatable != minecraft.getRenderViewEntity() && visibleToClient && !animatable.isBeingRidden();
 
         Team playerTeam = minecraft.player.getTeam();
 
         if (entityTeam.getNameTagVisibility() == Visible.ALWAYS) {
             return visibleToClient;
         } else if (entityTeam.getNameTagVisibility() == Visible.HIDE_FOR_OTHER_TEAMS) {
-            return playerTeam == null ? visibleToClient : entityTeam.isAlliedTo(
-                    playerTeam) && (entityTeam.canSeeFriendlyInvisibles() || visibleToClient);
+            return playerTeam == null ? visibleToClient : entityTeam.isSameTeam(
+                    playerTeam) && (entityTeam.getSeeFriendlyInvisiblesEnabled() || visibleToClient);
         } else if (entityTeam.getNameTagVisibility() == Visible.HIDE_FOR_OWN_TEAM) {
-            return playerTeam == null ? visibleToClient : !entityTeam.isAlliedTo(playerTeam) && visibleToClient;
+            return playerTeam == null ? visibleToClient : !entityTeam.isSameTeam(playerTeam) && visibleToClient;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public ResourceLocation getEntityTexture(T entity) {
+        return this.getTextureLocation(entity);
     }
 
     /**
@@ -422,7 +430,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         if (!(animatable instanceof LivingEntity))
             return OverlayTexture.NO_OVERLAY;
 
-        return OverlayTexture.pack(OverlayTexture.u(u), OverlayTexture.v(((LivingEntity)animatable).hurtTime > 0 || ((LivingEntity)animatable).deathTime > 0));
+        return OverlayTexture.getPackedUV(OverlayTexture.getU(u), OverlayTexture.getV(((LivingEntity)animatable).hurtTime > 0 || ((LivingEntity)animatable).deathTime > 0));
     }
 
     /**
@@ -441,45 +449,55 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
      * It's a like-for-like from {@link net.minecraft.client.renderer.entity.MobRenderer#renderLeash} that had to be duplicated here for flexible usage
      */
     public <E extends Entity, M extends MobEntity> void renderLeash(M mob, float partialTick, MatrixStack poseStack, IRenderTypeBuffer bufferSource, E leashHolder) {
-        double lerpBodyAngle = (MathHelper.lerp(partialTick, mob.yBodyRotO, mob.yBodyRot) * 0.017453292f) + 1.5707964f;
-        Vector3d leashOffset = mob.getLeashOffset();
-        double xAngleOffset = Math.cos(lerpBodyAngle) * leashOffset.z + Math.sin(lerpBodyAngle) * leashOffset.x;
-        double zAngleOffset = Math.sin(lerpBodyAngle) * leashOffset.z - Math.cos(lerpBodyAngle) * leashOffset.x;
-        double lerpOriginX = MathHelper.lerp(partialTick, mob.xo, mob.getX()) + xAngleOffset;
-        double lerpOriginY = MathHelper.lerp(partialTick, mob.yo, mob.getY()) + leashOffset.y;
-        double lerpOriginZ = MathHelper.lerp(partialTick, mob.zo, mob.getZ()) + zAngleOffset;
-        Vector3d ropeGripPosition = leashHolder.getRopeHoldPosition(partialTick);
-        float xDif = (float) (ropeGripPosition.x - lerpOriginX);
-        float yDif = (float) (ropeGripPosition.y - lerpOriginY);
-        float zDif = (float) (ropeGripPosition.z - lerpOriginZ);
-        float offsetMod = (float) (MathHelper.fastInvSqrt(xDif * xDif + zDif * zDif) * 0.025f / 2f);
-        float xOffset = zDif * offsetMod;
-        float zOffset = xDif * offsetMod;
-        IVertexBuilder vertexConsumer = bufferSource.getBuffer(RenderType.leash());
-        BlockPos entityEyePos = new BlockPos(mob.getEyePosition(partialTick));
-        BlockPos holderEyePos = new BlockPos(leashHolder.getEyePosition(partialTick));
-        int entityBlockLight = getBlockLightLevel((T) mob, entityEyePos);
-        int holderBlockLight = leashHolder.isOnFire() ? 15 : leashHolder.level.getBrightness(LightType.BLOCK,
-                holderEyePos);
-        int entitySkyLight = mob.level.getBrightness(LightType.SKY, entityEyePos);
-        int holderSkyLight = mob.level.getBrightness(LightType.SKY, holderEyePos);
+        poseStack.push();
+        double d0 = MathHelper.lerp(partialTick * 0.5F, leashHolder.rotationYaw, leashHolder.prevRotationYaw) * ((float)Math.PI / 180F);
+        double d1 = MathHelper.lerp(partialTick * 0.5F, leashHolder.rotationPitch, leashHolder.prevRotationPitch) * ((float)Math.PI / 180F);
+        double d2 = Math.cos(d0);
+        double d3 = Math.sin(d0);
+        double d4 = Math.sin(d1);
+        if (leashHolder instanceof HangingEntity) {
+            d2 = 0.0D;
+            d3 = 0.0D;
+            d4 = -1.0D;
+        }
 
-        poseStack.pushPose();
-        poseStack.translate(xAngleOffset, leashOffset.y, zAngleOffset);
-
-        Matrix4f posMatrix = new Matrix4f(poseStack.last().pose());
-
+        double d5 = Math.cos(d1);
+        double d6 = MathHelper.lerp(partialTick, leashHolder.prevPosX, leashHolder.getPosX()) - d2 * 0.7D - d3 * 0.5D * d5;
+        double d7 = MathHelper.lerp(partialTick, leashHolder.prevPosY + leashHolder.getEyeHeight() * 0.7D, leashHolder.getPosY() + leashHolder.getEyeHeight() * 0.7D) - d4 * 0.5D - 0.25D;
+        double d8 = MathHelper.lerp(partialTick, leashHolder.prevPosZ, leashHolder.getPosZ()) - d3 * 0.7D + d2 * 0.5D * d5;
+        double d9 = (MathHelper.lerp(partialTick, mob.renderYawOffset, mob.prevRenderYawOffset) * ((float)Math.PI / 180F)) + (Math.PI / 2D);
+        d2 = Math.cos(d9) * mob.getWidth() * 0.4D;
+        d3 = Math.sin(d9) * mob.getWidth() * 0.4D;
+        double d10 = MathHelper.lerp(partialTick, mob.prevPosX, mob.getPosX()) + d2;
+        double d11 = MathHelper.lerp(partialTick, mob.prevPosY, mob.getPosY());
+        double d12 = MathHelper.lerp(partialTick, mob.prevPosZ, mob.getPosZ()) + d3;
+        poseStack.translate(d2, -(1.6D - mob.getHeight()) * 0.5D, d3);
+        float f = (float)(d6 - d10);
+        float f1 = (float)(d7 - d11);
+        float f2 = (float)(d8 - d12);
+        IVertexBuilder ivertexbuilder = bufferSource.getBuffer(RenderType.getLeash());
+        Matrix4f matrix4f = poseStack.getLast().getMatrix();
+        float f4 = MathHelper.fastInvSqrt(f * f + f2 * f2) * 0.025F / 2.0F;
+        float f5 = f2 * f4;
+        float f6 = f * f4;
+        int i = this.getBlockLight(this.animatable, partialTick);
+        int j = this.getBlockLight(leashHolder, partialTick);
+        int k = mob.world.getLightFor(LightType.SKY, new BlockPos(mob.getEyePosition(partialTick)));
+        int l = mob.world.getLightFor(LightType.SKY, new BlockPos(leashHolder.getEyePosition(partialTick)));
+        
         for (int segment = 0; segment <= 24; ++segment) {
-            GeoEntityRenderer.renderLeashPiece(vertexConsumer, posMatrix, xDif, yDif, zDif, entityBlockLight,
-                    holderBlockLight, entitySkyLight, holderSkyLight, 0.025f, 0.025f, xOffset, zOffset, segment, false);
+            GeoEntityRenderer.renderLeashPiece(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.025F, f5, f6, segment,false);
         }
 
         for (int segment = 24; segment >= 0; --segment) {
-            GeoEntityRenderer.renderLeashPiece(vertexConsumer, posMatrix, xDif, yDif, zDif, entityBlockLight,
-                    holderBlockLight, entitySkyLight, holderSkyLight, 0.025f, 0.0f, xOffset, zOffset, segment, true);
+            GeoEntityRenderer.renderLeashPiece(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.025F, f5, f6, segment,true);
         }
 
-        poseStack.popPose();
+        poseStack.pop();
+    }
+
+    protected int getBlockLight(Entity entityIn, float partialTicks) {
+        return entityIn.isBurning() ? 15 : entityIn.world.getLightFor(LightType.BLOCK, new BlockPos(entityIn.getEyePosition(partialTicks)));
     }
 
     /**
@@ -490,7 +508,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         float piecePosPercent = segment / 24f;
         int lerpBlockLight = (int) MathHelper.lerp(piecePosPercent, entityBlockLight, holderBlockLight);
         int lerpSkyLight = (int) MathHelper.lerp(piecePosPercent, entitySkyLight, holderSkyLight);
-        int packedLight = LightTexture.pack(lerpBlockLight, lerpSkyLight);
+        int packedLight = LightTexture.packLight(lerpBlockLight, lerpSkyLight);
         float knotColourMod = segment % 2 == (isLeashKnot ? 1 : 0) ? 0.7f : 1f;
         float red = 0.5f * knotColourMod;
         float green = 0.4f * knotColourMod;
@@ -499,9 +517,9 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         float y = yDif > 0.0f ? yDif * piecePosPercent * piecePosPercent : yDif - yDif * (1.0f - piecePosPercent) * (1.0f - piecePosPercent);
         float z = zDif * piecePosPercent;
 
-        buffer.vertex(positionMatrix, x - xOffset, y + yOffset, z + zOffset).color(red, green, blue, 1).uv2(
+        buffer.pos(positionMatrix, x - xOffset, y + yOffset, z + zOffset).color(red, green, blue, 1).lightmap(
                 packedLight).endVertex();
-        buffer.vertex(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset).color(red, green, blue, 1).uv2(
+        buffer.pos(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset).color(red, green, blue, 1).lightmap(
                 packedLight).endVertex();
     }
 

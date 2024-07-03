@@ -1,7 +1,13 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
@@ -14,17 +20,13 @@ import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
 
 import java.util.List;
 
@@ -37,7 +39,6 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends ItemStackTi
     protected final GeoModel<T> model;
 
     protected ItemStack currentItemStack;
-    protected ItemCameraTransforms.TransformType renderPerspective;
     protected T animatable;
     protected float scaleWidth = 1;
     protected float scaleHeight = 1;
@@ -82,7 +83,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends ItemStackTi
     }
 
     /**
-     * Shadowing override of {@link EntityRenderer#getTextureLocation}.<br>
+     * Shadowing override of {@link EntityRenderer#getEntityTexture(Entity)}.<br>
      * This redirects the call to {@link GeoRenderer#getTextureLocation}
      */
     @Override
@@ -130,7 +131,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends ItemStackTi
      */
     @Override
     public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.itemRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         scaleModelForRender(this.scaleWidth, this.scaleHeight, poseStack, animatable, model, isReRender, partialTick,
                 packedLight, packedOverlay);
@@ -140,43 +141,15 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends ItemStackTi
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack poseStack, IRenderTypeBuffer bufferSource, int packedLight, int packedOverlay) {
+    public void render(ItemStack stack, MatrixStack poseStack, IRenderTypeBuffer bufferSource, int packedLight, int packedOverlay) {
         this.animatable = (T) stack.getItem();
         this.currentItemStack = stack;
-        this.renderPerspective = transformType;
-
-        if (transformType == ItemCameraTransforms.TransformType.GUI) {
-            renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
-        } else {
-            RenderType renderType = getRenderType(this.animatable, getTextureLocation(this.animatable), bufferSource,
-                    Minecraft.getInstance().getFrameTime());
-            IVertexBuilder buffer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, false,
-                    this.currentItemStack != null && this.currentItemStack.hasFoil());
-
-            defaultRender(poseStack, this.animatable, bufferSource, renderType, buffer, 0,
-                    Minecraft.getInstance().getFrameTime(), packedLight);
-        }
-    }
-
-    /**
-     * Wrapper method to handle rendering the item in a GUI context (defined by {@link ItemCameraTransforms.TransformType#GUI} normally).<br>
-     * Just includes some additional required transformations and settings.
-     */
-    protected void renderInGui(ItemCameraTransforms.TransformType transformType, MatrixStack poseStack, IRenderTypeBuffer bufferSource, int packedLight, int packedOverlay) {
-        RenderHelper.setupForFlatItems();
-        IRenderTypeBuffer.Impl defaultBufferSource = bufferSource instanceof IRenderTypeBuffer.Impl ? ((IRenderTypeBuffer.Impl) bufferSource) : Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
-        RenderType renderType = getRenderType(this.animatable, getTextureLocation(this.animatable), defaultBufferSource,
-                Minecraft.getInstance().getFrameTime());
-        IVertexBuilder buffer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, true,
-                this.currentItemStack != null && this.currentItemStack.hasFoil());
-
-        poseStack.pushPose();
-        defaultRender(poseStack, this.animatable, defaultBufferSource, renderType, buffer, 0,
-                Minecraft.getInstance().getFrameTime(), packedLight);
-        defaultBufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-        RenderHelper.setupFor3DItems();
-        poseStack.popPose();
+        RenderType renderType = getRenderType(this.animatable, getTextureLocation(this.animatable), bufferSource,
+                Minecraft.getInstance().getRenderPartialTicks());
+        IVertexBuilder buffer = ItemRenderer.getBuffer(bufferSource, renderType, false,
+                this.currentItemStack != null && this.currentItemStack.hasEffect());
+        defaultRender(poseStack, this.animatable, bufferSource, renderType, buffer, 0,
+                Minecraft.getInstance().getRenderPartialTicks(), packedLight);
     }
 
     /**
@@ -191,15 +164,12 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends ItemStackTi
             long instanceId = getInstanceId(animatable);
 
             animationState.setData(DataTickets.TICK, animatable.getTick(this.currentItemStack));
-            animationState.setData(DataTickets.ITEM_RENDER_PERSPECTIVE, this.renderPerspective);
             animationState.setData(DataTickets.ITEMSTACK, this.currentItemStack);
-            animatable.getAnimatableInstanceCache().getManagerForId(instanceId).setData(
-                    DataTickets.ITEM_RENDER_PERSPECTIVE, this.renderPerspective);
             this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
             this.model.handleAnimations(animatable, instanceId, animationState);
         }
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.modelRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
 //		RenderSystem.setShaderTexture(0, getTextureLocation(animatable));
         GeoRenderer.super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender,
@@ -212,7 +182,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends ItemStackTi
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f poseState = new Matrix4f(poseStack.getLast().getMatrix());
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.itemRenderTranslations));

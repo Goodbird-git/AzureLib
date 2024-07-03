@@ -1,7 +1,14 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.cache.object;
 
-import net.minecraft.util.math.vector.Vector3f;
 
+import net.minecraft.client.renderer.Vector3f;
 
 public class GeoVertex {
     private final Vector3f position;

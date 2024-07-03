@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -15,14 +22,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
 
 import java.util.List;
 
@@ -68,7 +75,7 @@ public class GeoBlockRenderer<T extends TileEntity & GeoAnimatable> extends Tile
      */
     @Override
     public long getInstanceId(T animatable) {
-        return animatable.getBlockPos().hashCode();
+        return animatable.getPos().hashCode();
     }
 
     /**
@@ -111,7 +118,7 @@ public class GeoBlockRenderer<T extends TileEntity & GeoAnimatable> extends Tile
      */
     @Override
     public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.blockRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.blockRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         scaleModelForRender(this.scaleWidth, this.scaleHeight, poseStack, animatable, model, isReRender, partialTick,
                 packedLight, packedOverlay);
@@ -144,7 +151,7 @@ public class GeoBlockRenderer<T extends TileEntity & GeoAnimatable> extends Tile
             this.model.handleAnimations(animatable, instanceId, animationState);
         }
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.modelRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
 //		RenderSystem.setShaderTexture(0, getTextureLocation(animatable));
         GeoRenderer.super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender,
@@ -157,10 +164,10 @@ public class GeoBlockRenderer<T extends TileEntity & GeoAnimatable> extends Tile
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f poseState = new Matrix4f(poseStack.getLast().getMatrix());
             Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.blockRenderTranslations);
             Matrix4f worldState = localMatrix.copy();
-            BlockPos pos = this.animatable.getBlockPos();
+            BlockPos pos = this.animatable.getPos();
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(localMatrix);
@@ -178,22 +185,22 @@ public class GeoBlockRenderer<T extends TileEntity & GeoAnimatable> extends Tile
     protected void rotateBlock(Direction facing, MatrixStack poseStack) {
         switch (facing) {
             case SOUTH:
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                poseStack.rotate(Vector3f.YP.rotationDegrees(180));
                 return;
             case WEST:
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+                poseStack.rotate(Vector3f.YP.rotationDegrees(90));
                 return;
             case NORTH:
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(0));
+                poseStack.rotate(Vector3f.YP.rotationDegrees(0));
                 return;
             case EAST:
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+                poseStack.rotate(Vector3f.YP.rotationDegrees(270));
                 return;
             case UP:
-                poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
+                poseStack.rotate(Vector3f.XP.rotationDegrees(90));
                 return;
             case DOWN:
-                poseStack.mulPose(Vector3f.XN.rotationDegrees(90));
+                poseStack.rotate(Vector3f.XN.rotationDegrees(90));
         }
     }
 
@@ -203,11 +210,11 @@ public class GeoBlockRenderer<T extends TileEntity & GeoAnimatable> extends Tile
     protected Direction getFacing(T block) {
         BlockState blockState = block.getBlockState();
 
-        if (blockState.hasProperty(HorizontalBlock.FACING))
-            return blockState.getValue(HorizontalBlock.FACING);
+        if (blockState.has(HorizontalBlock.HORIZONTAL_FACING))
+            return blockState.get(HorizontalBlock.HORIZONTAL_FACING);
 
-        if (blockState.hasProperty(DirectionalBlock.FACING))
-            return blockState.getValue(DirectionalBlock.FACING);
+        if (blockState.has(DirectionalBlock.FACING))
+            return blockState.get(DirectionalBlock.FACING);
 
         return Direction.NORTH;
     }

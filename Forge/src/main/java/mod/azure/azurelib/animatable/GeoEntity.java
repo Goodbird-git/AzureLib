@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.animatable;
 
 import javax.annotation.Nullable;
@@ -13,7 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 /**
- * The {@link GeoAnimatable} interface specific to {@link net.minecraft.world.entity.Entity Entities}. This also applies to Projectiles and other Entity subclasses.<br>
+ * The {@link GeoAnimatable} interface specific to {@link Entity Entities}. This also applies to Projectiles and other Entity subclasses.<br>
  * <b>NOTE:</b> This <u>cannot</u> be used for entities using the {@link mod.azure.azurelib.renderer.GeoReplacedEntityRenderer} as you aren't extending {@code Entity}. Use {@link GeoReplacedEntity} instead.
  */
 public interface GeoEntity extends GeoAnimatable {
@@ -27,7 +34,7 @@ public interface GeoEntity extends GeoAnimatable {
 	 */
 	@Nullable
 	default <D> D getAnimData(SerializableDataTicket<D> dataTicket) {
-		return getAnimatableInstanceCache().getManagerForId(((Entity) this).getId()).getData(dataTicket);
+		return getAnimatableInstanceCache().getManagerForId(((Entity) this).getEntityId()).getData(dataTicket);
 	}
 
 	/**
@@ -40,10 +47,10 @@ public interface GeoEntity extends GeoAnimatable {
 	default <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
 		Entity entity = (Entity) this;
 
-		if (entity.getCommandSenderWorld().isClientSide()) {
-			getAnimatableInstanceCache().getManagerForId(entity.getId()).setData(dataTicket, data);
+		if (entity.getEntityWorld().isRemote()) {
+			getAnimatableInstanceCache().getManagerForId(entity.getEntityId()).setData(dataTicket, data);
 		} else {
-			AzureLibNetwork.send(new EntityAnimDataSyncPacket<>(entity.getId(), dataTicket, data), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity));
+			AzureLibNetwork.send(new EntityAnimDataSyncPacket<>(entity.getEntityId(), dataTicket, data), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity));
 		}
 	}
 
@@ -57,10 +64,10 @@ public interface GeoEntity extends GeoAnimatable {
 	default void triggerAnim(@Nullable String controllerName, String animName) {
 		Entity entity = (Entity) this;
 
-		if (entity.getCommandSenderWorld().isClientSide()) {
-			getAnimatableInstanceCache().getManagerForId(entity.getId()).tryTriggerAnimation(controllerName, animName);
+		if (entity.getEntityWorld().isRemote()) {
+			getAnimatableInstanceCache().getManagerForId(entity.getEntityId()).tryTriggerAnimation(controllerName, animName);
 		} else {
-			AzureLibNetwork.send(new EntityAnimTriggerPacket<>(entity.getId(), controllerName, animName), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity));
+			AzureLibNetwork.send(new EntityAnimTriggerPacket<>(entity.getEntityId(), controllerName, animName), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity));
 		}
 	}
 

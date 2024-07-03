@@ -13,12 +13,9 @@ import java.util.function.Function;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mod.azure.azurelib.AzureLib;
-import mod.azure.azurelib.AzureLibException;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.core.animatable.model.CoreGeoModel;
 import mod.azure.azurelib.loading.FileLoader;
-import mod.azure.azurelib.loading.json.FormatVersion;
-import mod.azure.azurelib.loading.json.raw.Model;
 import mod.azure.azurelib.loading.object.BakedAnimations;
 import mod.azure.azurelib.loading.object.BakedModelFactory;
 import mod.azure.azurelib.loading.object.GeometryTree;
@@ -28,7 +25,6 @@ import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.ModLoader;
 
 /**
  * Cache class for holding loaded {@link mod.azure.azurelib.core.animation.Animation Animations} and {@link CoreGeoModel Models}
@@ -61,7 +57,7 @@ public final class AzureLibCache {
 
 		IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getInstance()
 				.getResourceManager();
-		reloadable.registerReloadListener(AzureLibCache::reload);
+		reloadable.addReloadListener(AzureLibCache::reload);
 	}
 
 	private static CompletableFuture<Void> reload(IFutureReloadListener.IStage stage, IResourceManager resourceManager, IProfiler preparationsProfiler, IProfiler reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
@@ -70,7 +66,7 @@ public final class AzureLibCache {
 
 		return CompletableFuture.allOf(
 				loadAnimations(backgroundExecutor, resourceManager, animations::put),
-				loadModels(backgroundExecutor, resourceManager, models::put)).thenCompose(stage::wait).thenAcceptAsync(empty -> {
+				loadModels(backgroundExecutor, resourceManager, models::put)).thenCompose(stage::markCompleteAwaitingOthers).thenAcceptAsync(empty -> {
 			AzureLibCache.ANIMATIONS = animations;
 			AzureLibCache.MODELS = models;
 		}, gameExecutor);
@@ -86,7 +82,7 @@ public final class AzureLibCache {
 
 	private static <T> CompletableFuture<Void> loadResources(Executor executor, IResourceManager resourceManager, String type, Function<ResourceLocation, T> loader, BiConsumer<ResourceLocation, T> map) {
 		return CompletableFuture.supplyAsync(
-						() -> resourceManager.listResources(type, fileName -> fileName.endsWith(".json")), executor)
+						() -> resourceManager.getAllResourceLocations(type, fileName -> fileName.endsWith(".json")), executor)
 				.thenApplyAsync(resources -> {
 					Map<ResourceLocation, CompletableFuture<T>> tasks = new Object2ObjectOpenHashMap<>();
 

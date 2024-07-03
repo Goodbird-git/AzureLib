@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.loading.json.raw;
 
 import net.minecraft.util.JSONUtils;
@@ -35,7 +42,7 @@ public class Model {
 			JsonObject obj = json.getAsJsonObject();
 			FormatVersion formatVersion = context.deserialize(obj.get("format_version"), FormatVersion.class);
 			MinecraftGeometry[] minecraftGeometry = JsonUtil.jsonArrayToObjectArray(
-					JSONUtils.getAsJsonArray(obj, "minecraft:geometry", new JsonArray()), context, MinecraftGeometry.class);
+					JSONUtils.getJsonArray(obj, "minecraft:geometry", new JsonArray()), context, MinecraftGeometry.class);
 
 			return new Model(formatVersion, minecraftGeometry);
 		};
