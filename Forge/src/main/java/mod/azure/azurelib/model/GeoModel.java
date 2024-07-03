@@ -139,7 +139,7 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 	}
 
 	@Override
-	public final void handleAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
+	public void handleAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
 		Minecraft mc = Minecraft.getInstance();
 		AnimatableManager<T> animatableManager = animatable.getAnimatableInstanceCache().getManagerForId(instanceId);
 		Double currentTick = animationState.getData(DataTickets.TICK);
