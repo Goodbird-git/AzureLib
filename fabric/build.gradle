@@ -121,6 +121,9 @@ if (file('key.properties').exists()) {
             projectId = "7zlUOZvb"
             accessToken = releaseProp.getProperty('modrinthKey')
             minecraftVersions.add("1.20.1")
+            requires {
+                slug = "fabric-api"
+            }
         }
     }
 }
