@@ -4,6 +4,9 @@ plugins {
     id "me.modmuss50.mod-publish-plugin" version "0.4.0"
 }
 
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -79,6 +82,22 @@ publishing {
     }
 }
 
+processResources {
+    doLast {
+        def jsonMinifyStart = System.currentTimeMillis()
+        def jsonMinified = 0
+        def jsonBytesSaved = 0
+        fileTree(dir: outputs.files.asPath, include: '**/*.json').each {
+            File file = it
+            jsonMinified++
+            def oldLength = file.length()
+            file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+            jsonBytesSaved += oldLength - file.length()
+        }
+        println('Minified ' + jsonMinified + ' json files. Saved ' + jsonBytesSaved + ' bytes. Took ' + (System.currentTimeMillis() - jsonMinifyStart) + 'ms.')
+    }
+}
+
 if (file('key.properties').exists()) {
     publishMods {
         def releaseProp = new Properties()
@@ -94,11 +113,17 @@ if (file('key.properties').exists()) {
             projectSlug = "azurelib"
             accessToken = releaseProp.getProperty("curseKey")
             minecraftVersions.add("1.16.5")
+            requires {
+                slug = "fabric-api"
+            }
         }
         modrinth {
             projectId = "7zlUOZvb"
             accessToken = releaseProp.getProperty('modrinthKey')
             minecraftVersions.add("1.16.5")
+            requires {
+                slug = "fabric-api"
+            }
         }
     }
 }
