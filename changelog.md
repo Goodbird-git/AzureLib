@@ -1,4 +1,5 @@
-v2.3.9
+v2.3.10
 
-- Remove unneeded 0.01f translate in GeoEntityRenderer
-- Rewrite events using Services
+- Adds headers to Geckolib forked classes
+- Adds headers to Configuration forked classes
+- Forks SBL into AzureLib for 1.21+
