@@ -116,7 +116,7 @@ if (file('key.properties').exists()) {
         file = jar.archiveFile
         changelog = rootProject.file("changelog.txt").text
         type = STABLE
-        modLoaders.add("forge")
+        modLoaders.add("fabric")
 
         curseforge {
             projectId = "817423"
