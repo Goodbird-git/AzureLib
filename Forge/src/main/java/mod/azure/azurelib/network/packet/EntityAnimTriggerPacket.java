@@ -7,10 +7,6 @@
  */
 package mod.azure.azurelib.network.packet;
 
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.animatable.GeoReplacedEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -19,6 +15,9 @@ import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * Packet for syncing user-definable animations that can be triggered from the server for {@link Entity Entities}

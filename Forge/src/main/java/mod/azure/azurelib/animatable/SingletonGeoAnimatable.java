@@ -7,8 +7,6 @@
  */
 package mod.azure.azurelib.animatable;
 
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -21,6 +19,7 @@ import mod.azure.azurelib.network.packet.AnimTriggerPacket;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 

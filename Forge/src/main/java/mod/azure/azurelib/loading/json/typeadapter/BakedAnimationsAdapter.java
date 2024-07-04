@@ -7,22 +7,8 @@
  */
 package mod.azure.azurelib.loading.json.typeadapter;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.math.NumberUtils;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.mojang.datafixers.util.Pair;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.AzureLib;
@@ -40,9 +26,15 @@ import mod.azure.azurelib.loading.object.BakedAnimations;
 import mod.azure.azurelib.util.JsonUtil;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * {@link com.google.gson.Gson} {@link JsonDeserializer} for {@link mod.azure.azurelib.loading.object.BakedAnimations}.<br>
+ * {@link com.google.gson.Gson} {@link JsonDeserializer} for {@link BakedAnimations}.<br>
  * Acts as the deserialization interface for {@code BakedAnimations}
  */
 public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations> {

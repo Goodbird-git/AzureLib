@@ -7,7 +7,6 @@ package mod.azure.azurelib.core.animation;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.keyframe.BoneAnimation;
 import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;

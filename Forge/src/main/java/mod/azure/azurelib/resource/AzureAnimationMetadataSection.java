@@ -1,15 +1,14 @@
 package mod.azure.azurelib.resource;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.client.resources.data.AnimationFrame;
 import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.client.resources.data.AnimationMetadataSectionSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class AzureAnimationMetadataSection extends AnimationMetadataSection {
 	public static final AnimationMetadataSectionSerializer SERIALIZER = new AnimationMetadataSectionSerializer();
@@ -78,7 +77,7 @@ public class AzureAnimationMetadataSection extends AnimationMetadataSection {
 		return this.interpolatedFrames;
 	}
 
-	public void forEachFrame(AzureAnimationMetadataSection.FrameOutput p_174862_) {
+	public void forEachFrame(FrameOutput p_174862_) {
 		for (AnimationFrame animationframe : this.frames) {
 			p_174862_.accept(animationframe.getFrameIndex(), animationframe.getFrameTime());
 		}

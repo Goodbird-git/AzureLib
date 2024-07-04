@@ -5,25 +5,12 @@
 
 package mod.azure.azurelib.core.animation;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.function.Function;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animatable.model.CoreGeoModel;
-import mod.azure.azurelib.core.keyframe.AnimationPoint;
-import mod.azure.azurelib.core.keyframe.BoneAnimation;
-import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
-import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.keyframe.KeyframeLocation;
-import mod.azure.azurelib.core.keyframe.KeyframeStack;
+import mod.azure.azurelib.core.keyframe.*;
 import mod.azure.azurelib.core.keyframe.event.CustomInstructionKeyframeEvent;
 import mod.azure.azurelib.core.keyframe.event.ParticleKeyframeEvent;
 import mod.azure.azurelib.core.keyframe.event.SoundKeyframeEvent;
@@ -38,6 +25,9 @@ import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core.state.BoneSnapshot;
+
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and instruction markers.
@@ -212,7 +202,7 @@ public class AnimationController<T extends GeoAnimatable> {
 	}
 
 	/**
-	 * Tells the AnimationController that you want to receive the {@link AnimationController.AnimationStateHandler}
+	 * Tells the AnimationController that you want to receive the {@link AnimationStateHandler}
 	 * while a triggered animation is playing.<br>
 	 * <br>
 	 * This has no effect if no triggered animation has been registered, or one isn't currently playing.<br>
@@ -632,7 +622,7 @@ public class AnimationController<T extends GeoAnimatable> {
 	}
 
 	/**
-	 * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link mod.azure.azurelib.core.animation.AnimationProcessor.QueuedAnimation}
+	 * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link AnimationProcessor.QueuedAnimation}
 	 * for animation lerping
 	 * @param animation The {@code QueuedAnimation} to filter {@code BoneSnapshots} for
 	 * @param snapshots The master snapshot collection to pull filter from

@@ -1,11 +1,11 @@
 package mod.azure.azurelib.core.animatable.model;
 
-import java.util.Optional;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.animation.AnimationProcessor;
 import mod.azure.azurelib.core.animation.AnimationState;
+
+import java.util.Optional;
 
 /**
  * Base class for AzureLib models.<br>

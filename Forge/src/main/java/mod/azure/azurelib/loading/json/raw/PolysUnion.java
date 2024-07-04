@@ -12,7 +12,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
-
 import mod.azure.azurelib.util.JsonUtil;
 
 /**

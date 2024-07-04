@@ -1,24 +1,7 @@
 package mod.azure.azurelib.core.math;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import mod.azure.azurelib.core.math.functions.Function;
-import mod.azure.azurelib.core.math.functions.classic.ACos;
-import mod.azure.azurelib.core.math.functions.classic.ASin;
-import mod.azure.azurelib.core.math.functions.classic.ATan;
-import mod.azure.azurelib.core.math.functions.classic.ATan2;
-import mod.azure.azurelib.core.math.functions.classic.Abs;
-import mod.azure.azurelib.core.math.functions.classic.Cos;
-import mod.azure.azurelib.core.math.functions.classic.Exp;
-import mod.azure.azurelib.core.math.functions.classic.Ln;
-import mod.azure.azurelib.core.math.functions.classic.Mod;
-import mod.azure.azurelib.core.math.functions.classic.Pow;
-import mod.azure.azurelib.core.math.functions.classic.Sin;
-import mod.azure.azurelib.core.math.functions.classic.Sqrt;
+import mod.azure.azurelib.core.math.functions.classic.*;
 import mod.azure.azurelib.core.math.functions.limit.Clamp;
 import mod.azure.azurelib.core.math.functions.limit.Max;
 import mod.azure.azurelib.core.math.functions.limit.Min;
@@ -26,13 +9,13 @@ import mod.azure.azurelib.core.math.functions.rounding.Ceil;
 import mod.azure.azurelib.core.math.functions.rounding.Floor;
 import mod.azure.azurelib.core.math.functions.rounding.Round;
 import mod.azure.azurelib.core.math.functions.rounding.Trunc;
-import mod.azure.azurelib.core.math.functions.utility.DieRoll;
-import mod.azure.azurelib.core.math.functions.utility.DieRollInteger;
-import mod.azure.azurelib.core.math.functions.utility.HermiteBlend;
-import mod.azure.azurelib.core.math.functions.utility.Lerp;
-import mod.azure.azurelib.core.math.functions.utility.LerpRotate;
-import mod.azure.azurelib.core.math.functions.utility.Random;
-import mod.azure.azurelib.core.math.functions.utility.RandomInteger;
+import mod.azure.azurelib.core.math.functions.utility.*;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Math builder

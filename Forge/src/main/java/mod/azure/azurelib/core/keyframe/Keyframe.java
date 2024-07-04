@@ -5,12 +5,12 @@
 
 package mod.azure.azurelib.core.keyframe;
 
-import java.util.List;
-import java.util.Objects;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.math.IValue;
+
+import java.util.List;
+import java.util.Objects;
 
 
 public class Keyframe<T extends IValue> {

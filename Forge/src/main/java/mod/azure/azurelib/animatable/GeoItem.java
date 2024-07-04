@@ -7,13 +7,6 @@
  */
 package mod.azure.azurelib.animatable;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.Suppliers;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.cache.AnimatableIdCache;
@@ -22,19 +15,19 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.ContextAwareAnimatableManager;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.Tag;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldServer;
+
+import javax.annotation.Nullable;
+import java.util.EnumMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
- * The {@link mod.azure.azurelib.core.animatable.GeoAnimatable GeoAnimatable} interface specific to {@link Item Items}. This also applies to armor, as they are just items too.
+ * The {@link GeoAnimatable GeoAnimatable} interface specific to {@link Item Items}. This also applies to armor, as they are just items too.
  */
 public interface GeoItem extends SingletonGeoAnimatable {
 	static final String ID_NBT_KEY = "AzureLibID";
@@ -67,7 +60,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	 * Gets the unique identifying number from this ItemStack's {@link Tag NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
 	 */
 	static long getId(ItemStack stack) {
-		CompoundNBT tag = stack.getTag();
+		NBTTagCompound tag = stack.getTagCompound();
 
 		if (tag == null)
 			return Long.MAX_VALUE;
@@ -76,11 +69,11 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Gets the unique identifying number from this ItemStack's {@link Tag NBT}.<br>
+	 * Gets the unique identifying number from this ItemStack's {@link NBTTagCompound NBT}.<br>
 	 * If no ID has been reserved for this stack yet, it will reserve a new id and assign it
 	 */
-	static long getOrAssignId(ItemStack stack, ServerWorld level) {
-		CompoundNBT tag = stack.getOrCreateTag();
+	static long getOrAssignId(ItemStack stack, WorldServer level) {
+		NBTTagCompound tag = stack.getOrCreateTag();
 		long id = tag.getLong(ID_NBT_KEY);
 
 		if (tag.contains(ID_NBT_KEY, 99))

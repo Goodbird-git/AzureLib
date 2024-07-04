@@ -7,12 +7,12 @@
  */
 package mod.azure.azurelib.cache.object;
 
-import java.util.List;
-import java.util.Optional;
-
 import mod.azure.azurelib.core.animatable.model.CoreBakedGeoModel;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.loading.json.raw.ModelProperties;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Baked model object for AzureLib models.

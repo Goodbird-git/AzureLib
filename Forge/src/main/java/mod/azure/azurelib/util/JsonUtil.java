@@ -7,42 +7,20 @@
  */
 package mod.azure.azurelib.util;
 
+import com.google.gson.*;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.loading.json.raw.*;
+import mod.azure.azurelib.loading.json.typeadapter.BakedAnimationsAdapter;
+import mod.azure.azurelib.loading.json.typeadapter.KeyFramesAdapter;
+import mod.azure.azurelib.loading.object.BakedAnimations;
+
+import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.core.animation.Animation;
-import mod.azure.azurelib.loading.json.raw.Bone;
-import mod.azure.azurelib.loading.json.raw.Cube;
-import mod.azure.azurelib.loading.json.raw.FaceUV;
-import mod.azure.azurelib.loading.json.raw.LocatorClass;
-import mod.azure.azurelib.loading.json.raw.LocatorValue;
-import mod.azure.azurelib.loading.json.raw.MinecraftGeometry;
-import mod.azure.azurelib.loading.json.raw.Model;
-import mod.azure.azurelib.loading.json.raw.ModelProperties;
-import mod.azure.azurelib.loading.json.raw.PolyMesh;
-import mod.azure.azurelib.loading.json.raw.PolysUnion;
-import mod.azure.azurelib.loading.json.raw.TextureMesh;
-import mod.azure.azurelib.loading.json.raw.UVFaces;
-import mod.azure.azurelib.loading.json.raw.UVUnion;
-import mod.azure.azurelib.loading.json.typeadapter.BakedAnimationsAdapter;
-import mod.azure.azurelib.loading.json.typeadapter.KeyFramesAdapter;
-import mod.azure.azurelib.loading.object.BakedAnimations;
-import net.minecraft.util.JSONUtils;
 
 /**
  * Json helper class for various json functions
@@ -74,7 +52,7 @@ public final class JsonUtil {
 	 * Converts a {@link JsonArray} of a given object type to an array of that object, deserialized from their respective {@link JsonElement JsonElements}
 	 * 
 	 * @param array       The array containing the objects to be converted
-	 * @param context     The {@link com.google.gson.Gson} context for deserialization
+	 * @param context     The {@link Gson} context for deserialization
 	 * @param objectClass The object type that the array contains
 	 */
 	public static <T> T[] jsonArrayToObjectArray(JsonArray array, JsonDeserializationContext context, Class<T> objectClass) {

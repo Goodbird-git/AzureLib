@@ -16,7 +16,8 @@ import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.util.ResourceLocation;
@@ -225,7 +226,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      */
     default void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.push();
-        RenderUtils.prepMatrixForBone(poseStack, bone);
+        RenderUtils.prepMatrixForBone(bone);
         renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
         if (!isReRender) {
@@ -273,9 +274,9 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      * This tends to be called recursively from something like {@link GeoRenderer#renderCubesOfBone}
      */
     default void renderCube(MatrixStack poseStack, GeoCube cube, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        RenderUtils.translateToPivotPoint(poseStack, cube);
-        RenderUtils.rotateMatrixAroundCube(poseStack, cube);
-        RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
+        RenderUtils.translateToPivotPoint(cube);
+        RenderUtils.rotateMatrixAroundCube(cube);
+        RenderUtils.translateAwayFromPivotPoint(cube);
 
         Matrix3f normalisedPoseState = poseStack.getLast().getNormal();
         Matrix4f poseState = poseStack.getLast().getMatrix();

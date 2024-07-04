@@ -1,10 +1,5 @@
 package mod.azure.azurelib.core.animation;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.model.CoreBakedGeoModel;
@@ -14,6 +9,11 @@ import mod.azure.azurelib.core.keyframe.AnimationPoint;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core.utils.Interpolations;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
 public class AnimationProcessor<T extends GeoAnimatable> {
 	private final Map<String, CoreGeoBone> bones = new Object2ObjectOpenHashMap<>();
@@ -261,7 +261,7 @@ public class AnimationProcessor<T extends GeoAnimatable> {
 	}
 
 	/**
-	 * {@link Animation} and {@link mod.azure.azurelib.core.animation.Animation.LoopType} override pair,
+	 * {@link Animation} and {@link Animation.LoopType} override pair,
 	 * used to define a playable animation stage for a {@link GeoAnimatable}
 	 */
 	public class QueuedAnimation {

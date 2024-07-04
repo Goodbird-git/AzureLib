@@ -17,6 +17,7 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.resource.AzureAnimationMetadataSection;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.Texture;
@@ -43,9 +44,9 @@ public class AnimatableTexture extends SimpleTexture {
     }
 
     public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
-        Texture texture = Minecraft.getInstance().getTextureManager().getTexture(texturePath);
+        ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(texturePath);
 
-        if (texture instanceof Texture)
+        if (texture instanceof ITextureObject)
             ((AnimatableTexture) texture).setAnimationFrame(frameTick);
     }
 

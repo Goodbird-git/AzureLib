@@ -10,6 +10,8 @@ package mod.azure.azurelib.cache;
 import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
@@ -33,7 +35,7 @@ public final class AnimatableIdCache extends WorldSavedData {
 	 * @param level An arbitrary ServerWorld. It doesn't matter which one
 	 * @return The next free ID, which is immediately reserved for use after calling this method
 	 */
-	public static long getFreeId(ServerWorld level) {
+	public static long getFreeId(WorldServer level) {
 		return getCache(level).getNextId();
 	}
 
@@ -43,8 +45,8 @@ public final class AnimatableIdCache extends WorldSavedData {
 		return ++this.lastId;
 	}
 
-	private static AnimatableIdCache getCache(ServerWorld level) {
-		DimensionSavedDataManager storage = level.getServer().getWorld(DimensionType.OVERWORLD).getSavedData();
+	private static AnimatableIdCache getCache(WorldServer level) {
+		DimensionSavedDataManager storage = level.getMinecraftServer().getWorld(0).getSavedData();
 
         return storage.getOrCreate(AnimatableIdCache::new, DATA_KEY);
 	}
@@ -54,17 +56,17 @@ public final class AnimatableIdCache extends WorldSavedData {
 	 * Remove this at some point in the future
 	 */
 	@Override
-	public void read(CompoundNBT tag) {
+	public void readFromNBT(NBTTagCompound tag) {
 		AnimatableIdCache legacyCache = new AnimatableIdCache();
-		for (String key : tag.keySet()) {
-			if (tag.contains(key, 99))
-				legacyCache.lastId = Math.max(legacyCache.lastId, tag.getInt(key));
+		for (String key : tag.getKeySet()) {
+			if (tag.hasKey(key, 99))
+				legacyCache.lastId = Math.max(legacyCache.lastId, tag.getInteger(key));
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag.putLong("last_id", this.lastId);
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+		tag.setLong("last_id", this.lastId);
 
 		return tag;
 	}

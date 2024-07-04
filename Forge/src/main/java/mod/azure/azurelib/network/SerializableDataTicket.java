@@ -12,7 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Network-compatible {@link mod.azure.azurelib.core.object.DataTicket} implementation.
+ * Network-compatible {@link DataTicket} implementation.
  * Used for sending data from server -> client in an easy manner
  */
 public abstract class SerializableDataTicket<D> extends DataTicket<D> {

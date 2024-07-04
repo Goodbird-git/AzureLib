@@ -30,7 +30,8 @@ import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.SkullTileEntity;
@@ -44,7 +45,7 @@ import java.util.Map;
 
 /**
  * Builtin class for handling dynamic armor rendering on AzureLib entities.<br>
- * Supports both {@link mod.azure.azurelib.animatable.GeoItem AzureLib} and {@link ArmorItem Vanilla} armor models.<br>
+ * Supports both {@link GeoItem AzureLib} and {@link ArmorItem Vanilla} armor models.<br>
  * Unlike a traditional armor renderer, this renderer renders per-bone, giving much more flexible armor rendering.
  */
 public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends GeoRenderLayer<T> {
@@ -252,7 +253,7 @@ public class ItemArmorGeoLayer<T extends LivingEntity & GeoAnimatable> extends G
         }
 
         poseStack.push();
-        RenderUtils.translateAndRotateMatrixForBone(poseStack, bone);
+        RenderUtils.translateAndRotateMatrixForBone(bone);
         poseStack.scale(1.1875f, 1.1875f, 1.1875f);
         poseStack.translate(-0.5f, 0, -0.5f);
         SkullTileEntityRenderer.render(null, 0.0F,

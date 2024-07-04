@@ -116,7 +116,7 @@ public class AnimatableManager<T extends GeoAnimatable> {
 	 * Attempt to trigger an animation from a given controller name and registered triggerable animation name.<br>
 	 * This pseudo-overloaded method checks each controller in turn until one of them accepts the trigger.<br>
 	 * This can be sped up by specifying which controller you intend to receive the trigger in {@link AnimatableManager#tryTriggerAnimation(String, String)}
-	 * @param animName The name of animation to trigger. This needs to have been registered with the controller via {@link mod.azure.azurelib.core.animation.AnimationController#triggerableAnim AnimationController.triggerableAnim}
+	 * @param animName The name of animation to trigger. This needs to have been registered with the controller via {@link AnimationController#triggerableAnim AnimationController.triggerableAnim}
 	 */
 	public void tryTriggerAnimation(String animName) {
 		for (AnimationController<?> controller : getAnimationControllers().values()) {
@@ -128,7 +128,7 @@ public class AnimatableManager<T extends GeoAnimatable> {
 	/**
 	 * Attempt to trigger an animation from a given controller name and registered triggerable animation name
 	 * @param controllerName The name of the controller name the animation belongs to
-	 * @param animName The name of animation to trigger. This needs to have been registered with the controller via {@link mod.azure.azurelib.core.animation.AnimationController#triggerableAnim AnimationController.triggerableAnim}
+	 * @param animName The name of animation to trigger. This needs to have been registered with the controller via {@link AnimationController#triggerableAnim AnimationController.triggerableAnim}
 	 */
 	public void tryTriggerAnimation(String controllerName, String animName) {
 		AnimationController<?> controller = getAnimationControllers().get(controllerName);

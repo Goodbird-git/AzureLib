@@ -14,7 +14,7 @@ import mod.azure.azurelib.cache.object.*;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -80,10 +80,10 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.push();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
+        RenderUtils.translateMatrixToBone(bone);
+        RenderUtils.translateToPivotPoint(bone);
+        RenderUtils.rotateMatrixAroundBone(bone);
+        RenderUtils.scaleMatrixForBone(bone);
 
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.getLast().getMatrix());
@@ -99,7 +99,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             bone.setWorldSpaceMatrix(worldState);
         }
 
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+        RenderUtils.translateAwayFromPivotPoint(bone);
 
         this.textureOverride = getTextureOverrideForBone(bone, this.animatable, partialTick);
         ResourceLocation texture = this.textureOverride == null ? getTextureLocation(

@@ -7,10 +7,6 @@
  */
 package mod.azure.azurelib.util;
 
-import javax.annotation.Nullable;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -20,89 +16,85 @@ import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.GeoReplacedEntityRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.texture.Texture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.util.NativeUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.util.vector.Quaternion;
+
+import javax.annotation.Nullable;
 
 /**
  * Helper class for various methods and functions useful while rendering
  */
 public final class RenderUtils {
-	public static void translateMatrixToBone(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
+	public static void translateMatrixToBone(CoreGeoBone bone) {
+		GlStateManager.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
 	}
 
-	public static void rotateMatrixAroundBone(MatrixStack poseStack, CoreGeoBone bone) {
+	public static void rotateMatrixAroundBone(CoreGeoBone bone) {
 		if (bone.getRotZ() != 0)
-			poseStack.rotate(Vector3f.ZP.rotation(bone.getRotZ()));
+			GlStateManager.rotate(Vector3f.ZP.rotation(bone.getRotZ()));
 
 		if (bone.getRotY() != 0)
-			poseStack.rotate(Vector3f.YP.rotation(bone.getRotY()));
+			GlStateManager.rotate(Vector3f.YP.rotation(bone.getRotY()));
 
 		if (bone.getRotX() != 0)
-			poseStack.rotate(Vector3f.XP.rotation(bone.getRotX()));
+			GlStateManager.rotate(Vector3f.XP.rotation(bone.getRotX()));
 	}
 
-	public static void rotateMatrixAroundCube(MatrixStack poseStack, GeoCube cube) {
+	public static void rotateMatrixAroundCube(GeoCube cube) {
 		Vec3d rotation = cube.rotation();
 
-		poseStack.rotate(new Quaternion(0, 0, (float) rotation.z, false));
-		poseStack.rotate(new Quaternion(0, (float) rotation.y, 0, false));
-		poseStack.rotate(new Quaternion((float) rotation.x, 0, 0, false));
+		GlStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, false));
+		GlStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, false));
+		GlStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, false));
 	}
 
-	public static void scaleMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.scale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
+	public static void scaleMatrixForBone(CoreGeoBone bone) {
+		GlStateManager.scale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
 	}
 
-	public static void translateToPivotPoint(MatrixStack poseStack, GeoCube cube) {
+	public static void translateToPivotPoint(GeoCube cube) {
 		Vec3d pivot = cube.pivot();
-		poseStack.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
+		GlStateManager.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
 	}
 
-	public static void translateToPivotPoint(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.translate(bone.getPivotX() / 16f, bone.getPivotY() / 16f, bone.getPivotZ() / 16f);
+	public static void translateToPivotPoint(CoreGeoBone bone) {
+		GlStateManager.translate(bone.getPivotX() / 16f, bone.getPivotY() / 16f, bone.getPivotZ() / 16f);
 	}
 
-	public static void translateAwayFromPivotPoint(MatrixStack poseStack, GeoCube cube) {
+	public static void translateAwayFromPivotPoint(GeoCube cube) {
 		Vec3d pivot = cube.pivot();
 
-		poseStack.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
+		GlStateManager.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
 	}
 
-	public static void translateAwayFromPivotPoint(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.translate(-bone.getPivotX() / 16f, -bone.getPivotY() / 16f, -bone.getPivotZ() / 16f);
+	public static void translateAwayFromPivotPoint(CoreGeoBone bone) {
+		GlStateManager.translate(-bone.getPivotX() / 16f, -bone.getPivotY() / 16f, -bone.getPivotZ() / 16f);
 	}
 
-	public static void translateAndRotateMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
-		translateToPivotPoint(poseStack, bone);
-		rotateMatrixAroundBone(poseStack, bone);
+	public static void translateAndRotateMatrixForBone(CoreGeoBone bone) {
+		translateToPivotPoint(bone);
+		rotateMatrixAroundBone(bone);
 	}
 
-	public static void prepMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
-		translateMatrixToBone(poseStack, bone);
-		translateToPivotPoint(poseStack, bone);
-		rotateMatrixAroundBone(poseStack, bone);
-		scaleMatrixForBone(poseStack, bone);
-		translateAwayFromPivotPoint(poseStack, bone);
+	public static void prepMatrixForBone(CoreGeoBone bone) {
+		translateMatrixToBone(bone);
+		translateToPivotPoint(bone);
+		rotateMatrixAroundBone(bone);
+		scaleMatrixForBone(bone);
+		translateAwayFromPivotPoint(bone);
 	}
 
 	public static Matrix4f invertAndMultiplyMatrices(Matrix4f baseMatrix, Matrix4f inputMatrix) {
@@ -115,12 +107,12 @@ public final class RenderUtils {
 	}
 
 	/**
-	 * Translates the provided {@link MatrixStack} to face towards the given {@link Entity}'s rotation.<br>
+	 * Makes entity to face towards the given {@link Entity}'s rotation.<br>
 	 * Usually used for rotating projectiles towards their trajectory, in an {@link GeoRenderer#preRender} override.<br>
 	 */
-	public static void faceRotation(MatrixStack poseStack, Entity animatable, float partialTick) {
-		poseStack.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
-		poseStack.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
+	public static void faceRotation(Entity animatable, float partialTick) {
+		GlStateManager.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
+		GlStateManager.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
 	}
 
 	/**
@@ -136,7 +128,7 @@ public final class RenderUtils {
 			return null;
 
 		Texture originalTexture = null;
-		Minecraft mc = Minecraft.getInstance();
+		Minecraft mc = Minecraft.getMinecraft();
 
 		try {
 			originalTexture = mc.supplyAsync(() -> mc.getTextureManager().getTexture(texture)).get();
@@ -237,7 +229,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoModel<?> getGeoModelForEntityType(EntityType<?> entityType) {
-		EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().renderers.get(entityType);
+		RenderEntity renderer = Minecraft.getMinecraft().getRenderManager().renderers.get(entityType);
 
 		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
 	}
@@ -250,7 +242,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoAnimatable getReplacedAnimatable(EntityType<?> entityType) {
-		EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().renderers.get(entityType);
+		EntityRenderer<?> renderer = Minecraft.getMinecraft().getRenderManager().renderers.get(entityType);
 
 		return renderer instanceof GeoReplacedEntityRenderer<?, ?> ? ((GeoReplacedEntityRenderer<?, ?>) renderer).getAnimatable() : null;
 	}
@@ -265,7 +257,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoModel<?> getGeoModelForEntity(Entity entity) {
-		EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().getRenderer(entity);
+		EntityRenderer<?> renderer = Minecraft.getMinecraft().getRenderManager().getRenderer(entity);
 
 		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
 	}
@@ -280,8 +272,8 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoModel<?> getGeoModelForItem(Item item) {
-		if (item.getItemStackTileEntityRenderer() instanceof GeoRenderer<?>)
-			return ((GeoRenderer<?>) item.getItemStackTileEntityRenderer()).getGeoModel();
+		if (item.getTileEntityItemStackRenderer() instanceof GeoRenderer<?>)
+			return ((GeoRenderer<?>) item.getTileEntityItemStackRenderer()).getGeoModel();
 
 		return null;
 	}
@@ -303,7 +295,7 @@ public final class RenderUtils {
 
 	/**
 	 * Gets a {@link GeoModel} instance from a given {@link Item}.<br>
-	 * This only works if you're calling this method for an Item known to be using a {@link mod.azure.azurelib.renderer.GeoArmorRenderer GeoArmorRenderer}.<br>
+	 * This only works if you're calling this method for an Item known to be using a {@link GeoArmorRenderer GeoArmorRenderer}.<br>
 	 * Generally speaking you probably shouldn't be calling this method at all.
 	 * 
 	 * @param stack The ItemStack to retrieve the GeoModel for

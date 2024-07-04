@@ -7,8 +7,6 @@
  */
 package mod.azure.azurelib.animatable;
 
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.network.AzureLibNetwork;
@@ -18,6 +16,8 @@ import mod.azure.azurelib.network.packet.EntityAnimTriggerPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import javax.annotation.Nullable;
 
 /**
  * The {@link GeoAnimatable} interface specific to {@link Entity Entities}. This interface is <u>specifically</u> for entities replacing the rendering of other, existing entities.

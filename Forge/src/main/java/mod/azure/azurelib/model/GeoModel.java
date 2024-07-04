@@ -7,9 +7,6 @@
  */
 package mod.azure.azurelib.model;
 
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
 import mod.azure.azurelib.AzureLibException;
 import mod.azure.azurelib.cache.AzureLibCache;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
@@ -29,11 +26,13 @@ import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 /**
  * Base class for all code-based model objects.<br>

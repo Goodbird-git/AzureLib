@@ -9,7 +9,6 @@ package mod.azure.azurelib.loading.json.raw;
 
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
-
 import mod.azure.azurelib.util.JsonUtil;
 
 /**
@@ -38,7 +37,7 @@ public class LocatorValue {
 				return new LocatorValue(null, JsonUtil.jsonArrayToDoubleArray(json.getAsJsonArray()));
 			}
 			else if (json.isJsonObject()) {
-				return new LocatorValue(context.deserialize(json.getAsJsonObject(), mod.azure.azurelib.loading.json.raw.LocatorClass.class), new double[0]);
+				return new LocatorValue(context.deserialize(json.getAsJsonObject(), LocatorClass.class), new double[0]);
 			}
 			else {
 				throw new JsonParseException("Invalid format for LocatorValue in json");

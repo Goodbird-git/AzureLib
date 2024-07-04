@@ -7,9 +7,6 @@
  */
 package mod.azure.azurelib.constant;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
@@ -18,10 +15,13 @@ import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 /**
  * Optionally usable class that holds constants for recommended animation paths.<br>
  * Using these won't affect much, but it may help keep some consistency in animation namings.<br>
- * Additionally, it encourages use of cached {@link mod.azure.azurelib.core.animation.RawAnimation RawAnimations}, to reduce overheads.
+ * Additionally, it encourages use of cached {@link RawAnimation RawAnimations}, to reduce overheads.
  */
 public final class DefaultAnimations {
 	public static final RawAnimation ITEM_ON_USE = RawAnimation.begin().thenPlay("item.use");

@@ -20,8 +20,9 @@ import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -323,10 +324,10 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
     @Override
     public void renderRecursively(MatrixStack poseStack, T animatable, GeoBone bone, RenderType renderType, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.push();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
+        RenderUtils.translateMatrixToBone(bone);
+        RenderUtils.translateToPivotPoint(bone);
+        RenderUtils.rotateMatrixAroundBone(bone);
+        RenderUtils.scaleMatrixForBone(bone);
 
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = poseStack.getLast().getMatrix().copy();
@@ -341,7 +342,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
             bone.setWorldSpaceMatrix(worldState);
         }
 
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+        RenderUtils.translateAwayFromPivotPoint(bone);
 
         renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 

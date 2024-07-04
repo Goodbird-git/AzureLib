@@ -7,13 +7,12 @@
  */
 package mod.azure.azurelib.loading.object;
 
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.cache.AzureLibCache;
 import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * Container object that holds a deserialized map of {@link Animation Animations}.<br>

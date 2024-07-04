@@ -5,9 +5,9 @@
 
 package mod.azure.azurelib.core.keyframe.event.data;
 
-import java.util.Objects;
-
 import mod.azure.azurelib.core.keyframe.Keyframe;
+
+import java.util.Objects;
 
 /**
  * Base class for custom {@link Keyframe} events.<br>

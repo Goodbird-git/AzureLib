@@ -7,8 +7,6 @@
  */
 package mod.azure.azurelib.network.packet;
 
-import java.util.function.Supplier;
-
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.network.SerializableDataTicket;
@@ -16,6 +14,8 @@ import mod.azure.azurelib.util.ClientUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Packet for syncing user-definable animation data for {@link Entity Entities}

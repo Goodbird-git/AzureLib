@@ -7,14 +7,7 @@
  */
 package mod.azure.azurelib.loading;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-
-import org.apache.commons.io.IOUtils;
-
 import com.google.gson.JsonObject;
-
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.loading.json.raw.Model;
@@ -23,6 +16,11 @@ import mod.azure.azurelib.util.JsonUtil;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.io.IOUtils;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 /**
  * Extracts raw information from given files, and other similar functions

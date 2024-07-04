@@ -9,7 +9,6 @@ package mod.azure.azurelib.loading.json.raw;
 
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
-
 import mod.azure.azurelib.util.JsonUtil;
 
 /**

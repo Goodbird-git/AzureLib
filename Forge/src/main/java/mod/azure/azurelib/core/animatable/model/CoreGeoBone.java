@@ -1,8 +1,8 @@
 package mod.azure.azurelib.core.animatable.model;
 
-import java.util.List;
-
 import mod.azure.azurelib.core.state.BoneSnapshot;
+
+import java.util.List;
 
 /**
  * Base class for AzureLib {@link CoreGeoModel model} bones.<br>

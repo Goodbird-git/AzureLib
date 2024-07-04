@@ -7,19 +7,11 @@
  */
 package mod.azure.azurelib.cache.texture;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.client.renderer.RenderState;
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.systems.IRenderCall;
-
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.resource.GeoGlowingTextureMeta;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -31,6 +23,11 @@ import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Texture object type responsible for AzureLib's emissive render textures

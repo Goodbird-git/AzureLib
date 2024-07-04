@@ -7,9 +7,6 @@
  */
 package mod.azure.azurelib.cache.object;
 
-import java.util.List;
-import java.util.Objects;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
@@ -17,6 +14,9 @@ import net.minecraft.client.renderer.Matrix3f;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Mutable bone object representing a set of cubes, as well as child bones.<br>

@@ -7,28 +7,19 @@
  */
 package mod.azure.azurelib.loading.object;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.cache.object.GeoCube;
-import mod.azure.azurelib.cache.object.GeoQuad;
-import mod.azure.azurelib.cache.object.GeoVertex;
-import mod.azure.azurelib.loading.json.raw.Bone;
-import mod.azure.azurelib.loading.json.raw.Cube;
-import mod.azure.azurelib.loading.json.raw.FaceUV;
-import mod.azure.azurelib.loading.json.raw.ModelProperties;
-import mod.azure.azurelib.loading.json.raw.UVUnion;
+import mod.azure.azurelib.cache.object.*;
+import mod.azure.azurelib.loading.json.raw.*;
 import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base interface for a factory of {@link BakedGeoModel} objects.

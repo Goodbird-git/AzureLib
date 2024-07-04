@@ -7,11 +7,6 @@
  */
 package mod.azure.azurelib.constant;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.core.object.DataTicket;
 import mod.azure.azurelib.model.data.EntityModelData;
@@ -23,6 +18,10 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Stores the default (builtin) {@link DataTicket DataTickets} used in AzureLib.<br>

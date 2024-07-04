@@ -7,8 +7,6 @@
  */
 package mod.azure.azurelib.animatable;
 
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -21,6 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import javax.annotation.Nullable;
 
 /**
  * The {@link GeoAnimatable} interface specific to {@link TileEntity BlockEntities}

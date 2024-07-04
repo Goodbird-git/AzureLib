@@ -7,15 +7,8 @@
  */
 package mod.azure.azurelib.cache.texture;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.systems.IRenderCall;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.Texture;
@@ -24,6 +17,11 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
  * Abstract texture wrapper for AzureLib textures.<br>

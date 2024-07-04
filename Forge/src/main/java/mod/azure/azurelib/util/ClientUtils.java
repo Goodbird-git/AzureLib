@@ -8,7 +8,7 @@
 package mod.azure.azurelib.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
@@ -18,14 +18,14 @@ public final class ClientUtils {
 	/**
 	 * Get the player on the client
 	 */
-	public static PlayerEntity getClientPlayer() {
-		return Minecraft.getInstance().player;
+	public static EntityPlayer getClientPlayer() {
+		return Minecraft.getMinecraft().player;
 	}
 
 	/**
 	 * Gets the current level on the client
 	 */
 	public static World getLevel() {
-		return Minecraft.getInstance().world;
+		return Minecraft.getMinecraft().world;
 	}
 }

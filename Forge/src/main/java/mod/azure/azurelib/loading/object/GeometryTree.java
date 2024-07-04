@@ -7,15 +7,15 @@
  */
 package mod.azure.azurelib.loading.object;
 
-import java.util.List;
-import java.util.Map;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.loading.json.raw.Bone;
 import mod.azure.azurelib.loading.json.raw.MinecraftGeometry;
 import mod.azure.azurelib.loading.json.raw.Model;
 import mod.azure.azurelib.loading.json.raw.ModelProperties;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Container class for a {@link Bone} structure, used at startup during deserialization

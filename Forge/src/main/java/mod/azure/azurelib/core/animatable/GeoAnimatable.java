@@ -22,7 +22,7 @@ import mod.azure.azurelib.core.animation.AnimationController;
 public interface GeoAnimatable {
 	/**
 	 * Register your {@link AnimationController AnimationControllers} and their respective animations and conditions.
-	 * Override this method in your animatable object and add your controllers via {@link mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar#add ControllerRegistrar.add}.
+	 * Override this method in your animatable object and add your controllers via {@link AnimatableManager.ControllerRegistrar#add ControllerRegistrar.add}.
 	 * You may add as many controllers as wanted.
 	 * <br><br>
 	 * Each controller can only play <u>one</u> animation at a time, and so animations that you intend to play concurrently should be handled in independent controllers.

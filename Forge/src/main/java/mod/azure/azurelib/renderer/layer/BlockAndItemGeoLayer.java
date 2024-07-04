@@ -84,7 +84,7 @@ public class BlockAndItemGeoLayer<T extends GeoAnimatable> extends GeoRenderLaye
             return;
 
         poseStack.push();
-        RenderUtils.translateAndRotateMatrixForBone(poseStack, bone);
+        RenderUtils.translateAndRotateMatrixForBone(bone);
 
         if (stack != null)
             renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight,

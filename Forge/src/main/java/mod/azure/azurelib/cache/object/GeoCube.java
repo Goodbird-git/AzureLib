@@ -7,7 +7,6 @@
  */
 package mod.azure.azurelib.cache.object;
 
-import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.util.math.Vec3d;
 
 /**

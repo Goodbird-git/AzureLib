@@ -1,7 +1,5 @@
 package mod.azure.azurelib.util;
 
-import javax.annotation.Nullable;
-
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -11,13 +9,15 @@ import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.loading.object.BakedModelFactory;
 import mod.azure.azurelib.network.SerializableDataTicket;
-import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumParticleTypes;
+
+import javax.annotation.Nullable;
 
 /**
  * Helper class for various AzureLib-specific functions.
@@ -49,7 +49,7 @@ public final class AzureLibUtil {
 	}
 
 	/**
-	 * Register a custom {@link mod.azure.azurelib.core.animation.Animation.LoopType} with AzureLib,
+	 * Register a custom {@link Animation.LoopType} with AzureLib,
 	 * allowing for dynamic handling of post-animation looping.<br>
 	 * <b><u>MUST be called during mod construct</u></b><br>
 	 * @param name The name of the {@code LoopType} handler
@@ -60,7 +60,7 @@ public final class AzureLibUtil {
 	}
 
 	/**
-	 * Register a custom {@link mod.azure.azurelib.core.animation.EasingType} with AzureLib,
+	 * Register a custom {@link EasingType} with AzureLib,
 	 * allowing for dynamic handling of animation transitions and curves.<br>
 	 * <b><u>MUST be called during mod construct</u></b><br>
 	 * @param name The name of the {@code EasingType} handler
@@ -71,7 +71,7 @@ public final class AzureLibUtil {
 	}
 
 	/**
-	 * Register a custom {@link mod.azure.azurelib.loading.object.BakedModelFactory} with AzureLib,
+	 * Register a custom {@link BakedModelFactory} with AzureLib,
 	 * allowing for dynamic handling of geo model loading.<br>
 	 * <b><u>MUST be called during mod construct</u></b><br>
 	 * @param namespace The namespace (modid) to register the factory for
@@ -107,14 +107,14 @@ public final class AzureLibUtil {
 	 * @param effect     If it should effect, what effect?
 	 * @param effectTime How long the effect should be applied for?
 	 */
-	public static void summonAoE(LivingEntity entity, IParticleData particle, int yOffset, int duration, float radius, boolean hasEffect, @Nullable Effect effect, int effectTime) {
-		AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(entity.world, entity.getPosX(), entity.getPosY() + yOffset, entity.getPosZ());
+	public static void summonAoE(EntityLiving entity, EnumParticleTypes particle, int yOffset, int duration, float radius, boolean hasEffect, @Nullable Potion effect, int effectTime) {
+		EntityAreaEffectCloud areaEffectCloudEntity = new EntityAreaEffectCloud(entity.world, entity.posX, entity.posY + yOffset, entity.posZ);
 		areaEffectCloudEntity.setRadius(radius);
 		areaEffectCloudEntity.setDuration(duration);
-		areaEffectCloudEntity.setParticleData(particle);
+		areaEffectCloudEntity.setParticle(particle);
 		areaEffectCloudEntity.setRadiusPerTick(-areaEffectCloudEntity.getRadius() / areaEffectCloudEntity.getDuration());
 		if (hasEffect && !entity.isPotionActive(effect))
-			areaEffectCloudEntity.addEffect(new EffectInstance(effect, effectTime, 0));
-		entity.world.addEntity(areaEffectCloudEntity);
+			areaEffectCloudEntity.addEffect(new PotionEffect(effect, effectTime, 0));
+		entity.world.onEntityAdded(areaEffectCloudEntity);
 	}
 }
