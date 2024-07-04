@@ -1,4 +1,5 @@
-v2.0.28
+v2.0.29
 
-- Remove unneeded 0.01f translate in GeoEntityRenderer
-- Rewrite events using Services
+- Adds headers to Geckolib forked classes
+- Adds headers to Configuration forked classes
+- Fixes a broken JavaDoc
