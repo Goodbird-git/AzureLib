@@ -13,7 +13,6 @@ import mod.azure.azurelib.network.packet.BlockEntityAnimDataSyncPacket;
 import mod.azure.azurelib.network.packet.BlockEntityAnimTriggerPacket;
 import mod.azure.azurelib.network.packet.EntityAnimDataSyncPacket;
 import mod.azure.azurelib.network.packet.EntityAnimTriggerPacket;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;

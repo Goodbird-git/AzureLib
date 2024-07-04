@@ -19,7 +19,6 @@ import mod.azure.azurelib.network.SerializableDataTicket;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;

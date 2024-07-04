@@ -35,7 +35,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.SkullTileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -43,7 +42,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Builtin class for handling dynamic armor rendering on AzureLib entities.<br>

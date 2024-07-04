@@ -116,9 +116,8 @@ public final class AzureLibUtil {
 		areaEffectCloudEntity.setDuration(duration);
 		areaEffectCloudEntity.setParticle(particle);
 		areaEffectCloudEntity.setRadiusPerTick(-areaEffectCloudEntity.getRadius() / (float) areaEffectCloudEntity.getDuration());
-		if (hasEffect == true)
-			if (!entity.hasEffect(effect))
-				areaEffectCloudEntity.addEffect(new MobEffectInstance(effect, effectTime, 0));
+		if (hasEffect && !entity.hasEffect(effect))
+			areaEffectCloudEntity.addEffect(new MobEffectInstance(effect, effectTime, 0));
 		entity.level.addFreshEntity(areaEffectCloudEntity);
 	}
 }
