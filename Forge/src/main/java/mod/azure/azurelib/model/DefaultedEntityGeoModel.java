@@ -12,10 +12,11 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.data.EntityModelData;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * {@link DefaultedGeoModel} specific to {@link net.minecraft.world.entity.Entity Entities}. Using this class pre-sorts provided asset paths into the "entity" subdirectory Additionally it can automatically handle head-turning if the entity has a "head" bone
+ * {@link DefaultedGeoModel} specific to {@link Entity Entities}. Using this class pre-sorts provided asset paths into the "entity" subdirectory Additionally it can automatically handle head-turning if the entity has a "head" bone
  */
 public class DefaultedEntityGeoModel<T extends GeoAnimatable> extends DefaultedGeoModel<T> {
 	private final boolean turnsHead;

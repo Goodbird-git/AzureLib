@@ -18,7 +18,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
- * Packet for syncing user-definable animation data for {@link net.minecraft.world.entity.Entity Entities}
+ * Packet for syncing user-definable animation data for {@link Entity Entities}
  */
 public class EntityAnimDataSyncPacket<D> {
 	private final int entityId;

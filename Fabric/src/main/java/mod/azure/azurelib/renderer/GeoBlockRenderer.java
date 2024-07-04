@@ -31,6 +31,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -224,7 +225,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> extends Blo
 	 * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this GeoRenderer.<br>
 	 * This should only be called immediately prior to rendering, and only
 	 * 
-	 * @see AnimatableTexture#setAndUpdate(ResourceLocation, int)
+	 * @see AnimatableTexture#setAndUpdate(ResourceLocation, int) 
 	 */
 	@Override
 	public void updateAnimatedTextureFrame(T animatable) {

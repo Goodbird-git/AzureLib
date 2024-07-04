@@ -137,7 +137,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
 
     /**
      * Called after rendering the model to buffer. Post-render modifications should be performed here.<br>
-     * {@link PoseStack} transformations will be unused and lost once this method ends
+     * {@link MatrixStack} transformations will be unused and lost once this method ends
      */
     @Override
     public void postRender(MatrixStack poseStack, T animatable, BakedGeoModel model, IRenderTypeBuffer bufferSource, IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
@@ -148,7 +148,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
     }
 
     /**
-     * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link VertexConsumer buffer} for rendering.<br>
+     * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link IVertexBuilder buffer} for rendering.<br>
      * Custom override to handle custom non-baked textures for ExtendedGeoEntityRenderer
      */
     @Override

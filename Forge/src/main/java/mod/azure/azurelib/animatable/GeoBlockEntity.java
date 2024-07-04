@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 /**
- * The {@link GeoAnimatable} interface specific to {@link BlockEntity BlockEntities}
+ * The {@link GeoAnimatable} interface specific to {@link TileEntity BlockEntities}
  * 
  */
 public interface GeoBlockEntity extends GeoAnimatable {

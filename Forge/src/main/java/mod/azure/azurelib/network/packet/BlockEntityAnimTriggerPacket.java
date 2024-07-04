@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
- * Packet for syncing user-definable animations that can be triggered from the server for {@link net.minecraft.world.level.block.entity.BlockEntity BlockEntities}
+ * Packet for syncing user-definable animations that can be triggered from the server for {@link TileEntity BlockEntities}
  */
 public class BlockEntityAnimTriggerPacket<D> {
 	private final BlockPos pos;

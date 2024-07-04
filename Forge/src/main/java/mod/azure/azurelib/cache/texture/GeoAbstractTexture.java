@@ -83,7 +83,7 @@ public abstract class GeoAbstractTexture extends Texture {
 	}
 
 	/**
-	 * Called at {@link NativeImage#load} time to load this texture for the first time into the render cache. Generate and apply the necessary functions here, then return the RenderCall to submit to the render pipeline.
+	 * Called at {@link Texture#load} time to load this texture for the first time into the render cache. Generate and apply the necessary functions here, then return the RenderCall to submit to the render pipeline.
 	 * 
 	 * @return The RenderCall to submit to the render pipeline, or null if no further action required
 	 */

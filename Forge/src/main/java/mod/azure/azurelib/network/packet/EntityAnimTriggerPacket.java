@@ -21,7 +21,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
- * Packet for syncing user-definable animations that can be triggered from the server for {@link net.minecraft.world.entity.Entity Entities}
+ * Packet for syncing user-definable animations that can be triggered from the server for {@link Entity Entities}
  */
 public class EntityAnimTriggerPacket<D> {
 	private final int entityId;
