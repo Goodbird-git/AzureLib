@@ -8,5 +8,5 @@ import net.minecraft.client.KeyMapping;
 
 public class Keybindings {
 
-	public static KeyMapping RELOAD = new KeyMapping("key.azurelib.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "category.azurelib.binds");
+	public static KeyMapping RELOAD = new KeyMapping("key.azurelib.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_INSERT, "category.azurelib.binds");
 }

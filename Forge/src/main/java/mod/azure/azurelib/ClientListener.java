@@ -14,7 +14,7 @@ public class ClientListener {
 
 	@SubscribeEvent
 	public static void registerKeys(final FMLClientSetupEvent  event) {
-		Keybindings.RELOAD = new KeyMapping("key.azurelib.reload", GLFW.GLFW_KEY_R, "category.azurelib.binds");
+		Keybindings.RELOAD = new KeyMapping("key.azurelib.reload", GLFW.GLFW_KEY_INSERT, "category.azurelib.binds");
 		ClientRegistry.registerKeyBinding(Keybindings.RELOAD);
 	}
 }
