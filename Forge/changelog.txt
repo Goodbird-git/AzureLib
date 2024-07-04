@@ -1,7 +1,3 @@
-v1.0.35
+v1.0.36
 
-- Port Easing Fix
-- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
-- Fixes isPerspectiveAware JavaDoc
-- Fix stale buffer on Entities/Layers
-- Add support for scale attribute/missing shaking for GeoReplaced
+- Adds headers to Geckolib forked classes
