@@ -4,6 +4,7 @@ import mod.azure.azurelib.animatable.GeoItem;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -28,8 +29,8 @@ public interface RenderProvider {
         return DEFAULT;
     }
 
-    default ItemStackTileEntityRenderer getCustomRenderer() {
-        return ItemStackTileEntityRenderer.instance;
+    default TileEntityItemStackRenderer getCustomRenderer() {
+        return TileEntityItemStackRenderer.instance;
     }
 
     default Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlotType equipmentSlot, BipedModel<LivingEntity> original) {
