@@ -41,26 +41,6 @@ public final class NeoForgeAzureLibMod {
             NeoForgeCommonRegistry.blockEntityTypeDeferredRegister.register(modEventBus);
         if (NeoForgeCommonRegistry.blockDeferredRegister != null)
             NeoForgeCommonRegistry.blockDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.entityTypeDeferredRegister != null)
-            NeoForgeCommonRegistry.entityTypeDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.armorMaterialDeferredRegister != null)
-            NeoForgeCommonRegistry.armorMaterialDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.itemDeferredRegister != null)
-            NeoForgeCommonRegistry.itemDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.soundEventDeferredRegister != null)
-            NeoForgeCommonRegistry.soundEventDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.menuTypeDeferredRegister != null)
-            NeoForgeCommonRegistry.menuTypeDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.structureTypeDeferredRegister != null)
-            NeoForgeCommonRegistry.structureTypeDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.particleTypeDeferredRegister != null)
-            NeoForgeCommonRegistry.particleTypeDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.creativeModeTabDeferredRegister != null)
-            NeoForgeCommonRegistry.creativeModeTabDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.statusEffectDeferredRegister != null)
-            NeoForgeCommonRegistry.statusEffectDeferredRegister.register(modEventBus);
-        if (NeoForgeCommonRegistry.fluidDeferredRegister != null)
-            NeoForgeCommonRegistry.fluidDeferredRegister.register(modEventBus);
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerMessages);
