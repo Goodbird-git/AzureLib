@@ -8,7 +8,7 @@
 package mod.azure.azurelib.mixin;
 
 import mod.azure.azurelib.cache.texture.AnimatableTexture;
-import net.minecraft.client.renderer.texture.Texture;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
@@ -22,15 +22,15 @@ import java.util.Map;
 
 @Mixin(TextureManager.class)
 public abstract class TextureManagerMixin {
-	@Shadow @Final private Map<ResourceLocation, Texture> mapTextureObjects;
+	@Shadow @Final private Map<ResourceLocation, ITextureObject> mapTextureObjects;
 
-	@Shadow public abstract void loadTexture(ResourceLocation resourceLocation, Texture abstractTexture);
+	@Shadow public abstract boolean loadTexture(ResourceLocation resourceLocation, ITextureObject abstractTexture);
 	
-	@Inject(method = "getTexture(Lnet/minecraft/util/ResourceLocation;)Lnet/minecraft/client/renderer/texture/Texture;", at = @At("HEAD"))
-	private void wrapAnimatableTexture(ResourceLocation path, CallbackInfoReturnable<Texture> callback) {
-		Texture existing = this.mapTextureObjects.get(path);
+	@Inject(method = "getTexture", at = @At("HEAD"))
+	private void wrapAnimatableTexture(ResourceLocation path, CallbackInfoReturnable<ITextureObject> callback) {
+		ITextureObject existing = this.mapTextureObjects.get(path);
 
-		if (existing == null && !path.getNamespace().equals("minecraft")) {
+		if (existing == null && !path.getResourceDomain().equals("minecraft")) {
 			existing = new AnimatableTexture(path);
 
 			loadTexture(path, existing);
