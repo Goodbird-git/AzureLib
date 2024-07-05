@@ -1,5 +1,3 @@
-v2.3.10
+v2.3.11
 
-- Adds headers to Geckolib forked classes
-- Adds headers to Configuration forked classes
-- Forks SBL into AzureLib for 1.21+
+- Fixes crash with creeperoverhual, just blacklist the mods resources as that mod has been broken since like 1.19.2
