@@ -3,7 +3,6 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.spongepowered.mixin' version '0.7.+'
     id "me.modmuss50.mod-publish-plugin" version "0.4.0"
 }
 
@@ -33,11 +32,6 @@ minecraft {
     }
 }
 
-mixin { 
-    add sourceSets.main, "azurelib.refmap.json"
-    config "azurelib.mixins.json"
-}
-
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
@@ -45,14 +39,15 @@ configurations {
     compile.extendsFrom(embed)
 }
 
+repositories {
+    maven {
+        url 'https://maven.cleanroommc.com'
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${loader_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    embed('org.spongepowered:mixin:0.8.3-SNAPSHOT') {
-        exclude module: 'guava'
-        exclude module: 'commons-io'
-        exclude module: 'gson'
-    }
+    implementation 'zone.rong:mixinbooter:8.4'
 }
 
 tasks.named('jar', Jar).configure {
@@ -118,7 +113,7 @@ if (file('key.properties').exists()) {
         File secretPropsFile = file("key.properties")
         releaseProp.load(secretPropsFile.newInputStream())
         file = jar.archiveFile
-        changelog = rootProject.file("changelog.md").text
+        changelog = rootProject.file("changelog.txt").text
         type = STABLE
         modLoaders.add("forge")
 
