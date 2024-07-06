@@ -130,17 +130,17 @@ public class AnimatableTexture extends SimpleTexture {
         }
 
         private Texture generateAnimatedTexture(BufferedImage image, AzureAnimationMetadataSection animMeta) {
-            if (!AzureLibUtil.isMultipleOf(image.getWidth(), this.frameSize.getFirst()) || !AzureLibUtil.isMultipleOf(
-                    image.getHeight(), this.frameSize.getSecond())) {
+            if (!AzureLibUtil.isMultipleOf(image.getWidth(), this.frameSize.getKey()) || !AzureLibUtil.isMultipleOf(
+                    image.getHeight(), this.frameSize.getValue())) {
                 AzureLib.LOGGER.error("Image {} size {},{} is not multiple of frame size {},{}",
-                        AnimatableTexture.this.textureLocation, image.getWidth(), image.getHeight(), this.frameSize.getFirst(),
-                        this.frameSize.getSecond());
+                        AnimatableTexture.this.textureLocation, image.getWidth(), image.getHeight(), this.frameSize.getKey(),
+                        this.frameSize.getValue());
 
                 return null;
             }
 
-            int columns = image.getWidth() / this.frameSize.getFirst();
-            int rows = image.getHeight() / this.frameSize.getSecond();
+            int columns = image.getWidth() / this.frameSize.getKey();
+            int rows = image.getHeight() / this.frameSize.getValue();
             int frameCount = columns * rows;
             List<Frame> frames = new ObjectArrayList<>();
 

@@ -12,6 +12,8 @@ import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
@@ -116,5 +118,18 @@ public final class AzureLibUtil {
 		if (hasEffect && !entity.isPotionActive(effect))
 			areaEffectCloudEntity.addEffect(new PotionEffect(effect, effectTime, 0));
 		entity.world.onEntityAdded(areaEffectCloudEntity);
+	}
+
+	/**
+	 * Gets the NBT tag of the item stack, or creates a new one if it doesn't exist.
+	 *
+	 * @param stack the item stack
+	 * @return the NBT tag
+	 */
+	public static NBTTagCompound getOrCreateTag(ItemStack stack) {
+		if (!stack.hasTagCompound()) {
+			stack.setTagCompound(new NBTTagCompound());
+		}
+		return stack.getTagCompound();
 	}
 }

@@ -7,8 +7,6 @@
  */
 package mod.azure.azurelib.renderer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
@@ -20,15 +18,13 @@ import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.model.AgeableModel;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -43,12 +39,12 @@ import java.util.List;
  * @param <T>
  * @see GeoItem
  */
-public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel implements GeoRenderer<T> {
+public class GeoArmorRenderer<T extends Item & GeoItem> extends ModelBiped implements GeoRenderer<T> {
     protected final GeoRenderLayersContainer<T> renderLayers = new GeoRenderLayersContainer<>(this);
     protected final GeoModel<T> model;
 
     protected T animatable;
-    protected BipedModel<?> baseModel;
+    protected ModelBiped baseModel;
     protected float scaleWidth = 1;
     protected float scaleHeight = 1;
 
@@ -67,7 +63,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
 
     protected Entity currentEntity = null;
     protected ItemStack currentStack = null;
-    protected EquipmentSlotType currentSlot = null;
+    protected EntityEquipmentSlot currentSlot = null;
 
     public GeoArmorRenderer(GeoModel<T> model) {
         super(1.0f);
@@ -108,7 +104,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     /**
      * Returns the equipped slot of the armor piece being rendered
      */
-    public EquipmentSlotType getCurrentSlot() {
+    public EntityEquipmentSlot getCurrentSlot() {
         return this.currentSlot;
     }
 
@@ -121,13 +117,11 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     }
 
     /**
-     * Gets the {@link RenderType} to render the given animatable with.<br>
-     * Uses the {@link RenderType#getEntityCutoutNoCull} {@code RenderType} by default.<br>
      * Override this to change the way a model will render (such as translucent models, etc)
      */
     @Override
-    public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable IRenderTypeBuffer bufferSource, float partialTick) {
-        return RenderType.getEntityCutoutNoCull(texture);
+    public void getRenderType(T animatable, ResourceLocation texture, float partialTick) {
+        this.model.getRenderType(animatable,texture);
     }
 
     /**
@@ -257,13 +251,13 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
      * {@link MatrixStack} translations made here are kept until the end of the render process
      */
     @Override
-    public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, @Nullable IRenderTypeBuffer bufferSource, @Nullable IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(T animatable, BakedGeoModel model, @Nullable IRenderTypeBuffer bufferSource, @Nullable IVertexBuilder buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         this.entityRenderTranslations = new Matrix4f(poseStack.getLast().getMatrix());
 
         applyBaseModel(this.baseModel);
         grabRelevantBones(getGeoModel().getBakedModel(getGeoModel().getModelResource(this.animatable)));
         applyBaseTransformations(this.baseModel);
-        scaleModelForBaby(poseStack, animatable, partialTick, isReRender);
+        scaleModelForBaby(animatable, partialTick, isReRender);
         scaleModelForRender(this.scaleWidth, this.scaleHeight, poseStack, animatable, model, isReRender, partialTick,
                 packedLight, packedOverlay);
 
@@ -446,7 +440,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     /**
      * Transform the currently rendering {@link GeoModel} to match the positions and rotations of the base model
      */
-    protected void applyBaseTransformations(BipedModel<?> baseModel) {
+    protected void applyBaseTransformations(ModelBiped baseModel) {
         if (this.head != null) {
             ModelRenderer headPart = baseModel.bipedHead;
 
@@ -517,23 +511,23 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends BipedModel imple
     /**
      * Apply custom scaling to account for {@link AgeableModel AgeableModel} baby models
      */
-    public void scaleModelForBaby(MatrixStack poseStack, T animatable, float partialTick, boolean isReRender) {
+    public void scaleModelForBaby(T animatable, float partialTick, boolean isReRender) {
         if (!this.isChild || isReRender)
             return;
 
-        if (this.currentSlot == EquipmentSlotType.HEAD) {
+        if (this.currentSlot == EntityEquipmentSlot.HEAD) {
             if (this.baseModel.isChildHeadScaled) {
                 float headScale = 1.5f / this.baseModel.childHeadScale;
 
-                poseStack.scale(headScale, headScale, headScale);
+                GlStateManager.scale(headScale, headScale, headScale);
             }
 
-            poseStack.translate(0, this.baseModel.childHeadOffsetY / 16f, this.baseModel.childHeadOffsetZ / 16f);
+            GlStateManager.translate(0, this.baseModel.childHeadOffsetY / 16f, this.baseModel.childHeadOffsetZ / 16f);
         } else {
             float bodyScale = 1 / this.baseModel.childBodyScale;
 
-            poseStack.scale(bodyScale, bodyScale, bodyScale);
-            poseStack.translate(0, this.baseModel.childBodyOffsetY / 16f, 0);
+            GlStateManager.scale(bodyScale, bodyScale, bodyScale);
+            GlStateManager.translate(0, this.baseModel.childBodyOffsetY / 16f, 0);
         }
     }
 

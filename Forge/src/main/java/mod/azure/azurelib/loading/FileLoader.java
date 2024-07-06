@@ -12,9 +12,9 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.loading.json.raw.Model;
 import mod.azure.azurelib.loading.object.BakedAnimations;
+import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 

@@ -12,11 +12,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.util.JSONUtils;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.resources.data.IMetadataSectionSerializer;
-import net.minecraft.util.JSONUtils;
 
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -81,7 +82,7 @@ public class GeoGlowingTextureMeta {
 	/**
 	 * Generate the GlowLayer pixels list from an existing image resource, instead of using the .png.mcmeta file
 	 */
-	public static GeoGlowingTextureMeta fromExistingImage(NativeImage glowLayer) {
+	public static GeoGlowingTextureMeta fromExistingImage(BufferedImage glowLayer) {
 		List<Pixel> pixels = new ObjectArrayList<>();
 
 		for (int x = 0; x < glowLayer.getWidth(); x++) {
@@ -89,7 +90,7 @@ public class GeoGlowingTextureMeta {
 				int color = glowLayer.getPixelRGBA(x, y);
 
 				if (color != 0)
-					pixels.add(new Pixel(x, y, NativeImage.getAlpha(color)));
+					pixels.add(new Pixel(x, y, BufferedImage.getAlpha(color)));
 			}
 		}
 
@@ -102,12 +103,12 @@ public class GeoGlowingTextureMeta {
 	/**
 	 * Create a new mask image based on the pre-determined pixel data
 	 */
-	public void createImageMask(NativeImage originalImage, NativeImage newImage) {
+	public void createImageMask(BufferedImage originalImage, BufferedImage newImage) {
 		for (Pixel pixel : this.pixels) {
 			int color = originalImage.getPixelRGBA(pixel.x, pixel.y);
 
 			if (pixel.alpha > 0)
-				color = NativeImage.getCombined(pixel.alpha, NativeImage.getBlue(color), NativeImage.getGreen(color), NativeImage.getRed(color));
+				color = BufferedImage.getCombined(pixel.alpha, BufferedImage.getBlue(color), BufferedImage.getGreen(color), BufferedImage.getRed(color));
 
 			newImage.setPixelRGBA(pixel.x, pixel.y, color);
 			originalImage.setPixelRGBA(pixel.x, pixel.y, 0);

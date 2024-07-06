@@ -12,8 +12,10 @@ import mod.azure.azurelib.core.object.DataTicket;
 import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.network.SerializableDataTicket;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -35,10 +37,10 @@ public final class DataTickets {
 	public static final DataTicket<TileEntity> BLOCK_ENTITY = new DataTicket<>("block_entity", TileEntity.class);
 	public static final DataTicket<ItemStack> ITEMSTACK = new DataTicket<>("itemstack", ItemStack.class);
 	public static final DataTicket<Entity> ENTITY = new DataTicket<>("entity", Entity.class);
-	public static final DataTicket<EquipmentSlotType > EQUIPMENT_SLOT = new DataTicket<>("equipment_slot", EquipmentSlotType .class);
+	public static final DataTicket<EntityEquipmentSlot> EQUIPMENT_SLOT = new DataTicket<>("equipment_slot", EntityEquipmentSlot .class);
 	public static final DataTicket<EntityModelData> ENTITY_MODEL_DATA = new DataTicket<>("entity_model_data", EntityModelData.class);
 	public static final DataTicket<Double> TICK = new DataTicket<>("tick", Double.class);
-	public static final DataTicket<TransformType> ITEM_RENDER_PERSPECTIVE = new DataTicket<>("item_render_perspective", TransformType.class);
+	public static final DataTicket<ItemCameraTransforms.TransformType> ITEM_RENDER_PERSPECTIVE = new DataTicket<>("item_render_perspective", ItemCameraTransforms.TransformType.class);
 
 	// Builtin serializable tickets
 	// These are not used anywhere by default, but are provided as examples

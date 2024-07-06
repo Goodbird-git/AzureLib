@@ -9,10 +9,8 @@ import mod.azure.azurelib.loading.object.BakedAnimations;
 import mod.azure.azurelib.loading.object.BakedModelFactory;
 import mod.azure.azurelib.loading.object.GeometryTree;
 import net.minecraft.client.Minecraft;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IFutureReloadListener;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
@@ -46,12 +44,12 @@ public final class AzureLibCache {
 	}
 
 	public static void registerReloadListener() {
-		Minecraft mc = Minecraft.getInstance();
+		Minecraft mc = Minecraft.getMinecraft();
 
 		if (!(mc.getResourceManager() instanceof IReloadableResourceManager))
 			throw new RuntimeException("AzureLib was initialized too early!");
 
-		IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getInstance()
+		IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getMinecraft()
 				.getResourceManager();
 		reloadable.addReloadListener(AzureLibCache::reload);
 	}
@@ -73,12 +71,12 @@ public final class AzureLibCache {
 	}
 
 	private static CompletableFuture<Void> loadModels(Executor backgroundExecutor, IResourceManager resourceManager, BiConsumer<ResourceLocation, BakedGeoModel> elementConsumer) {
-		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> BakedModelFactory.getForNamespace(resource.getNamespace()).constructGeoModel(GeometryTree.fromModel(FileLoader.loadModelFile(resource, resourceManager))), elementConsumer);
+		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> BakedModelFactory.getForNamespace(resource.getResourceDomain()).constructGeoModel(GeometryTree.fromModel(FileLoader.loadModelFile(resource, resourceManager))), elementConsumer);
 	}
 
 	private static <T> CompletableFuture<Void> loadResources(Executor executor, IResourceManager resourceManager, String type, Function<ResourceLocation, T> loader, BiConsumer<ResourceLocation, T> map) {
 		return CompletableFuture.supplyAsync(
-						() -> resourceManager.getAllResourceLocations(type, fileName -> fileName.endsWith(".json")), executor)
+						() -> resourceManager.getAllResources(type, fileName -> fileName.endsWith(".json")), executor)
 				.thenApplyAsync(resources -> {
 					Map<ResourceLocation, CompletableFuture<T>> tasks = new Object2ObjectOpenHashMap<>();
 
@@ -95,7 +93,7 @@ public final class AzureLibCache {
 					return tasks;
 				}, executor).thenAcceptAsync(tasks -> {
 					for (Entry<ResourceLocation, CompletableFuture<T>> entry : tasks.entrySet()) {
-						if (!EXCLUDED_NAMESPACES.contains(entry.getKey().getNamespace().toLowerCase(Locale.ROOT)))
+						if (!EXCLUDED_NAMESPACES.contains(entry.getKey().getResourceDomain().toLowerCase(Locale.ROOT)))
 							map.accept(entry.getKey(), entry.getValue().join());
 					}
 				}, executor);

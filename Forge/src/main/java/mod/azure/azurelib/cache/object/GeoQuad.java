@@ -7,8 +7,6 @@
  */
 package mod.azure.azurelib.cache.object;
 
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.util.Direction;
 
 /**
  * Quad data holder

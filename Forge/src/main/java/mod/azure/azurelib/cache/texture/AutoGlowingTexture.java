@@ -11,6 +11,8 @@ import com.mojang.blaze3d.systems.IRenderCall;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.resource.GeoGlowingTextureMeta;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -34,15 +36,43 @@ import java.util.concurrent.ExecutionException;
  */
 public class AutoGlowingTexture extends GeoAbstractTexture {
 
-	static class GlowRenderType extends RenderType {
+	static class GlowRenderType {
 
-		public GlowRenderType(String p_i225992_1_, VertexFormat p_i225992_2_, int p_i225992_3_, int p_i225992_4_, boolean p_i225992_5_, boolean p_i225992_6_, Runnable p_i225992_7_, Runnable p_i225992_8_) {
-			super(p_i225992_1_, p_i225992_2_, p_i225992_3_, p_i225992_4_, p_i225992_5_, p_i225992_6_, p_i225992_7_, p_i225992_8_);
-			// TODO Auto-generated constructor stub
+		/**
+		 * Sets up the OpenGL states for emissive rendering.
+		 */
+		public static void setupEmissiveRender(ResourceLocation texture) {
+			// Bind the texture
+			Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+
+			// Enable transparency and texture rendering with no culling
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			GlStateManager.enableTexture2D();
+			GlStateManager.disableCull();
+
+			// Enable emissive lighting
+			GlStateManager.disableLighting();
+			GlStateManager.enableLight(0);
+			GlStateManager.enableLight(1);
+
+			// Set lightmap to full brightness
+			int lightmapCoords = 0xF000F0; // Full brightness
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightmapCoords % 0xFFFF, lightmapCoords / 0xFFFF);
 		}
 
-		public static RenderType emissive(ResourceLocation texture) {
-			return RenderType.makeType("geo_glowing_layer", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, State.getBuilder().alpha(RenderType.DEFAULT_ALPHA).cull(new RenderState.CullState(false)).texture(new TextureState(texture, false, false)).transparency(RenderType.TRANSLUCENT_TRANSPARENCY).overlay(new RenderState.OverlayState(true)).build(true));
+		/**
+		 * Cleans up the OpenGL states after emissive rendering.
+		 */
+		public static void cleanupEmissiveRender() {
+			GlStateManager.disableBlend();
+			GlStateManager.enableCull();
+			GlStateManager.enableLighting();
+			GlStateManager.disableLight(0);
+			GlStateManager.disableLight(1);
+
+			// Restore lightmap to default
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xFFFF, 0xFFFF);
 		}
 	}
 
@@ -140,7 +170,7 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 	 * 
 	 * @param texture The texture of the resource to apply a glow layer to
 	 */
-	public static RenderType getRenderType(ResourceLocation texture) {
-		return GlowRenderType.emissive(getEmissiveResource(texture));
+	public static void getRenderType(ResourceLocation texture) {
+		GlowRenderType.setupEmissiveRender(texture);
 	}
 }

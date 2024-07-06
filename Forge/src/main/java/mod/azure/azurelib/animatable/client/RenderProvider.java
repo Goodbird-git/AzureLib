@@ -1,12 +1,13 @@
 package mod.azure.azurelib.animatable.client;
 
 import mod.azure.azurelib.animatable.GeoItem;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import mod.azure.azurelib.loading.json.raw.Model;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -33,8 +34,8 @@ public interface RenderProvider {
         return TileEntityItemStackRenderer.instance;
     }
 
-    default Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlotType equipmentSlot, BipedModel<LivingEntity> original) {
-        BipedModel<LivingEntity> replacement = getHumanoidArmorModel(livingEntity, itemStack, equipmentSlot, original);
+    default ModelBiped getGenericArmorModel(EntityLivingBase livingEntity, ItemStack itemStack, EntityEquipmentSlot equipmentSlot, ModelBiped original) {
+        ModelBiped replacement = getHumanoidArmorModel(livingEntity, itemStack, equipmentSlot, original);
 
         if (replacement != original) {
             original.setModelAttributes(replacement);
@@ -44,7 +45,7 @@ public interface RenderProvider {
         return original;
     }
 
-    default BipedModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlotType equipmentSlot, BipedModel<LivingEntity> original) {
+    default ModelBiped getHumanoidArmorModel(EntityLivingBase livingEntity, ItemStack itemStack, EntityEquipmentSlot equipmentSlot, ModelBiped original) {
         return original;
     }
 }

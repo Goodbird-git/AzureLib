@@ -15,14 +15,19 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.ContextAwareAnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -37,7 +42,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	 * This should be cached in your {@link Item Item} class
 	 */
 	static Supplier<RenderProvider> makeRenderer(GeoItem item) {
-		if (FMLLoader.getDist().isDedicatedServer())
+		if (FMLCommonHandler.instance().getEffectiveSide().isServer())
 			return () -> null;
 
 		return Suppliers.memoize(() -> {
@@ -57,7 +62,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Gets the unique identifying number from this ItemStack's {@link Tag NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
+	 * Gets the unique identifying number from this ItemStack's {@link NBTTagCompound NBT}, or {@link Long#MAX_VALUE} if one hasn't been assigned
 	 */
 	static long getId(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
@@ -73,15 +78,15 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	 * If no ID has been reserved for this stack yet, it will reserve a new id and assign it
 	 */
 	static long getOrAssignId(ItemStack stack, WorldServer level) {
-		NBTTagCompound tag = stack.getOrCreateTag();
+		NBTTagCompound tag = AzureLibUtil.getOrCreateTag(stack);
 		long id = tag.getLong(ID_NBT_KEY);
 
-		if (tag.contains(ID_NBT_KEY, 99))
+		if (tag.hasKey(ID_NBT_KEY, 99))
 			return id;
 
 		id = AnimatableIdCache.getFreeId(level);
 
-		tag.putLong(ID_NBT_KEY, id);
+		tag.setLong(ID_NBT_KEY, id);
 
 		return id;
 	}
@@ -99,7 +104,7 @@ public interface GeoItem extends SingletonGeoAnimatable {
 	}
 
 	/**
-	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType render perspective}
+	 * Whether this item animatable is perspective aware, handling animations differently depending on the {@link ItemCameraTransforms.TransformType render perspective}
 	 */
 	default boolean isPerspectiveAware() {
 		return false;
@@ -132,12 +137,12 @@ public interface GeoItem extends SingletonGeoAnimatable {
 		@Override
 		public AnimatableManager<?> getManagerForId(long uniqueId) {
 			if (!this.managers.containsKey(uniqueId))
-				this.managers.put(uniqueId, new ContextAwareAnimatableManager<GeoItem, TransformType>(this.animatable) {
+				this.managers.put(uniqueId, new ContextAwareAnimatableManager<GeoItem, ItemCameraTransforms.TransformType>(this.animatable) {
 					@Override
-					protected Map<TransformType, AnimatableManager<GeoItem>> buildContextOptions(GeoAnimatable animatable) {
-						Map<TransformType, AnimatableManager<GeoItem>> map = new EnumMap<>(TransformType.class);
+					protected Map<ItemCameraTransforms.TransformType, AnimatableManager<GeoItem>> buildContextOptions(GeoAnimatable animatable) {
+						Map<ItemCameraTransforms.TransformType, AnimatableManager<GeoItem>> map = new EnumMap<>(ItemCameraTransforms.TransformType.class);
 
-						for (TransformType context : TransformType.values()) {
+						for (ItemCameraTransforms.TransformType context : ItemCameraTransforms.TransformType.values()) {
 							map.put(context, new AnimatableManager<>(animatable));
 						}
 
@@ -145,11 +150,11 @@ public interface GeoItem extends SingletonGeoAnimatable {
 					}
 
 					@Override
-					public TransformType getCurrentContext() {
+					public ItemCameraTransforms.TransformType getCurrentContext() {
 						@Nullable
-						TransformType context = getData(DataTickets.ITEM_RENDER_PERSPECTIVE);
+						ItemCameraTransforms.TransformType context = getData(DataTickets.ITEM_RENDER_PERSPECTIVE);
 
-						return context == null ? TransformType.NONE : context;
+						return context == null ? ItemCameraTransforms.TransformType.NONE : context;
 					}
 				});
 

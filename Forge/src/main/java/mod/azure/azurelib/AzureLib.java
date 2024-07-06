@@ -1,10 +1,6 @@
 package mod.azure.azurelib;
 
-import mod.azure.azurelib.cache.AzureLibCache;
-import mod.azure.azurelib.network.AzureLibNetwork;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +20,7 @@ public class AzureLib {
 	public static synchronized void initialize() {
 		if (!hasInitialized) {
 //			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AzureLibCache::registerReloadListener);
-			AzureLibNetwork.init();
+//			AzureLibNetwork.init();
 		}
 
 		hasInitialized = true;

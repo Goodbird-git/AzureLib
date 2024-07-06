@@ -14,8 +14,6 @@ import mod.azure.azurelib.network.SerializableDataTicket;
 import mod.azure.azurelib.network.packet.EntityAnimDataSyncPacket;
 import mod.azure.azurelib.network.packet.EntityAnimTriggerPacket;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -52,7 +50,7 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 	 * @param data          The data to sync
 	 */
 	default <D> void setAnimData(Entity relatedEntity, SerializableDataTicket<D> dataTicket, D data) {
-		if (relatedEntity.getEntityWorld().isRemote()) {
+		if (relatedEntity.getEntityWorld().isRemote) {
 			getAnimatableInstanceCache().getManagerForId(relatedEntity.getEntityId()).setData(dataTicket, data);
 		} else {
 			AzureLibNetwork.send(new EntityAnimDataSyncPacket<>(relatedEntity.getEntityId(), dataTicket, data), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> relatedEntity));
@@ -68,7 +66,7 @@ public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 	 * @param animName       The name of animation to trigger. This needs to have been registered with the controller via {@link mod.azure.azurelib.core.animation.AnimationController#triggerableAnim AnimationController.triggerableAnim}
 	 */
 	default void triggerAnim(Entity relatedEntity, @Nullable String controllerName, String animName) {
-		if (relatedEntity.getEntityWorld().isRemote()) {
+		if (relatedEntity.getEntityWorld().isRemote) {
 			getAnimatableInstanceCache().getManagerForId(relatedEntity.getEntityId()).tryTriggerAnimation(controllerName, animName);
 		} else {
 			AzureLibNetwork.send(new EntityAnimTriggerPacket<>(relatedEntity.getEntityId(), controllerName, animName), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> relatedEntity));

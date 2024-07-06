@@ -1,17 +1,15 @@
 package mod.azure.azurelib.mixin;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.layers.ArmorLayer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,19 +20,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Render hook for injecting AzureLib's armor rendering functionalities
  */
-@Mixin(value = ArmorLayer.class, priority = 700)
-public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, A extends BipedModel<T>> {
+@Mixin(value = LayerArmorBase.class, priority = 700)
+public abstract class MixinHumanoidArmorLayer<A extends ModelBase> implements LayerRenderer<EntityLivingBase> {
 
     @Shadow
-    public abstract A getModelFromSlot(EquipmentSlotType slotIn);
+    public abstract A getModelFromSlot(EntityEquipmentSlot slotIn);
 
-    @Inject(method = "renderArmorPart", at = @At(value = "RETURN", target = "Lnet/minecraft/client/renderer/entity/layers/ArmorLayer;isLegSlot(Lnet/minecraft/inventory/EquipmentSlotType;)Z"), cancellable = true)
-    public void geckolib$renderGeckoLibModel(MatrixStack poseStack, IRenderTypeBuffer bufferSource, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, EquipmentSlotType equipmentSlot, int packedLight, CallbackInfo ci) {
+    @Inject(method = "renderArmorLayer", at = @At(value = "RETURN", target = "Lnet/minecraft/client/renderer/entity/layers/ArmorLayer;isLegSlot(Lnet/minecraft/inventory/EquipmentSlotType;)Z"), cancellable = true)
+    public void azurelib$renderAzureLibModel(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, EntityEquipmentSlot equipmentSlot, CallbackInfo ci) {
         final ItemStack stack = entity.getItemStackFromSlot(equipmentSlot);
-        if (stack.getItem() instanceof ArmorItem) {
+        if (stack.getItem() instanceof ItemArmor) {
             A baseModel = this.getModelFromSlot(equipmentSlot);
-            final Model geckolibModel = RenderProvider.of(stack).getGenericArmorModel(entity, stack, equipmentSlot,
-                    (BipedModel<LivingEntity>) baseModel);
+            final ModelBiped geckolibModel = RenderProvider.of(stack).getGenericArmorModel(entity, stack, equipmentSlot,
+                    (ModelBiped) baseModel);
 
             if (geckolibModel != null && stack.getItem() instanceof GeoItem) {
                 if (geckolibModel instanceof GeoArmorRenderer) {
@@ -43,7 +41,7 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, A extends 
                 }
 
                 baseModel.setModelAttributes((A) geckolibModel);
-                geckolibModel.render(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+                geckolibModel.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
             }
         }
     }

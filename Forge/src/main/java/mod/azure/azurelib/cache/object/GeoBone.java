@@ -10,9 +10,7 @@ package mod.azure.azurelib.cache.object;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
-import net.minecraft.client.renderer.Matrix3f;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;

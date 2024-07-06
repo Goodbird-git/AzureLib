@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -33,6 +34,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Quaternion;
 
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
 
 /**
  * Helper class for various methods and functions useful while rendering
@@ -56,9 +58,9 @@ public final class RenderUtils {
 	public static void rotateMatrixAroundCube(GeoCube cube) {
 		Vec3d rotation = cube.rotation();
 
-		GlStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, false));
-		GlStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, false));
-		GlStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, false));
+		GlStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, 0));
+		GlStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, 0));
+		GlStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, 0));
 	}
 
 	public static void scaleMatrixForBone(CoreGeoBone bone) {
@@ -127,7 +129,7 @@ public final class RenderUtils {
 		if (texture == null)
 			return null;
 
-		Texture originalTexture = null;
+		ITextureObject originalTexture = null;
 		Minecraft mc = Minecraft.getMinecraft();
 
 		try {
@@ -140,10 +142,10 @@ public final class RenderUtils {
 		if (originalTexture == null)
 			return null;
 
-		NativeImage image = null;
+		BufferedImage image = null;
 
 		try {
-			image = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getTextureData() : NativeImage.read(mc.getResourceManager().getResource(texture).getInputStream());
+			image = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getTextureData() : BufferedImage.read(mc.getResourceManager().getResource(texture).getInputStream());
 		} catch (Exception e) {
 			AzureLib.LOGGER.error("Failed to read image for id {}", texture);
 			e.printStackTrace();
@@ -242,7 +244,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoAnimatable getReplacedAnimatable(EntityType<?> entityType) {
-		EntityRenderer<?> renderer = Minecraft.getMinecraft().getRenderManager().renderers.get(entityType);
+		RenderEntity renderer = Minecraft.getMinecraft().getRenderManager().renderers.get(entityType);
 
 		return renderer instanceof GeoReplacedEntityRenderer<?, ?> ? ((GeoReplacedEntityRenderer<?, ?>) renderer).getAnimatable() : null;
 	}
@@ -257,7 +259,7 @@ public final class RenderUtils {
 	 */
 	@Nullable
 	public static GeoModel<?> getGeoModelForEntity(Entity entity) {
-		EntityRenderer<?> renderer = Minecraft.getMinecraft().getRenderManager().getRenderer(entity);
+		RenderEntity renderer = Minecraft.getMinecraft().getRenderManager().getRenderer(entity);
 
 		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
 	}
