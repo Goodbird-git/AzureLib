@@ -4,8 +4,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
 import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.*;
-import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,19 +35,6 @@ public interface AzureLibNetwork {
     ResourceLocation CONFIG_PACKET_ID = AzureLib.modResource("config_packet");
 
     Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
-
-    static void init() {
-        registerPacket(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC, true);
-        registerPacket(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC, true);
-        registerPacket(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC, true);
-        registerPacket(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC, true);
-        registerPacket(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC, true);
-        registerPacket(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC, true);
-    }
-
-    private static <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacket(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean isClientBound) {
-        Services.NETWORK.registerPacketInternal(payloadType, codec, isClientBound);
-    }
 
     static void sendWithCallback(AbstractPacket packet, IPacketCallback callback) {
         callback.onReadyToSend(packet);
