@@ -7,7 +7,7 @@ import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
 import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
-import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 import mod.azure.azurelib.sblforked.SBLConstants;
 import net.fabricmc.api.ModInitializer;
@@ -32,7 +32,12 @@ public final class FabricAzureLibMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             ConfigIO.FILE_WATCH_MANAGER.stopService();
         });
-        AzureLibNetwork.init();
+        PayloadTypeRegistry.playS2C().register(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC);
     }
 }

@@ -7,7 +7,7 @@ import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
 import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
-import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.neoforge.platform.NeoForgeAzureLibNetwork;
 import mod.azure.azurelib.neoforge.platform.NeoForgeCommonRegistry;
 import mod.azure.azurelib.sblforked.SBLConstants;
@@ -35,7 +35,6 @@ public final class NeoForgeAzureLibMod {
     public NeoForgeAzureLibMod(IEventBus modEventBus) {
         AzureLib.initialize();
         AzureLibMod.initRegistry();
-        NeoForgeAzureLibNetwork.init(modEventBus);
         DATA_COMPONENTS_REGISTER.register(modEventBus);
         if (NeoForgeCommonRegistry.blockEntityTypeDeferredRegister != null)
             NeoForgeCommonRegistry.blockEntityTypeDeferredRegister.register(modEventBus);
@@ -54,6 +53,12 @@ public final class NeoForgeAzureLibMod {
     public void registerMessages(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(AzureLib.MOD_ID);
 
+        registrar.playToClient(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC, (msg, ctx) -> {});
+        registrar.playToClient(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC, (msg, ctx) -> {});
+        registrar.playToClient(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC, (msg, ctx) -> {});
+        registrar.playToClient(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC, (msg, ctx) -> {});
+        registrar.playToClient(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC, (msg, ctx) -> {});
+        registrar.playToClient(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC, (msg, ctx) -> {});
         registrar.playToClient(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC, (msg, ctx) -> {});
     }
 }
