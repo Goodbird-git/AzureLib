@@ -15,8 +15,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-import java.util.function.Consumer;
-
 public class NeoForgeAzureLibNetwork implements AzureLibNetwork {
 
     private static PayloadRegistrar registrar = null;
