@@ -55,7 +55,7 @@ public class AnimationController<T extends GeoAnimatable> {
     protected boolean isJustStarting = false;
     protected boolean needsAnimationReload = false;
     protected boolean shouldResetTick = false;
-    private boolean justStopped = true;
+    protected boolean justStopped = true;
     protected boolean justStartedTransition = false;
 
     protected SoundKeyframeHandler<T> soundKeyframeHandler = null;
@@ -73,7 +73,7 @@ public class AnimationController<T extends GeoAnimatable> {
     protected double tickOffset;
     protected ToDoubleFunction<T> animationSpeedModifier = obj -> 1d;
     protected Function<T, EasingType> overrideEasingTypeFunction = obj -> null;
-    private final Set<KeyFrameData> executedKeyFrames = new ObjectOpenHashSet<>();
+    protected final Set<KeyFrameData> executedKeyFrames = new ObjectOpenHashSet<>();
     protected CoreGeoModel<T> lastModel;
 
     /**
@@ -522,7 +522,7 @@ public class AnimationController<T extends GeoAnimatable> {
      * @param seekTime              The lerped tick (current tick + partial tick)
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required bone, or continue with the remaining bones
      */
-    private void processCurrentAnimation(double adjustedTick, double seekTime, boolean crashWhenCantFindBone) {
+    protected void processCurrentAnimation(double adjustedTick, double seekTime, boolean crashWhenCantFindBone) {
         if (adjustedTick >= this.currentAnimation.animation().length()) {
             if (this.currentAnimation.loopType().shouldPlayAgain(this.animatable, this, this.currentAnimation.animation())) {
                 if (this.animationState != State.PAUSED) {
@@ -633,7 +633,7 @@ public class AnimationController<T extends GeoAnimatable> {
      *
      * @param modelRendererList The bone list from the {@link AnimationProcessor}
      */
-    private void createInitialQueues(Collection<CoreGeoBone> modelRendererList) {
+    protected void createInitialQueues(Collection<CoreGeoBone> modelRendererList) {
         this.boneAnimationQueues.clear();
 
         for (CoreGeoBone modelRenderer : modelRendererList) {
@@ -648,7 +648,7 @@ public class AnimationController<T extends GeoAnimatable> {
      * @param animation The {@code QueuedAnimation} to filter {@code BoneSnapshots} for
      * @param snapshots The master snapshot collection to pull filter from
      */
-    private void saveSnapshotsForAnimation(AnimationProcessor.QueuedAnimation animation, Map<String, BoneSnapshot> snapshots) {
+    protected void saveSnapshotsForAnimation(AnimationProcessor.QueuedAnimation animation, Map<String, BoneSnapshot> snapshots) {
         if (animation.animation().boneAnimations() == null) {
             return;
         }
@@ -685,7 +685,7 @@ public class AnimationController<T extends GeoAnimatable> {
     /**
      * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
      */
-    private AnimationPoint getAnimationPointAtTick(List<Keyframe<IValue>> frames, double tick, boolean isRotation,
+    protected AnimationPoint getAnimationPointAtTick(List<Keyframe<IValue>> frames, double tick, boolean isRotation,
                                                    Axis axis) {
         KeyframeLocation<Keyframe<IValue>> location = getCurrentKeyFrameLocation(frames, tick);
         Keyframe<IValue> currentFrame = location.keyframe();
@@ -718,7 +718,7 @@ public class AnimationController<T extends GeoAnimatable> {
      * @param ageInTicks The current tick time
      * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
      */
-    private KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(List<Keyframe<IValue>> frames,
+    protected KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(List<Keyframe<IValue>> frames,
                                                                           double ageInTicks) {
         double totalFrameTime = 0;
 
@@ -735,7 +735,7 @@ public class AnimationController<T extends GeoAnimatable> {
     /**
      * Clear the {@link KeyFrameData} cache in preparation for the next animation
      */
-    private void resetEventKeyFrames() {
+    protected void resetEventKeyFrames() {
         this.executedKeyFrames.clear();
     }
 
