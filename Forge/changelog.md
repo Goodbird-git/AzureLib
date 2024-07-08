@@ -1,7 +1,4 @@
-v1.0.39
+v1.0.1
 
-- Port Easing Fix
-- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
-- Fixes isPerspectiveAware JavaDoc
-- Fix stale buffer on Entities/Layers
-- Add support for scale attribute/missing shaking for GeoReplaced
+- Fixes publishing issues for maven artifacts.
+- Moves all private fields/methods to protected in AnimationController.
