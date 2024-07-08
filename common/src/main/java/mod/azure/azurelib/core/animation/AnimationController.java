@@ -45,7 +45,7 @@ import java.util.function.ToDoubleFunction;
  */
 public class AnimationController<T extends GeoAnimatable> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AnimationController.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AnimationController.class);
 
     protected final T animatable;
 
@@ -57,7 +57,7 @@ public class AnimationController<T extends GeoAnimatable> {
 
     protected final Map<String, BoneSnapshot> boneSnapshots = new Object2ObjectOpenHashMap<>();
     protected final Map<String, RawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
-    private final Set<KeyFrameData> executedKeyFrames = new ObjectOpenHashSet<>();
+    protected final Set<KeyFrameData> executedKeyFrames = new ObjectOpenHashSet<>();
     protected Queue<AnimationProcessor.QueuedAnimation> animationQueue = new LinkedList<>();
     protected boolean isJustStarting = false;
     protected boolean needsAnimationReload = false;
@@ -84,7 +84,7 @@ public class AnimationController<T extends GeoAnimatable> {
 
     protected Function<T, EasingType> overrideEasingTypeFunction = obj -> null;
     protected CoreGeoModel<T> lastModel;
-    private boolean justStopped = true;
+    protected boolean justStopped = true;
 
     /**
      * Instantiates a new {@code AnimationController}.<br>
@@ -588,7 +588,7 @@ public class AnimationController<T extends GeoAnimatable> {
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required
      *                              bone, or continue with the remaining bones
      */
-    private void processCurrentAnimation(double adjustedTick, double seekTime, boolean crashWhenCantFindBone) {
+    protected void processCurrentAnimation(double adjustedTick, double seekTime, boolean crashWhenCantFindBone) {
         if (adjustedTick >= this.currentAnimation.animation().length()) {
             if (
                     this.currentAnimation.loopType()
@@ -727,7 +727,7 @@ public class AnimationController<T extends GeoAnimatable> {
      *
      * @param modelRendererList The bone list from the {@link AnimationProcessor}
      */
-    private void createInitialQueues(Collection<CoreGeoBone> modelRendererList) {
+    protected void createInitialQueues(Collection<CoreGeoBone> modelRendererList) {
         this.boneAnimationQueues.clear();
 
         for (CoreGeoBone modelRenderer : modelRendererList) {
@@ -742,7 +742,7 @@ public class AnimationController<T extends GeoAnimatable> {
      * @param animation The {@code QueuedAnimation} to filter {@code BoneSnapshots} for
      * @param snapshots The master snapshot collection to pull filter from
      */
-    private void saveSnapshotsForAnimation(
+    protected void saveSnapshotsForAnimation(
             AnimationProcessor.QueuedAnimation animation,
             Map<String, BoneSnapshot> snapshots
     ) {
@@ -783,7 +783,7 @@ public class AnimationController<T extends GeoAnimatable> {
     /**
      * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
      */
-    private AnimationPoint getAnimationPointAtTick(
+    protected AnimationPoint getAnimationPointAtTick(
             List<Keyframe<IValue>> frames,
             double tick,
             boolean isRotation,
@@ -820,7 +820,7 @@ public class AnimationController<T extends GeoAnimatable> {
      * @param ageInTicks The current tick time
      * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
      */
-    private KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(
+    protected KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(
             List<Keyframe<IValue>> frames,
             double ageInTicks
     ) {
@@ -839,7 +839,7 @@ public class AnimationController<T extends GeoAnimatable> {
     /**
      * Clear the {@link KeyFrameData} cache in preparation for the next animation
      */
-    private void resetEventKeyFrames() {
+    protected void resetEventKeyFrames() {
         this.executedKeyFrames.clear();
     }
 
