@@ -1,3 +1,4 @@
-v1.0.39
+v1.0.40
 
-- Adds headers to Geckolib forked classes
+- Fixes publishing issues for maven artifacts.
+- Moves all private fields/methods to protected in AnimationController.
