@@ -1,5 +1,4 @@
-v2.0.29
+v2.0.30
 
-- Adds headers to Geckolib forked classes
-- Adds headers to Configuration forked classes
-- Fixes a broken JavaDoc
+- Fixes Fabric version requring ModMenu in dev.
+- Moves all private fields/methods to protected in AnimationController.
