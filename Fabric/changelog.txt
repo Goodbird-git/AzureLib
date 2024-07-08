@@ -1,3 +1,4 @@
-v1.0.36
+v1.0.37
 
-- Adds headers to Geckolib forked classes
+- Fixes Fabric not using remap.
+- Moves all private fields/methods to protected in AnimationController.
