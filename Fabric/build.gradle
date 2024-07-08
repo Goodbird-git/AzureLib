@@ -130,7 +130,7 @@ if (file('key.properties').exists()) {
         def releaseProp = new Properties()
         File secretPropsFile = file("key.properties")
         releaseProp.load(secretPropsFile.newInputStream())
-        file = jar.archiveFile
+        file = remapJar.archiveFile
         changelog = rootProject.file("changelog.txt").text
         type = STABLE
         modLoaders.add("fabric")
