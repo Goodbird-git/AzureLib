@@ -1,3 +1,4 @@
-v2.3.12
+v2.3.13
 
-- Fixes packets network crash.
+- Fixes Fabric version requring ModMenu in dev.
+- Moves all private fields/methods to protected in AnimationController.
