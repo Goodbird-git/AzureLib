@@ -88,8 +88,22 @@ publishing {
       artifactId = project.archives_base_name
       version = project.mod_version
       from components.java
+      pom.withXml {
+          asNode().dependencies.dependency.each { dep ->
+              if (dep.groupId.text() == 'com.terraformersmc' && dep.artifactId.text() == 'modmenu') {
+                  dep.parent().remove(dep)
+              }
+          }
+      }
     }
   }
+}
+
+// Disables Gradle's custom module metadata from being published to maven. The
+// metadata includes mapped dependencies which are not reasonably consumable by
+// other mod developers.
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
 }
 
 processResources {
