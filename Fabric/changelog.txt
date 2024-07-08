@@ -1,3 +1,4 @@
-v1.0.41
+v1.0.42
 
 - Fixes Fabric not using remap.
+- Moves all private fields/methods to protected in AnimationController.

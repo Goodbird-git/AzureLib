@@ -1,5 +1,4 @@
-v1.0.40
+v1.0.42
 
-- Adds headers to classes, because some people are cry babies regarding forks.
-- Fixes a few JavaDocs.
-- Changed reload keybind default to insert key.
+- Fixes publishing issues for maven artifacts.
+- Moves all private fields/methods to protected in AnimationController.
