@@ -31,9 +31,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         AzureLibMod.initRegistry();
         new FabricAzureLibNetwork();
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            ConfigIO.FILE_WATCH_MANAGER.stopService();
-        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> ConfigIO.FILE_WATCH_MANAGER.stopService());
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
