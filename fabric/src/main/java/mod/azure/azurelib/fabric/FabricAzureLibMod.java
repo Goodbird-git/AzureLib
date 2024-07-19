@@ -10,6 +10,7 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.fabric.platform.FabricAzureLibNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -40,6 +41,7 @@ public final class FabricAzureLibMod implements ModInitializer {
     public void onInitialize() {
         ConfigIO.FILE_WATCH_MANAGER.startService();
         AzureLib.initialize();
+        new FabricAzureLibNetwork();
         Registry.register(
                 BuiltInRegistries.BLOCK,
                 AzureLib.modResource("lightblock"),
