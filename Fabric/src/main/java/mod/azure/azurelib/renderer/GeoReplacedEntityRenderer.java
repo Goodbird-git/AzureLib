@@ -310,13 +310,13 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 
 		RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
 
+		if (!isReRender && buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
+			buffer = bufferSource.getBuffer(renderType);
+
 		renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-		if (!isReRender) {
+		if (!isReRender)
 			applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
-			if (buffer instanceof BufferBuilder && !((BufferBuilder) buffer).building)
-				buffer = bufferSource.getBuffer(renderType);
-		}
 
 		renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
