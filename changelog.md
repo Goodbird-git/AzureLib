@@ -1,4 +1,6 @@
-v2.2.13
+v2.2.14
 
-- Fixes Fabric version requring ModMenu in dev.
-- Moves all private fields/methods to protected in AnimationController.
+- Move the buffer rebuilding to earlier to avoid using buffers that aren't building.
+- Fixes configuration thread not closing on datagen for Fabric.
+- Fixes error if config folder is missing on first run only.
+- Closes configuration thread in a safer way.
