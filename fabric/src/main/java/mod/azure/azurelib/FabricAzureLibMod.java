@@ -29,9 +29,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         new FabricAzureLibNetwork();
         Registry.register(BuiltInRegistries.BLOCK, AzureLib.modResource("lightblock"), FabricAzureLibMod.TICKING_LIGHT_BLOCK);
         FabricAzureLibMod.TICKING_LIGHT_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID + ":lightblock", FabricBlockEntityTypeBuilder.create(TickingLightEntity::new, FabricAzureLibMod.TICKING_LIGHT_BLOCK).build(null));
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            ConfigIO.FILE_WATCH_MANAGER.stopService();
-        });
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> ConfigIO.FILE_WATCH_MANAGER.stopService());
         Registry.register(BuiltInRegistries.ENCHANTMENT, AzureLib.modResource("incendiaryenchantment"), INCENDIARYENCHANTMENT);
     }
 }
