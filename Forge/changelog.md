@@ -1,4 +1,3 @@
-v1.0.1
+v1.0.2
 
-- Fixes publishing issues for maven artifacts.
-- Moves all private fields/methods to protected in AnimationController.
+- Move the buffer rebuilding to earlier to avoid using buffers that aren't building.
