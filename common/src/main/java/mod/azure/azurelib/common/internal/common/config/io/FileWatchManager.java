@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.common.internal.common.config.ConfigHolder;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import org.apache.logging.log4j.Marker;
@@ -63,7 +64,12 @@ public final class FileWatchManager {
     }
     
     public void stopService() {
-    	this.executorService.shutdown();
+        try {
+            this.executorService.shutdown();
+            this.service.close();
+        } catch (IOException e) {
+            throw new AzureLibException("Error while stopping FileWatch service", e);
+        }
     }
 
     public void startService() {
