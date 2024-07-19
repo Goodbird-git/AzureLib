@@ -9,6 +9,7 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.fabric.platform.FabricAzureLibNetwork;
 import mod.azure.azurelib.sblforked.SBLConstants;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -28,6 +29,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         ConfigIO.FILE_WATCH_MANAGER.startService();
         AzureLib.initialize();
         AzureLibMod.initRegistry();
+        new FabricAzureLibNetwork();
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             ConfigIO.FILE_WATCH_MANAGER.stopService();
