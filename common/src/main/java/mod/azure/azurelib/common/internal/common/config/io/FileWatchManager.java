@@ -7,6 +7,7 @@
 package mod.azure.azurelib.common.internal.common.config.io;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.common.internal.common.config.ConfigHolder;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -58,7 +59,12 @@ public final class FileWatchManager {
     }
 
     public void stopService() {
-        this.executorService.shutdown();
+        try {
+            this.executorService.shutdown();
+            this.service.close();
+        } catch (IOException e) {
+            throw new AzureLibException("Error while stopping FileWatch service", e);
+        }
     }
 
     public void startService() {
