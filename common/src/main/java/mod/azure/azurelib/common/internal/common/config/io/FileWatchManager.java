@@ -74,6 +74,10 @@ public final class FileWatchManager {
         }
         Path configDir = Paths.get("./config");
         try {
+            File configDirFile = configDir.toFile();
+            if (!configDirFile.exists()) {
+                configDirFile.mkdir();
+            }
             Files.walkFileTree(configDir, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
