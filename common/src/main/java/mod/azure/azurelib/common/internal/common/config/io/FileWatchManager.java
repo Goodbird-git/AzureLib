@@ -56,6 +56,7 @@ public final class FileWatchManager {
             this.executorService = Executors.newSingleThreadScheduledExecutor(r -> {
                 Thread t = new Thread(r);
                 t.setName("Auto-Sync thread");
+                t.setDaemon(true);
                 return t;
             });
         }
