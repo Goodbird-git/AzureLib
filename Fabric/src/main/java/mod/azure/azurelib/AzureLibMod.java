@@ -42,9 +42,7 @@ public final class AzureLibMod implements ModInitializer {
 		Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(AzureLib.MOD_ID, "lightblock"), TICKING_LIGHT_BLOCK);
 		TICKING_LIGHT_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID + ":lightblock", FabricBlockEntityTypeBuilder.create(TickingLightEntity::new, TICKING_LIGHT_BLOCK).build(null));
 		config = AzureLibMod.registerConfig(TestingConfig.class, ConfigFormats.json()).getConfigInstance();
-		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-			ConfigIO.FILE_WATCH_MANAGER.stopService();
-		});
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> ConfigIO.FILE_WATCH_MANAGER.stopService());
 	}
 
 	/**
