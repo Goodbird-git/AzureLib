@@ -6,6 +6,7 @@ import mod.azure.azurelib.config.io.ConfigIO;
 import mod.azure.azurelib.enchantments.IncendiaryEnchantment;
 import mod.azure.azurelib.entities.TickingLightBlock;
 import mod.azure.azurelib.entities.TickingLightEntity;
+import mod.azure.azurelib.platform.FabricAzureLibNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -25,6 +26,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         ConfigIO.FILE_WATCH_MANAGER.startService();
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         AzureLib.initialize();
+        new FabricAzureLibNetwork();
         Registry.register(BuiltInRegistries.BLOCK, AzureLib.modResource("lightblock"), FabricAzureLibMod.TICKING_LIGHT_BLOCK);
         FabricAzureLibMod.TICKING_LIGHT_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID + ":lightblock", FabricBlockEntityTypeBuilder.create(TickingLightEntity::new, FabricAzureLibMod.TICKING_LIGHT_BLOCK).build(null));
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
