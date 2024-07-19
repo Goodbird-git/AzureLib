@@ -235,13 +235,14 @@ public interface GeoRenderer<T extends GeoAnimatable> {
 	default void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		poseStack.pushPose();
 		RenderUtils.prepMatrixForBone(poseStack, bone);
+
+		if (!isReRender && buffer instanceof BufferBuilder builder && !builder.building)
+			buffer = bufferSource.getBuffer(renderType);
+
 		renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-		if (!isReRender) {
+		if (!isReRender)
 			applyRenderLayersForBone(poseStack, getAnimatable(), bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
-			if (buffer instanceof BufferBuilder builder && !builder.building)
-				buffer = bufferSource.getBuffer(renderType);
-		}
 
 		renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 		poseStack.popPose();
