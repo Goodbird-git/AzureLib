@@ -3,7 +3,6 @@ package mod.azure.azurelib;
 import java.util.List;
 import java.util.Map;
 
-import mod.azure.azurelib.network.AzureLibNetwork;
 import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.client.screen.ConfigGroupScreen;
@@ -38,7 +37,6 @@ public final class AzureLibMod implements ModInitializer {
 	public void onInitialize() {
 		ConfigIO.FILE_WATCH_MANAGER.startService();
 		AzureLib.initialize();
-		new AzureLibNetwork();
 		Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(AzureLib.MOD_ID, "lightblock"), TICKING_LIGHT_BLOCK);
 		TICKING_LIGHT_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, AzureLib.MOD_ID + ":lightblock", FabricBlockEntityTypeBuilder.create(TickingLightEntity::new, TICKING_LIGHT_BLOCK).build(null));
 		config = AzureLibMod.registerConfig(TestingConfig.class, ConfigFormats.json()).getConfigInstance();
