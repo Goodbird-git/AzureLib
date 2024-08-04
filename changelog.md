@@ -1,6 +1,5 @@
-v2.3.14
+v2.3.15
 
-- Move the buffer rebuilding to earlier to avoid using buffers that aren't building.
-- Fixes configuration thread not closing on datagen for Fabric.
-- Fixes error if config folder is missing on first run only.
-- Closes configuration thread in a safer way.
+- few Java doc fixes.
+- Fixes NeoForge Config crash.
+- hopefully fixes AzureNav crash
