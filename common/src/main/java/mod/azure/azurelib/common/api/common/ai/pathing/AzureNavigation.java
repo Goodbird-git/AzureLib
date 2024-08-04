@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -30,29 +31,8 @@ public class AzureNavigation extends GroundPathNavigation {
         super(entity, world);
     }
 
-    static int leadEdgeToInt(float coord, int step) {
-        return Mth.floor(coord - step * EPSILON);
-    }
-
-    static int trailEdgeToInt(float coord, int step) {
-        return Mth.floor(coord + step * EPSILON);
-    }
-
-    static float element(Vec3 v, int i) {
-        switch (i) {
-            case 0:
-                return (float) v.x;
-            case 1:
-                return (float) v.y;
-            case 2:
-                return (float) v.z;
-            default:
-                return 0.0F;
-        }
-    }
-
     @Override
-    protected PathFinder createPathFinder(int maxVisitedNodes) {
+    protected @NotNull PathFinder createPathFinder(int maxVisitedNodes) {
         this.nodeEvaluator = new WalkNodeEvaluator();
         this.nodeEvaluator.setCanPassDoors(true);
         return new AzurePathFinder(this.nodeEvaluator, maxVisitedNodes);
@@ -87,15 +67,8 @@ public class AzureNavigation extends GroundPathNavigation {
         }
         final Vec3 base = entityPos.add(-this.mob.getBbWidth() * 0.5F, 0.0F, -this.mob.getBbWidth() * 0.5F);
         final Vec3 max = base.add(this.mob.getBbWidth(), this.mob.getBbHeight(), this.mob.getBbWidth());
-        if (
-                this.tryShortcut(path, new Vec3(this.mob.getX(), this.mob.getY(), this.mob.getZ()), pathLength, base,
-                        max)
-        ) {
-            if (
-                    this.isAt(path, 0.5F) || this.atElevationChange(path) && this.isAt(path,
-                            this.mob.getBbWidth() * 0.5F)
-            ) {
-                this.mob.getLookControl().setLookAt(path.getNextEntityPos(this.mob));
+        if (this.tryShortcut(path, new Vec3(this.mob.getX(), this.mob.getY(), this.mob.getZ()), pathLength, base, max)) {
+            if (this.isAt(path, 0.5F) || this.atElevationChange(path) && this.isAt(path, this.mob.getBbWidth() * 0.5F)) {
                 path.setNextNodeIndex(path.getNextNodeIndex() + 1);
             }
         }
@@ -191,8 +164,7 @@ public class AzureNavigation extends GroundPathNavigation {
     private boolean sweep(Vec3 vec, Vec3 base, Vec3 max) {
         float t = 0.0F;
         float max_t = (float) vec.length();
-        if (max_t < EPSILON)
-            return true;
+        if (max_t < EPSILON) return true;
         final float[] tr = new float[3];
         final int[] ldi = new int[3];
         final int[] tri = new int[3];
@@ -216,7 +188,9 @@ public class AzureNavigation extends GroundPathNavigation {
         final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         do {
             // stepForward
-            int axis = (tNext[0] < tNext[1]) ? ((tNext[0] < tNext[2]) ? 0 : 2) : ((tNext[1] < tNext[2]) ? 1 : 2);
+            int axis = (tNext[0] < tNext[1]) ?
+                    ((tNext[0] < tNext[2]) ? 0 : 2) :
+                    ((tNext[1] < tNext[2]) ? 1 : 2);
             float dt = tNext[axis] - t;
             t = tNext[axis];
             ldi[axis] += step[axis];
@@ -239,26 +213,34 @@ public class AzureNavigation extends GroundPathNavigation {
                 for (int z = z0; z != z1; z += stepz) {
                     for (int y = y0; y != y1; y += stepy) {
                         BlockState block = this.level.getBlockState(pos.set(x, y, z));
-                        if (!block.isPathfindable(PathComputationType.LAND))
-                            return false;
+                        if (!block.isPathfindable(PathComputationType.LAND)) return false;
                     }
-                    PathType below = this.nodeEvaluator.getPathTypeOfMob(this.nodeEvaluator.currentContext, x, y0 - 1,
-                            z, this.mob);
-                    if (below == PathType.WATER || below == PathType.LAVA || below == PathType.OPEN)
-                        return false;
-                    PathType in = this.nodeEvaluator.getPathTypeOfMob(this.nodeEvaluator.currentContext, x, y0, z,
-                            this.mob);
+                    PathType below = this.nodeEvaluator.getPathTypeOfMob(this.nodeEvaluator.currentContext, x, y0 - 1, z, this.mob);
+                    if (below == PathType.WATER || below == PathType.LAVA || below == PathType.OPEN) return false;
+                    PathType in = this.nodeEvaluator.getPathTypeOfMob(this.nodeEvaluator.currentContext, x, y0, z, this.mob);
                     float priority = this.mob.getPathfindingMalus(in);
-                    if (priority < 0.0F || priority >= 8.0F)
-                        return false;
-                    if (
-                            in == PathType.DAMAGE_FIRE || in == PathType.DANGER_FIRE
-                                    || in == PathType.DAMAGE_OTHER
-                    )
-                        return false;
+                    if (priority < 0.0F || priority >= 8.0F) return false;
+                    if (in == PathType.DAMAGE_FIRE || in == PathType.DANGER_FIRE || in == PathType.DAMAGE_OTHER) return false;
                 }
             }
         } while (t <= max_t);
         return true;
+    }
+
+    static int leadEdgeToInt(float coord, int step) {
+        return Mth.floor(coord - step * EPSILON);
+    }
+
+    static int trailEdgeToInt(float coord, int step) {
+        return Mth.floor(coord + step * EPSILON);
+    }
+
+    static float element(Vec3 v, int i) {
+        switch (i) {
+            case 0: return (float) v.x;
+            case 1: return (float) v.y;
+            case 2: return (float) v.z;
+            default: return 0.0F;
+        }
     }
 }

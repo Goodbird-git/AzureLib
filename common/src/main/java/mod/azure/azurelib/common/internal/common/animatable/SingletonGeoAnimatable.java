@@ -163,8 +163,8 @@ public interface SingletonGeoAnimatable extends GeoAnimatable {
      * }
      * </pre>
      *
-     * @param consumer
-     */
+     * @param consumer a {@link java.util.function.Consumer} that accepts a {@link RenderProvider}
+     * */
     void createRenderer(Consumer<RenderProvider> consumer);
 
     /**

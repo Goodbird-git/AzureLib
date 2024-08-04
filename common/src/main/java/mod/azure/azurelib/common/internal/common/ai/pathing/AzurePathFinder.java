@@ -10,6 +10,7 @@ import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class AzurePathFinder extends PathFinder {
     @Nullable
     @Override
     public Path findPath(
-            PathNavigationRegion regionIn,
-            Mob mob,
-            Set<BlockPos> targetPositions,
+            @NotNull PathNavigationRegion regionIn,
+            @NotNull Mob mob,
+            @NotNull Set<BlockPos> targetPositions,
             float maxRange,
             int accuracy,
             float searchDepthMultiplier
@@ -37,7 +38,7 @@ public class AzurePathFinder extends PathFinder {
     }
 
     @Override
-    protected float distance(Node first, Node second) {
+    protected float distance(Node first, @NotNull Node second) {
         return first.distanceToXZ(second);
     }
 
@@ -48,7 +49,7 @@ public class AzurePathFinder extends PathFinder {
         }
 
         private static List<Node> copyPathPoints(Path original) {
-            List<Node> points = new ArrayList();
+            List<Node> points = new ArrayList<>();
             for (int i = 0; i < original.getNodeCount(); i++) {
                 points.add(original.getNode(i));
             }
@@ -56,7 +57,7 @@ public class AzurePathFinder extends PathFinder {
         }
 
         @Override
-        public Vec3 getEntityPosAtNode(Entity entity, int index) {
+        public @NotNull Vec3 getEntityPosAtNode(Entity entity, int index) {
             Node point = this.getNode(index);
             double d0 = point.x + Mth.floor(entity.getBbWidth() + 1.0F) * 0.5D;
             double d1 = point.y;
