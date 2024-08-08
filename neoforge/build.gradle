@@ -117,7 +117,6 @@ publishing {
             artifactId base.archivesName.get()
             artifact jar
             artifact sourcesJar
-            from components.java
             pom.withXml {
                 asNode().dependencies.dependency.each { dep ->
                     if (dep.groupId.text() == 'net.minecraftforge' && dep.artifactId.text() == 'forge') {
