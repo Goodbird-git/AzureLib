@@ -40,7 +40,8 @@ public final class AzureLibCache {
             "customnpcs",
             "creeperoverhaul",
             "geckolib",
-            "gunsrpg"
+            "gunsrpg",
+            "born_in_chaos_v1"
     );
 
     private static Map<ResourceLocation, BakedAnimations> ANIMATIONS = Collections.emptyMap();
