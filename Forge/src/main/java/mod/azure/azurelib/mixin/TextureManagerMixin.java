@@ -32,9 +32,12 @@ public abstract class TextureManagerMixin {
 		Texture existing = this.mapTextureObjects.get(path);
 
 		if (existing == null && !path.getNamespace().equals("minecraft")) {
-			existing = new AnimatableTexture(path);
+			AnimatableTexture animatableTexture = new AnimatableTexture(path);
 
-			loadTexture(path, existing);
+			loadTexture(path, animatableTexture);
+
+			if (!animatableTexture.isAnimated())
+				this.mapTextureObjects.remove(path);
 		}
 	}
 }
