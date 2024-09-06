@@ -56,7 +56,7 @@ mixin {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven { url "https://maven.enginehub.org/repo/" }
+    maven { url = 'https://maven.minecraftforge.net/' }
     maven { url "https://maven.blamejared.com" }
     maven { url "https://minecraft.curseforge.com/api/maven/" }
     maven { url "https://cursemaven.com" }
