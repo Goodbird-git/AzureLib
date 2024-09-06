@@ -60,8 +60,8 @@ public class AnimatableTexture extends SimpleTexture {
 				this.isAnimated = true;
 
 				onRenderThread(() -> {
-					TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.width(), this.animationContents.frameSize.height());
-					nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.width(), this.animationContents.frameSize.height(), false, false);
+					TextureUtil.prepareImage(getId(), 0, this.animationContents.frameSize.getFirst(), this.animationContents.frameSize.getSecond());
+					nativeImage.upload(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(), this.animationContents.frameSize.getSecond(), false, false);
 				});
 			}
 		}
