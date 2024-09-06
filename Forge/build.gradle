@@ -72,12 +72,12 @@ mixin {
 
 repositories {
     maven { url "https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/" }
-    maven { url "https://maven.enginehub.org/repo/" }
     maven { url "https://maven.blamejared.com" }
     maven { url "https://minecraft.curseforge.com/api/maven/" }
     maven { url "https://maven.cloudsmith.io/azuredoom-mods/azurelib/" }
 	maven { url "https://cursemaven.com" }
     maven { url "https://plugins.gradle.org/m2/" }
+    maven { url = 'https://maven.minecraftforge.net/' }
     mavenCentral()
 }
 
