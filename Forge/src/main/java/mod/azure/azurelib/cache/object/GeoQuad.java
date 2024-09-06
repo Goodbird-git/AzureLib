@@ -52,7 +52,8 @@ public class GeoQuad {
 			float tempWidth = uWidth;
 			uWidth = u;
 			u = tempWidth;
-
+		}
+		else {
 			normal.mul(-1, 1, 1);
 		}
 
