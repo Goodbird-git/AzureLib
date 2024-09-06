@@ -199,17 +199,17 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 			parser.setMemoizedValue(MolangQueries.IS_ON_GROUND, () -> RenderUtils.booleanToFloat(((Entity) animatable).onGround));
 			parser.setMemoizedValue(MolangQueries.IS_IN_WATER, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWater()));
 			parser.setMemoizedValue(MolangQueries.IS_IN_WATER_OR_RAIN, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWater()));
+			parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((Entity) animatable).isBurning()));
 
 			if (animatable instanceof EntityLivingBase) {
 				parser.setMemoizedValue(MolangQueries.HEALTH, ((EntityLivingBase) animatable)::getHealth);
 				parser.setMemoizedValue(MolangQueries.MAX_HEALTH, ((EntityLivingBase) animatable)::getMaxHealth);
-				parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((EntityLivingBase) animatable).isBurning()));
 				parser.setMemoizedValue(MolangQueries.GROUND_SPEED, () -> {
 					Vec3d velocity = ((EntityLivingBase) animatable).getForward();
 
 					return Math.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
 				});
-				parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> ((EntityLivingBase) animatable).getY((float) animTime - ((EntityLivingBase) animatable).getYaw((float) animTime - 0.1f)));
+				parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> ((EntityLivingBase) animatable).getYRot() - ((EntityLivingBase) animatable).yRotO);
 			}
 		}
 	}

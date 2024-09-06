@@ -14,6 +14,7 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.resource.AzureAnimationMetadataSection;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -36,6 +37,7 @@ import java.util.List;
  */
 public class AnimatableTexture extends SimpleTexture {
     private AnimationContents animationContents = null;
+    private boolean isAnimated = false;
 
     public AnimatableTexture(final ResourceLocation location) {
         super(location);
@@ -90,6 +92,7 @@ public class AnimatableTexture extends SimpleTexture {
 
                         return;
                     }
+                    this.isAnimated = true;
 
                     onRenderThread(() -> {
                         TextureUtil.prepareImage(getGlTextureId(), 0, this.animationContents.frameSize.getFirst(),
@@ -97,19 +100,24 @@ public class AnimatableTexture extends SimpleTexture {
                         nativeImage.uploadTextureSub(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(),
                                 this.animationContents.frameSize.getSecond(), false, false);
                     });
-
-                    return;
                 }
             }
         } catch (RuntimeException exception) {
             AzureLib.LOGGER.warn("Failed reading metadata of: {}", this.textureLocation, exception);
         }
-
-        boolean blur = simpleTextureMeta.getTextureBlur();
-        boolean clamp = simpleTextureMeta.getTextureClamp();
-
-        onRenderThread(() -> GeoAbstractTexture.uploadSimple(getGlTextureId(), nativeImage, blur, clamp));
     }
+
+    /**
+     * Returns whether the texture found any valid animation metadata when loading.
+     * <p>
+     * If false, then this is no different to a standard {@link SimpleTexture}
+     */
+    public boolean isAnimated() {
+        return this.isAnimated;
+    }
+
+    public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
+        AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(texturePath);
 
     public void setAnimationFrame(int tick) {
         if (this.animationContents != null)
