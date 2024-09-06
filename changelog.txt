@@ -1,6 +1,6 @@
-v2.0.31
+v2.0.33
 
-- Move the buffer rebuilding to earlier to avoid using buffers that aren't building.
-- Fixes configuration thread not closing on datagen for Fabric.
-- Fixes error if config folder is missing on first run only.
-- Closes configuration thread in a safer way.
+- Port fix for shader issue with reflection and emissive texutes.
+- Fixes quad lighting being flipped.
+- Fixes crash when loaded with Born in Chaos.
+- Port fix for Molang Queries IS_IN_WATER_OR_RAIN, IS_ON_FIRE and YAW_SPEED.
