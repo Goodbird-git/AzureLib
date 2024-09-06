@@ -192,18 +192,18 @@ public abstract class GeoModel<T extends GeoAnimatable> implements CoreGeoModel<
 			parser.setMemoizedValue(MolangQueries.DISTANCE_FROM_CAMERA, () -> mc.gameRenderer.getMainCamera().getPosition().distanceTo(((Entity) animatable).position()));
 			parser.setMemoizedValue(MolangQueries.IS_ON_GROUND, () -> RenderUtils.booleanToFloat(((Entity) animatable).isOnGround()));
 			parser.setMemoizedValue(MolangQueries.IS_IN_WATER, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWater()));
-			parser.setMemoizedValue(MolangQueries.IS_IN_WATER_OR_RAIN, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWaterRainOrBubble()));
+			parser.setMemoizedValue(MolangQueries.IS_IN_WATER_OR_RAIN, () -> RenderUtils.booleanToFloat(((Entity) animatable).isInWaterOrRain()));
+			parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((Entity) animatable).isOnFire()));
 
 			if (animatable instanceof LivingEntity) {
 				parser.setMemoizedValue(MolangQueries.HEALTH, ((LivingEntity) animatable)::getHealth);
 				parser.setMemoizedValue(MolangQueries.MAX_HEALTH, ((LivingEntity) animatable)::getMaxHealth);
-				parser.setMemoizedValue(MolangQueries.IS_ON_FIRE, () -> RenderUtils.booleanToFloat(((LivingEntity) animatable).isOnFire()));
 				parser.setMemoizedValue(MolangQueries.GROUND_SPEED, () -> {
 					Vector3d velocity = ((LivingEntity) animatable).getDeltaMovement();
 
 					return Math.sqrt((float) ((velocity.x * velocity.x) + (velocity.z * velocity.z)));
 				});
-				parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> ((LivingEntity) animatable).getViewYRot((float) animTime - ((LivingEntity) animatable).getViewYRot((float) animTime - 0.1f)));
+				parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> ((LivingEntity) animatable).yRot - ((LivingEntity) animatable).yRotO);
 			}
 		}
 	}
