@@ -39,7 +39,7 @@ public class AzureNavigation extends GroundPathNavigator {
 	 * Special thanks to JayZX535 for contributing this method.
 	 */
 	public void hardStop() {
-		this.path = null;
+		this.currentPath = null;
 		this.pathToPosition = null;
 	}
 
