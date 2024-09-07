@@ -16,6 +16,7 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.core.animatable.model.CoreGeoModel;
 import mod.azure.azurelib.loading.FileLoader;
+import mod.azure.azurelib.loading.json.raw.Model;
 import mod.azure.azurelib.loading.object.BakedAnimations;
 import mod.azure.azurelib.loading.object.BakedModelFactory;
 import mod.azure.azurelib.loading.object.GeometryTree;
@@ -77,7 +78,22 @@ public final class AzureLibCache {
 	}
 
 	private static CompletableFuture<Void> loadModels(Executor backgroundExecutor, IResourceManager resourceManager, BiConsumer<ResourceLocation, BakedGeoModel> elementConsumer) {
-		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> BakedModelFactory.getForNamespace(resource.getNamespace()).constructGeoModel(GeometryTree.fromModel(FileLoader.loadModelFile(resource, resourceManager))), elementConsumer);
+		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> {
+			Model model = FileLoader.loadModelFile(resource, resourceManager);
+
+			switch (model.formatVersion()) {
+				case V_1_12_0:
+					break;
+				case V_1_14_0:
+					throw new IllegalArgumentException("Unsupported geometry json version: 1.14.0. Supported versions: 1.12.0");
+				case V_1_21_0:
+					throw new IllegalArgumentException("Unsupported geometry json version: 1.21.0. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix");
+				default:
+					throw new IllegalArgumentException("Unsupported geometry json version. Supported versions: 1.12.0");
+			}
+
+			return BakedModelFactory.getForNamespace(resource.getNamespace()).constructGeoModel(GeometryTree.fromModel(model));
+		}, elementConsumer);
 	}
 
 	private static <T> CompletableFuture<Void> loadResources(Executor executor, IResourceManager resourceManager, String type, Function<ResourceLocation, T> loader, BiConsumer<ResourceLocation, T> map) {
