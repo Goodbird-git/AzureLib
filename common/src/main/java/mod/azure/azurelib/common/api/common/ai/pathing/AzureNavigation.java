@@ -24,7 +24,7 @@ public class AzureNavigation extends GroundPathNavigation {
 
     static final float EPSILON = 1.0E-8F;
     @Nullable
-    private BlockPos pathToPosition;
+    protected BlockPos pathToPosition;
 
     public AzureNavigation(Mob entity, Level world) {
         super(entity, world);
