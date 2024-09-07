@@ -131,11 +131,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
     ) {
         poseStack.pushPose();
 
-        Color renderColor = getRenderColor(animatable, partialTick, packedLight);
-        float red = renderColor.getRedFloat();
-        float green = renderColor.getGreenFloat();
-        float blue = renderColor.getBlueFloat();
-        float alpha = renderColor.getAlphaFloat();
+        int renderColor = getRenderColor(animatable, partialTick, packedLight).argbInt();
         int packedOverlay = getPackedOverlay(animatable, 0, partialTick);
         BakedGeoModel model = getGeoModel().getBakedModel(getGeoModel().getModelResource(animatable));
 
@@ -155,10 +151,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                renderColor
         );
 
         if (firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight)) {
@@ -184,10 +177,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                     partialTick,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    renderColor
             );
             applyRenderLayers(
                     poseStack,
@@ -210,10 +200,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                     partialTick,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    renderColor
             );
             firePostRenderEvent(poseStack, model, bufferSource, partialTick, packedLight);
         }
@@ -229,10 +216,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                renderColor
         );
     }
 
@@ -251,10 +235,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int renderColor
     ) {
         poseStack.pushPose();
         preRender(
@@ -267,10 +248,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                renderColor
         );
         actuallyRender(
                 poseStack,
@@ -283,10 +261,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                renderColor
         );
         postRender(
                 poseStack,
@@ -298,10 +273,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                renderColor
         );
         poseStack.popPose();
     }
@@ -322,10 +294,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         updateAnimatedTextureFrame(animatable);
         for (GeoBone group : model.getTopLevelBones()) {
@@ -340,10 +309,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                     partialTick,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    colour
             );
         }
     }
@@ -452,10 +418,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int renderColor
     ) {
     }
 
@@ -473,10 +436,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int renderColor
     ) {
     }
 
@@ -493,10 +453,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int renderColor
     ) {
     }
 
@@ -514,10 +471,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
         RenderUtils.prepMatrixForBone(poseStack, bone);
@@ -525,7 +479,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
         if (!isReRender && buffer instanceof BufferBuilder builder && !builder.building)
             buffer = bufferSource.getBuffer(renderType);
 
-        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
 
         if (!isReRender)
             applyRenderLayersForBone(
@@ -551,10 +505,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
         poseStack.popPose();
     }
@@ -568,17 +519,14 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (bone.isHidden())
             return;
 
         for (GeoCube cube : bone.getCubes()) {
             poseStack.pushPose();
-            renderCube(poseStack, cube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            renderCube(poseStack, cube, buffer, packedLight, packedOverlay, colour);
             poseStack.popPose();
         }
     }
@@ -599,10 +547,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int renderColor
     ) {
         if (bone.isHidingChildren())
             return;
@@ -619,10 +564,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                     partialTick,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    renderColor
             );
         }
     }
@@ -637,10 +579,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         RenderUtils.translateToPivotPoint(poseStack, cube);
         RenderUtils.rotateMatrixAroundCube(poseStack, cube);
@@ -656,7 +595,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             Vector3f normal = normalisedPoseState.transform(new Vector3f(quad.normal()));
 
             RenderUtils.fixInvertedFlatCube(cube, normal);
-            createVerticesOfQuad(quad, poseState, normal, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            createVerticesOfQuad(quad, poseState, normal, buffer, packedLight, packedOverlay, colour);
         }
     }
 
@@ -671,10 +610,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         for (GeoVertex vertex : quad.vertices()) {
             Vector3f position = vertex.position();
@@ -684,7 +620,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
                     vector4f.x(),
                     vector4f.y(),
                     vector4f.z(),
-                    -1,
+                    colour,
                     vertex.texU(),
                     vertex.texV(),
                     packedOverlay,

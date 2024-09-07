@@ -45,10 +45,7 @@ public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends 
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         super.preRender(
                 poseStack,
@@ -60,10 +57,7 @@ public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends 
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
 
         if (!isReRender)
@@ -77,21 +71,9 @@ public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends 
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
-        if (this.dyeableBones.contains(bone)) {
-            final var color = getColorForBone(bone);
-
-            red *= color.getRedFloat();
-            green *= color.getGreenFloat();
-            blue *= color.getBlueFloat();
-            alpha *= color.getAlphaFloat();
-        }
-
-        super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
     }
 
     /**

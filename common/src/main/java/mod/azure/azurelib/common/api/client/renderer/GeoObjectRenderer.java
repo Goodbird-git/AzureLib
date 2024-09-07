@@ -162,10 +162,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.objectRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -201,10 +198,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
 
@@ -229,10 +223,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
         poseStack.popPose();
     }
@@ -252,10 +243,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -278,10 +266,7 @@ public class GeoObjectRenderer<T extends GeoAnimatable> implements GeoRenderer<T
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 

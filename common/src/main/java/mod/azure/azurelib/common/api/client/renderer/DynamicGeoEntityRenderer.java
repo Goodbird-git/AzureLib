@@ -89,10 +89,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         return false;
     }
@@ -112,10 +109,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
         RenderUtils.translateMatrixToBone(poseStack, bone);
@@ -165,13 +159,10 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
                         partialTick,
                         packedLight,
                         packedOverlay,
-                        red,
-                        green,
-                        blue,
-                        alpha
+                        colour
                 )
         )
-            super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
 
         if (renderTypeOverride != null)
             buffer = bufferSource.getBuffer(
@@ -202,10 +193,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
 
         poseStack.popPose();
@@ -226,10 +214,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.textureOverride = null;
 
@@ -243,10 +228,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 
@@ -263,10 +245,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (this.textureOverride == null) {
             super.createVerticesOfQuad(
@@ -276,10 +255,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
                     buffer,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    colour
             );
 
             return;
@@ -296,10 +272,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
                     buffer,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    colour
             );
 
             return;

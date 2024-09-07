@@ -25,7 +25,6 @@ import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationState;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -217,10 +216,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -268,10 +264,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
 
@@ -387,10 +380,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
                     partialTick,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    colour
             );
 
         poseStack.popPose();
@@ -439,10 +429,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         super.render(this.currentEntity, 0, partialTick, poseStack, bufferSource, packedLight);
 
@@ -469,10 +456,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
         RenderUtils.translateMatrixToBone(poseStack, bone);
@@ -498,7 +482,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
         if (!isReRender && buffer instanceof BufferBuilder builder && !builder.building)
             buffer = bufferSource.getBuffer(renderType);
 
-        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
 
         if (!isReRender)
             applyRenderLayersForBone(
@@ -524,10 +508,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
 
         poseStack.popPose();

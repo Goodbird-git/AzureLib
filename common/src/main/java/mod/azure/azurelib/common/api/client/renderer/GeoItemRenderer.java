@@ -183,10 +183,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -317,10 +314,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (!isReRender) {
             AnimationState<T> animationState = new AnimationState<>(animatable, 0, 0, partialTick, false);
@@ -349,10 +343,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 
@@ -371,10 +362,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -397,10 +385,7 @@ public class GeoItemRenderer<T extends Item & GeoAnimatable> extends BlockEntity
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 

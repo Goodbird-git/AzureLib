@@ -289,10 +289,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -374,10 +371,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
         poseStack.translate(0, 24 / 16f, 0);
@@ -408,10 +402,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
         poseStack.popPose();
     }
@@ -431,10 +422,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -458,10 +446,7 @@ public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel im
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 

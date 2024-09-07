@@ -137,10 +137,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.blockRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -188,10 +185,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (!isReRender) {
             AnimationState<T> animationState = new AnimationState<T>(animatable, 0, 0, partialTick, false);
@@ -219,10 +213,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 
@@ -241,10 +232,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -277,10 +265,7 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
     }
 

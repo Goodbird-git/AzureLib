@@ -206,10 +206,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -257,10 +254,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
 
@@ -375,10 +369,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
                     partialTick,
                     packedLight,
                     packedOverlay,
-                    red,
-                    green,
-                    blue,
-                    alpha
+                    colour
             );
 
         poseStack.popPose();
@@ -427,10 +418,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         super.render(animatable, 0, partialTick, poseStack, bufferSource, packedLight);
 
@@ -457,10 +445,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
             float partialTick,
             int packedLight,
             int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int colour
     ) {
         poseStack.pushPose();
         RenderUtils.translateMatrixToBone(poseStack, bone);
@@ -486,7 +471,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
         if (!isReRender && buffer instanceof BufferBuilder builder && !builder.building)
             buffer = bufferSource.getBuffer(renderType);
 
-        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
 
         if (!isReRender)
             applyRenderLayersForBone(
@@ -512,10 +497,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
                 partialTick,
                 packedLight,
                 packedOverlay,
-                red,
-                green,
-                blue,
-                alpha
+                colour
         );
 
         poseStack.popPose();
