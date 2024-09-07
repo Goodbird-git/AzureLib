@@ -89,3 +89,4 @@ mutable field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities 
 accessible field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities lineOfSightTest Ljava/util/function/Predicate;
 mutable field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities lineOfSightTest Ljava/util/function/Predicate;
 accessible method net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities <init> ()V
+accessible class net/minecraft/client/renderer/RenderStateShard$OverlayStateShard

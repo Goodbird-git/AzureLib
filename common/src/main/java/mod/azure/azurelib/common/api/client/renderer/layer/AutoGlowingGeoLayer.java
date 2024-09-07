@@ -52,22 +52,12 @@ public class AutoGlowingGeoLayer<T extends GeoAnimatable> extends GeoRenderLayer
             int packedLight,
             int packedOverlay
     ) {
-        RenderType emissiveRenderType = getRenderType(animatable);
+        renderType = getRenderType(animatable);
 
-        getRenderer().reRender(
-                bakedModel,
-                poseStack,
-                bufferSource,
-                animatable,
-                emissiveRenderType,
-                bufferSource.getBuffer(emissiveRenderType),
-                partialTick,
-                15728640,
-                OverlayTexture.NO_OVERLAY,
-                1,
-                1,
-                1,
-                1
-        );
+        if (renderType != null) {
+            getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, renderType,
+                    bufferSource.getBuffer(renderType), partialTick, 15728640, packedOverlay,
+                    getRenderer().getRenderColor(animatable, partialTick, packedLight).argbInt());
+        }
     }
 }

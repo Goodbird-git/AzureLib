@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
@@ -39,47 +40,25 @@ import mod.azure.azurelib.common.platform.Services;
  */
 public class AutoGlowingTexture extends GeoAbstractTexture {
 
-    private static final RenderStateShard.ShaderStateShard SHADER_STATE = new RenderStateShard.ShaderStateShard(
-            GameRenderer::getRendertypeEntityTranslucentEmissiveShader
-    );
-
-    private static final RenderStateShard.TransparencyStateShard TRANSPARENCY_STATE =
-            new RenderStateShard.TransparencyStateShard("translucent_transparency", () -> {
-                RenderSystem.enableBlend();
-                RenderSystem.blendFuncSeparate(
-                        GlStateManager.SourceFactor.SRC_ALPHA,
-                        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                        GlStateManager.SourceFactor.ONE,
-                        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-                );
-            }, () -> {
-                RenderSystem.disableBlend();
-                RenderSystem.defaultBlendFunc();
-            });
-
-    private static final RenderStateShard.WriteMaskStateShard WRITE_MASK = new RenderStateShard.WriteMaskStateShard(
-            true,
-            true
-    );
-
-    private static final Function<ResourceLocation, RenderType> RENDER_TYPE_FUNCTION = Util.memoize(texture -> {
+    private static final RenderStateShard.ShaderStateShard SHADER_STATE = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityTranslucentEmissiveShader);
+    private static final RenderStateShard.TransparencyStateShard TRANSPARENCY_STATE = new RenderStateShard.TransparencyStateShard("translucent_transparency", () -> {
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+    }, () -> {
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+    });
+    private static final RenderStateShard.WriteMaskStateShard WRITE_MASK = new RenderStateShard.WriteMaskStateShard(true, true);
+    private static final BiFunction<ResourceLocation, Boolean, RenderType> GLOWING_RENDER_TYPE = Util.memoize((texture, isGlowing) -> {
         RenderStateShard.TextureStateShard textureState = new RenderStateShard.TextureStateShard(texture, false, false);
 
-        return RenderType.create(
-                "geo_glowing_layer",
-                DefaultVertexFormat.NEW_ENTITY,
-                VertexFormat.Mode.QUADS,
-                256,
-                false,
-                true,
+        return RenderType.create("geo_glowing_layer", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true,
                 RenderType.CompositeState.builder()
                         .setShaderState(SHADER_STATE)
                         .setTextureState(textureState)
                         .setTransparencyState(TRANSPARENCY_STATE)
-                        .setLightmapState(RenderStateShard.LIGHTMAP)
-                        .setWriteMaskState(WRITE_MASK)
-                        .createCompositeState(false)
-        );
+                        .setOverlayState(new RenderStateShard.OverlayStateShard(true))
+                        .setWriteMaskState(WRITE_MASK).createCompositeState(isGlowing));
     });
 
     private static final String APPENDIX = "_glowmask";
@@ -116,7 +95,17 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
      * @param texture The texture of the resource to apply a glow layer to
      */
     public static RenderType getRenderType(ResourceLocation texture) {
-        return RENDER_TYPE_FUNCTION.apply(getEmissiveResource(texture));
+        return GLOWING_RENDER_TYPE.apply(getEmissiveResource(texture), false);
+    }
+
+
+    /**
+     * Return a cached instance of the RenderType for the given texture for AutoGlowingGeoLayer rendering, while the entity has an outline
+     *
+     * @param texture The texture of the resource to apply a glow layer to
+     */
+    public static RenderType getOutlineRenderType(ResourceLocation texture) {
+        return GLOWING_RENDER_TYPE.apply(getEmissiveResource(texture), true);
     }
 
     /**
