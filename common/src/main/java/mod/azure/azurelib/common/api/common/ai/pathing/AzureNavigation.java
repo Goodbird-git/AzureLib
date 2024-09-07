@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
  * */
 public class AzureNavigation extends GroundPathNavigation {
     @Nullable
-    private BlockPos pathToPosition;
+	protected BlockPos pathToPosition;
 
 	public AzureNavigation(Mob entity, Level world) {
 		super(entity, world);
