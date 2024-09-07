@@ -24,7 +24,7 @@ import net.minecraft.world.World;
  * */
 public class AzureNavigation extends GroundPathNavigator {
     @Nullable
-    private BlockPos pathToPosition;
+	protected BlockPos pathToPosition;
 
 	public AzureNavigation(MobEntity entity, World world) {
 		super(entity, world);
