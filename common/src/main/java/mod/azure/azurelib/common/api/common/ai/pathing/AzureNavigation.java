@@ -242,12 +242,9 @@ public class AzureNavigation extends GroundPathNavigation {
                         if (!block.isPathfindable(PathComputationType.LAND))
                             return false;
                     }
-                    PathType below = this.nodeEvaluator.getPathTypeOfMob(this.nodeEvaluator.currentContext, x, y0 - 1,
-                            z, this.mob);
-                    if (below == PathType.WATER || below == PathType.LAVA || below == PathType.OPEN)
-                        return false;
-                    PathType in = this.nodeEvaluator.getPathTypeOfMob(this.nodeEvaluator.currentContext, x, y0, z,
-                            this.mob);
+                    PathType below = this.nodeEvaluator.getPathType(new PathfindingContext(mob.level(), mob), x, y0 - 1, z);
+                    if (below == PathType.WATER || below == PathType.LAVA || below == PathType.OPEN) return false;
+                    PathType in = this.nodeEvaluator.getPathType(new PathfindingContext(mob.level(), mob), x, y0, z);
                     float priority = this.mob.getPathfindingMalus(in);
                     if (priority < 0.0F || priority >= 8.0F)
                         return false;
