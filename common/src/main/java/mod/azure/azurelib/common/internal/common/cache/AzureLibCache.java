@@ -95,8 +95,16 @@ public final class AzureLibCache {
         return loadResources(backgroundExecutor, resourceManager, "geo", resource -> {
             Model model = FileLoader.loadModelFile(resource, resourceManager);
 
-            if (model.formatVersion() != FormatVersion.V_1_12_0)
-                throw new AzureLibException(resource, "Unsupported geometry json version. Supported versions: 1.12.0");
+            switch (model.formatVersion()) {
+                case V_1_12_0:
+                    break;
+                case V_1_14_0:
+                    throw new IllegalArgumentException("Unsupported geometry json version: 1.14.0. Supported versions: 1.12.0");
+                case V_1_21_0:
+                    throw new IllegalArgumentException("Unsupported geometry json version: 1.21.0. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix");
+                default:
+                    throw new IllegalArgumentException("Unsupported geometry json version. Supported versions: 1.12.0");
+            }
 
             return BakedModelFactory.getForNamespace(resource.getNamespace())
                     .constructGeoModel(GeometryTree.fromModel(model));
