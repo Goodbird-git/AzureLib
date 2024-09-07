@@ -37,6 +37,18 @@ public class AzureNavigation extends GroundPathNavigator {
 		return new AzurePathFinder(this.nodeEvaluator, maxVisitedNodes);
 	}
 
+	/**
+	 * Forces the entity to stop its current pathfinding by clearing both the {@code path} and {@code pathToPosition}.
+	 * Unlike the normal {@code stop()} method, this ensures that {@code pathToPosition} is cleared as well,
+	 * preventing potential pathfinding issues caused by lingering path data.
+	 * <p>
+	 * Special thanks to JayZX535 for contributing this method.
+	 */
+	public void hardStop() {
+		this.path = null;
+		this.pathToPosition = null;
+	}
+
 	@Override
 	protected void followThePath() {
 		Path path = Objects.requireNonNull(this.path);
