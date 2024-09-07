@@ -1,6 +1,9 @@
-v2.3.17
+v2.3.18
 
-- Port fix for shader issue with reflection and emissive texutes.
-- Fixes quad lighting being flipped.
-- Fixes crash when loaded with Born in Chaos.
-- Port fix for Molang Queries IS_IN_WATER_OR_RAIN, IS_ON_FIRE and YAW_SPEED.
+- Adds hardStop() for nulling path and pathToPosition if you need it to stop before reaching end node in path in AzureNavigation.
+- Made pathToPosition protected instead of private in AzureNavigation.
+- Adds error for new bedrock format number.
+- Fixes crash due to null context on getPathType in AzureNavigation.
+- Deprecated DyeableGeoArmorRenderer for 1.21+
+- Update everything to properly use the colour value, this is a required breaking change.
+- Tweak AutoGlowingTexture
