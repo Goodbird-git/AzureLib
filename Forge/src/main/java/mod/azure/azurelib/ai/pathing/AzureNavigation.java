@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
  * https://github.com/BobMowzie/MowziesMobs/blob/master/src/main/java/com/bobmowzie/mowziesmobs/server/ai/MMPathNavigateGround.java
  * */
 public class AzureNavigation extends GroundPathNavigation {
-    private BlockPos pathToPosition;
+	protected BlockPos pathToPosition;
 
 	public AzureNavigation(Mob entity, Level world) {
 		super(entity, world);
