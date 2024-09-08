@@ -6,7 +6,6 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.azurelib.common.internal.common.loading.FileLoader;
-import mod.azure.azurelib.common.internal.common.loading.json.FormatVersion;
 import mod.azure.azurelib.common.internal.common.loading.json.raw.Model;
 import mod.azure.azurelib.common.internal.common.loading.object.BakedAnimations;
 import mod.azure.azurelib.common.internal.common.loading.object.BakedModelFactory;
@@ -41,7 +40,8 @@ public final class AzureLibCache {
             "creeperoverhaul",
             "geckolib",
             "gunsrpg",
-            "born_in_chaos_v1"
+            "born_in_chaos_v1",
+            "neoforge"
     );
 
     private static Map<ResourceLocation, BakedAnimations> ANIMATIONS = Collections.emptyMap();
