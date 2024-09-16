@@ -16,6 +16,7 @@ import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
 import mod.azure.azurelib.core.object.Color;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,10 +27,10 @@ import java.util.Set;
 /**
  * A dyeable armour renderer for AzureLib armor models.
  */
-@Deprecated
 public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends GeoArmorRenderer<T> {
 
     protected final Set<GeoBone> dyeableBones = new ObjectArraySet<>();
+    protected BakedGeoModel lastModel = null;
 
     protected DyeableGeoArmorRenderer(GeoModel<T> model) {
         super(model);
@@ -74,6 +75,11 @@ public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends 
             int packedOverlay,
             int colour
     ) {
+        if (this.dyeableBones.contains(bone)) {
+            final Color color = getColorForBone(bone);
+
+            colour = FastColor.ARGB32.multiply(colour, color.argbInt());
+        }
         super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
     }
 
