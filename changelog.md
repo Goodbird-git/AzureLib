@@ -1,6 +1,4 @@
-v2.2.16
+v2.2.17
 
-- Adds hardStop() for nulling path and pathToPosition if you need it to stop before reaching end node in path in AzureNavigation.
-- Made pathToPosition protected instead of private in AzureNavigation.
-- Adds error for new bedrock format number.
-- Fixes crash due to null context on getPathType in AzureNavigation.
+- Tweaked DyeableGeoArmorRender to match on all MC versions.
+- Added DynamicGeoRenders for Armor, Blocks, Items, Objects and ReplacedEntities
