@@ -135,7 +135,7 @@ public abstract class DyeableGeoArmorRenderer<T extends Item & GeoItem> extends 
      * Recursively parse through the given bones collection, collecting and caching dyeable bones as applicable
      */
     protected void collectDyeableBones(Collection<GeoBone> bones) {
-        for (var bone : bones) {
+        for (GeoBone bone : bones) {
             if (isBoneDyeable(bone))
                 this.dyeableBones.add(bone);
 
