@@ -1,3 +1,4 @@
-v2.3.21
+v2.3.22
 
-- Fixes missing faceRotation from RenderUtils
+- Fixes packets not firing properly on NeoForge.
+- Tweaked CommonUtils#spawnLightSource
