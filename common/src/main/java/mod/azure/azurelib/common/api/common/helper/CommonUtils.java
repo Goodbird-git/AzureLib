@@ -63,30 +63,27 @@ public record CommonUtils() {
     }
 
     /**
-     * Call wherever you are firing weapon to place the half tick light-block, making sure do so only on the server.
+     * Spawns or refreshes a light source at the position of the firing entity. This method should
+     * only be called on the server side to place a temporary light-block.
      *
-     * @param entity         Usually the player or mob that is using the weapon
-     * @param isInWaterBlock Checks if it's in a water block to refresh faster.
+     * @param entity         The entity (e.g., player or mob) using the weapon.
+     * @param isInWaterBlock If true, the light-block will refresh faster when in water.
      */
     public static void spawnLightSource(Entity entity, boolean isInWaterBlock) {
-        BlockPos lightBlockPos = null;
+        BlockPos lightBlockPos = AzureLibUtil.findFreeSpace(entity.level(), entity.blockPosition(), 2);
+
+        // If no valid position for the light block is found, exit early
         if (lightBlockPos == null) {
-            lightBlockPos = AzureLibUtil.findFreeSpace(entity.level(), entity.blockPosition(), 2);
-            if (lightBlockPos == null)
-                return;
-            entity.level()
-                    .setBlockAndUpdate(
-                            lightBlockPos,
-                            AzureBlocksRegistry.TICKING_LIGHT_BLOCK.get().defaultBlockState()
-                    );
-        } else if (
-                AzureLibUtil.checkDistance(
-                        lightBlockPos,
-                        entity.blockPosition(),
-                        2
-                ) && entity.level().getBlockEntity(lightBlockPos) instanceof TickingLightEntity tickingLightEntity
-        ) {
+            return;
+        }
+
+        // Check if there's already a ticking light block at the position and refresh it if needed
+        if (entity.level().getBlockEntity(lightBlockPos) instanceof TickingLightEntity tickingLightEntity) {
             tickingLightEntity.refresh(isInWaterBlock ? 20 : 0);
+        } else {
+            // Otherwise, place a new ticking light block
+            entity.level().setBlockAndUpdate(lightBlockPos, AzureBlocksRegistry.TICKING_LIGHT_BLOCK.get().defaultBlockState());
         }
     }
+
 }
