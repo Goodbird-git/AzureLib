@@ -1,4 +1,4 @@
-v2.3.19
+v2.3.20
 
-- Blacklist neoforge name due to NeoForge#1525
-- Fixes issues layers/render.
+- Tweaked DyeableGeoArmorRender to match on all MC versions.
+- Added DynamicGeoRenders for Armor, Blocks, Items, Objects and ReplacedEntities
