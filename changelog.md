@@ -1,4 +1,4 @@
-v2.3.22
+v2.3.23
 
-- Fixes packets not firing properly on NeoForge.
-- Tweaked CommonUtils#spawnLightSource
+- Use root locale when converting strings - PlanetTeamSpeak
+- Add missing client packet registartion on Fabric
