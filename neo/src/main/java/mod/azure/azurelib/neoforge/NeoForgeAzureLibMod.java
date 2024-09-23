@@ -51,13 +51,13 @@ public final class NeoForgeAzureLibMod {
     public void registerMessages(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(AzureLib.MOD_ID);
 
-        registrar.playToClient(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC, (msg, ctx) -> {});
-        registrar.playToClient(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC, (msg, ctx) -> {});
-        registrar.playToClient(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC, (msg, ctx) -> {});
-        registrar.playToClient(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC, (msg, ctx) -> {});
-        registrar.playToClient(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC, (msg, ctx) -> {});
-        registrar.playToClient(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC, (msg, ctx) -> {});
-        registrar.playToClient(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC, (msg, ctx) -> {});
+        registrar.playBidirectional(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC, (msg, ctx) -> msg.handle());
+        registrar.playBidirectional(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC, (msg, ctx) -> msg.handle());
+        registrar.playBidirectional(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC, (msg, ctx) -> msg.handle());
+        registrar.playBidirectional(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC, (msg, ctx) -> msg.handle());
+        registrar.playBidirectional(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC, (msg, ctx) -> msg.handle());
+        registrar.playBidirectional(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC, (msg, ctx) -> msg.handle());
+        registrar.playBidirectional(SendConfigDataPacket.TYPE, SendConfigDataPacket.CODEC, (msg, ctx) -> msg.handle());
     }
 
     public record AzureEnchantments() {
