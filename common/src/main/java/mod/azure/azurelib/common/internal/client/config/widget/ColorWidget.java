@@ -8,6 +8,7 @@ package mod.azure.azurelib.common.internal.client.config.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
@@ -70,7 +71,7 @@ public final class ColorWidget extends AbstractWidget {
 		ColorSelectorDialog dialog = new ColorSelectorDialog(SELECT_COLOR, this.lastScreen, this.argb, this.colorSupplier);
 		dialog.onConfirmed(screen -> {
 			int color = dialog.getResultColor();
-			String colorText = this.colorPrefix + Integer.toHexString(color).toUpperCase();
+			String colorText = this.colorPrefix + Integer.toHexString(color).toUpperCase(Locale.ROOT);
 			this.colorWidget.set(colorText);
 			dialog.displayPreviousScreen(dialog);
 		});
@@ -218,7 +219,7 @@ public final class ColorWidget extends AbstractWidget {
 			ColorComponent(int bitOffset) {
 				this.bitOffset = bitOffset;
 				this.title = val -> {
-					String name = this.name().toLowerCase();
+					String name = this.name().toLowerCase(Locale.ROOT);
 					String translate = "text.azurelib.screen.color." + name;
 					int colorValue = (int) (val * 255);
 					return Component.translatable(translate, colorValue);
