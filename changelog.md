@@ -1,4 +1,3 @@
-v2.3.23
+v2.3.24
 
-- Use root locale when converting strings - PlanetTeamSpeak
-- Add missing client packet registartion on Fabric
+- Adjust cache for BB exporting using weird version, which still works.
