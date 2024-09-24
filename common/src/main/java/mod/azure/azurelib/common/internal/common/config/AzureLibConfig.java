@@ -9,4 +9,7 @@ public class AzureLibConfig {
     @Configurable
     @Configurable.Synchronized
     public boolean useVanillaUseKey = true;
+    @Configurable
+    @Configurable.Synchronized
+    public boolean useIncendiaryEnchantment = true;
 }

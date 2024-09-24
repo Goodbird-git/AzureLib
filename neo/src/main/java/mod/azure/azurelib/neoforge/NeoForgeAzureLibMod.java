@@ -38,7 +38,8 @@ public final class NeoForgeAzureLibMod {
         DATA_COMPONENTS_REGISTER.register(modEventBus);
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
-        AzureEnchantments.ENCHANTMENTS.register(modEventBus);
+        if (AzureLibMod.config.useIncendiaryEnchantment)
+            AzureEnchantments.ENCHANTMENTS.register(modEventBus);
         AzureBlocks.BLOCKS.register(modEventBus);
         AzureEntities.TILE_TYPES.register(modEventBus);
         modEventBus.addListener(this::registerMessages);

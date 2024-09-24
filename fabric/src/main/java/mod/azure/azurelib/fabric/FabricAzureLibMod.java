@@ -55,11 +55,12 @@ public final class FabricAzureLibMod implements ModInitializer {
         );
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> ConfigIO.FILE_WATCH_MANAGER.stopService());
-        Registry.register(
+        if (AzureLibMod.config.useIncendiaryEnchantment)
+            Registry.register(
                 BuiltInRegistries.ENCHANTMENT,
                 AzureLib.modResource("incendiaryenchantment"),
                 INCENDIARYENCHANTMENT
-        );
+            );
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
