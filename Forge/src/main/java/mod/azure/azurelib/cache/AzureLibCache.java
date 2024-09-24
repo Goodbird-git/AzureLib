@@ -93,12 +93,10 @@ public final class AzureLibCache {
             Model model = FileLoader.loadModelFile(resource, resourceManager);
 
             switch (model.formatVersion()) {
-                case V_1_12_0:
+                case V_1_12_0, V_1_21_0:
                     break;
                 case V_1_14_0:
                     throw new IllegalArgumentException("Unsupported geometry json version: 1.14.0. Supported versions: 1.12.0");
-                case V_1_21_0:
-                    throw new IllegalArgumentException("Unsupported geometry json version: 1.21.0. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix");
                 default:
                     throw new IllegalArgumentException("Unsupported geometry json version. Supported versions: 1.12.0");
             }
