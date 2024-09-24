@@ -16,6 +16,18 @@ public class AzureLibException extends RuntimeException {
 		super(fileLocation + ": " + message);
 	}
 
+	public AzureLibException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public AzureLibException(String message) {
+		super(message);
+	}
+
+	public AzureLibException(Throwable cause) {
+		super(cause);
+	}
+
 	public AzureLibException(ResourceLocation fileLocation, String message, Throwable cause) {
 		super(fileLocation + ": " + message, cause);
 	}
