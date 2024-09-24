@@ -24,13 +24,11 @@ import net.minecraftforge.registries.RegistryObject;
 public final class AzureLibMod {
 
 	public static AzureLibMod instance;
-	public static TestingConfig config;
 
 	public AzureLibMod() {
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		AzureLib.initialize();
-		AzureLibMod.config = AzureLibMod.registerConfig(TestingConfig.class, ConfigFormats.json()).getConfigInstance();
 		modEventBus.addListener(this::init);
 		AzureBlocks.BLOCKS.register(modEventBus);
 		AzureEntities.TILE_TYPES.register(modEventBus);
