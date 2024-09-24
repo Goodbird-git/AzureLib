@@ -1,3 +1,3 @@
-v1.0.6
+v1.0.7
 
-- Use root locale when converting strings - PlanetTeamSpeak
+- Adjust cache for BB exporting using weird version, which still works.
