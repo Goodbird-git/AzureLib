@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -34,9 +35,14 @@ public final class AzureLibMod {
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		AzureLib.initialize();
+		modEventBus.addListener(this::init);
 		AzureLibMod.config = AzureLibMod.registerConfig(TestingConfig.class, ConfigFormats.json()).getConfigInstance();
 		AzureBlocks.BLOCKS.register(modEventBus);
 		AzureEntities.TILE_TYPES.register(modEventBus);
+	}
+
+	private void init(FMLCommonSetupEvent event) {
+		ConfigIO.FILE_WATCH_MANAGER.startService();
 	}
 
 	public class AzureBlocks {
