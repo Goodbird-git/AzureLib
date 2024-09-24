@@ -15,7 +15,8 @@
   "environment" : "*",
   "entrypoints" : {
     "main" : [ "mod.azure.azurelib.AzureLibMod" ],
-    "client" : [ "mod.azure.azurelib.ClientListener" ]
+    "client" : [ "mod.azure.azurelib.ClientListener" ],
+    "modmenu" : [ "mod.azure.azurelib.integration.ModMenuIntegration" ]
   },
   "mixins" : [ "azurelib.mixins.json" ],
   "accessWidener" : "azurelib.aw",
@@ -24,10 +25,5 @@
     "fabric-api" : "*",
     "java" : ">=17",
     "minecraft" : "1.19.2"
-  },
-  "custom" : {
-    "modmenu" : {
-      "badges" : [ "library" ]
-    }
   }
 }

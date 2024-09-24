@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import mod.azure.azurelib.network.AzureLibNetwork;
 import mod.azure.azurelib.cache.AzureLibCache;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 /**
  * Base class for AzureLib!<br>
@@ -15,6 +17,7 @@ import mod.azure.azurelib.cache.AzureLibCache;
  */
 public class AzureLib {
 	public static final Logger LOGGER = LogManager.getLogger();
+	public static final Marker MAIN_MARKER = MarkerManager.getMarker("main");
 	public static final String MOD_ID = "azurelib";
 	public static volatile boolean hasInitialized;
 
