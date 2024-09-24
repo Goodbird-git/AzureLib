@@ -24,10 +24,5 @@
     "fabric" : "*",
     "java" : ">=17",
     "minecraft" : "1.18.2"
-  },
-  "custom" : {
-    "modmenu" : {
-      "badges" : [ "library" ]
-    }
   }
 }
