@@ -1,12 +1,8 @@
 package mod.azure.azurelib.ai.pathing;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathFinder;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.pathfinding.WalkNodeProcessor;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.pathfinding.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -19,19 +15,31 @@ import java.util.Objects;
  * code source for the base class can be found here: 
  * https://github.com/BobMowzie/MowziesMobs/blob/master/src/main/java/com/bobmowzie/mowziesmobs/server/ai/MMPathNavigateGround.java
  * */
-public class AzureNavigation extends GroundPathNavigator {
+public class AzureNavigation extends PathNavigateGround {
     @Nullable
-    private BlockPos pathToPosition;
+	protected BlockPos pathToPosition;
 
-	public AzureNavigation(MobEntity entity, World world) {
+	public AzureNavigation(EntityMob entity, World world) {
 		super(entity, world);
 	}
 
 	@Override
-	protected PathFinder getPathFinder(int maxVisitedNodes) {
+	protected PathFinder getPathFinder() {
 		this.nodeProcessor = new WalkNodeProcessor();
 		this.nodeProcessor.setCanEnterDoors(true);
-		return new AzurePathFinder(this.nodeProcessor, maxVisitedNodes);
+		return new AzurePathFinder(this.nodeProcessor);
+	}
+
+	/**
+	 * Forces the entity to stop its current pathfinding by clearing both the {@code path} and {@code pathToPosition}.
+	 * Unlike the normal {@code stop()} method, this ensures that {@code pathToPosition} is cleared as well,
+	 * preventing potential pathfinding issues caused by lingering path data.
+	 * <p>
+	 * Special thanks to JayZX535 for contributing this method.
+	 */
+	public void hardStop() {
+		this.currentPath = null;
+		this.pathToPosition = null;
 	}
 
 	@Override
