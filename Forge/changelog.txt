@@ -1,3 +1,4 @@
-v1.0.23
+v1.0.24
 
-- Use root locale when converting strings - PlanetTeamSpeak
+- Adjust cache for BB exporting using weird version, which still works.
+- Ports Config system to 1.17.1.
