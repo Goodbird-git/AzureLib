@@ -1,6 +1,7 @@
 package mod.azure.azurelib.ai.pathing;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.Path;
@@ -9,6 +10,7 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.Region;
 
 import javax.annotation.Nullable;
@@ -17,20 +19,23 @@ import java.util.List;
 import java.util.Set;
 
 public class AzurePathFinder extends PathFinder {
-	public AzurePathFinder(NodeProcessor processor, int maxVisitedNodes) {
-		super(processor, maxVisitedNodes);
+	public AzurePathFinder(NodeProcessor processor) {
+		super(processor);
 	}
 
+	/*
+	TODO: Priavte need to open
+	*/
 	@Nullable
 	@Override
-	public Path func_227478_a_(Region regionIn, MobEntity mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
-		Path path = super.func_227478_a_(regionIn, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
+	public Path findPath(IBlockAccess regionIn, EntityLiving mob, double x, double y, double z, float maxDistance) {
+		Path path = super.findPath(regionIn, mob, x, y, z, maxDistance);
 		return path == null ? null : new PatchedPath(path);
 	}
 
 	static class PatchedPath extends Path {
 		public PatchedPath(Path original) {
-			super(copyPathPoints(original), original.getTarget(), original.reachesTarget());
+			super(copyPathPoints(original), original.getTarget(), original.isFinished());
 		}
 
 		@Override
