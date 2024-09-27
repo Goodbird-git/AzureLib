@@ -1,3 +1,5 @@
-v2.3.24
+v2.3.25
 
-- Adjust cache for BB exporting using weird version, which still works.
+- Port Avoid duplicating mc code to improve compat in mixins
+- Updated to latest NeoForge to fix crash with https://github.com/neoforged/NeoForge/pull/1541
+- MixinHumanoidArmorLayer Mixin fixed now with NeoForge
