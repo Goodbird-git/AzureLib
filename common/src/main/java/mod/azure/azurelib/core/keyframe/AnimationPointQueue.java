@@ -5,10 +5,6 @@
  * Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
-/*
- * Copyright (c) 2020. Author: Bernie G. (Gecko)
- */
-
 package mod.azure.azurelib.core.keyframe;
 
 import mod.azure.azurelib.core.animation.AnimationController;

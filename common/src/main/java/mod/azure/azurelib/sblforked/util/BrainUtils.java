@@ -2,7 +2,7 @@
  * This class is a fork of the matching class found in the SmartBrainLib repository.
  * Original source: https://github.com/Tslat/SmartBrainLib
  * Copyright © 2024 Tslat.
- * Licensed under the MIT License.
+ * Licensed under Mozilla Public License 2.0: https://github.com/Tslat/SmartBrainLib/blob/1.21/LICENSE.
  */
 package mod.azure.azurelib.sblforked.util;
 

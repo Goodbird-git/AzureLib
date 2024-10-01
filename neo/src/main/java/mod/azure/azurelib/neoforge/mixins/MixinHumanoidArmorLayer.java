@@ -1,3 +1,10 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository.
+ * Original source: https://github.com/bernie-g/geckolib
+ * Copyright © 2024 Bernie-G.
+ * Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
 package mod.azure.azurelib.neoforge.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -41,15 +48,15 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, A extends 
     @Inject(method = "renderArmorPiece(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;ILnet/minecraft/client/model/HumanoidModel;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/HumanoidArmorLayer;usesInnerModel(Lnet/minecraft/world/entity/EquipmentSlot;)Z"), cancellable = true)
     public void azurelib$renderAzurelibModel(PoseStack poseStack, MultiBufferSource bufferSource, LivingEntity entity, EquipmentSlot equipmentSlot, int packedLight, HumanoidModel baseModel, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci, @Share("item_by_slot") LocalRef<ItemStack> itemBySlotRef) {
         final ItemStack stack = itemBySlotRef.get();
-        final Model geckolibModel = RenderProvider.of(stack).getGenericArmorModel(entity, stack, equipmentSlot,
+        final Model azurelibModel = RenderProvider.of(stack).getGenericArmorModel(entity, stack, equipmentSlot,
                 (HumanoidModel<LivingEntity>) baseModel);
 
-        if (geckolibModel != null && stack.getItem() instanceof GeoItem) {
-            if (geckolibModel instanceof GeoArmorRenderer<?> geoArmorRenderer)
+        if (azurelibModel != null && stack.getItem() instanceof GeoItem) {
+            if (azurelibModel instanceof GeoArmorRenderer<?> geoArmorRenderer)
                 geoArmorRenderer.prepForRender(entity, stack, equipmentSlot, baseModel);
 
-            baseModel.copyPropertiesTo((A) geckolibModel);
-            geckolibModel.renderToBuffer(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, stack.is(
+            baseModel.copyPropertiesTo((A) azurelibModel);
+            azurelibModel.renderToBuffer(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, stack.is(
                     ItemTags.DYEABLE) ? FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(stack, -6265536)) : -1);
             ci.cancel();
         }
