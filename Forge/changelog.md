@@ -1,3 +1,3 @@
-v1.0.7
+v1.0.8
 
-- Adjust cache for BB exporting using weird version, which still works.
+- Only throw error if no format version
