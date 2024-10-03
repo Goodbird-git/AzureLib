@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mod.azure.azurelib.AzureLib;
+import mod.azure.azurelib.AzureLibException;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.core.animatable.model.CoreGeoModel;
 import mod.azure.azurelib.loading.FileLoader;
@@ -38,14 +39,14 @@ public final class AzureLibCache {
 
 	public static Map<ResourceLocation, BakedAnimations> getBakedAnimations() {
 		if (!AzureLib.hasInitialized)
-			throw new RuntimeException("AzureLib was never initialized! Please read the documentation!");
+			throw new AzureLibException("AzureLib was never initialized! Please read the documentation!");
 
 		return ANIMATIONS;
 	}
 
 	public static Map<ResourceLocation, BakedGeoModel> getBakedModels() {
 		if (!AzureLib.hasInitialized)
-			throw new RuntimeException("AzureLib was never initialized! Please read the documentation!");
+			throw new AzureLibException("AzureLib was never initialized! Please read the documentation!");
 
 		return MODELS;
 	}
@@ -53,8 +54,10 @@ public final class AzureLibCache {
 	public static void registerReloadListener() {
 		Minecraft mc = Minecraft.getInstance();
 
+		if (mc == null) return;
+
 		if (!(mc.getResourceManager() instanceof IReloadableResourceManager))
-			throw new RuntimeException("AzureLib was initialized too early!");
+			throw new AzureLibException("AzureLib was initialized too early!");
 
 		IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getInstance()
 				.getResourceManager();
@@ -81,15 +84,8 @@ public final class AzureLibCache {
 		return loadResources(backgroundExecutor, resourceManager, "geo", resource -> {
 			Model model = FileLoader.loadModelFile(resource, resourceManager);
 
-			switch (model.formatVersion()) {
-				case V_1_12_0:
-				case V_1_21_0:
-					break;
-				case V_1_14_0:
-					throw new IllegalArgumentException("Unsupported geometry json version: 1.14.0. Supported versions: 1.12.0");
-				default:
-					throw new IllegalArgumentException("Unsupported geometry json version. Supported versions: 1.12.0");
-			}
+			if (model.formatVersion() == null )
+				throw new AzureLibException("Model Format missing");
 
 			return BakedModelFactory.getForNamespace(resource.getNamespace()).constructGeoModel(GeometryTree.fromModel(model));
 		}, elementConsumer);
