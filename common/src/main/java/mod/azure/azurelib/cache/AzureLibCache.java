@@ -90,8 +90,6 @@ public final class AzureLibCache {
                                                       BiConsumer<ResourceLocation, BakedGeoModel> elementConsumer) {
         return loadResources(backgroundExecutor, resourceManager, "geo", resource -> {
             Model model = FileLoader.loadModelFile(resource, resourceManager);
-            if (model.formatVersion() == null )
-                throw new AzureLibException("Model Format missing");
 
             return BakedModelFactory.getForNamespace(resource.getNamespace())
                     .constructGeoModel(GeometryTree.fromModel(model));
