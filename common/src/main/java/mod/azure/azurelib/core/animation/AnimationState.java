@@ -19,7 +19,10 @@ import java.util.Objects;
  * Animation state handler for end-users.<br>
  * This is where users would set their selected animation to play, stop the controller, or any number of other
  * animation-related actions.
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimationState<T extends GeoAnimatable> {
 
     private final T animatable;

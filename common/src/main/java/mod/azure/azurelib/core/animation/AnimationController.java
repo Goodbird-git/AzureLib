@@ -38,7 +38,9 @@ import java.util.function.ToDoubleFunction;
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
  * instruction markers. Each controller can only play a single animation at a time - for example you may have one
  * controller to animate walking, one to control attacks, one to control size, etc.
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimationController<T extends GeoAnimatable> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AnimationController.class);

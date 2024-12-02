@@ -23,7 +23,10 @@ import org.jetbrains.annotations.Nullable;
  * <li>{@code GeoEntity}</li>
  * <li>{@code GeoItem}</li>
  * </ul>
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public interface GeoAnimatable {
 
     /**

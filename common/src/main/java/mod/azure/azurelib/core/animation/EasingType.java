@@ -25,7 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * For more information on easings, see:<br>
  * <a href="https://easings.net/">Easings.net</a><br>
  * <a href="https://cubic-bezier.com">Cubic-Bezier.com</a><br>
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 @FunctionalInterface
 public interface EasingType {
 

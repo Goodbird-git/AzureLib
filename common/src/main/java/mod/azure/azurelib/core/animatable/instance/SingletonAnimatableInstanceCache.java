@@ -15,7 +15,10 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
 /**
  * AnimatableInstanceCache implementation for singleton/flyweight objects such as Items. Utilises a keyed map to
  * differentiate different instances of the object.
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class SingletonAnimatableInstanceCache extends AnimatableInstanceCache {
 
     protected final Long2ObjectMap<AnimatableManager<?>> managers = new Long2ObjectOpenHashMap<>();

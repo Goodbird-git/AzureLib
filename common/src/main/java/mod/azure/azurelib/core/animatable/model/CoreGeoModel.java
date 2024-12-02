@@ -18,7 +18,10 @@ import java.util.Optional;
 /**
  * Base class for AzureLib models.<br>
  * Mostly an internal placeholder to allow for splitting up core (non-Minecraft) libraries
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public interface CoreGeoModel<E extends GeoAnimatable> {
 
     /**

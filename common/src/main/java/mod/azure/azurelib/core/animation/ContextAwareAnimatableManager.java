@@ -19,7 +19,10 @@ import java.util.Map;
  * This can be used for things like perspective-dependent animation handling and other similar functionality.<br>
  * This relies entirely on data present in {@link AnimatableManager#extraData} saved to this manager to determine
  * context
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public abstract class ContextAwareAnimatableManager<T extends GeoAnimatable, C> extends AnimatableManager<T> {
 
     private final Map<C, AnimatableManager<T>> managers;

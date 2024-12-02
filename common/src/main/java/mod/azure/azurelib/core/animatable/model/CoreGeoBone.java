@@ -14,7 +14,10 @@ import java.util.List;
 /**
  * Base class for AzureLib {@link CoreGeoModel model} bones.<br>
  * Mostly a placeholder to allow for splitting up core (non-Minecraft) libraries
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public interface CoreGeoBone {
 
     String getName();

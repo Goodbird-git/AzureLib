@@ -22,7 +22,10 @@ import java.util.Map;
  * The animation data collection for a given animatable instance.<br>
  * Generally speaking, a single working-instance of an {@link GeoAnimatable Animatable} will have a single instance of
  * {@code AnimatableManager} associated with it.<br>
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimatableManager<T extends GeoAnimatable> {
 
     private final Map<String, BoneSnapshot> boneSnapshotCollection = new Object2ObjectOpenHashMap<>();

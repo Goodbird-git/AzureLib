@@ -17,7 +17,10 @@ import java.util.Optional;
 
 /**
  * Baked model object for AzureLib models.
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class BakedGeoModel implements CoreBakedGeoModel {
 
     public final Map<String, GeoBone> bonesByName;
