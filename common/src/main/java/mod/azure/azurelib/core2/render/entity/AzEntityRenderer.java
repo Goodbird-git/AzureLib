@@ -2,7 +2,7 @@ package mod.azure.azurelib.core2.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.impl.AzEntityRendererPipeline;
@@ -27,7 +27,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
     private float scaleHeight = 1;
     private final AzEntityRendererPipeline<T> azEntityRendererPipeline;
     private final List<AzRenderLayer<T>> renderLayers;
-    private final AzAnimator<T> azAnimator;
+    private final AzEntityAnimator<T> azAnimator;
 
     protected AzEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -36,7 +36,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         this.azAnimator = createAnimator();
     }
 
-    protected abstract @Nullable AzAnimator<T> createAnimator();
     protected abstract @NotNull ResourceLocation getModelLocation(T entity);
 
     @Override
@@ -44,6 +43,10 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         var modelResourceLocation = getModelLocation(entity);
         var bakedGeoModel = AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
         azEntityRendererPipeline.defaultRender(poseStack, bakedGeoModel, entity, bufferSource, null, null, entityYaw, partialTick, packedLight);
+    }
+
+    protected @Nullable AzEntityAnimator<T> createAnimator() {
+        return null;
     }
 
     /**
@@ -134,7 +137,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         return super.getBlockLightLevel(entity, pos);
     }
 
-    public AzAnimator<T> getAnimator() {
+    public AzEntityAnimator<T> getAnimator() {
         return azAnimator;
     }
 

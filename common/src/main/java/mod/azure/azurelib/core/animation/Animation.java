@@ -33,7 +33,7 @@ public record Animation(
         Keyframes keyFrames
 ) {
 
-    static Animation generateWaitAnimation(double length) {
+    public static Animation generateWaitAnimation(double length) {
         return new Animation(
                 RawAnimation.Stage.WAIT,
                 length,

@@ -5,19 +5,17 @@
  * Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
-package mod.azure.azurelib.core.keyframe.event;
+package mod.azure.azurelib.core2.animation.event;
 
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.keyframe.event.KeyFrameEvent;
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
+import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 /**
- * The {@link KeyFrameEvent} specific to the {@link AnimationController#soundKeyframeHandler}.<br>
+ * The {@link KeyFrameEvent} specific to the {@link AzAnimationController#soundKeyframeHandler}.<br>
  * Called when a sound instruction keyframe is encountered
- *
- * @deprecated
  */
-public class SoundKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T, SoundKeyframeData> {
+public class AzSoundKeyframeEvent<T> extends AzKeyFrameEvent<T, SoundKeyframeData> {
 
     /**
      * This stores all the fields that are needed in the AnimationTestEvent
@@ -27,10 +25,10 @@ public class SoundKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T
      *                      depending on the controller's AnimationState.
      * @param controller    the controller
      */
-    public SoundKeyframeEvent(
+    public AzSoundKeyframeEvent(
             T entity,
             double animationTick,
-            AnimationController<T> controller,
+            AzAnimationController<T> controller,
             SoundKeyframeData keyFrameData
     ) {
         super(entity, animationTick, controller, keyFrameData);

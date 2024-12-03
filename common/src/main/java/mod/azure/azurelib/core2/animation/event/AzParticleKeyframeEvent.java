@@ -5,25 +5,23 @@
  * Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
-package mod.azure.azurelib.core.keyframe.event;
+package mod.azure.azurelib.core2.animation.event;
 
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.keyframe.event.KeyFrameEvent;
 import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
+import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 /**
- * The {@link KeyFrameEvent} specific to the {@link AnimationController#particleKeyframeHandler}.<br>
+ * The {@link KeyFrameEvent} specific to the {@link AzAnimationController#particleKeyframeHandler}.<br>
  * Called when a particle instruction keyframe is encountered
- *
- * @deprecated
  */
-public class ParticleKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T, ParticleKeyframeData> {
+public class AzParticleKeyframeEvent<T> extends AzKeyFrameEvent<T, ParticleKeyframeData> {
 
-    public ParticleKeyframeEvent(
-            T animatable,
-            double animationTick,
-            AnimationController<T> controller,
-            ParticleKeyframeData particleKeyFrameData
+    public AzParticleKeyframeEvent(
+        T animatable,
+        double animationTick,
+        AzAnimationController<T> controller,
+        ParticleKeyframeData particleKeyFrameData
     ) {
         super(animatable, animationTick, controller, particleKeyFrameData);
     }

@@ -14,6 +14,8 @@ import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData
 /**
  * The {@link KeyFrameEvent} specific to the {@link AnimationController#customKeyframeHandler}.<br>
  * Called when a custom instruction keyframe is encountered
+ *
+ * @deprecated
  */
 public class CustomInstructionKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T, CustomInstructionKeyframeData> {
 

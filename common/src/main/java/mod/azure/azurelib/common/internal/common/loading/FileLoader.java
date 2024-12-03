@@ -15,6 +15,8 @@ import mod.azure.azurelib.common.internal.common.loading.json.raw.Model;
 import mod.azure.azurelib.common.internal.common.loading.object.BakedAnimations;
 import mod.azure.azurelib.common.internal.common.util.JsonUtil;
 import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
@@ -37,9 +39,21 @@ public final class FileLoader {
      *
      * @param location The resource path of the animations file
      * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access
+     *
+     * @deprecated
      */
     public static BakedAnimations loadAnimationsFile(ResourceLocation location, ResourceManager manager) {
         return JsonUtil.GEO_GSON.fromJson(loadFile(location, manager), BakedAnimations.class);
+    }
+
+    /**
+     * Load up and deserialize an animation json file to its respective {@link AzAnimation} components
+     *
+     * @param location The resource path of the animations file
+     * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access
+     */
+    public static AzBakedAnimations loadAzAnimationsFile(ResourceLocation location, ResourceManager manager) {
+        return JsonUtil.GEO_GSON.fromJson(loadFile(location, manager), AzBakedAnimations.class);
     }
 
     /**

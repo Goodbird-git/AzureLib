@@ -19,6 +19,8 @@ import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
  * @see CustomInstructionKeyframeEvent
  * @see ParticleKeyframeEvent
  * @see SoundKeyframeEvent
+ *
+ * @deprecated
  */
 public abstract class KeyFrameEvent<T extends GeoAnimatable, E extends KeyFrameData> {
 

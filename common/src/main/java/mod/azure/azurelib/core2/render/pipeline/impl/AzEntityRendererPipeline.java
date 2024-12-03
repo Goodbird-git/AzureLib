@@ -187,19 +187,10 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         }
 
         if (!isReRender) {
-            // FIXME:
-            float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
-            var velocity = animatable.getDeltaMovement();
-            float avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-
-//            float motionThreshold = getMotionAnimThreshold(animatable);
-//            AnimationState<T> animationState = new AnimationState<T>(
-//                animatable,
-//                limbSwing,
-//                limbSwingAmount,
-//                partialTick,
-//                avgVelocity >= motionThreshold && limbSwingAmount != 0
-//            );
+            // FIXME: Figure out what to do with this data stuff.
+//            float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
+//            var velocity = animatable.getDeltaMovement();
+//            float avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
 //
 //            long instanceId = getInstanceId(animatable);
 //
@@ -214,14 +205,12 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 //                    -headPitch
 //                )
 //            );
-
-            // FIXME:
+//
 //            this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
-//            this.model.handleAnimations(animatable, instanceId, animationState);
-//            runAnimations(animatable, animationState);
 
-            var geoAnimationProvider = azEntityRenderer.getAnimator();
-            geoAnimationProvider.runAnimations(animatable);
+            var animator = azEntityRenderer.getAnimator();
+            var animationState = animator.createAnimationState(animatable, limbSwing, limbSwingAmount, partialTick);
+            animator.animate(animatable, animationState);
         }
 
         this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
@@ -421,11 +410,13 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
      */
     protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw,
                                   float partialTick, float nativeScale) {
-        if (isShaking(animatable))
-            rotationYaw += (float)(Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
+        if (isShaking(animatable)) {
+            rotationYaw += (float) (Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
+        }
 
-        if (!animatable.hasPose(Pose.SLEEPING))
+        if (!animatable.hasPose(Pose.SLEEPING)) {
             poseStack.mulPose(Axis.YP.rotationDegrees(180f - rotationYaw));
+        }
 
         if (animatable instanceof LivingEntity livingEntity) {
             if (livingEntity.deathTime > 0) {
