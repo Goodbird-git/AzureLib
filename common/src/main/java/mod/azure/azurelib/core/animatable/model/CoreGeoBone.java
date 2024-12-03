@@ -17,7 +17,6 @@ import java.util.List;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public interface CoreGeoBone {
 
     String getName();

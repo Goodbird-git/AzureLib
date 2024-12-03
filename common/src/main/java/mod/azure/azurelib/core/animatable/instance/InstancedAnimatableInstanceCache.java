@@ -16,7 +16,6 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public class InstancedAnimatableInstanceCache extends AnimatableInstanceCache {
 
     protected AnimatableManager<?> manager;

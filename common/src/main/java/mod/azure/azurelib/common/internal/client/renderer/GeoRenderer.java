@@ -33,6 +33,8 @@ import java.util.List;
 
 /**
  * Base interface for all AzureLib renderers.<br>
+ *
+ * @deprecated
  */
 public interface GeoRenderer<T extends GeoAnimatable> {
     /**

@@ -40,7 +40,6 @@ import java.util.function.ToDoubleFunction;
  * controller to animate walking, one to control attacks, one to control size, etc.
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public class AnimationController<T extends GeoAnimatable> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AnimationController.class);

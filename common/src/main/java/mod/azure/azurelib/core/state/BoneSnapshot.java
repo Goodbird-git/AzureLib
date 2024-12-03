@@ -18,7 +18,6 @@ import mod.azure.azurelib.core.animation.AnimationProcessor;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public class BoneSnapshot {
 
     private final CoreGeoBone bone;

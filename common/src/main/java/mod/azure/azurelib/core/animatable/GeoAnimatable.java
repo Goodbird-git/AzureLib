@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public interface GeoAnimatable {
 
     /**

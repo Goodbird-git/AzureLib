@@ -24,7 +24,6 @@ import java.util.*;
 /**
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public class AnimationProcessor<T extends GeoAnimatable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnimationProcessor.class);

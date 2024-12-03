@@ -22,7 +22,6 @@ import java.util.Map;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public abstract class ContextAwareAnimatableManager<T extends GeoAnimatable, C> extends AnimatableManager<T> {
 
     private final Map<C, AnimatableManager<T>> managers;

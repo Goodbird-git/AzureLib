@@ -16,7 +16,6 @@ import java.util.Optional;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public interface CoreBakedGeoModel {
 
     List<? extends CoreGeoBone> getBones();

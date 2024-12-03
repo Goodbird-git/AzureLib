@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public record Animation(
         String name,
         double length,

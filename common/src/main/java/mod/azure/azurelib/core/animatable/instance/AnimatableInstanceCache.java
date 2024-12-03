@@ -25,7 +25,6 @@ import java.util.function.Supplier;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public abstract class AnimatableInstanceCache {
 
     protected final GeoAnimatable animatable;

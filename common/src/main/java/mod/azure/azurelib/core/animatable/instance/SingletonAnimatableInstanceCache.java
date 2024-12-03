@@ -18,7 +18,6 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public class SingletonAnimatableInstanceCache extends AnimatableInstanceCache {
 
     protected final Long2ObjectMap<AnimatableManager<?>> managers = new Long2ObjectOpenHashMap<>();

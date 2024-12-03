@@ -21,7 +21,6 @@ import java.util.Optional;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public interface CoreGeoModel<E extends GeoAnimatable> {
 
     /**

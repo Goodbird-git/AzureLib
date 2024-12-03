@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 @FunctionalInterface
 public interface EasingType {
 

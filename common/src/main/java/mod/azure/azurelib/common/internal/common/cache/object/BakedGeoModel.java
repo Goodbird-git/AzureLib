@@ -20,7 +20,6 @@ import java.util.Optional;
  *
  * @deprecated
  */
-@Deprecated(forRemoval = true)
 public class BakedGeoModel implements CoreBakedGeoModel {
 
     public final Map<String, GeoBone> bonesByName;
