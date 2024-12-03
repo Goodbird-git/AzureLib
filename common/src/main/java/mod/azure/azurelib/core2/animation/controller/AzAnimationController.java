@@ -391,15 +391,17 @@ public class AzAnimationController<T> {
      */
     protected PlayState handleAnimationState(AzAnimationState<T> state) {
         if (triggeredAnimation != null) {
-            if (currentRawAnimation != triggeredAnimation)
+            if (currentRawAnimation != triggeredAnimation) {
                 this.currentAnimation = null;
+            }
 
             setAnimation(state.getAnimatable(), triggeredAnimation);
 
             if (
                 !hasAnimationFinished() && (!handlingTriggeredAnimations || stateHandler.handle(state) == PlayState.CONTINUE)
-            )
+            ) {
                 return PlayState.CONTINUE;
+            }
 
             this.triggeredAnimation = null;
             this.needsAnimationReload = true;

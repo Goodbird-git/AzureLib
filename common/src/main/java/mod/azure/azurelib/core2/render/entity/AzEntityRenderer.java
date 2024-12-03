@@ -34,14 +34,27 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         this.azEntityRendererPipeline = new AzEntityRendererPipeline<>(this);
         this.renderLayers = new ObjectArrayList<>();
         this.azAnimator = createAnimator();
+
+        if (azAnimator != null) {
+            azAnimator.registerControllers(azAnimator.getAnimationControllerContainer());
+        }
     }
 
     protected abstract @NotNull ResourceLocation getModelLocation(T entity);
+
+    public void superRender(@NotNull T entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
 
     @Override
     public void render(@NotNull T entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
         var modelResourceLocation = getModelLocation(entity);
         var bakedGeoModel = AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
+
+        if (bakedGeoModel != null) {
+            azAnimator.getAnimationProcessor().setActiveModel(bakedGeoModel);
+        }
+
         azEntityRendererPipeline.defaultRender(poseStack, bakedGeoModel, entity, bufferSource, null, null, entityYaw, partialTick, packedLight);
     }
 

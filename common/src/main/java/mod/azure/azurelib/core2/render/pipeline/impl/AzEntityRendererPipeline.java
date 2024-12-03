@@ -339,7 +339,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
     @Override
     public void renderFinal(PoseStack poseStack, T entity, AzBakedModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
-        azEntityRenderer.render(entity, 0, partialTick, poseStack, bufferSource, packedLight);
+        azEntityRenderer.superRender(entity, 0, partialTick, poseStack, bufferSource, packedLight);
 
         if (entity instanceof Mob mob) {
             var leashHolder = mob.getLeashHolder();

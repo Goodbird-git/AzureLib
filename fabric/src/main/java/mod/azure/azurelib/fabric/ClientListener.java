@@ -4,10 +4,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import mod.azure.azurelib.common.api.client.helper.ClientUtils;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
-import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.fabric.core2.example.DroneRenderer;
+import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
@@ -45,5 +47,7 @@ public final class ClientListener implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(AnimTriggerPacket.TYPE, (packet, context) -> packet.handle());
         ClientPlayNetworking.registerGlobalReceiver(AnimDataSyncPacket.TYPE, (packet, context) -> packet.handle());
         ClientPlayNetworking.registerGlobalReceiver(SendConfigDataPacket.TYPE, (packet, context) -> packet.handle());
+
+        EntityRendererRegistry.register(ExampleEntityTypes.DRONE, DroneRenderer::new);
     }
 }
