@@ -63,8 +63,8 @@ public abstract class AzRendererPipeline<T> {
      * Initial access point for rendering. It all begins here.<br>
      * All AzureLib renderers should immediately defer their respective default {@code render} calls to this, for consistent handling
      */
-    public void defaultRender(PoseStack poseStack, AzBakedModel model, T animatable, MultiBufferSource bufferSource, @Nullable RenderType renderType, @Nullable VertexConsumer buffer,
-                              float yaw, float partialTick, int packedLight) {
+    public void render(PoseStack poseStack, AzBakedModel model, T animatable, MultiBufferSource bufferSource, @Nullable RenderType renderType, @Nullable VertexConsumer buffer,
+                       float yaw, float partialTick, int packedLight) {
         poseStack.pushPose();
 
         var renderColor = getRenderColor(animatable, partialTick, packedLight).argbInt();
@@ -99,7 +99,7 @@ public abstract class AzRendererPipeline<T> {
      * Re-renders the provided {@link AzBakedModel}.<br>
      * Usually you'd use this for rendering alternate {@link RenderType} layers or for sub-model rendering whilst inside a {@link AzRenderLayer} or similar
      */
-    public void reRender(AzBakedModel model, PoseStack poseStack, MultiBufferSource bufferSource, T animatable,
+    protected void reRender(AzBakedModel model, PoseStack poseStack, MultiBufferSource bufferSource, T animatable,
                          RenderType renderType, VertexConsumer buffer, float partialTick,
                          int packedLight, int packedOverlay, int colour) {
         poseStack.pushPose();
@@ -112,7 +112,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * The actual render method that sub-type renderers should override to handle their specific rendering tasks.<br>
      */
-    public void actuallyRender(PoseStack poseStack, T animatable, AzBakedModel model, RenderType renderType,
+    protected void actuallyRender(PoseStack poseStack, T animatable, AzBakedModel model, RenderType renderType,
                                MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick,
                                int packedLight, int packedOverlay, int colour) {
         updateAnimatedTextureFrame(animatable);
@@ -126,7 +126,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * Renders the provided {@link AzBone} and its associated child bones
      */
-    public void renderRecursively(PoseStack poseStack, T animatable, AzBone bone, RenderType renderType, MultiBufferSource bufferSource,
+    protected void renderRecursively(PoseStack poseStack, T animatable, AzBone bone, RenderType renderType, MultiBufferSource bufferSource,
                                   VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
                                   int packedOverlay, int colour) {
         poseStack.pushPose();
@@ -144,7 +144,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * Renders the {@link GeoCube GeoCubes} associated with a given {@link AzBone}
      */
-    public void renderCubesOfBone(PoseStack poseStack, AzBone bone, VertexConsumer buffer, int packedLight,
+    protected void renderCubesOfBone(PoseStack poseStack, AzBone bone, VertexConsumer buffer, int packedLight,
                                    int packedOverlay, int colour) {
         if (bone.isHidden())
             return;
@@ -160,7 +160,7 @@ public abstract class AzRendererPipeline<T> {
      * Render the child bones of a given {@link AzBone}.<br>
      * Note that this does not render the bone itself. That should be done through {@link AzRendererPipeline#renderCubesOfBone} separately
      */
-    public void renderChildBones(PoseStack poseStack, T animatable, AzBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer,
+    protected void renderChildBones(PoseStack poseStack, T animatable, AzBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer,
                                   boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         if (bone.isHidingChildren())
             return;
@@ -174,7 +174,7 @@ public abstract class AzRendererPipeline<T> {
      * Renders an individual {@link GeoCube}.<br>
      * This tends to be called recursively from something like {@link AzRendererPipeline#renderCubesOfBone}
      */
-    public void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight,
+    protected void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight,
                             int packedOverlay, int colour) {
         RenderUtils.translateToPivotPoint(poseStack, cube);
         RenderUtils.rotateMatrixAroundCube(poseStack, cube);
@@ -197,7 +197,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link VertexConsumer buffer} for rendering
      */
-    public void createVerticesOfQuad(GeoQuad quad, Matrix4f poseState, Vector3f normal, VertexConsumer buffer,
+    protected void createVerticesOfQuad(GeoQuad quad, Matrix4f poseState, Vector3f normal, VertexConsumer buffer,
                                       int packedLight, int packedOverlay, int colour) {
         for (var vertex : quad.vertices()) {
             var position = vertex.position();
@@ -211,7 +211,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * Calls back to the various {@link AzRenderLayer RenderLayers} that have been registered to this renderer for their {@link mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer#preRender pre-render} actions.
      */
-    public void preApplyRenderLayers(PoseStack poseStack, T animatable, AzBakedModel model, RenderType renderType, MultiBufferSource bufferSource,
+    protected void preApplyRenderLayers(PoseStack poseStack, T animatable, AzBakedModel model, RenderType renderType, MultiBufferSource bufferSource,
                                      VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         for (var renderLayer : getRenderLayers()) {
             renderLayer.preRender(poseStack, animatable, model, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
@@ -221,7 +221,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * Calls back to the various {@link AzRenderLayer RenderLayers} that have been registered to this renderer for their {@link mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer#renderForBone per-bone} render actions.
      */
-    public void applyRenderLayersForBone(PoseStack poseStack, T animatable, AzBone bone, RenderType renderType, MultiBufferSource bufferSource,
+    protected void applyRenderLayersForBone(PoseStack poseStack, T animatable, AzBone bone, RenderType renderType, MultiBufferSource bufferSource,
                                           VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         for (var renderLayer : getRenderLayers()) {
             renderLayer.renderForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
@@ -231,7 +231,7 @@ public abstract class AzRendererPipeline<T> {
     /**
      * Render the various {@link AzRenderLayer RenderLayers} that have been registered to this renderer
      */
-    public void applyRenderLayers(PoseStack poseStack, T animatable, AzBakedModel model, RenderType renderType, MultiBufferSource bufferSource,
+    protected void applyRenderLayers(PoseStack poseStack, T animatable, AzBakedModel model, RenderType renderType, MultiBufferSource bufferSource,
                                   VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         for (var renderLayer : getRenderLayers()) {
             renderLayer.render(poseStack, animatable, model, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
@@ -243,19 +243,19 @@ public abstract class AzRendererPipeline<T> {
      * work such as scaling and translating.<br>
      * {@link PoseStack} translations made here are kept until the end of the render process
      */
-    public void preRender(PoseStack poseStack, T animatable, AzBakedModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
+    protected void preRender(PoseStack poseStack, T animatable, AzBakedModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
                           int packedOverlay, int colour) {}
 
     /**
      * Called after rendering the model to buffer. Post-render modifications should be performed here.<br>
      * {@link PoseStack} transformations will be unused and lost once this method ends
      */
-    public void postRender(PoseStack poseStack, T animatable, AzBakedModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {}
+    protected void postRender(PoseStack poseStack, T animatable, AzBakedModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {}
 
     /**
      * Call after all other rendering work has taken place, including reverting the {@link PoseStack}'s state. This method is <u>not</u> called in {@link AzRendererPipeline#reRender re-render}
      */
-    public void renderFinal(PoseStack poseStack, T animatable, AzBakedModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight,
+    protected void renderFinal(PoseStack poseStack, T animatable, AzBakedModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight,
                             int packedOverlay, int colour) {}
 
     /**
@@ -263,22 +263,23 @@ public abstract class AzRendererPipeline<T> {
      * <p>
      * Use this method to clean up any leftover persistent objects stored during rendering or any other post-render maintenance tasks as required
      */
-    public void doPostRenderCleanup() {}
+    protected void doPostRenderCleanup() {}
 
     /**
      * Scales the {@link PoseStack} in preparation for rendering the model, excluding when re-rendering the model as part of a {@link mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer} or external render call.<br>
      * Override and call super with modified scale values as needed to further modify the scale of the model (E.G. child entities)
      */
-    public void scaleModelForRender(float widthScale, float heightScale, PoseStack poseStack, T animatable, AzBakedModel model, boolean isReRender, float partialTick, int packedLight, int packedOverlay) {
-        if (!isReRender && (widthScale != 1 || heightScale != 1))
+    protected void scaleModelForRender(float widthScale, float heightScale, PoseStack poseStack, T animatable, AzBakedModel model, boolean isReRender, float partialTick, int packedLight, int packedOverlay) {
+        if (!isReRender && (widthScale != 1 || heightScale != 1)) {
             poseStack.scale(widthScale, heightScale, widthScale);
+        }
     }
 
     /**
      * Gets a tint-applying color to render the given animatable with.<br>
      * Returns {@link Color#WHITE} by default
      */
-    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+    protected Color getRenderColor(T animatable, float partialTick, int packedLight) {
         return Color.WHITE;
     }
 
@@ -288,7 +289,7 @@ public abstract class AzRendererPipeline<T> {
      * but can be used for other things like the {@link net.minecraft.world.entity.monster.Creeper}
      * white tint when exploding.
      */
-    public int getPackedOverlay(T animatable, float u, float partialTick) {
+    protected int getPackedOverlay(T animatable, float u, float partialTick) {
         return OverlayTexture.NO_OVERLAY;
     }
 

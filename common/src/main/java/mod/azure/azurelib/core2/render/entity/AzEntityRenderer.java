@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
+import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.impl.AzEntityRendererPipeline;
@@ -46,10 +47,34 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
 
     @Override
     public void render(@NotNull T entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+        var cachedEntityAnimator = provideAnimator(entity);
+        var azBakedModel = provideBakedModel(entity, cachedEntityAnimator);
+        // Point the renderer's current animator reference to the cached entity animator  before rendering.
+        reusedAzEntityAnimator = cachedEntityAnimator;
+        // Execute the render pipeline.
+        azEntityRendererPipeline.render(poseStack, azBakedModel, entity, bufferSource, null, null, entityYaw, partialTick, packedLight);
+    }
+
+    protected @Nullable AzEntityAnimator<T> createAnimator() {
+        return null;
+    }
+
+    protected @Nullable AzBakedModel provideBakedModel(@NotNull T entity, AzEntityAnimator<T> cachedEntityAnimator) {
+        var modelResourceLocation = getModelLocation(entity);
+        var bakedGeoModel = AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
+
+        if (cachedEntityAnimator != null && bakedGeoModel != null) {
+            cachedEntityAnimator.getAnimationProcessor().setActiveModel(bakedGeoModel);
+        }
+
+        return bakedGeoModel;
+    }
+
+    protected @Nullable AzEntityAnimator<T> provideAnimator(T entity) {
         // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for the entity.
         @SuppressWarnings("unchecked")
         var entityAnimatorCache = (AzAnimatorAccessor<T>) entity;
-        AzEntityAnimator<T> cachedEntityAnimator = (AzEntityAnimator<T>) entityAnimatorCache.getAnimator();
+        var cachedEntityAnimator = (AzEntityAnimator<T>) entityAnimatorCache.getAnimator();
 
         if (cachedEntityAnimator == null) {
             // If the cached animator is null, create a new one. We use a separate reference here just for some
@@ -62,22 +87,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
                 entityAnimatorCache.setAnimator(cachedEntityAnimator);
             }
         }
-
-        var modelResourceLocation = getModelLocation(entity);
-        var bakedGeoModel = AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
-
-        if (cachedEntityAnimator != null && bakedGeoModel != null) {
-            cachedEntityAnimator.getAnimationProcessor().setActiveModel(bakedGeoModel);
-        }
-
-        // Point the renderer's current animator reference to the cached entity animator  before rendering.
-        reusedAzEntityAnimator = cachedEntityAnimator;
-        // Execute the render pipeline.
-        azEntityRendererPipeline.defaultRender(poseStack, bakedGeoModel, entity, bufferSource, null, null, entityYaw, partialTick, packedLight);
-    }
-
-    protected @Nullable AzEntityAnimator<T> createAnimator() {
-        return null;
+        return cachedEntityAnimator;
     }
 
     /**
