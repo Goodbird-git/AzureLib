@@ -5,11 +5,6 @@
  */
 package mod.azure.azurelib.common.internal.common.network.packet;
 
-import mod.azure.azurelib.common.api.client.helper.ClientUtils;
-import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
-import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
-import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,9 +12,14 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
+import mod.azure.azurelib.common.api.client.helper.ClientUtils;
+import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
+import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
+
 /**
- * Packet for syncing user-definable animations that can be triggered from the server for
- * {@link Entity Entities}
+ * Packet for syncing user-definable animations that can be triggered from the server for {@link Entity Entities}
  */
 public record AzEntityAnimTriggerPacket(
     int entityId,
@@ -50,7 +50,7 @@ public record AzEntityAnimTriggerPacket(
 
         AzAnimatorAccessor.get(entity)
             .map(AzAnimator::getAnimationControllerContainer)
-            .map(container -> container.getOrNull(controllerName))
+            .map(controllerContainer -> controllerContainer.getOrNull(controllerName))
             .ifPresent(controller -> controller.tryTriggerAnimation(animName));
     }
 

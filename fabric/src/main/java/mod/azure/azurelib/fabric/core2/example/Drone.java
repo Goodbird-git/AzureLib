@@ -19,7 +19,7 @@ public class Drone extends Monster {
         super.tick();
 
         if (this.level().isClientSide) {
-            animationDispatcher.dispatch("base_controller", "animation.idle");
+            animationDispatcher.dispatchFromClient("base_controller", "animation.idle");
         }
     }
 }
