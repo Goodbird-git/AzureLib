@@ -10,6 +10,8 @@ import org.joml.Vector3f;
 
 /**
  * Quad data holder
+ *
+ * @deprecated
  */
 public record GeoQuad(
     GeoVertex[] vertices,

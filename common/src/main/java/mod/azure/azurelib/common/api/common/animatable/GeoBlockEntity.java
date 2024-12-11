@@ -23,6 +23,8 @@ import mod.azure.azurelib.core.animation.AnimationController;
 
 /**
  * The {@link GeoAnimatable} interface specific to {@link BlockEntity BlockEntities}
+ *
+ * @deprecated
  */
 public interface GeoBlockEntity extends GeoAnimatable {
 

@@ -23,6 +23,8 @@ import mod.azure.azurelib.core.animation.AnimationController;
  * to Projectiles and other Entity subclasses.<br>
  * <b>NOTE:</b> This <u>cannot</u> be used for entities using the {@link GeoReplacedEntityRenderer} as you aren't
  * extending {@code Entity}. Use {@link GeoReplacedEntity} instead.
+ *
+ * @deprecated
  */
 public interface GeoEntity extends GeoAnimatable {
 

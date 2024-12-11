@@ -24,6 +24,7 @@ import mod.azure.azurelib.core.object.DataTicket;
  *
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public abstract class AnimatableInstanceCache {
 
     protected final GeoAnimatable animatable;

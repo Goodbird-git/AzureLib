@@ -21,7 +21,10 @@ import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 
 /**
  * Packet for syncing user-definable animation data for {@link net.minecraft.world.entity.Entity Entities}
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public record EntityAnimDataSyncPacket<D>(
     int entityId,
     boolean isReplacedEntity,

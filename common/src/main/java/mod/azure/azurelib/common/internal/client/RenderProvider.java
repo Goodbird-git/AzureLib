@@ -19,7 +19,10 @@ import mod.azure.azurelib.common.internal.mixins.ItemRendererAccessor;
 /**
  * Internal interface for safely providing a custom renderer instances at runtime.<br>
  * This can be safely instantiated as a new anonymous class inside your {@link Item} class
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public interface RenderProvider {
 
     RenderProvider DEFAULT = new RenderProvider() {};

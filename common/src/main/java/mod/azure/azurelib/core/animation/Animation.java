@@ -24,6 +24,7 @@ import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
  *
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public record Animation(
     String name,
     double length,

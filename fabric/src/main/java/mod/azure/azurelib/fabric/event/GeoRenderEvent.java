@@ -1175,7 +1175,10 @@ public interface GeoRenderEvent {
     /**
      * Renderer events for miscellaneous {@link GeoReplacedEntity replaced entities} being rendered by
      * {@link GeoReplacedEntityRenderer}
+     *
+     * @deprecated
      */
+    @Deprecated(forRemoval = true)
     abstract class ReplacedEntity implements GeoRenderEvent {
 
         private final GeoReplacedEntityRenderer<?, ?> renderer;

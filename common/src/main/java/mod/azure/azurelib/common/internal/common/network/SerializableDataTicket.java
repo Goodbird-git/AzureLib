@@ -16,7 +16,10 @@ import mod.azure.azurelib.core.object.DataTicket;
 
 /**
  * Network-compatible {@link DataTicket} implementation. Used for sending data from server -> client in an easy manner
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public abstract class SerializableDataTicket<D> extends DataTicket<D> {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SerializableDataTicket<?>> STREAM_CODEC = StreamCodec

@@ -13,8 +13,9 @@ import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
  * The {@link KeyFrameEvent} specific to the {@link AnimationController#soundKeyframeHandler}.<br>
  * Called when a sound instruction keyframe is encountered
  *
- * @deprecated
+ * @deprecated Use {@link mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent} instead.
  */
+@Deprecated(forRemoval = true)
 public class SoundKeyframeEvent<T extends GeoAnimatable> extends KeyFrameEvent<T, SoundKeyframeData> {
 
     /**

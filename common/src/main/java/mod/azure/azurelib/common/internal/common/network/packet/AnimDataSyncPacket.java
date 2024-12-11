@@ -19,7 +19,10 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 /**
  * Packet for syncing user-definable animation data for {@link SingletonGeoAnimatable} instances
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public record AnimDataSyncPacket<D>(
     String syncableId,
     long instanceId,

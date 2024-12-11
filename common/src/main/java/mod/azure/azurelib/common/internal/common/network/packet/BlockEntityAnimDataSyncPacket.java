@@ -20,7 +20,10 @@ import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 
 /**
  * Packet for syncing user-definable animation data for {@link BlockEntity BlockEntities}
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public record BlockEntityAnimDataSyncPacket<D>(
     BlockPos blockPos,
     SerializableDataTicket<D> dataTicket,

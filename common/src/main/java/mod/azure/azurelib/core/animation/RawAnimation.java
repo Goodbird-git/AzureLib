@@ -24,8 +24,9 @@ import java.util.Objects;
  * RawAnimation.begin().thenPlay("action.open_box").thenLoop("state.stay_open")
  * }</pre>
  *
- * @deprecated
+ * @deprecated Use {@link mod.azure.azurelib.core2.animation.primitive.AzRawAnimation} instead.
  */
+@Deprecated(forRemoval = true)
 public final class RawAnimation {
 
     private final List<Stage> animationList = new ObjectArrayList<>();

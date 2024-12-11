@@ -21,6 +21,7 @@ import mod.azure.azurelib.core.object.PlayState;
  *
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimationState<T extends GeoAnimatable> {
 
     private final T animatable;

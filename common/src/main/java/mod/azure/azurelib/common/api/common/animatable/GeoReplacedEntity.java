@@ -25,7 +25,10 @@ import mod.azure.azurelib.core.animation.AnimationController;
 /**
  * The {@link GeoAnimatable} interface specific to {@link Entity Entities}. This interface is <u>specifically</u> for
  * entities replacing the rendering of other, existing entities.
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public interface GeoReplacedEntity extends SingletonGeoAnimatable {
 
     /**

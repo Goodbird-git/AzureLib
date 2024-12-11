@@ -25,6 +25,7 @@ import mod.azure.azurelib.core.animation.AnimationProcessor;
  *
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public interface GeoAnimatable {
 
     /**

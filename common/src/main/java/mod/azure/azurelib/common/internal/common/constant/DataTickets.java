@@ -25,7 +25,10 @@ import mod.azure.azurelib.core.object.DataTicket;
 /**
  * Stores the default (builtin) {@link DataTicket DataTickets} used in AzureLib.<br>
  * Additionally handles registration of {@link SerializableDataTicket SerializableDataTickets}
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public final class DataTickets {
 
     // Builtin tickets

@@ -31,6 +31,8 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 
 /**
  * Wrapper for {@link SimpleTexture SimpleTexture} implementation allowing for casual use of animated non-atlas textures
+ *
+ * @deprecated
  */
 public class AnimatableTexture extends SimpleTexture {
 

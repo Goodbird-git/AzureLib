@@ -40,6 +40,7 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
  *
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimationController<T extends GeoAnimatable> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AnimationController.class);

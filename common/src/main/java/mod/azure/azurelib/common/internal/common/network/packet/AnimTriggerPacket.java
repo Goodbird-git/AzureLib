@@ -18,6 +18,8 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
 
 /**
  * Packet for syncing user-definable animations that can be triggered from the server
+ *
+ * @deprecated
  */
 public record AnimTriggerPacket(
     String syncableId,

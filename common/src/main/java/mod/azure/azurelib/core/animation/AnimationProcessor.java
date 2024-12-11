@@ -23,6 +23,7 @@ import mod.azure.azurelib.core.utils.Interpolations;
 /**
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimationProcessor<T extends GeoAnimatable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnimationProcessor.class);

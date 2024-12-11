@@ -21,8 +21,11 @@ import mod.azure.azurelib.common.internal.client.RenderProvider;
 
 /**
  * Render hook to inject AzureLib's ISTER rendering callback
+ *
+ * @deprecated
  */
 @Mixin(ItemRenderer.class)
+@Deprecated(forRemoval = true)
 public class MixinItemRenderer {
 
     @Inject(

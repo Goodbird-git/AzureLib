@@ -10,7 +10,10 @@ import java.util.Objects;
 
 /**
  * Ticket object to define a typed data object
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class DataTicket<D> {
 
     private final String id;

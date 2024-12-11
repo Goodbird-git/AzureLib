@@ -12,7 +12,7 @@ import java.util.Optional;
  * Baked model object for AzureLib models.<br>
  * Mostly an internal placeholder to allow for splitting up core (non-Minecraft) libraries
  *
- * @deprecated
+ * @deprecated Use {@link mod.azure.azurelib.core2.model.AzBakedModel} instead.
  */
 public interface CoreBakedGeoModel {
 

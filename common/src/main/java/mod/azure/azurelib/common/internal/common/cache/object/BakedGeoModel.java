@@ -16,8 +16,9 @@ import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 /**
  * Baked model object for AzureLib models.
  *
- * @deprecated
+ * @deprecated Use {@link mod.azure.azurelib.core2.model.AzBakedModel} instead.
  */
+@Deprecated(forRemoval = true)
 public class BakedGeoModel implements CoreBakedGeoModel {
 
     public final Map<String, GeoBone> bonesByName;

@@ -40,7 +40,7 @@ import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
 /**
  * Cache class for holding loaded {@link Animation Animations} and {@link CoreGeoModel Models}
  *
- * @deprecated Use {@link mod.azure.azurelib.core2.model.cache.AzBakedModelCache AzBakedModelCache}, instead.
+ * @deprecated Use {@link AzBakedModelCache} and {@link AzBakedAnimationCache} instead.
  */
 public final class AzureLibCache {
 
@@ -72,7 +72,7 @@ public final class AzureLibCache {
     }
 
     /**
-     * @deprecated
+     * @deprecated Use {@link AzBakedAnimationCache} instead.
      */
     public static Map<ResourceLocation, BakedAnimations> getBakedAnimations() {
         if (!AzureLib.hasInitialized)
@@ -82,7 +82,7 @@ public final class AzureLibCache {
     }
 
     /**
-     * @deprecated
+     * @deprecated Use {@link AzBakedModelCache} instead.
      */
     public static Map<ResourceLocation, BakedGeoModel> getBakedModels() {
         if (!AzureLib.hasInitialized)

@@ -19,7 +19,11 @@ import java.util.Map;
 
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 
+/**
+ * @deprecated
+ */
 @Mixin(TextureManager.class)
+@Deprecated(forRemoval = true)
 public abstract class TextureManagerMixin {
 
     @Shadow

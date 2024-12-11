@@ -34,6 +34,8 @@ import mod.azure.azurelib.common.platform.Services;
 
 /**
  * Texture object type responsible for AzureLib's emissive render textures
+ *
+ * @deprecated
  */
 public class AutoGlowingTexture extends GeoAbstractTexture {
 

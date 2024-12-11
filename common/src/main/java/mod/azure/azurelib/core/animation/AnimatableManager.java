@@ -24,6 +24,7 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
  *
  * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class AnimatableManager<T extends GeoAnimatable> {
 
     private final Map<String, BoneSnapshot> boneSnapshotCollection = new Object2ObjectOpenHashMap<>();
