@@ -2,7 +2,6 @@ package mod.azure.azurelib.core2.animation;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.AzureLibException;
-import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
@@ -12,7 +11,6 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContai
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -44,14 +42,8 @@ public abstract class AzAnimator<T> {
 
     public void animate(T animatable, AzAnimationState<T> animationState) {
         var minecraft = Minecraft.getInstance();
-        var currentTick = animationState.<Double>getData(DataTickets.TICK);
-
-        if (currentTick == null) {
-            // TODO: We need to figure out how to get this instanceof check out of this abstract class.
-            currentTick = animatable instanceof LivingEntity livingEntity
-                ? (double) livingEntity.tickCount
-                : RenderUtils.getCurrentTick();
-        }
+        // TODO: If encountering rendering smoothness issues, break glass (this used to be a DataTickets.TICK fetch).
+        var currentTick = RenderUtils.getCurrentTick();
 
         if (firstTickTime == -1) {
             firstTickTime = currentTick + minecraft.getTimer().getGameTimeDeltaTicks();
