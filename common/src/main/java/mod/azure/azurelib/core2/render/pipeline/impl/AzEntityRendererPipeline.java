@@ -209,8 +209,11 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 //            this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
 
             var animator = azEntityRenderer.getAnimator();
-            var animationState = animator.createAnimationState(animatable, limbSwing, limbSwingAmount, partialTick);
-            animator.animate(animatable, animationState);
+
+            if (animator != null) {
+                var animationState = animator.createAnimationState(animatable, limbSwing, limbSwingAmount, partialTick);
+                animator.animate(animatable, animationState);
+            }
         }
 
         this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());

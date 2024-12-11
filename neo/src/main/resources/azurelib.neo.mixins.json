@@ -9,6 +9,7 @@
     "PlayerListMixin"
   ],
   "client": [
+    "EntityMixin_AzEntityAnimatorCache",
     "ItemRendererAccessor",
     "MinecraftMixin",
     "MixinItemRenderer",
