@@ -1,9 +1,9 @@
 package mod.azure.azurelib.core2.animation;
 
+import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimTriggerPacket;
 import mod.azure.azurelib.common.platform.Services;
 
 public class AzAnimationDispatcher<T extends Entity> {
@@ -22,9 +22,8 @@ public class AzAnimationDispatcher<T extends Entity> {
                 .ifPresent(controller -> controller.tryTriggerAnimation(animationName));
         } else {
             var entityId = entity.getId();
-            var entityAnimTriggerPacket = new EntityAnimTriggerPacket(
+            var entityAnimTriggerPacket = new AzEntityAnimTriggerPacket(
                 entityId,
-                false,
                 controllerName,
                 animationName
             );
