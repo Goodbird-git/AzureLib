@@ -21,7 +21,7 @@ public abstract class EntityMixin_AzEntityAnimatorCache implements AzAnimatorAcc
     }
 
     @Override
-    public @Nullable AzAnimator<Entity> getAnimator() {
+    public @Nullable AzAnimator<Entity> getAnimatorOrNull() {
         return animator;
     }
 }

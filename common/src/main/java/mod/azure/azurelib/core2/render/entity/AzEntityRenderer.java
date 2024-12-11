@@ -101,9 +101,8 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
     protected @Nullable AzEntityAnimator<T> provideAnimator(T entity) {
         // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for the
         // entity.
-        @SuppressWarnings("unchecked")
-        var entityAnimatorCache = (AzAnimatorAccessor<T>) entity;
-        var cachedEntityAnimator = (AzEntityAnimator<T>) entityAnimatorCache.getAnimator();
+        var accessor = AzAnimatorAccessor.cast(entity);
+        var cachedEntityAnimator = (AzEntityAnimator<T>) accessor.getAnimatorOrNull();
 
         if (cachedEntityAnimator == null) {
             // If the cached animator is null, create a new one. We use a separate reference here just for some
@@ -113,9 +112,10 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
                 // If the new animator we created is not null, then register its controllers.
                 cachedEntityAnimator.registerControllers(cachedEntityAnimator.getAnimationControllerContainer());
                 // Also cache the animator so that the next time we fetch the animator, it's ready for us.
-                entityAnimatorCache.setAnimator(cachedEntityAnimator);
+                accessor.setAnimator(cachedEntityAnimator);
             }
         }
+
         return cachedEntityAnimator;
     }
 

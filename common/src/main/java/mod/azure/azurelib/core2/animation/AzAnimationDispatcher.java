@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimTriggerPacket;
 import mod.azure.azurelib.common.platform.Services;
-import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 
 public class AzAnimationDispatcher<T extends Entity> {
 
@@ -17,19 +16,10 @@ public class AzAnimationDispatcher<T extends Entity> {
 
     public void dispatch(@Nullable String controllerName, String animationName) {
         if (entity.level().isClientSide()) {
-            @SuppressWarnings("unchecked")
-            var entityAnimatorCache = (AzAnimatorAccessor<T>) entity;
-            var cachedEntityAnimator = (AzEntityAnimator<T>) entityAnimatorCache.getAnimator();
-
-            if (cachedEntityAnimator == null) {
-                return;
-            }
-
-            var controller = cachedEntityAnimator.getAnimationControllerContainer().getOrNull(controllerName);
-
-            if (controller != null) {
-                controller.tryTriggerAnimation(animationName);
-            }
+            AzAnimatorAccessor.get(entity)
+                .map(AzAnimator::getAnimationControllerContainer)
+                .map(container -> container.getOrNull(controllerName))
+                .ifPresent(controller -> controller.tryTriggerAnimation(animationName));
         } else {
             var entityId = entity.getId();
             var entityAnimTriggerPacket = new EntityAnimTriggerPacket(
