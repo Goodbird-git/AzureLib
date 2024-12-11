@@ -21,10 +21,12 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
     public void registerControllers(AzAnimationControllerContainer<Drone> animationControllerContainer) {
         animationControllerContainer.add(
             new AzAnimationController<>(this, "base_controller", 0, this::handle)
+                .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
         );
     }
+
     public PlayState handle(AzAnimationState<Drone> event) {
-        return event.setAndContinue(IDLE_ANIMATION);
+        return PlayState.CONTINUE;
     }
 
     @Override

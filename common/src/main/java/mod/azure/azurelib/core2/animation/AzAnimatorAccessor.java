@@ -1,6 +1,8 @@
 package mod.azure.azurelib.core2.animation;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface AzAnimatorAccessor<T> {
-    AzAnimator<T> getAnimator();
+    @Nullable AzAnimator<T> getAnimator();
     void setAnimator(AzAnimator<T> animator);
 }

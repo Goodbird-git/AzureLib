@@ -1,6 +1,7 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -20,6 +21,10 @@ public class AzAnimationControllerContainer<T> {
         for (var extraController : controllers) {
             animationControllersByName.put(extraController.getName(), extraController);
         }
+    }
+
+    public @Nullable AzAnimationController<T> getOrNull(String controllerName) {
+        return animationControllersByName.get(controllerName);
     }
 
     public Collection<AzAnimationController<T>> getAll() {
