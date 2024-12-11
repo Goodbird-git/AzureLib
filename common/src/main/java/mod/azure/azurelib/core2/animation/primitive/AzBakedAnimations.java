@@ -14,6 +14,7 @@ public record AzBakedAnimations(
     Map<String, AzAnimation> animations,
     Map<String, ResourceLocation> includes
 ) {
+
     /**
      * Gets an {@link AzAnimation} by its name, if present
      */

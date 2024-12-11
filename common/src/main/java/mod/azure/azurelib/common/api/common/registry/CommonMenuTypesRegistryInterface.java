@@ -1,23 +1,31 @@
 package mod.azure.azurelib.common.api.common.registry;
 
-import mod.azure.azurelib.common.platform.Services;
 import net.minecraft.world.inventory.MenuType;
 
 import java.util.function.Supplier;
+
+import mod.azure.azurelib.common.platform.Services;
 
 /**
  * Example of using this Interface to create a new MenuType:
  * <p>
  * The following code demonstrates how to register a new screen type in the game:
  * </p>
+ *
  * <pre>{@code
- * public static final Supplier<MenuType<?>> TEST = CommonMenuTypesRegistryInterface.registerScreen("modid", "screenname", () -> new MenuType<>(CustomScreenHandler::new, FeatureFlags.VANILLA_SET));
+ *
+ * public static final Supplier<MenuType<?>> TEST = CommonMenuTypesRegistryInterface.registerScreen(
+ *     "modid",
+ *     "screenname",
+ *     () -> new MenuType<>(CustomScreenHandler::new, FeatureFlags.VANILLA_SET)
+ * );
  * }</pre>
  * <p>
  * In this example:
  * </p>
  * <ul>
- * <li><code>registerScreen</code> is a method to register a new screen type with the specified mod ID and screen name.</li>
+ * <li><code>registerScreen</code> is a method to register a new screen type with the specified mod ID and screen
+ * name.</li>
  * <li><code>MenuType</code> is used to create a new screen type instance.</li>
  * </ul>
  * <p>

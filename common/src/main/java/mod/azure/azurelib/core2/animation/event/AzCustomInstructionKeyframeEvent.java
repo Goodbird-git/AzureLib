@@ -10,10 +10,10 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 public class AzCustomInstructionKeyframeEvent<T> extends AzKeyFrameEvent<T, CustomInstructionKeyframeData> {
 
     public AzCustomInstructionKeyframeEvent(
-            T entity,
-            double animationTick,
-            AzAnimationController<T> controller,
-            CustomInstructionKeyframeData customInstructionKeyframeData
+        T entity,
+        double animationTick,
+        AzAnimationController<T> controller,
+        CustomInstructionKeyframeData customInstructionKeyframeData
     ) {
         super(entity, animationTick, controller, customInstructionKeyframeData);
     }

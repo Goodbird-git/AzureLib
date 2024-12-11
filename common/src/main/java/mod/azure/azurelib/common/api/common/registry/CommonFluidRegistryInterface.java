@@ -1,17 +1,24 @@
 package mod.azure.azurelib.common.api.common.registry;
 
-import mod.azure.azurelib.common.platform.Services;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Supplier;
+
+import mod.azure.azurelib.common.platform.Services;
 
 /**
  * Example of using this Interface to create a new Fluid:
  * <p>
  * The following code demonstrates how to register a new Fluid in the game:
  * </p>
+ *
  * <pre>{@code
- * public static final Supplier<Fluid> TEST_FLUID = CommonFluidRegistryInterface.registerFluid("modid", "fluidName", () -> new CustomFluid());
+ *
+ * public static final Supplier<Fluid> TEST_FLUID = CommonFluidRegistryInterface.registerFluid(
+ *     "modid",
+ *     "fluidName",
+ *     () -> new CustomFluid()
+ * );
  * }</pre>
  * <p>
  * In this example:

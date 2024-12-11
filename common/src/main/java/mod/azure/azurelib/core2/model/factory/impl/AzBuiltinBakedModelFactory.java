@@ -1,6 +1,8 @@
 package mod.azure.azurelib.core2.model.factory.impl;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.world.phys.Vec3;
+
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
 import mod.azure.azurelib.common.internal.common.loading.json.raw.Cube;
@@ -11,7 +13,6 @@ import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.model.factory.AzBakedModelFactory;
 import mod.azure.azurelib.core2.model.factory.primitive.VertexSet;
-import net.minecraft.world.phys.Vec3;
 
 public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
 

@@ -1,16 +1,11 @@
 /**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
 package mod.azure.azurelib.core2.model;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
-import mod.azure.azurelib.core.state.BoneSnapshot;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -19,6 +14,10 @@ import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.Objects;
+
+import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
+import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
+import mod.azure.azurelib.core.state.BoneSnapshot;
 
 /**
  * Mutable bone object representing a set of cubes, as well as child bones.<br>
@@ -41,27 +40,49 @@ public class AzBone implements CoreGeoBone {
     private final Boolean dontRender;
 
     private final Boolean reset;
+
     private final Matrix4f modelSpaceMatrix = new Matrix4f();
+
     private final Matrix4f localSpaceMatrix = new Matrix4f();
+
     private final Matrix4f worldSpaceMatrix = new Matrix4f();
+
     private BoneSnapshot initialSnapshot;
+
     private boolean hidden;
+
     private boolean childrenHidden = false;
+
     private float scaleX = 1;
+
     private float scaleY = 1;
+
     private float scaleZ = 1;
+
     private float positionX;
+
     private float positionY;
+
     private float positionZ;
+
     private float pivotX;
+
     private float pivotY;
+
     private float pivotZ;
+
     private float rotX;
+
     private float rotY;
+
     private float rotZ;
+
     private boolean positionChanged = false;
+
     private boolean rotationChanged = false;
+
     private boolean scaleChanged = false;
+
     private Matrix3f worldSpaceNormal = new Matrix3f();
 
     private boolean trackingMatrices;

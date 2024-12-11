@@ -1,8 +1,6 @@
 package mod.azure.azurelib.common.internal.common;
 
 import com.mojang.serialization.Codec;
-import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
-import mod.azure.azurelib.common.platform.Services;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +10,9 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
 import java.util.function.Supplier;
+
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
+import mod.azure.azurelib.common.platform.Services;
 
 /**
  * Base class for AzureLib!<br>
@@ -27,10 +28,18 @@ public final class AzureLib {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static final Marker MAIN_MARKER = MarkerManager.getMarker("main");
-    public static final Supplier<DataComponentType<Long>> STACK_ANIMATABLE_ID_COMPONENT = Services.PLATFORM.registerDataComponent(
-            "stack_animatable_id", builder -> builder.persistent(Codec.LONG).networkSynchronized(
-                    ByteBufCodecs.VAR_LONG));
+
+    public static final Supplier<DataComponentType<Long>> STACK_ANIMATABLE_ID_COMPONENT = Services.PLATFORM
+        .registerDataComponent(
+            "stack_animatable_id",
+            builder -> builder.persistent(Codec.LONG)
+                .networkSynchronized(
+                    ByteBufCodecs.VAR_LONG
+                )
+        );
+
     public static boolean hasInitialized;
+
     public static boolean hasKeyBindsInitialized;
 
     private AzureLib() {

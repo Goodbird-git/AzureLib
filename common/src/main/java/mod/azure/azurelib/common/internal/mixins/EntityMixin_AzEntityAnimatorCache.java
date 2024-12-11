@@ -1,11 +1,12 @@
 package mod.azure.azurelib.common.internal.mixins;
 
-import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+
+import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin_AzEntityAnimatorCache implements AzAnimatorAccessor<Entity> {

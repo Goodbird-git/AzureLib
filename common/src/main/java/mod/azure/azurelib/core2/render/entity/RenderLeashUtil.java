@@ -49,10 +49,10 @@ public class RenderLeashUtil {
         int holderBlockLight = leashHolder.isOnFire()
             ? 15
             : leashHolder.level()
-            .getBrightness(
-                LightLayer.BLOCK,
-                holderEyePos
-            );
+                .getBrightness(
+                    LightLayer.BLOCK,
+                    holderEyePos
+                );
         int entitySkyLight = mob.level().getBrightness(LightLayer.SKY, entityEyePos);
         int holderSkyLight = mob.level().getBrightness(LightLayer.SKY, holderEyePos);
 

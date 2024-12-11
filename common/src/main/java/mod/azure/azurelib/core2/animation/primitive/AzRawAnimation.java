@@ -1,10 +1,11 @@
 package mod.azure.azurelib.core2.animation.primitive;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 import java.util.List;
 import java.util.Objects;
+
+import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 /**
  * A builder class for a raw/unbaked animation. These are constructed to pass to the {@link AzAnimationController} to
@@ -144,6 +145,5 @@ public final class AzRawAnimation {
     public int hashCode() {
         return Objects.hash(this.animationList);
     }
-
 
 }

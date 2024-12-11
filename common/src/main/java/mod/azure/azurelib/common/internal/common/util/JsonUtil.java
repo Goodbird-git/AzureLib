@@ -1,8 +1,6 @@
 /**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
 package mod.azure.azurelib.common.internal.common.util;
@@ -10,6 +8,14 @@ package mod.azure.azurelib.common.internal.common.util;
 import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.util.GsonHelper;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import mod.azure.azurelib.common.internal.common.loading.json.raw.*;
 import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.BakedAnimationsAdapter;
 import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.KeyFramesAdapter;
@@ -19,13 +25,6 @@ import mod.azure.azurelib.core2.animation.parse.AzBakedAnimationsAdapter;
 import mod.azure.azurelib.core2.animation.parse.AzKeyFramesAdapter;
 import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.core2.animation.primitive.AzKeyframes;
-import net.minecraft.util.GsonHelper;
-import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Json helper class for various json functions
@@ -81,9 +80,9 @@ public record JsonUtil() {
      * @param objectClass The object type that the array contains
      */
     public static <T> T[] jsonArrayToObjectArray(
-            JsonArray array,
-            JsonDeserializationContext context,
-            Class<T> objectClass
+        JsonArray array,
+        JsonDeserializationContext context,
+        Class<T> objectClass
     ) {
         T[] objArray = (T[]) Array.newInstance(objectClass, array.size());
 
@@ -122,9 +121,9 @@ public record JsonUtil() {
      * @param objectType The object class that the map should contain
      */
     public static <T> Map<String, T> jsonObjToMap(
-            JsonObject obj,
-            JsonDeserializationContext context,
-            Class<T> objectType
+        JsonObject obj,
+        JsonDeserializationContext context,
+        Class<T> objectType
     ) {
         Map<String, T> map = new Object2ObjectOpenHashMap<>(obj.size());
 

@@ -1,24 +1,23 @@
 /**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
 package mod.azure.azurelib.common.api.client.renderer.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
-import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
-import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.List;
 import java.util.function.Supplier;
+
+import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
+import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 /**
  * A more efficient version of {@link BoneFilterGeoLayer}.<br>
@@ -34,14 +33,13 @@ public class FastBoneFilterGeoLayer<T extends GeoAnimatable> extends BoneFilterG
     }
 
     public FastBoneFilterGeoLayer(GeoRenderer<T> renderer, Supplier<List<String>> boneSupplier) {
-        this(renderer, boneSupplier, (bone, animatable, partialTick) -> {
-        });
+        this(renderer, boneSupplier, (bone, animatable, partialTick) -> {});
     }
 
     public FastBoneFilterGeoLayer(
-            GeoRenderer<T> renderer,
-            Supplier<List<String>> boneSupplier,
-            TriConsumer<GeoBone, T, Float> checkAndApply
+        GeoRenderer<T> renderer,
+        Supplier<List<String>> boneSupplier,
+        TriConsumer<GeoBone, T, Float> checkAndApply
     ) {
         super(renderer, checkAndApply);
 
@@ -58,20 +56,20 @@ public class FastBoneFilterGeoLayer<T extends GeoAnimatable> extends BoneFilterG
 
     @Override
     public void preRender(
-            PoseStack poseStack,
-            T animatable,
-            BakedGeoModel bakedModel,
-            RenderType renderType,
-            MultiBufferSource bufferSource,
-            VertexConsumer buffer,
-            float partialTick,
-            int packedLight,
-            int packedOverlay
+        PoseStack poseStack,
+        T animatable,
+        BakedGeoModel bakedModel,
+        RenderType renderType,
+        MultiBufferSource bufferSource,
+        VertexConsumer buffer,
+        float partialTick,
+        int packedLight,
+        int packedOverlay
     ) {
         for (String boneName : getAffectedBones()) {
             this.renderer.getGeoModel()
-                    .getBone(boneName)
-                    .ifPresent(bone -> checkAndApply(bone, animatable, partialTick));
+                .getBone(boneName)
+                .ifPresent(bone -> checkAndApply(bone, animatable, partialTick));
         }
     }
 }

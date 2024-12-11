@@ -61,10 +61,10 @@ public record Color(int argbInt) {
      */
     public static Color ofRGBA(float r, float g, float b, float a) {
         return ofRGBA(
-                (int) (r * 255f + 0.5),
-                (int) (g * 255f + 0.5f),
-                (int) (b * 255f + 0.5f),
-                (int) (a * 255f + 0.5f)
+            (int) (r * 255f + 0.5),
+            (int) (g * 255f + 0.5f),
+            (int) (b * 255f + 0.5f),
+            (int) (a * 255f + 0.5f)
         );
     }
 
@@ -196,10 +196,10 @@ public record Color(int argbInt) {
             b = i;
 
         return ofRGBA(
-                Math.min((int) (r / (1 / factor)), 255),
-                Math.min((int) (g / (1 / factor)), 255),
-                Math.min((int) (b / (1 / factor)), 255),
-                getAlpha()
+            Math.min((int) (r / (1 / factor)), 255),
+            Math.min((int) (g / (1 / factor)), 255),
+            Math.min((int) (b / (1 / factor)), 255),
+            getAlpha()
         );
     }
 
@@ -212,10 +212,10 @@ public record Color(int argbInt) {
      */
     public Color darker(float factor) {
         return ofRGBA(
-                Math.max((int) (getRed() * (1 / factor)), 0),
-                Math.max((int) (getGreen() * (1 / factor)), 0),
-                Math.max((int) (getBlue() * (1 / factor)), 0),
-                getAlpha()
+            Math.max((int) (getRed() * (1 / factor)), 0),
+            Math.max((int) (getGreen() * (1 / factor)), 0),
+            Math.max((int) (getBlue() * (1 / factor)), 0),
+            getAlpha()
         );
     }
 

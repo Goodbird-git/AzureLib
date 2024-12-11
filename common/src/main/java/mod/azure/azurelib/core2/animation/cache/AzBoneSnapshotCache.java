@@ -1,9 +1,10 @@
 package mod.azure.azurelib.core2.animation.cache;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mod.azure.azurelib.core.state.BoneSnapshot;
 
 import java.util.Map;
+
+import mod.azure.azurelib.core.state.BoneSnapshot;
 
 public class AzBoneSnapshotCache {
 

@@ -1,5 +1,11 @@
 package mod.azure.azurelib.core2.animation;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
@@ -9,26 +15,26 @@ import mod.azure.azurelib.core2.animation.cache.AzBakedAnimationCache;
 import mod.azure.azurelib.core2.animation.cache.AzBoneSnapshotCache;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public abstract class AzAnimator<T> {
 
     // Remnants from AnimatableManager.
     private final AzAnimationControllerContainer<T> animationControllerContainer;
+
     private final AzAnimationProcessor<T> animationProcessor;
+
     private final AzBoneSnapshotCache boneSnapshotCache;
 
     // Remnants from AnimatableManager.
     private double lastUpdateTime;
+
     private boolean isFirstTick = true;
+
     private double firstTickTime = -1;
 
     // Remnants from GeoModel.
     private double animTime;
+
     private double lastGameTickTime;
 
     protected AzAnimator() {
@@ -38,6 +44,7 @@ public abstract class AzAnimator<T> {
     }
 
     public abstract void registerControllers(AzAnimationControllerContainer<T> animationControllerContainer);
+
     public abstract @NotNull ResourceLocation getAnimationLocation(T animatable);
 
     public void animate(T animatable, AzAnimationState<T> animationState) {
@@ -53,9 +60,9 @@ public abstract class AzAnimator<T> {
         boolean isReRender = !isFirstTick && currentFrameTime == lastUpdateTime;
 
         // TODO: Figure out why this was here to begin with.
-//        if (isReRender && instanceId == this.lastRenderedInstance) {
-//            return;
-//        }
+        // if (isReRender && instanceId == this.lastRenderedInstance) {
+        // return;
+        // }
 
         if (!isReRender && (!minecraft.isPaused() || shouldPlayAnimsWhileGamePaused())) {
             this.lastUpdateTime = currentFrameTime;

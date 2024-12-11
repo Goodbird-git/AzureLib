@@ -1,5 +1,9 @@
 package mod.azure.azurelib.core2.model.factory;
 
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
 import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoQuad;
 import mod.azure.azurelib.common.internal.common.loading.json.raw.Cube;
@@ -11,12 +15,8 @@ import mod.azure.azurelib.common.internal.common.loading.object.GeometryTree;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.model.factory.primitive.VertexSet;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class AzBakedModelFactory {
-
 
     /**
      * Construct the output model from the given {@link GeometryTree}.<br>
@@ -30,7 +30,11 @@ public abstract class AzBakedModelFactory {
      * @param properties    The loaded properties for the model
      * @param parent        The parent bone for this bone, or null if a top-level bone
      */
-    public abstract AzBone constructBone(BoneStructure boneStructure, ModelProperties properties, @Nullable AzBone parent);
+    public abstract AzBone constructBone(
+        BoneStructure boneStructure,
+        ModelProperties properties,
+        @Nullable AzBone parent
+    );
 
     /**
      * Construct a {@link GeoCube} from the relevant raw input data
@@ -98,29 +102,29 @@ public abstract class AzBakedModelFactory {
         double[] uvSize = cube.size();
         Vec3 uvSizeVec = new Vec3(Math.floor(uvSize[0]), Math.floor(uvSize[1]), Math.floor(uvSize[2]));
         double[][] uvData = switch (direction) {
-            case WEST -> new double[][]{
-                new double[]{uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z},
-                new double[]{uvSizeVec.z, uvSizeVec.y}
+            case WEST -> new double[][] {
+                new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z },
+                new double[] { uvSizeVec.z, uvSizeVec.y }
             };
-            case EAST -> new double[][]{
-                new double[]{uv[0], uv[1] + uvSizeVec.z},
-                new double[]{uvSizeVec.z, uvSizeVec.y}
+            case EAST -> new double[][] {
+                new double[] { uv[0], uv[1] + uvSizeVec.z },
+                new double[] { uvSizeVec.z, uvSizeVec.y }
             };
-            case NORTH -> new double[][]{
-                new double[]{uv[0] + uvSizeVec.z, uv[1] + uvSizeVec.z},
-                new double[]{uvSizeVec.x, uvSizeVec.y}
+            case NORTH -> new double[][] {
+                new double[] { uv[0] + uvSizeVec.z, uv[1] + uvSizeVec.z },
+                new double[] { uvSizeVec.x, uvSizeVec.y }
             };
-            case SOUTH -> new double[][]{
-                new double[]{uv[0] + uvSizeVec.z + uvSizeVec.x + uvSizeVec.z, uv[1] + uvSizeVec.z},
-                new double[]{uvSizeVec.x, uvSizeVec.y}
+            case SOUTH -> new double[][] {
+                new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x + uvSizeVec.z, uv[1] + uvSizeVec.z },
+                new double[] { uvSizeVec.x, uvSizeVec.y }
             };
-            case UP -> new double[][]{
-                new double[]{uv[0] + uvSizeVec.z, uv[1]},
-                new double[]{uvSizeVec.x, uvSizeVec.z}
+            case UP -> new double[][] {
+                new double[] { uv[0] + uvSizeVec.z, uv[1] },
+                new double[] { uvSizeVec.x, uvSizeVec.z }
             };
-            case DOWN -> new double[][]{
-                new double[]{uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z},
-                new double[]{uvSizeVec.x, -uvSizeVec.z}
+            case DOWN -> new double[][] {
+                new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z },
+                new double[] { uvSizeVec.x, -uvSizeVec.z }
             };
         };
 

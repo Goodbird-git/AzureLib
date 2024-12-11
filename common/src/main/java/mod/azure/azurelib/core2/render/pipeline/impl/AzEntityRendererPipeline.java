@@ -4,14 +4,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
-import mod.azure.azurelib.common.internal.client.util.RenderUtils;
-import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
-import mod.azure.azurelib.core2.model.AzBakedModel;
-import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
-import mod.azure.azurelib.core2.render.entity.RenderLeashUtil;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,11 +20,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
+import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
+import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
+import mod.azure.azurelib.core2.model.AzBakedModel;
+import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
+import mod.azure.azurelib.core2.render.entity.RenderLeashUtil;
+import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
+
 public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeline<T> {
 
     private final AzEntityRenderer<T> azEntityRenderer;
 
     protected Matrix4f entityRenderTranslations = new Matrix4f();
+
     protected Matrix4f modelRenderTranslations = new Matrix4f();
 
     public AzEntityRendererPipeline(AzEntityRenderer<T> azEntityRenderer) {
@@ -45,7 +47,12 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     }
 
     @Override
-    public RenderType getDefaultRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getDefaultRenderType(
+        T animatable,
+        ResourceLocation texture,
+        @Nullable MultiBufferSource bufferSource,
+        float partialTick
+    ) {
         return RenderType.entityCutoutNoCull(texture);
     }
 
@@ -99,8 +106,8 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
     /**
      * The actual render method that subtype renderers should override to handle their specific rendering tasks.<br>
-     * {@link AzEntityRendererPipeline#preRender} has already been called by this stage, and {@link AzEntityRendererPipeline#postRender} will be
-     * called directly after
+     * {@link AzEntityRendererPipeline#preRender} has already been called by this stage, and
+     * {@link AzEntityRendererPipeline#postRender} will be called directly after
      */
     @Override
     public void actuallyRender(
@@ -124,17 +131,17 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         float lerpBodyRot = livingEntity == null
             ? 0
             : Mth.rotLerp(
-            partialTick,
-            livingEntity.yBodyRotO,
-            livingEntity.yBodyRot
-        );
+                partialTick,
+                livingEntity.yBodyRotO,
+                livingEntity.yBodyRot
+            );
         float lerpHeadRot = livingEntity == null
             ? 0
             : Mth.rotLerp(
-            partialTick,
-            livingEntity.yHeadRotO,
-            livingEntity.yHeadRot
-        );
+                partialTick,
+                livingEntity.yHeadRotO,
+                livingEntity.yHeadRot
+            );
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
 
         if (shouldSit && animatable.getVehicle() instanceof LivingEntity livingentity) {
@@ -188,25 +195,25 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
         if (!isReRender) {
             // FIXME: Figure out what to do with this data stuff.
-//            float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
-//            var velocity = animatable.getDeltaMovement();
-//            float avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-//
-//            long instanceId = getInstanceId(animatable);
-//
-//            animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
-//            animationState.setData(DataTickets.ENTITY, animatable);
-//            animationState.setData(
-//                DataTickets.ENTITY_MODEL_DATA,
-//                new EntityModelData(
-//                    shouldSit,
-//                    livingEntity != null && livingEntity.isBaby(),
-//                    -netHeadYaw,
-//                    -headPitch
-//                )
-//            );
-//
-//            this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
+            // float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
+            // var velocity = animatable.getDeltaMovement();
+            // float avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
+            //
+            // long instanceId = getInstanceId(animatable);
+            //
+            // animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
+            // animationState.setData(DataTickets.ENTITY, animatable);
+            // animationState.setData(
+            // DataTickets.ENTITY_MODEL_DATA,
+            // new EntityModelData(
+            // shouldSit,
+            // livingEntity != null && livingEntity.isBaby(),
+            // -netHeadYaw,
+            // -headPitch
+            // )
+            // );
+            //
+            // this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
 
             var animator = azEntityRenderer.getAnimator();
 
@@ -341,7 +348,17 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     }
 
     @Override
-    public void renderFinal(PoseStack poseStack, T entity, AzBakedModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
+    public void renderFinal(
+        PoseStack poseStack,
+        T entity,
+        AzBakedModel model,
+        MultiBufferSource bufferSource,
+        VertexConsumer buffer,
+        float partialTick,
+        int packedLight,
+        int packedOverlay,
+        int colour
+    ) {
         azEntityRenderer.superRender(entity, 0, partialTick, poseStack, bufferSource, packedLight);
 
         if (entity instanceof Mob mob) {
@@ -359,7 +376,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     @Override
     public void fireCompileRenderLayersEvent() {
         // FIXME:
-//        Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileEntityRenderLayers(geoEntityRenderer);
+        // Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireCompileEntityRenderLayers(geoEntityRenderer);
     }
 
     /**
@@ -377,7 +394,8 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     ) {
         // FIXME:
         return true;
-//        return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireEntityPreRender(geoEntityRenderer, poseStack, model, bufferSource, partialTick, packedLight);
+        // return Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireEntityPreRender(geoEntityRenderer, poseStack, model,
+        // bufferSource, partialTick, packedLight);
     }
 
     /**
@@ -392,11 +410,13 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         int packedLight
     ) {
         // FIXME:
-//        Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireEntityPostRender(geoEntityRenderer, poseStack, model, bufferSource, partialTick, packedLight);
+        // Services.GEO_RENDER_PHASE_EVENT_FACTORY.fireEntityPostRender(geoEntityRenderer, poseStack, model,
+        // bufferSource, partialTick, packedLight);
     }
 
     /**
-     * Applies rotation transformations to the renderer prior to render time to account for various entity states, default scale of 1
+     * Applies rotation transformations to the renderer prior to render time to account for various entity states,
+     * default scale of 1
      */
     protected void applyRotations(
         T animatable,
@@ -409,10 +429,17 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     }
 
     /**
-     * Applies rotation transformations to the renderer prior to render time to account for various entity states, scalable
+     * Applies rotation transformations to the renderer prior to render time to account for various entity states,
+     * scalable
      */
-    protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw,
-                                  float partialTick, float nativeScale) {
+    protected void applyRotations(
+        T animatable,
+        PoseStack poseStack,
+        float ageInTicks,
+        float rotationYaw,
+        float partialTick,
+        float nativeScale
+    ) {
         if (isShaking(animatable)) {
             rotationYaw += (float) (Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
         }
@@ -425,20 +452,23 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             if (livingEntity.deathTime > 0) {
                 float deathRotation = (livingEntity.deathTime + partialTick - 1f) / 20f * 1.6f;
 
-                poseStack.mulPose(Axis.ZP.rotationDegrees(Math.min(Mth.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable)));
-            }
-            else if (livingEntity.isAutoSpinAttack()) {
+                poseStack.mulPose(
+                    Axis.ZP.rotationDegrees(Math.min(Mth.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable))
+                );
+            } else if (livingEntity.isAutoSpinAttack()) {
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90f - livingEntity.getXRot()));
                 poseStack.mulPose(Axis.YP.rotationDegrees((livingEntity.tickCount + partialTick) * -75f));
-            }
-            else if (animatable.hasPose(Pose.SLEEPING)) {
+            } else if (animatable.hasPose(Pose.SLEEPING)) {
                 Direction bedOrientation = livingEntity.getBedOrientation();
 
-                poseStack.mulPose(Axis.YP.rotationDegrees(bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw));
+                poseStack.mulPose(
+                    Axis.YP.rotationDegrees(
+                        bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw
+                    )
+                );
                 poseStack.mulPose(Axis.ZP.rotationDegrees(getDeathMaxRotation(animatable)));
                 poseStack.mulPose(Axis.YP.rotationDegrees(270f));
-            }
-            else if (LivingEntityRenderer.isEntityUpsideDown(livingEntity)) {
+            } else if (LivingEntityRenderer.isEntityUpsideDown(livingEntity)) {
                 poseStack.translate(0, (animatable.getBbHeight() + 0.1f) / nativeScale, 0);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
             }
@@ -470,6 +500,9 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             return OverlayTexture.NO_OVERLAY;
         }
 
-        return OverlayTexture.pack(OverlayTexture.u(u), OverlayTexture.v(livingEntity.hurtTime > 0 || livingEntity.deathTime > 0));
+        return OverlayTexture.pack(
+            OverlayTexture.u(u),
+            OverlayTexture.v(livingEntity.hurtTime > 0 || livingEntity.deathTime > 0)
+        );
     }
 }

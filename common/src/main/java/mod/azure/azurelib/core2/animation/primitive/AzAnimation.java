@@ -25,8 +25,11 @@ public record AzAnimation(
             length,
             AzLoopType.PLAY_ONCE,
             new BoneAnimation[0],
-            new AzKeyframes(new SoundKeyframeData[0], new ParticleKeyframeData[0],
-                    new CustomInstructionKeyframeData[0])
+            new AzKeyframes(
+                new SoundKeyframeData[0],
+                new ParticleKeyframeData[0],
+                new CustomInstructionKeyframeData[0]
+            )
         );
     }
 }

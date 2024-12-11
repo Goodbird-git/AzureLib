@@ -1,8 +1,9 @@
 package mod.azure.azurelib.core2.model.factory.primitive;
 
-import mod.azure.azurelib.common.internal.common.cache.object.GeoVertex;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
+
+import mod.azure.azurelib.common.internal.common.cache.object.GeoVertex;
 
 /**
  * Holder class to make it easier to store and refer to vertices for a given cube
@@ -51,7 +52,7 @@ public record VertexSet(
      * Returns the normal vertex array for a west-facing quad
      */
     public GeoVertex[] quadWest() {
-        return new GeoVertex[]{ this.topRightBack, this.topLeftBack, this.bottomLeftBack, this.bottomRightBack };
+        return new GeoVertex[] { this.topRightBack, this.topLeftBack, this.bottomLeftBack, this.bottomRightBack };
     }
 
     /**
@@ -70,7 +71,7 @@ public record VertexSet(
      * Returns the normal vertex array for a north-facing quad
      */
     public GeoVertex[] quadNorth() {
-        return new GeoVertex[]{ this.topLeftBack, this.topLeftFront, this.bottomLeftFront, this.bottomLeftBack };
+        return new GeoVertex[] { this.topLeftBack, this.topLeftFront, this.bottomLeftFront, this.bottomLeftBack };
     }
 
     /**
@@ -89,7 +90,7 @@ public record VertexSet(
      * Returns the normal vertex array for a top-facing quad
      */
     public GeoVertex[] quadUp() {
-        return new GeoVertex[]{ this.topRightBack, this.topRightFront, this.topLeftFront, this.topLeftBack };
+        return new GeoVertex[] { this.topRightBack, this.topRightFront, this.topLeftFront, this.topLeftBack };
     }
 
     /**

@@ -1,10 +1,11 @@
 package mod.azure.azurelib.core2.animation;
 
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
+
 import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimTriggerPacket;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
 
 public class AzAnimationDispatcher<T extends Entity> {
 

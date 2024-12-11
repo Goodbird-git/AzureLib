@@ -1,11 +1,15 @@
 /**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
 package mod.azure.azurelib.common.api.common.animatable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.AzureLib;
@@ -16,11 +20,6 @@ import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link GeoAnimatable} interface specific to {@link BlockEntity BlockEntities}
@@ -53,8 +52,8 @@ public interface GeoBlockEntity extends GeoAnimatable {
 
         if (level == null) {
             AzureLib.LOGGER.error(
-                    "Attempting to set animation data for BlockEntity too early! Must wait until after the BlockEntity has been set in the world. ({})",
-                    blockEntity.getClass()
+                "Attempting to set animation data for BlockEntity too early! Must wait until after the BlockEntity has been set in the world. ({})",
+                blockEntity.getClass()
             );
 
             return;
@@ -66,9 +65,9 @@ public interface GeoBlockEntity extends GeoAnimatable {
             BlockPos pos = blockEntity.getBlockPos();
 
             BlockEntityAnimDataSyncPacket<D> blockEntityAnimDataSyncPacket = new BlockEntityAnimDataSyncPacket<>(
-                    pos,
-                    dataTicket,
-                    data
+                pos,
+                dataTicket,
+                data
             );
             Services.NETWORK.sendToEntitiesTrackingChunk(blockEntityAnimDataSyncPacket, (ServerLevel) level, pos);
         }
@@ -89,8 +88,8 @@ public interface GeoBlockEntity extends GeoAnimatable {
 
         if (level == null) {
             AzureLib.LOGGER.error(
-                    "Attempting to trigger an animation for a BlockEntity too early! Must wait until after the BlockEntity has been set in the world. ({})",
-                    blockEntity.getClass()
+                "Attempting to trigger an animation for a BlockEntity too early! Must wait until after the BlockEntity has been set in the world. ({})",
+                blockEntity.getClass()
             );
 
             return;
@@ -102,9 +101,9 @@ public interface GeoBlockEntity extends GeoAnimatable {
             BlockPos pos = blockEntity.getBlockPos();
 
             BlockEntityAnimTriggerPacket blockEntityAnimTriggerPacket = new BlockEntityAnimTriggerPacket(
-                    pos,
-                    controllerName,
-                    animName
+                pos,
+                controllerName,
+                animName
             );
             Services.NETWORK.sendToEntitiesTrackingChunk(blockEntityAnimTriggerPacket, (ServerLevel) level, pos);
         }

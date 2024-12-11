@@ -1,5 +1,9 @@
 package mod.azure.azurelib.fabric;
 
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.AzureLibMod;
 import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
@@ -15,9 +19,6 @@ import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPa
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.platform.FabricAzureLibNetwork;
 import mod.azure.azurelib.sblforked.SBLConstants;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public final class FabricAzureLibMod implements ModInitializer {
 

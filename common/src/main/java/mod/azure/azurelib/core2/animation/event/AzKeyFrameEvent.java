@@ -22,7 +22,12 @@ public abstract class AzKeyFrameEvent<T, E extends KeyFrameData> {
 
     private final E eventKeyFrame;
 
-    protected AzKeyFrameEvent(T animatable, double animationTick, AzAnimationController<T> controller, E eventKeyFrame) {
+    protected AzKeyFrameEvent(
+        T animatable,
+        double animationTick,
+        AzAnimationController<T> controller,
+        E eventKeyFrame
+    ) {
         this.animatable = animatable;
         this.animationTick = animationTick;
         this.controller = controller;

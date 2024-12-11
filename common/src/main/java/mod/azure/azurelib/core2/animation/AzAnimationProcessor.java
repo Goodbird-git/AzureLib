@@ -1,6 +1,11 @@
 package mod.azure.azurelib.core2.animation;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.state.BoneSnapshot;
@@ -11,16 +16,13 @@ import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzStage;
 import mod.azure.azurelib.core2.model.AzBakedModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 public class AzAnimationProcessor<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationProcessor.class);
 
     private final AzAnimator<T> animator;
+
     private final Map<String, CoreGeoBone> bonesByName;
 
     public boolean reloadAnimations;
@@ -52,9 +54,9 @@ public class AzAnimationProcessor<T> {
 
             if (animation == null) {
                 LOGGER.warn(
-                        "Unable to find animation: {} for {}",
-                        stage.animationName(),
-                        animatable.getClass().getSimpleName()
+                    "Unable to find animation: {} for {}",
+                    stage.animationName(),
+                    animatable.getClass().getSimpleName()
                 );
                 return null;
             } else {
@@ -105,13 +107,13 @@ public class AzAnimationProcessor<T> {
 
                 if (rotXPoint != null && rotYPoint != null && rotZPoint != null) {
                     bone.setRotX(
-                            (float) EasingType.lerpWithOverride(rotXPoint, easingType) + initialSnapshot.getRotX()
+                        (float) EasingType.lerpWithOverride(rotXPoint, easingType) + initialSnapshot.getRotX()
                     );
                     bone.setRotY(
-                            (float) EasingType.lerpWithOverride(rotYPoint, easingType) + initialSnapshot.getRotY()
+                        (float) EasingType.lerpWithOverride(rotYPoint, easingType) + initialSnapshot.getRotY()
                     );
                     bone.setRotZ(
-                            (float) EasingType.lerpWithOverride(rotZPoint, easingType) + initialSnapshot.getRotZ()
+                        (float) EasingType.lerpWithOverride(rotZPoint, easingType) + initialSnapshot.getRotZ()
                     );
                     snapshot.updateRotation(bone.getRotX(), bone.getRotY(), bone.getRotZ());
                     snapshot.startRotAnim();
@@ -150,18 +152,18 @@ public class AzAnimationProcessor<T> {
                     saveSnapshot.stopRotAnim(animTime);
 
                 double percentageReset = Math.min(
-                        (animTime - saveSnapshot.getLastResetRotationTick()) / resetTickLength,
-                        1
+                    (animTime - saveSnapshot.getLastResetRotationTick()) / resetTickLength,
+                    1
                 );
 
                 bone.setRotX(
-                        (float) Interpolations.lerp(saveSnapshot.getRotX(), initialSnapshot.getRotX(), percentageReset)
+                    (float) Interpolations.lerp(saveSnapshot.getRotX(), initialSnapshot.getRotX(), percentageReset)
                 );
                 bone.setRotY(
-                        (float) Interpolations.lerp(saveSnapshot.getRotY(), initialSnapshot.getRotY(), percentageReset)
+                    (float) Interpolations.lerp(saveSnapshot.getRotY(), initialSnapshot.getRotY(), percentageReset)
                 );
                 bone.setRotZ(
-                        (float) Interpolations.lerp(saveSnapshot.getRotZ(), initialSnapshot.getRotZ(), percentageReset)
+                    (float) Interpolations.lerp(saveSnapshot.getRotZ(), initialSnapshot.getRotZ(), percentageReset)
                 );
 
                 if (percentageReset >= 1) {
@@ -177,7 +179,10 @@ public class AzAnimationProcessor<T> {
                     saveSnapshot.stopPosAnim(animTime);
                 }
 
-                var percentageReset = Math.min((animTime - saveSnapshot.getLastResetPositionTick()) / resetTickLength, 1);
+                var percentageReset = Math.min(
+                    (animTime - saveSnapshot.getLastResetPositionTick()) / resetTickLength,
+                    1
+                );
 
                 bone.setPosX(
                     (float) Interpolations.lerp(
@@ -214,7 +219,10 @@ public class AzAnimationProcessor<T> {
                     saveSnapshot.stopScaleAnim(animTime);
                 }
 
-                double percentageReset = Math.min((animTime - saveSnapshot.getLastResetScaleTick()) / resetTickLength, 1);
+                double percentageReset = Math.min(
+                    (animTime - saveSnapshot.getLastResetScaleTick()) / resetTickLength,
+                    1
+                );
 
                 bone.setScaleX(
                     (float) Interpolations.lerp(saveSnapshot.getScaleX(), initialSnapshot.getScaleX(), percentageReset)

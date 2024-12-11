@@ -1,12 +1,13 @@
 package mod.azure.azurelib.fabric.core2.example;
 
-import mod.azure.azurelib.common.internal.common.AzureLib;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+
+import mod.azure.azurelib.common.internal.common.AzureLib;
 
 public class ExampleEntityTypes {
 

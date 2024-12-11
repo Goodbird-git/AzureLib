@@ -1,10 +1,6 @@
 package mod.azure.azurelib.common.platform.services;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
-import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,6 +12,11 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
+import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public interface AzureLibNetwork {
 
@@ -54,7 +55,11 @@ public interface AzureLibNetwork {
         return animatable;
     }
 
-    <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacketInternal(CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean isClientBound);
+    <B extends FriendlyByteBuf, P extends AbstractPacket> void registerPacketInternal(
+        CustomPacketPayload.Type<P> payloadType,
+        StreamCodec<B, P> codec,
+        boolean isClientBound
+    );
 
     /**
      * Registers a synced {@link GeoAnimatable} object for networking support.<br>

@@ -1,22 +1,21 @@
 /**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
 package mod.azure.azurelib.core.animatable.instance;
 
 import com.google.common.base.Suppliers;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
+
 import mod.azure.azurelib.common.internal.client.RenderProvider;
 import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.object.DataTicket;
-
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 
 /**
  * The base cache class responsible for returning the {@link AnimatableManager} for a given instanceof of a
@@ -28,12 +27,16 @@ import java.util.function.Supplier;
 public abstract class AnimatableInstanceCache {
 
     protected final GeoAnimatable animatable;
+
     protected final Supplier<RenderProvider> renderProvider;
 
     protected AnimatableInstanceCache(GeoAnimatable animatable) {
         this.animatable = animatable;
         this.renderProvider = Suppliers.memoize(() -> {
-            if (!(this.animatable instanceof SingletonGeoAnimatable singleton) || !Services.PLATFORM.isEnvironmentClient())
+            if (
+                !(this.animatable instanceof SingletonGeoAnimatable singleton) || !Services.PLATFORM
+                    .isEnvironmentClient()
+            )
                 return null;
 
             final AtomicReference<RenderProvider> consumer = new AtomicReference<>(RenderProvider.DEFAULT);
@@ -77,7 +80,8 @@ public abstract class AnimatableInstanceCache {
     /**
      * Get the {@link RenderProvider} for this animatable
      * <p>
-     * Because only {@link SingletonGeoAnimatable}s use this functionality, it this method should not be used and will always return null for anything other than a SingletonGeoAnimatable
+     * Because only {@link SingletonGeoAnimatable}s use this functionality, it this method should not be used and will
+     * always return null for anything other than a SingletonGeoAnimatable
      * <p>
      * The returned object is upcast to Object for side-safety
      *

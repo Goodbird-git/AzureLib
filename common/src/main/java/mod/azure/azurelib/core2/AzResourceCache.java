@@ -32,9 +32,9 @@ public abstract class AzResourceCache {
         BiConsumer<ResourceLocation, T> map
     ) {
         return CompletableFuture.supplyAsync(
-                () -> resourceManager.listResources(type, fileName -> fileName.toString().endsWith(".json")),
-                executor
-            )
+            () -> resourceManager.listResources(type, fileName -> fileName.toString().endsWith(".json")),
+            executor
+        )
             .thenApplyAsync(resources -> {
                 var tasks = new Object2ObjectOpenHashMap<ResourceLocation, CompletableFuture<T>>();
 

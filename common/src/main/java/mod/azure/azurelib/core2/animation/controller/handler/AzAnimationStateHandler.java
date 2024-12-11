@@ -4,9 +4,9 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core2.animation.AzAnimationState;
 
 /**
- * Every render frame, the {@code AzAnimationController} will call this handler for <u>each</u> animatable that is
- * being rendered. This handler defines which animation should be currently playing, and returning a
- * {@link PlayState} to tell the controller what to do next.<br>
+ * Every render frame, the {@code AzAnimationController} will call this handler for <u>each</u> animatable that is being
+ * rendered. This handler defines which animation should be currently playing, and returning a {@link PlayState} to tell
+ * the controller what to do next.<br>
  * Example Usage:<br>
  *
  * <pre>{@code

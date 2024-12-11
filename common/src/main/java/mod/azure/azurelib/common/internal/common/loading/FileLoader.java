@@ -1,13 +1,19 @@
 /**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
 package mod.azure.azurelib.common.internal.common.loading;
 
 import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.GsonHelper;
+import org.apache.commons.io.IOUtils;
+
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
@@ -17,13 +23,6 @@ import mod.azure.azurelib.common.internal.common.util.JsonUtil;
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
-import org.apache.commons.io.IOUtils;
-
-import java.io.InputStream;
-import java.nio.charset.Charset;
 
 /**
  * Extracts raw information from given files, and other similar functions
@@ -39,7 +38,6 @@ public final class FileLoader {
      *
      * @param location The resource path of the animations file
      * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access
-     *
      * @deprecated
      */
     public static BakedAnimations loadAnimationsFile(ResourceLocation location, ResourceManager manager) {

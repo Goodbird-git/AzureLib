@@ -1,16 +1,17 @@
 package mod.azure.azurelib.core2.animation.primitive;
 
 import com.google.gson.JsonElement;
-import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
-import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
+import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
+
 /**
  * Loop type functional interface to define post-play handling for a given animation. <br>
- * Custom loop types are supported by extending this class and providing the extended class instance as the loop
- * type for the animation
+ * Custom loop types are supported by extending this class and providing the extended class instance as the loop type
+ * for the animation
  */
 @FunctionalInterface
 public interface AzLoopType {
@@ -18,11 +19,11 @@ public interface AzLoopType {
     Map<String, AzLoopType> LOOP_TYPES = new ConcurrentHashMap<>(4);
 
     AzLoopType DEFAULT = (animatable, controller, currentAnimation) -> currentAnimation.loopType()
-            .shouldPlayAgain(animatable, controller, currentAnimation);
+        .shouldPlayAgain(animatable, controller, currentAnimation);
 
     AzLoopType PLAY_ONCE = register(
-            "play_once",
-            register("false", (animatable, controller, currentAnimation) -> false)
+        "play_once",
+        register("false", (animatable, controller, currentAnimation) -> false)
     );
 
     AzLoopType HOLD_ON_LAST_FRAME = register("hold_on_last_frame", (animatable, controller, currentAnimation) -> {
@@ -66,8 +67,7 @@ public interface AzLoopType {
     /**
      * Register a AzLoopType with AzureLib for handling loop functionality of animations..<br>
      * <b><u>MUST be called during mod construct</u></b><br>
-     * It is recommended you don't call this directly, and instead call it via
-     * {@code AzureLibUtil#addCustomLoopType}
+     * It is recommended you don't call this directly, and instead call it via {@code AzureLibUtil#addCustomLoopType}
      *
      * @param name     The name of the loop type
      * @param loopType The loop type to register

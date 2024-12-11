@@ -1,13 +1,14 @@
 package mod.azure.azurelib.core2.animation;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
+import java.util.Map;
+import java.util.Objects;
+
 import mod.azure.azurelib.core.object.DataTicket;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
-
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Animation state handler for end-users.<br>
@@ -27,7 +28,9 @@ public class AzAnimationState<T> {
     private final boolean isMoving;
 
     private final Map<DataTicket<?>, Object> extraData = new Object2ObjectOpenHashMap<>();
+
     public double animationTick;
+
     protected AzAnimationController<T> controller;
 
     public AzAnimationState(T animatable, float limbSwing, float limbSwingAmount, float partialTick, boolean isMoving) {
@@ -157,8 +160,8 @@ public class AzAnimationState<T> {
     }
 
     /**
-     * Similar to {@link AzAnimationState#isCurrentAnimation}, but additionally checks the current stage of the animation
-     * by name.<br>
+     * Similar to {@link AzAnimationState#isCurrentAnimation}, but additionally checks the current stage of the
+     * animation by name.<br>
      * This can be used to check if a multi-stage animation has reached a given stage (if it is running at all)<br>
      * Note that this will still return true even if the animation has finished, matching with the last animation stage
      * in the {@link AzRawAnimation} last provided
@@ -168,9 +171,9 @@ public class AzAnimationState<T> {
      */
     public boolean isCurrentAnimationStage(String name) {
         return getController().getCurrentAnimation() != null && getController().getCurrentAnimation()
-                .animation()
-                .name()
-                .equals(name);
+            .animation()
+            .name()
+            .equals(name);
     }
 
     /**

@@ -2,6 +2,19 @@ package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Queue;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.keyframe.AnimationPoint;
@@ -19,7 +32,6 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.controller.handler.AzAnimationStateHandler;
 import mod.azure.azurelib.core2.animation.controller.handler.AzCustomKeyframeHandler;
 import mod.azure.azurelib.core2.animation.controller.handler.AzParticleKeyframeHandler;
@@ -28,19 +40,8 @@ import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent
 import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Queue;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
@@ -52,21 +53,35 @@ public class AzAnimationController<T> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationController.class);
 
     protected final String name;
+
     protected final AzAnimationStateHandler<T> stateHandler;
+
     protected final Map<String, BoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
+
     protected final Map<String, BoneSnapshot> boneSnapshots = new Object2ObjectOpenHashMap<>();
+
     protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
+
     protected final Set<KeyFrameData> executedKeyFrames = new ObjectOpenHashSet<>();
+
     private final AzAnimator<T> animator;
 
     protected Queue<AzQueuedAnimation> animationQueue = new LinkedList<>();
+
     protected boolean isJustStarting = false;
+
     protected boolean needsAnimationReload = false;
+
     protected boolean shouldResetTick = false;
+
     protected boolean justStartedTransition = false;
+
     protected AzSoundKeyframeHandler<T> soundKeyframeHandler = null;
+
     protected AzParticleKeyframeHandler<T> particleKeyframeHandler = null;
+
     protected AzCustomKeyframeHandler<T> customKeyframeHandler = null;
+
     protected AzRawAnimation triggeredAnimation = null;
 
     protected boolean handlingTriggeredAnimations = false;
@@ -84,6 +99,7 @@ public class AzAnimationController<T> {
     protected ToDoubleFunction<T> animationSpeedModifier = obj -> 1d;
 
     protected Function<T, EasingType> overrideEasingTypeFunction = obj -> null;
+
     protected boolean justStopped = true;
 
     // FIXME: There used to be more constructors here. We should bring those back as a builder pattern.
@@ -110,8 +126,8 @@ public class AzAnimationController<T> {
     }
 
     /**
-     * Applies the given {@link AzSoundKeyframeHandler} to this controller, for handling {@link AzSoundKeyframeEvent sound
-     * keyframe instructions}.
+     * Applies the given {@link AzSoundKeyframeHandler} to this controller, for handling {@link AzSoundKeyframeEvent
+     * sound keyframe instructions}.
      *
      * @return this
      */
@@ -122,8 +138,8 @@ public class AzAnimationController<T> {
     }
 
     /**
-     * Applies the given {@link AzParticleKeyframeHandler} to this controller, for handling {@link AzParticleKeyframeEvent
-     * particle keyframe instructions}.
+     * Applies the given {@link AzParticleKeyframeHandler} to this controller, for handling
+     * {@link AzParticleKeyframeEvent particle keyframe instructions}.
      *
      * @return this
      */
@@ -140,7 +156,7 @@ public class AzAnimationController<T> {
      * @return this
      */
     public AzAnimationController<T> setCustomInstructionKeyframeHandler(
-            AzCustomKeyframeHandler<T> customInstructionHandler
+        AzCustomKeyframeHandler<T> customInstructionHandler
     ) {
         this.customKeyframeHandler = customInstructionHandler;
 
@@ -398,7 +414,9 @@ public class AzAnimationController<T> {
             setAnimation(state.getAnimatable(), triggeredAnimation);
 
             if (
-                !hasAnimationFinished() && (!handlingTriggeredAnimations || stateHandler.handle(state) == PlayState.CONTINUE)
+                !hasAnimationFinished() && (!handlingTriggeredAnimations || stateHandler.handle(
+                    state
+                ) == PlayState.CONTINUE)
             ) {
                 return PlayState.CONTINUE;
             }
@@ -502,38 +520,38 @@ public class AzAnimationController<T> {
 
                     if (!rotationKeyFrames.xKeyframes().isEmpty()) {
                         boneAnimationQueue.addNextRotation(
-                                null,
-                                adjustedTick,
-                                transitionLength,
-                                boneSnapshot,
-                                bone.getInitialSnapshot(),
-                                getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), 0, true, Axis.X),
-                                getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), 0, true, Axis.Y),
-                                getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), 0, true, Axis.Z)
+                            null,
+                            adjustedTick,
+                            transitionLength,
+                            boneSnapshot,
+                            bone.getInitialSnapshot(),
+                            getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), 0, true, Axis.X),
+                            getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), 0, true, Axis.Y),
+                            getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), 0, true, Axis.Z)
                         );
                     }
 
                     if (!positionKeyFrames.xKeyframes().isEmpty()) {
                         boneAnimationQueue.addNextPosition(
-                                null,
-                                adjustedTick,
-                                transitionLength,
-                                boneSnapshot,
-                                getAnimationPointAtTick(positionKeyFrames.xKeyframes(), 0, false, Axis.X),
-                                getAnimationPointAtTick(positionKeyFrames.yKeyframes(), 0, false, Axis.Y),
-                                getAnimationPointAtTick(positionKeyFrames.zKeyframes(), 0, false, Axis.Z)
+                            null,
+                            adjustedTick,
+                            transitionLength,
+                            boneSnapshot,
+                            getAnimationPointAtTick(positionKeyFrames.xKeyframes(), 0, false, Axis.X),
+                            getAnimationPointAtTick(positionKeyFrames.yKeyframes(), 0, false, Axis.Y),
+                            getAnimationPointAtTick(positionKeyFrames.zKeyframes(), 0, false, Axis.Z)
                         );
                     }
 
                     if (!scaleKeyFrames.xKeyframes().isEmpty()) {
                         boneAnimationQueue.addNextScale(
-                                null,
-                                adjustedTick,
-                                transitionLength,
-                                boneSnapshot,
-                                getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), 0, false, Axis.X),
-                                getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), 0, false, Axis.Y),
-                                getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), 0, false, Axis.Z)
+                            null,
+                            adjustedTick,
+                            transitionLength,
+                            boneSnapshot,
+                            getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), 0, false, Axis.X),
+                            getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), 0, false, Axis.Y),
+                            getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), 0, false, Axis.Z)
                         );
                     }
                 }
@@ -549,7 +567,12 @@ public class AzAnimationController<T> {
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required
      *                              bone, or continue with the remaining bones
      */
-    protected void processCurrentAnimation(T animatable, double adjustedTick, double seekTime, boolean crashWhenCantFindBone) {
+    protected void processCurrentAnimation(
+        T animatable,
+        double adjustedTick,
+        double seekTime,
+        boolean crashWhenCantFindBone
+    ) {
         if (adjustedTick >= currentAnimation.animation().length()) {
             if (
                 currentAnimation.loopType().shouldPlayAgain(animatable, this, this.currentAnimation.animation())
@@ -597,25 +620,25 @@ public class AzAnimationController<T> {
 
             if (!rotationKeyFrames.xKeyframes().isEmpty()) {
                 boneAnimationQueue.addRotations(
-                        getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), adjustedTick, true, Axis.X),
-                        getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), adjustedTick, true, Axis.Y),
-                        getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), adjustedTick, true, Axis.Z)
+                    getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), adjustedTick, true, Axis.X),
+                    getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), adjustedTick, true, Axis.Y),
+                    getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), adjustedTick, true, Axis.Z)
                 );
             }
 
             if (!positionKeyFrames.xKeyframes().isEmpty()) {
                 boneAnimationQueue.addPositions(
-                        getAnimationPointAtTick(positionKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
-                        getAnimationPointAtTick(positionKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
-                        getAnimationPointAtTick(positionKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
+                    getAnimationPointAtTick(positionKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
+                    getAnimationPointAtTick(positionKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
+                    getAnimationPointAtTick(positionKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
                 );
             }
 
             if (!scaleKeyFrames.xKeyframes().isEmpty()) {
                 boneAnimationQueue.addScales(
-                        getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
-                        getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
-                        getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
+                    getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
+                    getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
+                    getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
                 );
             }
         }
@@ -626,15 +649,15 @@ public class AzAnimationController<T> {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (soundKeyframeHandler == null) {
                     LOGGER.warn(
-                            "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
-                            animatable.getClass().getSimpleName(),
-                            getName()
+                        "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
+                        animatable.getClass().getSimpleName(),
+                        getName()
                     );
                     break;
                 }
 
                 soundKeyframeHandler.handle(
-                        new AzSoundKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
+                    new AzSoundKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
                 );
             }
         }
@@ -643,41 +666,44 @@ public class AzAnimationController<T> {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (particleKeyframeHandler == null) {
                     LOGGER.warn(
-                            "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
-                            animatable.getClass().getSimpleName(),
-                            getName()
+                        "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
+                        animatable.getClass().getSimpleName(),
+                        getName()
                     );
                     break;
                 }
 
                 particleKeyframeHandler.handle(
-                        new AzParticleKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
+                    new AzParticleKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
                 );
             }
         }
 
         for (
-                var keyframeData : currentAnimation.animation()
+            var keyframeData : currentAnimation.animation()
                 .keyFrames()
                 .customInstructions()
         ) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (customKeyframeHandler == null) {
                     LOGGER.warn(
-                            "Custom Instruction Keyframe found for {} -> {}, but no keyframe handler registered",
-                            animatable.getClass().getSimpleName(),
-                            getName()
+                        "Custom Instruction Keyframe found for {} -> {}, but no keyframe handler registered",
+                        animatable.getClass().getSimpleName(),
+                        getName()
                     );
                     break;
                 }
 
                 customKeyframeHandler.handle(
-                        new AzCustomInstructionKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
+                    new AzCustomInstructionKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
                 );
             }
         }
 
-        if (this.transitionLength == 0 && this.shouldResetTick && this.animationState == AzAnimationControllerState.TRANSITIONING) {
+        if (
+            this.transitionLength == 0 && this.shouldResetTick
+                && this.animationState == AzAnimationControllerState.TRANSITIONING
+        ) {
             this.currentAnimation = this.animationQueue.poll();
         }
     }
@@ -696,15 +722,15 @@ public class AzAnimationController<T> {
     }
 
     /**
-     * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link AzQueuedAnimation}
-     * for animation lerping
+     * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link AzQueuedAnimation} for animation
+     * lerping
      *
      * @param animation The {@code QueuedAnimation} to filter {@code BoneSnapshots} for
      * @param snapshots The master snapshot collection to pull filter from
      */
     protected void saveSnapshotsForAnimation(
-            AzQueuedAnimation animation,
-            Map<String, BoneSnapshot> snapshots
+        AzQueuedAnimation animation,
+        Map<String, BoneSnapshot> snapshots
     ) {
         if (animation.animation().boneAnimations() == null) {
             return;
@@ -726,7 +752,7 @@ public class AzAnimationController<T> {
      *
      * @param tick The currently used tick value
      * @return 0 if {@link AzAnimationController#shouldResetTick} is set to false, or a
-     * {@link AzAnimationController#animationSpeedModifier} modified value otherwise
+     *         {@link AzAnimationController#animationSpeedModifier} modified value otherwise
      */
     protected double adjustTick(T animatable, double tick) {
         if (!shouldResetTick) {
@@ -785,8 +811,8 @@ public class AzAnimationController<T> {
      * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
      */
     protected KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(
-            List<Keyframe<IValue>> frames,
-            double ageInTicks
+        List<Keyframe<IValue>> frames,
+        double ageInTicks
     ) {
         var totalFrameTime = 0;
 
