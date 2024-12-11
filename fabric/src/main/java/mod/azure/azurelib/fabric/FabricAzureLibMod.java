@@ -11,6 +11,7 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.AnimDataSyncPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AnimTriggerPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimDataSyncPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimDataSyncPacket;
@@ -34,6 +35,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(AzEntityAnimTriggerPacket.TYPE, AzEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
