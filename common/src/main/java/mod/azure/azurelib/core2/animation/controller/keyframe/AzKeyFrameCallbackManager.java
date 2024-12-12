@@ -13,6 +13,7 @@ import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
+// TODO: reduce the boilerplate of the specialized handle functions in this class.
 public class AzKeyFrameCallbackManager<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AzKeyFrameCallbackManager.class);
@@ -33,13 +34,10 @@ public class AzKeyFrameCallbackManager<T> {
     }
 
     private void handleCustomKeyframes(T animatable, double adjustedTick) {
-        for (
-            var keyframeData : getCurrentAnimation().animation()
-                .keyFrames()
-                .customInstructions()
-        ) {
-            var customKeyframeHandler = getCallbacks().getCustomKeyframeHandler();
+        var customKeyframeHandler = getCallbacks().getCustomKeyframeHandler();
+        var customInstructions = getCurrentAnimation().animation().keyFrames().customInstructions();
 
+        for (var keyframeData : customInstructions) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (customKeyframeHandler == null) {
                     LOGGER.warn(
@@ -58,9 +56,10 @@ public class AzKeyFrameCallbackManager<T> {
     }
 
     private void handleParticleKeyframes(T animatable, double adjustedTick) {
-        for (var keyframeData : getCurrentAnimation().animation().keyFrames().particles()) {
-            var particleKeyframeHandler = getCallbacks().getParticleKeyframeHandler();
+        var particleKeyframeHandler = getCallbacks().getParticleKeyframeHandler();
+        var particleInstructions = getCurrentAnimation().animation().keyFrames().particles();
 
+        for (var keyframeData : particleInstructions) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (particleKeyframeHandler == null) {
                     LOGGER.warn(
@@ -79,9 +78,10 @@ public class AzKeyFrameCallbackManager<T> {
     }
 
     private void handleSoundKeyframes(T animatable, double adjustedTick) {
-        for (var keyframeData : getCurrentAnimation().animation().keyFrames().sounds()) {
-            var soundKeyframeHandler = getCallbacks().getSoundKeyframeHandler();
+        var soundKeyframeHandler = getCallbacks().getSoundKeyframeHandler();
+        var soundInstructions = getCurrentAnimation().animation().keyFrames().sounds();
 
+        for (var keyframeData : soundInstructions) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (soundKeyframeHandler == null) {
                     LOGGER.warn(
