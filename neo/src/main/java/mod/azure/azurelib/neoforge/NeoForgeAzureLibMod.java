@@ -14,7 +14,6 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.neoforge.platform.NeoForgeCommonRegistry;
-import mod.azure.azurelib.sblforked.SBLConstants;
 
 @Mod(AzureLib.MOD_ID)
 public final class NeoForgeAzureLibMod {
@@ -35,7 +34,6 @@ public final class NeoForgeAzureLibMod {
         AzureLibMod.config = AzureLibMod.registerConfig(AzureLibConfig.class, ConfigFormats.json()).getConfigInstance();
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerMessages);
-        SBLConstants.SBL_LOADER.init(modEventBus);
     }
 
     private void init(FMLCommonSetupEvent event) {
