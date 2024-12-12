@@ -1,8 +1,8 @@
-package mod.azure.azurelib.core2.animation.controller;
+package mod.azure.azurelib.core2.animation.controller.keyframe;
 
-import mod.azure.azurelib.core2.animation.controller.handler.AzCustomKeyframeHandler;
-import mod.azure.azurelib.core2.animation.controller.handler.AzParticleKeyframeHandler;
-import mod.azure.azurelib.core2.animation.controller.handler.AzSoundKeyframeHandler;
+import mod.azure.azurelib.core2.animation.controller.keyframe.handler.AzCustomKeyframeHandler;
+import mod.azure.azurelib.core2.animation.controller.keyframe.handler.AzParticleKeyframeHandler;
+import mod.azure.azurelib.core2.animation.controller.keyframe.handler.AzSoundKeyframeHandler;
 import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;

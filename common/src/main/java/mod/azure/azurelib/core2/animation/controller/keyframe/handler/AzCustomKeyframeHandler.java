@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.animation.controller.handler;
+package mod.azure.azurelib.core2.animation.controller.keyframe.handler;
 
 import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent;
 

@@ -1,6 +1,8 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
