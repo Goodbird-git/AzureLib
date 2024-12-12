@@ -81,8 +81,6 @@ public class AzAnimationController<T> {
 
     protected AzRawAnimation triggeredAnimation = null;
 
-    protected boolean handlingTriggeredAnimations = false;
-
     protected double transitionLength;
 
     protected AzRawAnimation currentRawAnimation;
@@ -387,7 +385,7 @@ public class AzAnimationController<T> {
 
             setAnimation(state.getAnimatable(), triggeredAnimation);
 
-            if (!hasAnimationFinished() && !handlingTriggeredAnimations) {
+            if (!hasAnimationFinished()) {
                 return PlayState.CONTINUE;
             }
 
