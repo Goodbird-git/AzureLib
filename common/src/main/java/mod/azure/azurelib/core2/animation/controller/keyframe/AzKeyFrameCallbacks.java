@@ -1,5 +1,7 @@
 package mod.azure.azurelib.core2.animation.controller.keyframe;
 
+import org.jetbrains.annotations.Nullable;
+
 import mod.azure.azurelib.core2.animation.controller.keyframe.handler.AzCustomKeyframeHandler;
 import mod.azure.azurelib.core2.animation.controller.keyframe.handler.AzParticleKeyframeHandler;
 import mod.azure.azurelib.core2.animation.controller.keyframe.handler.AzSoundKeyframeHandler;
@@ -9,31 +11,38 @@ import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 
 public class AzKeyFrameCallbacks<T> {
 
-    private final AzCustomKeyframeHandler<T> customKeyframeHandler;
+    private static final AzKeyFrameCallbacks<?> NO_OP = new AzKeyFrameCallbacks<>(null, null, null);
 
-    private final AzParticleKeyframeHandler<T> particleKeyframeHandler;
+    @SuppressWarnings("unchecked")
+    public static <T> AzKeyFrameCallbacks<T> noop() {
+        return (AzKeyFrameCallbacks<T>) NO_OP;
+    }
 
-    private final AzSoundKeyframeHandler<T> soundKeyframeHandler;
+    private final @Nullable AzCustomKeyframeHandler<T> customKeyframeHandler;
+
+    private final @Nullable AzParticleKeyframeHandler<T> particleKeyframeHandler;
+
+    private final @Nullable AzSoundKeyframeHandler<T> soundKeyframeHandler;
 
     private AzKeyFrameCallbacks(
-        AzCustomKeyframeHandler<T> customKeyframeHandler,
-        AzParticleKeyframeHandler<T> particleKeyframeHandler,
-        AzSoundKeyframeHandler<T> soundKeyframeHandler
+        @Nullable AzCustomKeyframeHandler<T> customKeyframeHandler,
+        @Nullable AzParticleKeyframeHandler<T> particleKeyframeHandler,
+        @Nullable AzSoundKeyframeHandler<T> soundKeyframeHandler
     ) {
         this.customKeyframeHandler = customKeyframeHandler;
         this.particleKeyframeHandler = particleKeyframeHandler;
         this.soundKeyframeHandler = soundKeyframeHandler;
     }
 
-    public AzCustomKeyframeHandler<T> getCustomKeyframeHandler() {
+    public @Nullable AzCustomKeyframeHandler<T> getCustomKeyframeHandler() {
         return customKeyframeHandler;
     }
 
-    public AzParticleKeyframeHandler<T> getParticleKeyframeHandler() {
+    public @Nullable AzParticleKeyframeHandler<T> getParticleKeyframeHandler() {
         return particleKeyframeHandler;
     }
 
-    public AzSoundKeyframeHandler<T> getSoundKeyframeHandler() {
+    public @Nullable AzSoundKeyframeHandler<T> getSoundKeyframeHandler() {
         return soundKeyframeHandler;
     }
 
@@ -43,11 +52,11 @@ public class AzKeyFrameCallbacks<T> {
 
     public static class Builder<T> {
 
-        private AzCustomKeyframeHandler<T> customKeyframeHandler;
+        private @Nullable AzCustomKeyframeHandler<T> customKeyframeHandler;
 
-        private AzParticleKeyframeHandler<T> particleKeyframeHandler;
+        private @Nullable AzParticleKeyframeHandler<T> particleKeyframeHandler;
 
-        private AzSoundKeyframeHandler<T> soundKeyframeHandler;
+        private @Nullable AzSoundKeyframeHandler<T> soundKeyframeHandler;
 
         private Builder() {}
 
@@ -59,7 +68,6 @@ public class AzKeyFrameCallbacks<T> {
          */
         public Builder<T> setSoundKeyframeHandler(AzSoundKeyframeHandler<T> soundHandler) {
             this.soundKeyframeHandler = soundHandler;
-
             return this;
         }
 
@@ -71,7 +79,6 @@ public class AzKeyFrameCallbacks<T> {
          */
         public Builder<T> setParticleKeyframeHandler(AzParticleKeyframeHandler<T> particleHandler) {
             this.particleKeyframeHandler = particleHandler;
-
             return this;
         }
 
@@ -81,20 +88,13 @@ public class AzKeyFrameCallbacks<T> {
          *
          * @return this
          */
-        public Builder<T> setCustomInstructionKeyframeHandler(
-            AzCustomKeyframeHandler<T> customInstructionHandler
-        ) {
+        public Builder<T> setCustomInstructionKeyframeHandler(AzCustomKeyframeHandler<T> customInstructionHandler) {
             this.customKeyframeHandler = customInstructionHandler;
-
             return this;
         }
 
         public AzKeyFrameCallbacks<T> build() {
-            return new AzKeyFrameCallbacks<>(
-                customKeyframeHandler,
-                particleKeyframeHandler,
-                soundKeyframeHandler
-            );
+            return new AzKeyFrameCallbacks<>(customKeyframeHandler, particleKeyframeHandler, soundKeyframeHandler);
         }
     }
 }

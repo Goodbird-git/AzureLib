@@ -1,13 +1,13 @@
 package mod.azure.azurelib.core2.animation.controller.keyframe;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
 import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
+import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;

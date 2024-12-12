@@ -1,8 +1,7 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
@@ -31,6 +31,8 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
@@ -48,11 +50,11 @@ public class AzAnimationController<T> {
 
     protected final Map<String, BoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
 
-    protected final Map<String, BoneSnapshot> boneSnapshots = new Object2ObjectOpenHashMap<>();
-
     protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
 
     private final AzAnimator<T> animator;
+
+    private final AzBoneSnapshotCache boneSnapshotCache;
 
     private final AzKeyFrameCallbackManager<T> keyFrameCallbackManager;
 
@@ -99,10 +101,13 @@ public class AzAnimationController<T> {
         this.animator = animator;
         this.name = name;
         this.transitionLength = transitionTickTime;
+        this.boneSnapshotCache = new AzBoneSnapshotCache();
+        this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
         this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
     }
 
-    public AzAnimationController<T> setKeyFrameCallbacks(AzKeyFrameCallbacks<T> keyFrameCallbacks) {
+    public AzAnimationController<T> setKeyFrameCallbacks(@NotNull AzKeyFrameCallbacks<T> keyFrameCallbacks) {
+        Objects.requireNonNull(keyFrameCallbacks);
         this.keyFrameCallbacks = keyFrameCallbacks;
         return this;
     }
@@ -422,7 +427,7 @@ public class AzAnimationController<T> {
                     return;
                 }
 
-                saveSnapshotsForAnimation(currentAnimation, snapshots);
+                boneSnapshotCache.put(currentAnimation, snapshots.values());
             }
 
             if (currentAnimation != null) {
@@ -430,7 +435,7 @@ public class AzAnimationController<T> {
 
                 for (var boneAnimation : currentAnimation.animation().boneAnimations()) {
                     var boneAnimationQueue = boneAnimationQueues.get(boneAnimation.boneName());
-                    var boneSnapshot = boneSnapshots.get(boneAnimation.boneName());
+                    var boneSnapshot = boneSnapshotCache.getOrNull(boneAnimation.boneName());
                     var bone = bones.get(boneAnimation.boneName());
 
                     if (bone == null) {
@@ -591,31 +596,6 @@ public class AzAnimationController<T> {
 
         for (var modelRenderer : modelRendererList) {
             boneAnimationQueues.put(modelRenderer.getName(), new BoneAnimationQueue(modelRenderer));
-        }
-    }
-
-    /**
-     * Cache the relevant {@link BoneSnapshot BoneSnapshots} for the current {@link AzQueuedAnimation} for animation
-     * lerping
-     *
-     * @param animation The {@code QueuedAnimation} to filter {@code BoneSnapshots} for
-     * @param snapshots The master snapshot collection to pull filter from
-     */
-    protected void saveSnapshotsForAnimation(
-        AzQueuedAnimation animation,
-        Map<String, BoneSnapshot> snapshots
-    ) {
-        if (animation.animation().boneAnimations() == null) {
-            return;
-        }
-
-        for (var snapshot : snapshots.values()) {
-            for (var boneAnimation : animation.animation().boneAnimations()) {
-                if (boneAnimation.boneName().equals(snapshot.getBone().getName())) {
-                    boneSnapshots.put(boneAnimation.boneName(), BoneSnapshot.copy(snapshot));
-                    break;
-                }
-            }
         }
     }
 
