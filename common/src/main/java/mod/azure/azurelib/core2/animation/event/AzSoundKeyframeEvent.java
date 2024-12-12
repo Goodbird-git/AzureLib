@@ -5,12 +5,12 @@
  */
 package mod.azure.azurelib.core2.animation.event;
 
-import mod.azure.azurelib.core.keyframe.event.KeyFrameEvent;
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 
 /**
- * The {@link KeyFrameEvent} specific to the {@link AzAnimationController#soundKeyframeHandler}.<br>
+ * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#getSoundKeyframeHandler()}.<br>
  * Called when a sound instruction keyframe is encountered
  */
 public class AzSoundKeyframeEvent<T> extends AzKeyFrameEvent<T, SoundKeyframeData> {
