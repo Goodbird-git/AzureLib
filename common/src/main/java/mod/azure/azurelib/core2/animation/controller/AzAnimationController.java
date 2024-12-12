@@ -32,9 +32,6 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.controller.handler.AzCustomKeyframeHandler;
-import mod.azure.azurelib.core2.animation.controller.handler.AzParticleKeyframeHandler;
-import mod.azure.azurelib.core2.animation.controller.handler.AzSoundKeyframeHandler;
 import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
@@ -73,11 +70,7 @@ public class AzAnimationController<T> {
 
     protected boolean justStartedTransition = false;
 
-    protected AzSoundKeyframeHandler<T> soundKeyframeHandler = null;
-
-    protected AzParticleKeyframeHandler<T> particleKeyframeHandler = null;
-
-    protected AzCustomKeyframeHandler<T> customKeyframeHandler = null;
+    protected AzAnimationControllerCallbacks<T> callbacks;
 
     protected AzRawAnimation triggeredAnimation = null;
 
@@ -112,41 +105,8 @@ public class AzAnimationController<T> {
         this.transitionLength = transitionTickTime;
     }
 
-    /**
-     * Applies the given {@link AzSoundKeyframeHandler} to this controller, for handling {@link AzSoundKeyframeEvent
-     * sound keyframe instructions}.
-     *
-     * @return this
-     */
-    public AzAnimationController<T> setSoundKeyframeHandler(AzSoundKeyframeHandler<T> soundHandler) {
-        this.soundKeyframeHandler = soundHandler;
-
-        return this;
-    }
-
-    /**
-     * Applies the given {@link AzParticleKeyframeHandler} to this controller, for handling
-     * {@link AzParticleKeyframeEvent particle keyframe instructions}.
-     *
-     * @return this
-     */
-    public AzAnimationController<T> setParticleKeyframeHandler(AzParticleKeyframeHandler<T> particleHandler) {
-        this.particleKeyframeHandler = particleHandler;
-
-        return this;
-    }
-
-    /**
-     * Applies the given {@link AzCustomKeyframeHandler} to this controller, for handling
-     * {@link AzCustomInstructionKeyframeEvent sound keyframe instructions}.
-     *
-     * @return this
-     */
-    public AzAnimationController<T> setCustomInstructionKeyframeHandler(
-        AzCustomKeyframeHandler<T> customInstructionHandler
-    ) {
-        this.customKeyframeHandler = customInstructionHandler;
-
+    public AzAnimationController<T> setCallbacks(AzAnimationControllerCallbacks<T> callbacks) {
+        this.callbacks = callbacks;
         return this;
     }
 
@@ -614,45 +574,26 @@ public class AzAnimationController<T> {
 
         adjustedTick += this.transitionLength;
 
-        for (var keyframeData : currentAnimation.animation().keyFrames().sounds()) {
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
-                if (soundKeyframeHandler == null) {
-                    LOGGER.warn(
-                        "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
-                        animatable.getClass().getSimpleName(),
-                        getName()
-                    );
-                    break;
-                }
+        handleSoundKeyframes(animatable, adjustedTick);
+        handleParticleKeyframes(animatable, adjustedTick);
+        handleCustomKeyframes(animatable, adjustedTick);
 
-                soundKeyframeHandler.handle(
-                    new AzSoundKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
-                );
-            }
+        if (
+            this.transitionLength == 0 && this.shouldResetTick
+                && this.animationState == AzAnimationControllerState.TRANSITIONING
+        ) {
+            this.currentAnimation = this.animationQueue.poll();
         }
+    }
 
-        for (var keyframeData : currentAnimation.animation().keyFrames().particles()) {
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
-                if (particleKeyframeHandler == null) {
-                    LOGGER.warn(
-                        "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
-                        animatable.getClass().getSimpleName(),
-                        getName()
-                    );
-                    break;
-                }
-
-                particleKeyframeHandler.handle(
-                    new AzParticleKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
-                );
-            }
-        }
-
+    private void handleCustomKeyframes(T animatable, double adjustedTick) {
         for (
             var keyframeData : currentAnimation.animation()
                 .keyFrames()
                 .customInstructions()
         ) {
+            var customKeyframeHandler = callbacks.getCustomKeyframeHandler();
+
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
                 if (customKeyframeHandler == null) {
                     LOGGER.warn(
@@ -668,12 +609,47 @@ public class AzAnimationController<T> {
                 );
             }
         }
+    }
 
-        if (
-            this.transitionLength == 0 && this.shouldResetTick
-                && this.animationState == AzAnimationControllerState.TRANSITIONING
-        ) {
-            this.currentAnimation = this.animationQueue.poll();
+    private void handleParticleKeyframes(T animatable, double adjustedTick) {
+        for (var keyframeData : currentAnimation.animation().keyFrames().particles()) {
+            var particleKeyframeHandler = callbacks.getParticleKeyframeHandler();
+
+            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
+                if (particleKeyframeHandler == null) {
+                    LOGGER.warn(
+                        "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
+                        animatable.getClass().getSimpleName(),
+                        getName()
+                    );
+                    break;
+                }
+
+                particleKeyframeHandler.handle(
+                    new AzParticleKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
+                );
+            }
+        }
+    }
+
+    private void handleSoundKeyframes(T animatable, double adjustedTick) {
+        for (var keyframeData : currentAnimation.animation().keyFrames().sounds()) {
+            var soundKeyframeHandler = callbacks.getSoundKeyframeHandler();
+
+            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
+                if (soundKeyframeHandler == null) {
+                    LOGGER.warn(
+                        "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
+                        animatable.getClass().getSimpleName(),
+                        getName()
+                    );
+                    break;
+                }
+
+                soundKeyframeHandler.handle(
+                    new AzSoundKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
+                );
+            }
         }
     }
 
