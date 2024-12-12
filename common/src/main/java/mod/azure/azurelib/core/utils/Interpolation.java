@@ -85,6 +85,16 @@ public enum Interpolation {
             return a + (b - a) * (float) (-Math.pow(2, -10 * x) + 1);
         }
     },
+    CATMULLROM("catmullrom") {
+
+        @Override
+        public float interpolate(float a, float b, float x) {
+            return 0.5f * ((2 * a) +
+                (-(a - (b - a)) + b) * x +
+                (2 * (a - (b - a)) - 5 * a + 4 * b - (b + (b - a))) * (x * x) +
+                (-(a - (b - a)) + 3 * a - 3 * b + (b + (b - a))) * (x * x * x));
+        }
+    },
     EXP_INOUT("exp_inout") {
 
         @Override
