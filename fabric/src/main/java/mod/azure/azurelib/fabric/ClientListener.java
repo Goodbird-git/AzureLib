@@ -1,6 +1,7 @@
 package mod.azure.azurelib.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import mod.azure.azurelib.fabric.core2.example.FacehuggerRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -63,5 +64,6 @@ public final class ClientListener implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SendConfigDataPacket.TYPE, (packet, context) -> packet.handle());
 
         EntityRendererRegistry.register(ExampleEntityTypes.DRONE, DroneRenderer::new);
+        EntityRendererRegistry.register(ExampleEntityTypes.FACEHUGGER, FacehuggerRenderer::new);
     }
 }

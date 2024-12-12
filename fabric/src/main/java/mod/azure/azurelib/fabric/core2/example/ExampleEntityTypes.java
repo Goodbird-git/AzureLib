@@ -16,6 +16,11 @@ public class ExampleEntityTypes {
         EntityType.Builder.of(Drone::new, MobCategory.MONSTER).sized(0.8f, 1.98f)
     );
 
+    public static final EntityType<Facehugger> FACEHUGGER = register(
+        "facehugger",
+        EntityType.Builder.of(Facehugger::new, MobCategory.MONSTER).sized(0.75f, 0.25f)
+    );
+
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
         var entityType = builder.build(name);
         var resourceLocation = AzureLib.modResource(name);
@@ -25,5 +30,6 @@ public class ExampleEntityTypes {
 
     public static void initialize() {
         FabricDefaultAttributeRegistry.register(DRONE, Drone.createMonsterAttributes());
+        FabricDefaultAttributeRegistry.register(FACEHUGGER, Facehugger.createMonsterAttributes());
     }
 }
