@@ -1,7 +1,6 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
@@ -21,7 +19,6 @@ import mod.azure.azurelib.core.keyframe.AnimationPoint;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.keyframe.Keyframe;
 import mod.azure.azurelib.core.keyframe.KeyframeLocation;
-import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
 import mod.azure.azurelib.core.math.Constant;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.molang.MolangParser;
@@ -32,9 +29,6 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent;
-import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
-import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
@@ -56,9 +50,9 @@ public class AzAnimationController<T> {
 
     protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
 
-    protected final Set<KeyFrameData> executedKeyFrames = new ObjectOpenHashSet<>();
-
     private final AzAnimator<T> animator;
+
+    private final AzKeyFrameCallbackManager<T> keyFrameCallbackManager;
 
     protected Queue<AzQueuedAnimation> animationQueue = new LinkedList<>();
 
@@ -70,7 +64,7 @@ public class AzAnimationController<T> {
 
     protected boolean justStartedTransition = false;
 
-    protected AzAnimationControllerCallbacks<T> callbacks;
+    protected AzKeyFrameCallbacks<T> keyFrameCallbacks;
 
     protected AzRawAnimation triggeredAnimation = null;
 
@@ -103,10 +97,11 @@ public class AzAnimationController<T> {
         this.animator = animator;
         this.name = name;
         this.transitionLength = transitionTickTime;
+        this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
     }
 
-    public AzAnimationController<T> setCallbacks(AzAnimationControllerCallbacks<T> callbacks) {
-        this.callbacks = callbacks;
+    public AzAnimationController<T> setKeyFrameCallbacks(AzKeyFrameCallbacks<T> keyFrameCallbacks) {
+        this.keyFrameCallbacks = keyFrameCallbacks;
         return this;
     }
 
@@ -419,7 +414,7 @@ public class AzAnimationController<T> {
                 this.justStartedTransition = false;
                 this.currentAnimation = animationQueue.poll();
 
-                resetEventKeyFrames();
+                keyFrameCallbackManager.reset();
 
                 if (currentAnimation == null) {
                     return;
@@ -510,12 +505,12 @@ public class AzAnimationController<T> {
                     this.shouldResetTick = true;
 
                     adjustedTick = adjustTick(animatable, seekTime);
-                    resetEventKeyFrames();
+                    keyFrameCallbackManager.reset();
                 }
             } else {
                 var nextAnimation = animationQueue.peek();
 
-                resetEventKeyFrames();
+                keyFrameCallbackManager.reset();
 
                 if (nextAnimation == null) {
                     this.animationState = AzAnimationControllerState.STOPPED;
@@ -574,82 +569,13 @@ public class AzAnimationController<T> {
 
         adjustedTick += this.transitionLength;
 
-        handleSoundKeyframes(animatable, adjustedTick);
-        handleParticleKeyframes(animatable, adjustedTick);
-        handleCustomKeyframes(animatable, adjustedTick);
+        keyFrameCallbackManager.handle(animatable, adjustedTick);
 
         if (
             this.transitionLength == 0 && this.shouldResetTick
                 && this.animationState == AzAnimationControllerState.TRANSITIONING
         ) {
             this.currentAnimation = this.animationQueue.poll();
-        }
-    }
-
-    private void handleCustomKeyframes(T animatable, double adjustedTick) {
-        for (
-            var keyframeData : currentAnimation.animation()
-                .keyFrames()
-                .customInstructions()
-        ) {
-            var customKeyframeHandler = callbacks.getCustomKeyframeHandler();
-
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
-                if (customKeyframeHandler == null) {
-                    LOGGER.warn(
-                        "Custom Instruction Keyframe found for {} -> {}, but no keyframe handler registered",
-                        animatable.getClass().getSimpleName(),
-                        getName()
-                    );
-                    break;
-                }
-
-                customKeyframeHandler.handle(
-                    new AzCustomInstructionKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
-                );
-            }
-        }
-    }
-
-    private void handleParticleKeyframes(T animatable, double adjustedTick) {
-        for (var keyframeData : currentAnimation.animation().keyFrames().particles()) {
-            var particleKeyframeHandler = callbacks.getParticleKeyframeHandler();
-
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
-                if (particleKeyframeHandler == null) {
-                    LOGGER.warn(
-                        "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
-                        animatable.getClass().getSimpleName(),
-                        getName()
-                    );
-                    break;
-                }
-
-                particleKeyframeHandler.handle(
-                    new AzParticleKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
-                );
-            }
-        }
-    }
-
-    private void handleSoundKeyframes(T animatable, double adjustedTick) {
-        for (var keyframeData : currentAnimation.animation().keyFrames().sounds()) {
-            var soundKeyframeHandler = callbacks.getSoundKeyframeHandler();
-
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
-                if (soundKeyframeHandler == null) {
-                    LOGGER.warn(
-                        "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
-                        animatable.getClass().getSimpleName(),
-                        getName()
-                    );
-                    break;
-                }
-
-                soundKeyframeHandler.handle(
-                    new AzSoundKeyframeEvent<>(animatable, adjustedTick, this, keyframeData)
-                );
-            }
         }
     }
 
@@ -773,13 +699,6 @@ public class AzAnimationController<T> {
     }
 
     /**
-     * Clear the {@link KeyFrameData} cache in preparation for the next animation
-     */
-    protected void resetEventKeyFrames() {
-        executedKeyFrames.clear();
-    }
-
-    /**
      * Returns the current state of this controller.
      */
     public AzAnimationControllerState getAnimationState() {
@@ -788,5 +707,9 @@ public class AzAnimationController<T> {
 
     public void setAnimationState(AzAnimationControllerState animationState) {
         this.animationState = animationState;
+    }
+
+    public AzKeyFrameCallbacks<T> getKeyFrameCallbacks() {
+        return keyFrameCallbacks;
     }
 }

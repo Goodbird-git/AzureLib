@@ -7,7 +7,7 @@ import mod.azure.azurelib.core2.animation.event.AzCustomInstructionKeyframeEvent
 import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 
-public class AzAnimationControllerCallbacks<T> {
+public class AzKeyFrameCallbacks<T> {
 
     private final AzCustomKeyframeHandler<T> customKeyframeHandler;
 
@@ -15,7 +15,7 @@ public class AzAnimationControllerCallbacks<T> {
 
     private final AzSoundKeyframeHandler<T> soundKeyframeHandler;
 
-    private AzAnimationControllerCallbacks(
+    private AzKeyFrameCallbacks(
         AzCustomKeyframeHandler<T> customKeyframeHandler,
         AzParticleKeyframeHandler<T> particleKeyframeHandler,
         AzSoundKeyframeHandler<T> soundKeyframeHandler
@@ -89,8 +89,8 @@ public class AzAnimationControllerCallbacks<T> {
             return this;
         }
 
-        public AzAnimationControllerCallbacks<T> build() {
-            return new AzAnimationControllerCallbacks<>(
+        public AzKeyFrameCallbacks<T> build() {
+            return new AzKeyFrameCallbacks<>(
                 customKeyframeHandler,
                 particleKeyframeHandler,
                 soundKeyframeHandler
