@@ -32,7 +32,6 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.controller.handler.AzAnimationStateHandler;
 import mod.azure.azurelib.core2.animation.controller.handler.AzCustomKeyframeHandler;
 import mod.azure.azurelib.core2.animation.controller.handler.AzParticleKeyframeHandler;
 import mod.azure.azurelib.core2.animation.controller.handler.AzSoundKeyframeHandler;
@@ -53,8 +52,6 @@ public class AzAnimationController<T> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationController.class);
 
     protected final String name;
-
-    protected final AzAnimationStateHandler<T> stateHandler;
 
     protected final Map<String, BoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
 
@@ -110,19 +107,11 @@ public class AzAnimationController<T> {
      * @param name               The name of the controller - should represent what animations it handles
      * @param transitionTickTime The amount of time (in <b>ticks</b>) that the controller should take to transition
      *                           between animations. Lerping is automatically applied where possible
-     * @param animationHandler   The {@link AzAnimationStateHandler} animation state handler responsible for deciding
-     *                           which animations to play
      */
-    public AzAnimationController(
-        AzAnimator<T> animator,
-        String name,
-        int transitionTickTime,
-        AzAnimationStateHandler<T> animationHandler
-    ) {
+    public AzAnimationController(AzAnimator<T> animator, String name, int transitionTickTime) {
         this.animator = animator;
         this.name = name;
         this.transitionLength = transitionTickTime;
-        this.stateHandler = animationHandler;
     }
 
     /**
@@ -220,20 +209,6 @@ public class AzAnimationController<T> {
      */
     public AzAnimationController<T> triggerableAnim(String name, AzRawAnimation animation) {
         this.triggerableAnimations.put(name, animation);
-
-        return this;
-    }
-
-    /**
-     * Tells the AnimationController that you want to receive the {@link AzAnimationStateHandler} while a triggered
-     * animation is playing.<br>
-     * <br>
-     * This has no effect if no triggered animation has been registered, or one isn't currently playing.<br>
-     * If a triggered animation is playing, it can be checked in your AnimationStateHandler via
-     * {@link AzAnimationController#isPlayingTriggeredAnimation()}
-     */
-    public AzAnimationController<T> receiveTriggeredAnimations() {
-        this.handlingTriggeredAnimations = true;
 
         return this;
     }
@@ -338,7 +313,6 @@ public class AzAnimationController<T> {
     /**
      * Returns whether the controller is currently playing a triggered animation registered in
      * {@link AzAnimationController#triggerableAnim}<br>
-     * Used for custom handling if {@link AzAnimationController#receiveTriggeredAnimations()} was marked
      */
     public boolean isPlayingTriggeredAnimation() {
         return triggeredAnimation != null && !hasAnimationFinished();
@@ -413,11 +387,7 @@ public class AzAnimationController<T> {
 
             setAnimation(state.getAnimatable(), triggeredAnimation);
 
-            if (
-                !hasAnimationFinished() && (!handlingTriggeredAnimations || stateHandler.handle(
-                    state
-                ) == PlayState.CONTINUE)
-            ) {
+            if (!hasAnimationFinished() && !handlingTriggeredAnimations) {
                 return PlayState.CONTINUE;
             }
 
@@ -425,7 +395,8 @@ public class AzAnimationController<T> {
             this.needsAnimationReload = true;
         }
 
-        return stateHandler.handle(state);
+        // TODO: Revisit this.
+        return PlayState.CONTINUE;
     }
 
     /**

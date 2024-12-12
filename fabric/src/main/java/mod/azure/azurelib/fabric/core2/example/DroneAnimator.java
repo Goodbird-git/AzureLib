@@ -4,8 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
@@ -22,13 +20,9 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
     @Override
     public void registerControllers(AzAnimationControllerContainer<Drone> animationControllerContainer) {
         animationControllerContainer.add(
-            new AzAnimationController<>(this, "base_controller", 0, this::handle)
+            new AzAnimationController<>(this, "base_controller", 0)
                 .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
         );
-    }
-
-    public PlayState handle(AzAnimationState<Drone> event) {
-        return PlayState.CONTINUE;
     }
 
     @Override
