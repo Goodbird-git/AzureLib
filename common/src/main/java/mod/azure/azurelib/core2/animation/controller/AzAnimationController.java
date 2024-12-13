@@ -1,7 +1,6 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;

@@ -1,5 +1,9 @@
 package mod.azure.azurelib.core2.animation;
 
+import java.util.Map;
+
+import mod.azure.azurelib.core.animation.EasingType;
+import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 public class AzAnimationProcessor<T> {
@@ -36,21 +40,29 @@ public class AzAnimationProcessor<T> {
 
             controller.update(context);
 
-            // Progresses the current bones according to the animation queue.
-            for (var boneAnimation : controller.getBoneAnimationQueues().values()) {
-                var bone = boneAnimation.bone();
-                var snapshot = boneSnapshots.get(bone.getName());
-                var initialSnapshot = bone.getInitialSnapshot();
-
-                AzBoneAnimationUpdateUtil.updateRotations(boneAnimation, bone, easingType, initialSnapshot, snapshot);
-                AzBoneAnimationUpdateUtil.updatePositions(boneAnimation, bone, easingType, snapshot);
-                AzBoneAnimationUpdateUtil.updateScale(boneAnimation, bone, easingType, snapshot);
-            }
+            updateBoneSnapshots(controller, boneSnapshots, easingType);
         }
 
         this.reloadAnimations = false;
 
         boneCache.update(context);
         timer.finishFirstTick();
+    }
+
+    private void updateBoneSnapshots(
+        AzAnimationController<T> controller,
+        Map<String, BoneSnapshot> boneSnapshots,
+        EasingType easingType
+    ) {
+        // Progresses the current bones according to the animation queue.
+        for (var boneAnimation : controller.getBoneAnimationQueues().values()) {
+            var bone = boneAnimation.bone();
+            var snapshot = boneSnapshots.get(bone.getName());
+            var initialSnapshot = bone.getInitialSnapshot();
+
+            AzBoneAnimationUpdateUtil.updateRotations(boneAnimation, bone, easingType, initialSnapshot, snapshot);
+            AzBoneAnimationUpdateUtil.updatePositions(boneAnimation, bone, easingType, snapshot);
+            AzBoneAnimationUpdateUtil.updateScale(boneAnimation, bone, easingType, snapshot);
+        }
     }
 }
