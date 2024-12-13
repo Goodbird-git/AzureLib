@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 
-public class AzAnimationTickAnalysis {
+public class AzAnimationTimer {
 
     private final boolean shouldPlayAnimationsWhileGamePaused;
 
@@ -20,7 +20,7 @@ public class AzAnimationTickAnalysis {
 
     private double lastGameTickTime;
 
-    public AzAnimationTickAnalysis(boolean shouldPlayAnimationsWhileGamePaused) {
+    public AzAnimationTimer(boolean shouldPlayAnimationsWhileGamePaused) {
         this.shouldPlayAnimationsWhileGamePaused = shouldPlayAnimationsWhileGamePaused;
     }
 

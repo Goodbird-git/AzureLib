@@ -7,13 +7,13 @@ public class AzAnimationProcessor<T> {
 
     private final AzAnimator<T> animator;
 
-    private final AzBoneCache boneSnapshotCache;
+    private final AzBoneCache boneCache;
 
     public boolean reloadAnimations;
 
     public AzAnimationProcessor(AzAnimator<T> animator) {
         this.animator = animator;
-        this.boneSnapshotCache = new AzBoneCache();
+        this.boneCache = new AzBoneCache();
         this.reloadAnimations = false;
     }
 
@@ -26,9 +26,9 @@ public class AzAnimationProcessor<T> {
         var animTime = animator.getAnimTime();
         var shouldCrash = animator.crashIfBoneMissing();
 
-        boneSnapshotCache.updateBoneSnapshots();
-        var boneSnapshots = boneSnapshotCache.getBoneSnapshotsByName();
-        var bonesByName = boneSnapshotCache.getBonesByName();
+        boneCache.updateBoneSnapshots();
+        var boneSnapshots = boneCache.getBoneSnapshotsByName();
+        var bonesByName = boneCache.getBonesByName();
 
         for (var controller : animator.getAnimationControllerContainer().getAll()) {
             var easingType = controller.getOverrideEasingTypeFunction().apply(animatable);
@@ -58,17 +58,17 @@ public class AzAnimationProcessor<T> {
         double resetTickLength = animator.getBoneResetTime();
 
         // Updates the cached bone snapshots (only if they have changed).
-        for (var bone : boneSnapshotCache.getRegisteredBones()) {
+        for (var bone : boneCache.getRegisteredBones()) {
             AzCachedBoneUpdateUtil.updateCachedBoneRotation(bone, boneSnapshots, animTime, resetTickLength);
             AzCachedBoneUpdateUtil.updateCachedBonePosition(bone, boneSnapshots, animTime, resetTickLength);
             AzCachedBoneUpdateUtil.updateCachedBoneScale(bone, boneSnapshots, animTime, resetTickLength);
         }
 
-        boneSnapshotCache.resetBoneTransformationMarkers();
+        boneCache.resetBoneTransformationMarkers();
         animator.finishFirstTick();
     }
 
-    public AzBoneCache getBoneSnapshotCache() {
-        return boneSnapshotCache;
+    public AzBoneCache getBoneCache() {
+        return boneCache;
     }
 }

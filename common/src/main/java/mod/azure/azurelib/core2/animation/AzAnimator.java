@@ -16,17 +16,17 @@ import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 
 public abstract class AzAnimator<T> {
 
-    // Remnants from AnimatableManager.
+    // Holds animation controllers.
     private final AzAnimationControllerContainer<T> animationControllerContainer;
-
+    // Processes animations.
     private final AzAnimationProcessor<T> animationProcessor;
-
-    private final AzAnimationTickAnalysis tickAnalysis;
+    // Tracks animation time.
+    private final AzAnimationTimer timer;
 
     protected AzAnimator() {
         this.animationControllerContainer = new AzAnimationControllerContainer<>();
         this.animationProcessor = new AzAnimationProcessor<>(this);
-        this.tickAnalysis = new AzAnimationTickAnalysis(shouldPlayAnimsWhileGamePaused());
+        this.timer = new AzAnimationTimer(shouldPlayAnimsWhileGamePaused());
     }
 
     public abstract void registerControllers(AzAnimationControllerContainer<T> animationControllerContainer);
@@ -34,14 +34,14 @@ public abstract class AzAnimator<T> {
     public abstract @NotNull ResourceLocation getAnimationLocation(T animatable);
 
     public void animate(T animatable) {
-        tickAnalysis.tick();
+        timer.tick();
 
-        preAnimationSetup(animatable, tickAnalysis.getAnimTime());
+        preAnimationSetup(animatable, timer.getAnimTime());
 
         var minecraft = Minecraft.getInstance();
         var shouldRun = !minecraft.isPaused() || shouldPlayAnimsWhileGamePaused();
 
-        if (shouldRun && !animationProcessor.getBoneSnapshotCache().getRegisteredBones().isEmpty()) {
+        if (shouldRun && !animationProcessor.getBoneCache().getRegisteredBones().isEmpty()) {
             animationProcessor.update(animatable);
         }
 
@@ -115,7 +115,7 @@ public abstract class AzAnimator<T> {
     }
 
     public double getAnimTime() {
-        return tickAnalysis.getAnimTime();
+        return timer.getAnimTime();
     }
 
     /**
@@ -127,10 +127,10 @@ public abstract class AzAnimator<T> {
     }
 
     public boolean isFirstTick() {
-        return tickAnalysis.isFirstTick();
+        return timer.isFirstTick();
     }
 
     protected void finishFirstTick() {
-        tickAnalysis.finishFirstTick();
+        timer.finishFirstTick();
     }
 }
