@@ -1,25 +1,18 @@
 package mod.azure.azurelib.core2.animation;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core.utils.Interpolations;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
-import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
-import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
-import mod.azure.azurelib.core2.animation.primitive.AzStage;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 
 public class AzAnimationProcessor<T> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationProcessor.class);
 
     private final AzAnimator<T> animator;
 
@@ -31,40 +24,6 @@ public class AzAnimationProcessor<T> {
         this.animator = animator;
         this.bonesByName = new Object2ObjectOpenHashMap<>();
         this.reloadAnimations = false;
-    }
-
-    /**
-     * Build an animation queue for the given {@link AzRawAnimation}
-     *
-     * @param animatable   The animatable object being rendered
-     * @param rawAnimation The raw animation to be compiled
-     * @return A queue of animations and loop types to play
-     */
-    public Queue<AzQueuedAnimation> buildAnimationQueue(T animatable, AzRawAnimation rawAnimation) {
-        var animations = new LinkedList<AzQueuedAnimation>();
-
-        for (var stage : rawAnimation.getAnimationStages()) {
-            AzAnimation animation;
-
-            if (Objects.equals(stage.animationName(), AzStage.WAIT)) {
-                animation = AzAnimation.generateWaitAnimation(stage.additionalTicks());
-            } else {
-                animation = animator.getAnimation(animatable, stage.animationName());
-            }
-
-            if (animation == null) {
-                LOGGER.warn(
-                    "Unable to find animation: {} for {}",
-                    stage.animationName(),
-                    animatable.getClass().getSimpleName()
-                );
-                return null;
-            } else {
-                animations.add(new AzQueuedAnimation(animation, stage.loopType()));
-            }
-        }
-
-        return animations;
     }
 
     /**

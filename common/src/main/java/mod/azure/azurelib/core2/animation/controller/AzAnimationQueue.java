@@ -2,19 +2,27 @@ package mod.azure.azurelib.core2.animation.controller;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
-public class AzAnimationQueue {
+public class AzAnimationQueue<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationQueue.class);
 
     private final Queue<AzQueuedAnimation> animationQueue;
 
-    public AzAnimationQueue() {
+    private final AzAnimator<T> animator;
+
+    public AzAnimationQueue(AzAnimator<T> animator) {
         this.animationQueue = new LinkedList<>();
+        this.animator = animator;
     }
 
     public void add(@NotNull AzQueuedAnimation queuedAnimation) {

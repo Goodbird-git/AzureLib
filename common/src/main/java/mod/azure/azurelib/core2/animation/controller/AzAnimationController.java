@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -25,6 +27,7 @@ import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameProcesso
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzStage;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
@@ -41,7 +44,7 @@ public class AzAnimationController<T> {
 
     protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
 
-    private final AzAnimationQueue animationQueue;
+    private final AzAnimationQueue<T> animationQueue;
 
     private final AzAnimator<T> animator;
 
@@ -92,7 +95,7 @@ public class AzAnimationController<T> {
         this.animator = animator;
         this.name = name;
         this.transitionLength = transitionTickTime;
-        this.animationQueue = new AzAnimationQueue();
+        this.animationQueue = new AzAnimationQueue<>(animator);
         this.boneSnapshotCache = new AzBoneSnapshotCache();
         this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
         this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
@@ -272,6 +275,37 @@ public class AzAnimationController<T> {
     }
 
     /**
+     * Populates the animation queue with the given {@link AzRawAnimation}
+     *
+     * @param animatable   The animatable object being rendered
+     * @param rawAnimation The raw animation to be compiled
+     * @return Whether the animations were loaded into the queue.
+     */
+    public List<AzQueuedAnimation> tryCreateAnimationQueue(T animatable, AzRawAnimation rawAnimation) {
+        var stages = rawAnimation.getAnimationStages();
+        var animations = new ArrayList<AzQueuedAnimation>();
+
+        for (var stage : stages) {
+            var animation = Objects.equals(stage.animationName(), AzStage.WAIT)
+                ? AzAnimation.generateWaitAnimation(stage.additionalTicks())
+                : animator.getAnimation(animatable, stage.animationName());
+
+            if (animation == null) {
+                LOGGER.warn(
+                    "Unable to find animation: {} for {}",
+                    stage.animationName(),
+                    animatable.getClass().getSimpleName()
+                );
+                return List.of();
+            } else {
+                animations.add(new AzQueuedAnimation(animation, stage.loopType()));
+            }
+        }
+
+        return animations;
+    }
+
+    /**
      * Sets the currently loaded animation to the one provided.<br>
      * This method may be safely called every render frame, as passing the same builder that is already loaded will do
      * nothing.<br>
@@ -287,9 +321,9 @@ public class AzAnimationController<T> {
         }
 
         if (needsAnimationReload || !rawAnimation.equals(currentRawAnimation)) {
-            var animations = animator.getAnimationProcessor().buildAnimationQueue(animatable, rawAnimation);
+            var animations = tryCreateAnimationQueue(animatable, rawAnimation);
 
-            if (animations != null) {
+            if (!animations.isEmpty()) {
                 animationQueue.clear();
                 animationQueue.addAll(animations);
                 this.currentRawAnimation = rawAnimation;
