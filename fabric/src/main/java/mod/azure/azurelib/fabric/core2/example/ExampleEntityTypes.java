@@ -1,5 +1,6 @@
 package mod.azure.azurelib.fabric.core2.example;
 
+import mod.azure.azurelib.fabric.core2.example.azure.DoomHunter;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +22,11 @@ public class ExampleEntityTypes {
         EntityType.Builder.of(Facehugger::new, MobCategory.MONSTER).sized(0.75f, 0.25f)
     );
 
+    public static final EntityType<DoomHunter> DOOMHUNTER = register(
+            "doomhunter",
+            EntityType.Builder.of(DoomHunter::new, MobCategory.MONSTER).sized(3.0f, 7.0f)
+    );
+
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
         var entityType = builder.build(name);
         var resourceLocation = AzureLib.modResource(name);
@@ -31,5 +37,6 @@ public class ExampleEntityTypes {
     public static void initialize() {
         FabricDefaultAttributeRegistry.register(DRONE, Drone.createMonsterAttributes());
         FabricDefaultAttributeRegistry.register(FACEHUGGER, Facehugger.createMonsterAttributes());
+        FabricDefaultAttributeRegistry.register(DOOMHUNTER, DoomHunter.createMonsterAttributes());
     }
 }
