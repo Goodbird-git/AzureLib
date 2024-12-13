@@ -2,20 +2,16 @@ package mod.azure.azurelib.core2.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
@@ -157,48 +153,8 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
      * Pretty much exclusively used in {@link EntityRenderer#renderNameTag}
      */
     @Override
-    public boolean shouldShowName(T entity) {
-        var nameRenderDistance = entity.isDiscrete() ? 32d : 64d;
-
-        if (!(entity instanceof LivingEntity)) {
-            return false;
-        }
-
-        if (this.entityRenderDispatcher.distanceToSqr(entity) >= nameRenderDistance * nameRenderDistance) {
-            return false;
-        }
-
-        if (
-            entity instanceof Mob && (!entity.shouldShowName() && (!entity.hasCustomName()
-                || entity != this.entityRenderDispatcher.crosshairPickEntity))
-        ) {
-            return false;
-        }
-
-        final var minecraft = Minecraft.getInstance();
-        // TODO: See if we can do this null check better.
-        var player = Objects.requireNonNull(minecraft.player);
-        var visibleToClient = !entity.isInvisibleTo(player);
-        var entityTeam = entity.getTeam();
-
-        if (entityTeam == null) {
-            return Minecraft.renderNames() && entity != minecraft.getCameraEntity() && visibleToClient
-                && !entity.isVehicle();
-        }
-
-        var playerTeam = minecraft.player.getTeam();
-
-        return switch (entityTeam.getNameTagVisibility()) {
-            case ALWAYS -> visibleToClient;
-            case NEVER -> false;
-            case HIDE_FOR_OTHER_TEAMS -> playerTeam == null
-                ? visibleToClient
-                : entityTeam.isAlliedTo(
-                    playerTeam
-                ) && (entityTeam.canSeeFriendlyInvisibles() || visibleToClient);
-            case HIDE_FOR_OWN_TEAM ->
-                playerTeam == null ? visibleToClient : !entityTeam.isAlliedTo(playerTeam) && visibleToClient;
-        };
+    public boolean shouldShowName(@NotNull T entity) {
+        return AzEntityNameTagUtil.shouldShowName(entityRenderDispatcher, entity);
     }
 
     // Proxy method override for super.getBlockLightLevel external access.
