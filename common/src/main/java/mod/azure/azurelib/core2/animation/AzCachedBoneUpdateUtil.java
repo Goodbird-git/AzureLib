@@ -1,10 +1,10 @@
 package mod.azure.azurelib.core2.animation;
 
+import java.util.Map;
+
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core.utils.Interpolations;
-
-import java.util.Map;
 
 public class AzCachedBoneUpdateUtil {
 
