@@ -6,7 +6,7 @@ import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 
 public class AzAnimationTimer {
 
-    private final boolean shouldPlayAnimationsWhileGamePaused;
+    private final AzAnimatorConfig config;
 
     // Remnants from AnimatableManager.
     private double lastUpdateTime;
@@ -20,8 +20,8 @@ public class AzAnimationTimer {
 
     private double lastGameTickTime;
 
-    public AzAnimationTimer(boolean shouldPlayAnimationsWhileGamePaused) {
-        this.shouldPlayAnimationsWhileGamePaused = shouldPlayAnimationsWhileGamePaused;
+    public AzAnimationTimer(AzAnimatorConfig config) {
+        this.config = config;
     }
 
     public void tick() {
@@ -41,7 +41,7 @@ public class AzAnimationTimer {
         // return;
         // }
 
-        if (!isReRender && (!minecraft.isPaused() || shouldPlayAnimationsWhileGamePaused)) {
+        if (!isReRender && (!minecraft.isPaused() || config.shouldPlayAnimationsWhileGamePaused())) {
             this.lastUpdateTime = currentFrameTime;
 
             this.animTime += lastUpdateTime - this.lastGameTickTime;

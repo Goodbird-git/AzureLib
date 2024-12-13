@@ -24,7 +24,7 @@ public class AzAnimationProcessor<T> {
      */
     public void update(T animatable) {
         var animTime = animator.getAnimTime();
-        var shouldCrash = animator.crashIfBoneMissing();
+        var shouldCrash = animator.config().crashIfBoneMissing();
 
         boneCache.updateBoneSnapshots();
         var boneSnapshots = boneCache.getBoneSnapshotsByName();
@@ -55,7 +55,7 @@ public class AzAnimationProcessor<T> {
         }
 
         this.reloadAnimations = false;
-        double resetTickLength = animator.getBoneResetTime();
+        double resetTickLength = animator.config().boneResetTime();
 
         // Updates the cached bone snapshots (only if they have changed).
         for (var bone : boneCache.getRegisteredBones()) {

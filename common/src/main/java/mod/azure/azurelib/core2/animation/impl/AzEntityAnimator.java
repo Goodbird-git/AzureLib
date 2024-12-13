@@ -9,8 +9,13 @@ import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 
 public abstract class AzEntityAnimator<T extends Entity> extends AzAnimator<T> {
+
+    protected AzEntityAnimator(AzAnimatorConfig config) {
+        super(config);
+    }
 
     @Override
     protected void applyMolangQueries(T entity, double animTime) {
