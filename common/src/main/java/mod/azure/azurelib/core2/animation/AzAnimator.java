@@ -10,13 +10,13 @@ import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core2.animation.cache.AzBakedAnimationCache;
+import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 
 public abstract class AzAnimator<T> {
 
-    // Holds general properties for the animator and its controllers.
-    private final AzAnimatorConfig config;
+    private final AzAnimationContext<T> reusableContext;
 
     // Holds animation controllers.
     private final AzAnimationControllerContainer<T> animationControllerContainer;
@@ -24,14 +24,14 @@ public abstract class AzAnimator<T> {
     // Processes animations.
     private final AzAnimationProcessor<T> animationProcessor;
 
-    // Tracks animation time.
-    private final AzAnimationTimer timer;
-
     protected AzAnimator(AzAnimatorConfig config) {
-        this.config = config;
         this.animationControllerContainer = new AzAnimationControllerContainer<>();
         this.animationProcessor = new AzAnimationProcessor<>(this);
-        this.timer = new AzAnimationTimer(config);
+
+        var boneCache = new AzBoneCache();
+        var timer = new AzAnimationTimer(config);
+
+        this.reusableContext = new AzAnimationContext<>(boneCache, config, timer);
     }
 
     public abstract void registerControllers(AzAnimationControllerContainer<T> animationControllerContainer);
@@ -39,6 +39,12 @@ public abstract class AzAnimator<T> {
     public abstract @NotNull ResourceLocation getAnimationLocation(T animatable);
 
     public void animate(T animatable) {
+        reusableContext.animatable = animatable;
+
+        var boneCache = reusableContext.boneCache();
+        var config = reusableContext.config();
+        var timer = reusableContext.timer();
+
         timer.tick();
 
         preAnimationSetup(animatable, timer.getAnimTime());
@@ -46,8 +52,8 @@ public abstract class AzAnimator<T> {
         var minecraft = Minecraft.getInstance();
         var shouldRun = !minecraft.isPaused() || config.shouldPlayAnimationsWhileGamePaused();
 
-        if (shouldRun && !animationProcessor.getBoneCache().getRegisteredBones().isEmpty()) {
-            animationProcessor.update(animatable);
+        if (shouldRun && !boneCache.isEmpty()) {
+            animationProcessor.update(reusableContext);
         }
 
         setCustomAnimations(animatable);
@@ -92,27 +98,11 @@ public abstract class AzAnimator<T> {
         return bakedAnimations.getAnimation(name);
     }
 
+    public AzAnimationContext<T> context() {
+        return reusableContext;
+    }
+
     public AzAnimationControllerContainer<T> getAnimationControllerContainer() {
         return animationControllerContainer;
-    }
-
-    public AzAnimationProcessor<T> getAnimationProcessor() {
-        return animationProcessor;
-    }
-
-    public double getAnimTime() {
-        return timer.getAnimTime();
-    }
-
-    public AzAnimatorConfig config() {
-        return config;
-    }
-
-    public boolean isFirstTick() {
-        return timer.isFirstTick();
-    }
-
-    protected void finishFirstTick() {
-        timer.finishFirstTick();
     }
 }

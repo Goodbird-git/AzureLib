@@ -1,32 +1,32 @@
 package mod.azure.azurelib.core2.animation;
 
-import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 public class AzAnimationProcessor<T> {
 
     private final AzAnimator<T> animator;
 
-    private final AzBoneCache boneCache;
-
     public boolean reloadAnimations;
 
     public AzAnimationProcessor(AzAnimator<T> animator) {
         this.animator = animator;
-        this.boneCache = new AzBoneCache();
         this.reloadAnimations = false;
     }
 
     /**
      * Tick and apply transformations to the model based on the current state of the {@link AzAnimationController}
      *
-     * @param animatable The animatable object relevant to the animation being played
+     * @param context An animation context provided by the animator.
      */
-    public void update(T animatable) {
-        var animTime = animator.getAnimTime();
-        var shouldCrash = animator.config().crashIfBoneMissing();
+    public void update(AzAnimationContext<T> context) {
+        var animatable = context.animatable();
+        var timer = context.timer();
+        var animTime = timer.getAnimTime();
+        var boneCache = context.boneCache();
+        var config = context.config();
+        var shouldCrash = config.crashIfBoneMissing();
 
-        boneCache.updateBoneSnapshots();
+        boneCache.snapshot();
         var boneSnapshots = boneCache.getBoneSnapshotsByName();
         var bonesByName = boneCache.getBonesByName();
 
@@ -38,7 +38,7 @@ public class AzAnimationProcessor<T> {
                 controller.getBoneAnimationQueues().clear();
             }
 
-            controller.setJustStarting(animator.isFirstTick());
+            controller.setJustStarting(timer.isFirstTick());
 
             controller.process(animatable, bonesByName, boneSnapshots, animTime, shouldCrash);
 
@@ -55,20 +55,8 @@ public class AzAnimationProcessor<T> {
         }
 
         this.reloadAnimations = false;
-        double resetTickLength = animator.config().boneResetTime();
 
-        // Updates the cached bone snapshots (only if they have changed).
-        for (var bone : boneCache.getRegisteredBones()) {
-            AzCachedBoneUpdateUtil.updateCachedBoneRotation(bone, boneSnapshots, animTime, resetTickLength);
-            AzCachedBoneUpdateUtil.updateCachedBonePosition(bone, boneSnapshots, animTime, resetTickLength);
-            AzCachedBoneUpdateUtil.updateCachedBoneScale(bone, boneSnapshots, animTime, resetTickLength);
-        }
-
-        boneCache.resetBoneTransformationMarkers();
-        animator.finishFirstTick();
-    }
-
-    public AzBoneCache getBoneCache() {
-        return boneCache;
+        boneCache.update(context);
+        timer.finishFirstTick();
     }
 }
