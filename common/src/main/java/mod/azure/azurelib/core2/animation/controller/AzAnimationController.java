@@ -1,6 +1,7 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,6 @@ import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
@@ -389,20 +389,18 @@ public class AzAnimationController<T> {
     /**
      * This method is called every frame in order to populate the animation point queues, and process animation state
      * logic.
-     *
-     * @param bones                 The registered {@link CoreGeoBone bones} for this model
-     * @param snapshots             The {@link BoneSnapshot} map
-     * @param seekTime              The current tick + partial tick
-     * @param crashWhenCantFindBone Whether to hard-fail when a bone can't be found, or to continue with the remaining
-     *                              bones
      */
-    public void process(
-        T animatable,
-        Map<String, CoreGeoBone> bones,
-        Map<String, BoneSnapshot> snapshots,
-        final double seekTime,
-        boolean crashWhenCantFindBone
-    ) {
+    public void update(AzAnimationContext<T> context) {
+        var animatable = context.animatable();
+        var boneCache = context.boneCache();
+        var bones = boneCache.getBonesByName();
+        var snapshots = boneCache.getBoneSnapshotsByName();
+        var crashWhenCantFindBone = context.config().crashIfBoneMissing();
+        var timer = context.timer();
+        var seekTime = timer.getAnimTime();
+
+        setJustStarting(timer.isFirstTick());
+
         double adjustedTick = adjustTick(animatable, seekTime);
 
         if (animationState == AzAnimationControllerState.TRANSITIONING && adjustedTick >= transitionLength) {

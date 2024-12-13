@@ -21,14 +21,10 @@ public class AzAnimationProcessor<T> {
     public void update(AzAnimationContext<T> context) {
         var animatable = context.animatable();
         var timer = context.timer();
-        var animTime = timer.getAnimTime();
         var boneCache = context.boneCache();
-        var config = context.config();
-        var shouldCrash = config.crashIfBoneMissing();
 
         boneCache.snapshot();
         var boneSnapshots = boneCache.getBoneSnapshotsByName();
-        var bonesByName = boneCache.getBonesByName();
 
         for (var controller : animator.getAnimationControllerContainer().getAll()) {
             var easingType = controller.getOverrideEasingTypeFunction().apply(animatable);
@@ -38,9 +34,7 @@ public class AzAnimationProcessor<T> {
                 controller.getBoneAnimationQueues().clear();
             }
 
-            controller.setJustStarting(timer.isFirstTick());
-
-            controller.process(animatable, bonesByName, boneSnapshots, animTime, shouldCrash);
+            controller.update(context);
 
             // Progresses the current bones according to the animation queue.
             for (var boneAnimation : controller.getBoneAnimationQueues().values()) {
