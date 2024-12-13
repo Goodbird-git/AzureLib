@@ -1,6 +1,7 @@
 package mod.azure.azurelib.core2.animation.cache;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,6 +17,8 @@ public class AzBoneCache {
     private final Map<String, CoreGeoBone> bonesByName;
 
     private final Map<String, BoneSnapshot> boneSnapshotsByName;
+
+    private ResourceLocation cachedResourceLocation;
 
     public AzBoneCache() {
         this.bonesByName = new Object2ObjectOpenHashMap<>();
@@ -38,8 +41,15 @@ public class AzBoneCache {
      * Should be called whenever switching models to render/animate
      */
     public void setActiveModel(AzBakedModel model) {
-        this.bonesByName.clear();
-        model.getTopLevelBones().forEach(this::registerGeoBone);
+        var newModelResourceLocation = model.getResourceLocation();
+
+        // If the cached resource location has not been set, or if the new resource location is different,
+        // then flush the bone cache and repopulate it with the new model's bones.
+        if (cachedResourceLocation == null || !cachedResourceLocation.equals(newModelResourceLocation)) {
+            bonesByName.clear();
+            model.getTopLevelBones().forEach(this::registerGeoBone);
+            this.cachedResourceLocation = newModelResourceLocation;
+        }
     }
 
     public void update(AzAnimationContext<?> context) {

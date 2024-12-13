@@ -1,6 +1,7 @@
 package mod.azure.azurelib.core2.model.factory.impl;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
@@ -17,14 +18,14 @@ import mod.azure.azurelib.core2.model.factory.primitive.VertexSet;
 public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
 
     @Override
-    public AzBakedModel constructGeoModel(GeometryTree geometryTree) {
+    public AzBakedModel constructGeoModel(ResourceLocation resourceLocation, GeometryTree geometryTree) {
         var bones = new ObjectArrayList<AzBone>();
 
         for (var boneStructure : geometryTree.topLevelBones().values()) {
             bones.add(constructBone(boneStructure, geometryTree.properties(), null));
         }
 
-        return new AzBakedModel(bones);
+        return new AzBakedModel(resourceLocation, bones);
     }
 
     @Override
