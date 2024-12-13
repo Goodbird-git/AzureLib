@@ -236,7 +236,7 @@ public class AzKeyFrameProcessor<T> {
         List<Keyframe<IValue>> frames,
         double ageInTicks
     ) {
-        var totalFrameTime = 0;
+        var totalFrameTime = 0.0;
 
         for (var frame : frames) {
             totalFrameTime += frame.length();
