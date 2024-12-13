@@ -47,7 +47,8 @@ public class AzBoneCache {
         // then flush the bone cache and repopulate it with the new model's bones.
         if (cachedResourceLocation == null || !cachedResourceLocation.equals(newModelResourceLocation)) {
             bonesByName.clear();
-            model.getTopLevelBones().forEach(this::registerGeoBone);
+            model.getBonesByName().forEach(($, value) -> value.saveInitialSnapshot());
+            bonesByName.putAll(model.getBonesByName());
             this.cachedResourceLocation = newModelResourceLocation;
         }
     }
@@ -67,17 +68,6 @@ public class AzBoneCache {
         }
 
         resetBoneTransformationMarkers();
-    }
-
-    /**
-     * Adds the given bone to the bones list for this processor.<br>
-     * This is normally handled automatically by AzureLib.<br>
-     * Failure to properly register a bone will break things.
-     */
-    public void registerGeoBone(CoreGeoBone bone) {
-        bone.saveInitialSnapshot();
-        this.bonesByName.put(bone.getName(), bone);
-        bone.getChildBones().forEach(this::registerGeoBone);
     }
 
     /**

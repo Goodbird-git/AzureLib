@@ -40,6 +40,10 @@ public class AzBakedModel {
         return Optional.ofNullable(bonesByName.get(name));
     }
 
+    public Map<String, AzBone> getBonesByName() {
+        return bonesByName;
+    }
+
     public ResourceLocation getResourceLocation() {
         return resourceLocation;
     }
