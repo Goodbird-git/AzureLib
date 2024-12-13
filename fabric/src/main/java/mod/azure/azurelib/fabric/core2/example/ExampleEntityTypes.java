@@ -1,6 +1,5 @@
 package mod.azure.azurelib.fabric.core2.example;
 
-import mod.azure.azurelib.fabric.core2.example.azure.DoomHunter;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.fabric.core2.example.azure.DoomHunter;
 
 public class ExampleEntityTypes {
 
@@ -23,8 +23,8 @@ public class ExampleEntityTypes {
     );
 
     public static final EntityType<DoomHunter> DOOMHUNTER = register(
-            "doomhunter",
-            EntityType.Builder.of(DoomHunter::new, MobCategory.MONSTER).sized(3.0f, 7.0f)
+        "doomhunter",
+        EntityType.Builder.of(DoomHunter::new, MobCategory.MONSTER).sized(3.0f, 7.0f)
     );
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {

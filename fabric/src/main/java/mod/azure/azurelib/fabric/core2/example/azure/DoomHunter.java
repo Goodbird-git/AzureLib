@@ -1,10 +1,7 @@
 package mod.azure.azurelib.fabric.core2.example.azure;
 
-import mod.azure.azurelib.common.api.common.ai.pathing.AzureNavigation;
-import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -15,6 +12,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+
+import mod.azure.azurelib.common.api.common.ai.pathing.AzureNavigation;
+import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 
 public class DoomHunter extends Monster {
 
@@ -56,6 +56,5 @@ public class DoomHunter extends Monster {
     }
 
     @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-    }
+    protected void playStepSound(BlockPos pos, BlockState state) {}
 }

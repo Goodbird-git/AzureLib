@@ -1,8 +1,6 @@
 package mod.azure.azurelib.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import mod.azure.azurelib.fabric.core2.example.FacehuggerRenderer;
-import mod.azure.azurelib.fabric.core2.example.azure.DoomHunterRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -15,6 +13,8 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.fabric.core2.example.DroneRenderer;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
+import mod.azure.azurelib.fabric.core2.example.FacehuggerRenderer;
+import mod.azure.azurelib.fabric.core2.example.azure.DoomHunterRenderer;
 
 public final class ClientListener implements ClientModInitializer {
 
