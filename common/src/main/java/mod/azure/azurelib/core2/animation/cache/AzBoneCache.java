@@ -23,8 +23,6 @@ public class AzBoneCache {
     /**
      * Create new bone {@link BoneSnapshot} based on the bone's initial snapshot for the currently registered
      * {@link CoreGeoBone GeoBones}, filtered by the bones already present in the master snapshots map
-     *
-     * @return The input snapshots map, for easy assignment
      */
     public void updateBoneSnapshots() {
         for (var bone : getRegisteredBones()) {
