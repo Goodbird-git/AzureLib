@@ -19,7 +19,6 @@ import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
-import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
@@ -367,13 +366,13 @@ public class AzAnimationController<T> {
     /**
      * Handle a given AnimationState, alongside the current triggered animation if applicable
      */
-    protected PlayState handleAnimationState(AzAnimationState<T> state) {
+    protected PlayState handleAnimationState(T animatable) {
         if (triggeredAnimation != null) {
             if (currentRawAnimation != triggeredAnimation) {
                 this.currentAnimation = null;
             }
 
-            setAnimation(state.getAnimatable(), triggeredAnimation);
+            setAnimation(animatable, triggeredAnimation);
 
             if (!hasAnimationFinished()) {
                 return PlayState.CONTINUE;
@@ -391,7 +390,6 @@ public class AzAnimationController<T> {
      * This method is called every frame in order to populate the animation point queues, and process animation state
      * logic.
      *
-     * @param state                 The animation test state
      * @param bones                 The registered {@link CoreGeoBone bones} for this model
      * @param snapshots             The {@link BoneSnapshot} map
      * @param seekTime              The current tick + partial tick
@@ -399,13 +397,12 @@ public class AzAnimationController<T> {
      *                              bones
      */
     public void process(
-        AzAnimationState<T> state,
+        T animatable,
         Map<String, CoreGeoBone> bones,
         Map<String, BoneSnapshot> snapshots,
         final double seekTime,
         boolean crashWhenCantFindBone
     ) {
-        var animatable = state.getAnimatable();
         double adjustedTick = adjustTick(animatable, seekTime);
 
         if (animationState == AzAnimationControllerState.TRANSITIONING && adjustedTick >= transitionLength) {
@@ -414,7 +411,7 @@ public class AzAnimationController<T> {
             adjustedTick = adjustTick(animatable, seekTime);
         }
 
-        PlayState playState = handleAnimationState(state);
+        PlayState playState = handleAnimationState(animatable);
 
         if (playState == PlayState.STOP || (currentAnimation == null && animationQueue.isEmpty())) {
             this.animationState = AzAnimationControllerState.STOPPED;

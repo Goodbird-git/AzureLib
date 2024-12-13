@@ -5,34 +5,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-import mod.azure.azurelib.common.api.common.animatable.GeoBlockEntity;
-import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
-import mod.azure.azurelib.core2.animation.AzAnimationState;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 
 public abstract class AzEntityAnimator<T extends Entity> extends AzAnimator<T> {
-
-    public AzAnimationState<T> createAnimationState(
-        T animatable,
-        float limbSwing,
-        float limbSwingAmount,
-        float partialTick
-    ) {
-        var velocity = animatable.getDeltaMovement();
-        var avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-        var motionThreshold = getMotionAnimThreshold(animatable);
-
-        return new AzAnimationState<>(
-            animatable,
-            limbSwing,
-            limbSwingAmount,
-            partialTick,
-            avgVelocity >= motionThreshold && limbSwingAmount != 0
-        );
-    }
 
     @Override
     protected void applyMolangQueries(T entity, double animTime) {
@@ -62,19 +40,5 @@ public abstract class AzEntityAnimator<T extends Entity> extends AzAnimator<T> {
             });
             parser.setMemoizedValue(MolangQueries.YAW_SPEED, () -> livingEntity.getYRot() - livingEntity.yRotO);
         }
-    }
-
-    /**
-     * Determines the threshold value before the animatable should be considered moving for animation purposes.<br>
-     * The default value and usage for this varies depending on the renderer.<br>
-     * <ul>
-     * <li>For entities, it represents the averaged lateral velocity of the object.</li>
-     * <li>For {@link GeoBlockEntity Tile Entities} and {@link GeoItem Items}, it's currently unused</li>
-     * </ul>
-     * The lower the value, the more sensitive the {@link AzAnimationState#isMoving()} check will be.<br>
-     * Particularly low values may have adverse effects however
-     */
-    protected float getMotionAnimThreshold(T animatable) {
-        return 0.015f;
     }
 }

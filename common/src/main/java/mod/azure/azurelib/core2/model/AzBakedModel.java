@@ -1,11 +1,11 @@
 package mod.azure.azurelib.core2.model;
 
+import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class AzBakedModel {
 
@@ -27,13 +27,15 @@ public class AzBakedModel {
     }
 
     private Map<String, AzBone> mapBonesByName(List<AzBone> bones) {
-        return bones.stream()
-            .collect(
-                Collectors.toMap(
-                    AzBone::getName,
-                    Function.identity(),
-                    (left, right) -> right
-                )
-            );
+        var bonesByName = new HashMap<String, AzBone>();
+        var nodesToMap = new ArrayDeque<>(bones);
+
+        while (!nodesToMap.isEmpty()) {
+            var currentBone = nodesToMap.poll();
+            nodesToMap.addAll(currentBone.getChildBones());
+            bonesByName.put(currentBone.getName(), currentBone);
+        }
+
+        return bonesByName;
     }
 }

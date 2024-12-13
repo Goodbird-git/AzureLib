@@ -88,7 +88,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         var bakedGeoModel = AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
 
         if (cachedEntityAnimator != null && bakedGeoModel != null) {
-            cachedEntityAnimator.getAnimationProcessor().setActiveModel(bakedGeoModel);
+            cachedEntityAnimator.getAnimationProcessor().getBoneSnapshotCache().setActiveModel(bakedGeoModel);
         }
 
         return bakedGeoModel;

@@ -16,13 +16,8 @@
 					"pivot": [0, 4, 0]
 				},
 				{
-					"name": "gWholeBody",
-					"parent": "root",
-					"pivot": [0, 4, 0]
-				},
-				{
 					"name": "gRFrontLeg",
-					"parent": "gWholeBody",
+					"parent": "root",
 					"pivot": [-1.03227, 3.85146, -2.40085],
 					"rotation": [0, -47.5, 12.5],
 					"cubes": [

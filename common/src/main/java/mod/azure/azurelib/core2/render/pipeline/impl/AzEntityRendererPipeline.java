@@ -218,8 +218,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             var animator = azEntityRenderer.getAnimator();
 
             if (animator != null) {
-                var animationState = animator.createAnimationState(animatable, limbSwing, limbSwingAmount, partialTick);
-                animator.animate(animatable, animationState);
+                animator.animate(animatable);
             }
         }
 

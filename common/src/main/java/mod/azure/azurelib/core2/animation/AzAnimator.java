@@ -6,13 +6,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.AzureLibException;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core2.animation.cache.AzBakedAnimationCache;
-import mod.azure.azurelib.core2.animation.cache.AzBoneSnapshotCache;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 
@@ -23,63 +21,31 @@ public abstract class AzAnimator<T> {
 
     private final AzAnimationProcessor<T> animationProcessor;
 
-    private final AzBoneSnapshotCache boneSnapshotCache;
-
-    // Remnants from AnimatableManager.
-    private double lastUpdateTime;
-
-    private boolean isFirstTick = true;
-
-    private double firstTickTime = -1;
-
-    // Remnants from GeoModel.
-    private double animTime;
-
-    private double lastGameTickTime;
+    private final AzAnimationTickAnalysis tickAnalysis;
 
     protected AzAnimator() {
         this.animationControllerContainer = new AzAnimationControllerContainer<>();
         this.animationProcessor = new AzAnimationProcessor<>(this);
-        this.boneSnapshotCache = new AzBoneSnapshotCache();
+        this.tickAnalysis = new AzAnimationTickAnalysis(shouldPlayAnimsWhileGamePaused());
     }
 
     public abstract void registerControllers(AzAnimationControllerContainer<T> animationControllerContainer);
 
     public abstract @NotNull ResourceLocation getAnimationLocation(T animatable);
 
-    public void animate(T animatable, AzAnimationState<T> animationState) {
+    public void animate(T animatable) {
+        tickAnalysis.tick();
+
+        preAnimationSetup(animatable, tickAnalysis.getAnimTime());
+
         var minecraft = Minecraft.getInstance();
-        // TODO: If encountering rendering smoothness issues, break glass (this used to be a DataTickets.TICK fetch).
-        var currentTick = RenderUtils.getCurrentTick();
+        var shouldRun = !minecraft.isPaused() || shouldPlayAnimsWhileGamePaused();
 
-        if (firstTickTime == -1) {
-            firstTickTime = currentTick + minecraft.getTimer().getGameTimeDeltaTicks();
+        if (shouldRun && !animationProcessor.getBoneSnapshotCache().getRegisteredBones().isEmpty()) {
+            animationProcessor.update(animatable);
         }
 
-        double currentFrameTime = currentTick - firstTickTime;
-        boolean isReRender = !isFirstTick && currentFrameTime == lastUpdateTime;
-
-        // TODO: Figure out why this was here to begin with.
-        // if (isReRender && instanceId == this.lastRenderedInstance) {
-        // return;
-        // }
-
-        if (!isReRender && (!minecraft.isPaused() || shouldPlayAnimsWhileGamePaused())) {
-            this.lastUpdateTime = currentFrameTime;
-
-            this.animTime += lastUpdateTime - this.lastGameTickTime;
-            this.lastGameTickTime = lastUpdateTime;
-        }
-
-        animationState.animationTick = this.animTime;
-
-        preAnimationSetup(animatable, this.animTime);
-
-        if (!animationProcessor.getRegisteredBones().isEmpty()) {
-            animationProcessor.tickAnimation(animatable, animationState);
-        }
-
-        setCustomAnimations(animatable, animationState);
+        setCustomAnimations(animatable);
     }
 
     /**
@@ -90,10 +56,8 @@ public abstract class AzAnimator<T> {
     }
 
     protected void applyMolangQueries(T animatable, double animTime) {
+        var level = Objects.requireNonNull(Minecraft.getInstance().level);
         var parser = MolangParser.INSTANCE;
-        var minecraft = Minecraft.getInstance();
-        // TODO: See if there's a better way to null-check here.
-        var level = Objects.requireNonNull(minecraft.level);
 
         parser.setMemoizedValue(MolangQueries.LIFE_TIME, () -> animTime / 20d);
         parser.setMemoizedValue(MolangQueries.ACTOR_COUNT, level::getEntityCount);
@@ -105,11 +69,9 @@ public abstract class AzAnimator<T> {
      * This method is called once per render frame for each {@link T animatable} being rendered.<br>
      * Override to set custom animations (such as head rotation, etc).
      *
-     * @param animatable     The {@code GeoAnimatable} instance currently being rendered
-     * @param animationState An {@link AzAnimationState} instance created to hold animation data for the
-     *                       {@code animatable} for this method call
+     * @param animatable The {@code GeoAnimatable} instance currently being rendered
      */
-    public void setCustomAnimations(T animatable, AzAnimationState<T> animationState) {}
+    public void setCustomAnimations(T animatable) {}
 
     /**
      * Defines whether the animations for this animator should continue playing in the background when the game is
@@ -153,7 +115,7 @@ public abstract class AzAnimator<T> {
     }
 
     public double getAnimTime() {
-        return animTime;
+        return tickAnalysis.getAnimTime();
     }
 
     /**
@@ -164,15 +126,11 @@ public abstract class AzAnimator<T> {
         return 1;
     }
 
-    public AzBoneSnapshotCache getBoneSnapshotCache() {
-        return boneSnapshotCache;
-    }
-
     public boolean isFirstTick() {
-        return this.isFirstTick;
+        return tickAnalysis.isFirstTick();
     }
 
     protected void finishFirstTick() {
-        this.isFirstTick = false;
+        tickAnalysis.finishFirstTick();
     }
 }
