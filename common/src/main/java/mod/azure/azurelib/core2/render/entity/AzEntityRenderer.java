@@ -62,9 +62,15 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         int packedLight
     ) {
         var cachedEntityAnimator = provideAnimator(entity);
-        var azBakedModel = provideBakedModel(entity, cachedEntityAnimator);
+        var azBakedModel = provideBakedModel(entity);
+
+        if (cachedEntityAnimator != null && azBakedModel != null) {
+            cachedEntityAnimator.context().boneCache().setActiveModel(azBakedModel);
+        }
+
         // Point the renderer's current animator reference to the cached entity animator before rendering.
         reusedAzEntityAnimator = cachedEntityAnimator;
+
         // Execute the render pipeline.
         azEntityRendererPipeline.render(
             poseStack,
@@ -83,15 +89,9 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         return null;
     }
 
-    protected @Nullable AzBakedModel provideBakedModel(@NotNull T entity, AzEntityAnimator<T> cachedEntityAnimator) {
+    protected @Nullable AzBakedModel provideBakedModel(@NotNull T entity) {
         var modelResourceLocation = getModelLocation(entity);
-        var bakedGeoModel = AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
-
-        if (cachedEntityAnimator != null && bakedGeoModel != null) {
-            cachedEntityAnimator.getAnimationProcessor().getBoneCache().setActiveModel(bakedGeoModel);
-        }
-
-        return bakedGeoModel;
+        return AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
     }
 
     protected @Nullable AzEntityAnimator<T> provideAnimator(T entity) {
