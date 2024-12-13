@@ -25,8 +25,8 @@ import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.render.entity.AzEntityLeashRenderUtil;
 import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
-import mod.azure.azurelib.core2.render.entity.RenderLeashUtil;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 
 public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeline<T> {
@@ -365,7 +365,14 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             var leashHolder = mob.getLeashHolder();
 
             if (leashHolder != null) {
-                RenderLeashUtil.renderLeash(azEntityRenderer, mob, partialTick, poseStack, bufferSource, leashHolder);
+                AzEntityLeashRenderUtil.renderLeash(
+                    azEntityRenderer,
+                    mob,
+                    partialTick,
+                    poseStack,
+                    bufferSource,
+                    leashHolder
+                );
             }
         }
     }

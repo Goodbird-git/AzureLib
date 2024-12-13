@@ -154,7 +154,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
      */
     @Override
     public boolean shouldShowName(@NotNull T entity) {
-        return AzEntityNameTagUtil.shouldShowName(entityRenderDispatcher, entity);
+        return AzEntityNameRenderUtil.shouldShowName(entityRenderDispatcher, entity);
     }
 
     // Proxy method override for super.getBlockLightLevel external access.

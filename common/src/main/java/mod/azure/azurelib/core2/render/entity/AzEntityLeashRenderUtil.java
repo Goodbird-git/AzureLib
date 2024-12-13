@@ -13,7 +13,7 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
-public class RenderLeashUtil {
+public class AzEntityLeashRenderUtil {
 
     /**
      * Static rendering code for rendering a leash segment.<br>
@@ -148,7 +148,7 @@ public class RenderLeashUtil {
             .setLight(packedLight);
     }
 
-    private RenderLeashUtil() {
+    private AzEntityLeashRenderUtil() {
         throw new UnsupportedOperationException();
     }
 }

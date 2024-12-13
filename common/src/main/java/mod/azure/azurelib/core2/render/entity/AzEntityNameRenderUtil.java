@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Mob;
 
 import java.util.Objects;
 
-public class AzEntityNameTagUtil {
+public class AzEntityNameRenderUtil {
 
     public static <T extends Entity> boolean shouldShowName(EntityRenderDispatcher entityRenderDispatcher, T entity) {
         var nameRenderDistance = entity.isDiscrete() ? 32d : 64d;
@@ -54,7 +54,7 @@ public class AzEntityNameTagUtil {
         };
     }
 
-    private AzEntityNameTagUtil() {
+    private AzEntityNameRenderUtil() {
         throw new UnsupportedOperationException();
     }
 }
