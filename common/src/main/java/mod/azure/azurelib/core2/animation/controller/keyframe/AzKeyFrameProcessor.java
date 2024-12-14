@@ -23,7 +23,10 @@ public class AzKeyFrameProcessor<T> {
 
     private final AzBoneAnimationQueueCache boneAnimationQueueCache;
 
-    public AzKeyFrameProcessor(AzAnimationController<T> animationController, AzBoneAnimationQueueCache boneAnimationQueueCache) {
+    public AzKeyFrameProcessor(
+        AzAnimationController<T> animationController,
+        AzBoneAnimationQueueCache boneAnimationQueueCache
+    ) {
         this.animationController = animationController;
         this.boneAnimationQueueCache = boneAnimationQueueCache;
     }

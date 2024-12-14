@@ -1,6 +1,5 @@
 package mod.azure.azurelib.core2.animation;
 
-import mod.azure.azurelib.core2.model.AzBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +13,7 @@ import mod.azure.azurelib.core2.animation.cache.AzBakedAnimationCache;
 import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.model.AzBakedModel;
 
 public abstract class AzAnimator<T> {
 

@@ -1,12 +1,13 @@
 package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
+
+import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 
 public class AzBoneAnimationQueueCache {
 
