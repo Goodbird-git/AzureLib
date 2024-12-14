@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import mod.azure.azurelib.core.keyframe.AnimationPoint;
 import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.keyframe.KeyframeLocation;
 import mod.azure.azurelib.core.math.Constant;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
+import mod.azure.azurelib.core2.animation.AzKeyframe;
+import mod.azure.azurelib.core2.animation.AzKeyframeLocation;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
 import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
@@ -98,27 +98,33 @@ public class AzKeyFrameProcessor<T> {
             var scaleKeyFrames = boneAnimation.scaleKeyFrames();
 
             if (!rotationKeyFrames.xKeyframes().isEmpty()) {
-                boneAnimationQueue.addRotations(
-                    getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), adjustedTick, true, Axis.X),
-                    getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), adjustedTick, true, Axis.Y),
-                    getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), adjustedTick, true, Axis.Z)
-                );
+                var rotX = boneAnimationQueue.rotationXQueue();
+                var rotY = boneAnimationQueue.rotationYQueue();
+                var rotZ = boneAnimationQueue.rotationZQueue();
+
+                updateAnimationPointForTick(rotX, rotationKeyFrames.xKeyframes(), adjustedTick, true, Axis.X);
+                updateAnimationPointForTick(rotY, rotationKeyFrames.yKeyframes(), adjustedTick, true, Axis.Y);
+                updateAnimationPointForTick(rotZ, rotationKeyFrames.zKeyframes(), adjustedTick, true, Axis.Z);
             }
 
             if (!positionKeyFrames.xKeyframes().isEmpty()) {
-                boneAnimationQueue.addPositions(
-                    getAnimationPointAtTick(positionKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
-                    getAnimationPointAtTick(positionKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
-                    getAnimationPointAtTick(positionKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
-                );
+                var posX = boneAnimationQueue.positionXQueue();
+                var posY = boneAnimationQueue.positionYQueue();
+                var posZ = boneAnimationQueue.positionZQueue();
+
+                updateAnimationPointForTick(posX, positionKeyFrames.xKeyframes(), adjustedTick, false, Axis.X);
+                updateAnimationPointForTick(posY, positionKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y);
+                updateAnimationPointForTick(posZ, positionKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z);
             }
 
             if (!scaleKeyFrames.xKeyframes().isEmpty()) {
-                boneAnimationQueue.addScales(
-                    getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
-                    getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
-                    getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
-                );
+                var scaleX = boneAnimationQueue.scaleXQueue();
+                var scaleY = boneAnimationQueue.scaleYQueue();
+                var scaleZ = boneAnimationQueue.scaleZQueue();
+
+                updateAnimationPointForTick(scaleX, scaleKeyFrames.xKeyframes(), adjustedTick, false, Axis.X);
+                updateAnimationPointForTick(scaleY, scaleKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y);
+                updateAnimationPointForTick(scaleZ, scaleKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z);
             }
         }
 
@@ -155,49 +161,71 @@ public class AzKeyFrameProcessor<T> {
             var scaleKeyFrames = boneAnimation.scaleKeyFrames();
 
             if (!rotationKeyFrames.xKeyframes().isEmpty()) {
+                var rotX = boneAnimationQueue.rotationXQueue();
+                var rotY = boneAnimationQueue.rotationYQueue();
+                var rotZ = boneAnimationQueue.rotationZQueue();
+
+                updateAnimationPointForTick(rotX, rotationKeyFrames.xKeyframes(), 0, true, Axis.X);
+                updateAnimationPointForTick(rotY, rotationKeyFrames.yKeyframes(), 0, true, Axis.Y);
+                updateAnimationPointForTick(rotZ, rotationKeyFrames.zKeyframes(), 0, true, Axis.Z);
+
                 boneAnimationQueue.addNextRotation(
                     null,
                     adjustedTick,
                     transitionLength,
                     boneSnapshot,
                     bone.getInitialAzSnapshot(),
-                    getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), 0, true, Axis.X),
-                    getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), 0, true, Axis.Y),
-                    getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), 0, true, Axis.Z)
+                    rotX,
+                    rotY,
+                    rotZ
                 );
             }
 
             if (!positionKeyFrames.xKeyframes().isEmpty()) {
+                var posX = boneAnimationQueue.positionXQueue();
+                var posY = boneAnimationQueue.positionYQueue();
+                var posZ = boneAnimationQueue.positionZQueue();
+
+                updateAnimationPointForTick(posX, positionKeyFrames.xKeyframes(), 0, false, Axis.X);
+                updateAnimationPointForTick(posY, positionKeyFrames.yKeyframes(), 0, false, Axis.Y);
+                updateAnimationPointForTick(posZ, positionKeyFrames.zKeyframes(), 0, false, Axis.Z);
+
                 boneAnimationQueue.addNextPosition(
                     null,
                     adjustedTick,
                     transitionLength,
                     boneSnapshot,
-                    getAnimationPointAtTick(positionKeyFrames.xKeyframes(), 0, false, Axis.X),
-                    getAnimationPointAtTick(positionKeyFrames.yKeyframes(), 0, false, Axis.Y),
-                    getAnimationPointAtTick(positionKeyFrames.zKeyframes(), 0, false, Axis.Z)
+                    posX,
+                    posY,
+                    posZ
                 );
             }
 
             if (!scaleKeyFrames.xKeyframes().isEmpty()) {
+                var scaleX = boneAnimationQueue.scaleXQueue();
+                var scaleY = boneAnimationQueue.scaleYQueue();
+                var scaleZ = boneAnimationQueue.scaleZQueue();
+
+                updateAnimationPointForTick(scaleX, scaleKeyFrames.xKeyframes(), 0, false, Axis.X);
+                updateAnimationPointForTick(scaleY, scaleKeyFrames.yKeyframes(), 0, false, Axis.Y);
+                updateAnimationPointForTick(scaleZ, scaleKeyFrames.zKeyframes(), 0, false, Axis.Z);
+
                 boneAnimationQueue.addNextScale(
                     null,
                     adjustedTick,
                     transitionLength,
                     boneSnapshot,
-                    getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), 0, false, Axis.X),
-                    getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), 0, false, Axis.Y),
-                    getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), 0, false, Axis.Z)
+                    scaleX,
+                    scaleY,
+                    scaleZ
                 );
             }
         }
     }
 
-    /**
-     * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
-     */
-    private AnimationPoint getAnimationPointAtTick(
-        List<Keyframe<IValue>> frames,
+    private void updateAnimationPointForTick(
+        AzAnimationPoint animationPoint,
+        List<AzKeyframe<IValue>> frames,
         double tick,
         boolean isRotation,
         Axis axis
@@ -225,7 +253,7 @@ public class AzKeyFrameProcessor<T> {
             }
         }
 
-        return new AnimationPoint(currentFrame, location.startTick(), currentFrame.length(), startValue, endValue);
+        animationPoint.set(currentFrame, location.startTick(), currentFrame.length(), startValue, endValue);
     }
 
     /**
@@ -235,8 +263,8 @@ public class AzKeyFrameProcessor<T> {
      * @param ageInTicks The current tick time
      * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
      */
-    protected KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(
-        List<Keyframe<IValue>> frames,
+    protected AzKeyframeLocation<AzKeyframe<IValue>> getCurrentKeyFrameLocation(
+        List<AzKeyframe<IValue>> frames,
         double ageInTicks
     ) {
         var totalFrameTime = 0.0;
@@ -245,10 +273,10 @@ public class AzKeyFrameProcessor<T> {
             totalFrameTime += frame.length();
 
             if (totalFrameTime > ageInTicks) {
-                return new KeyframeLocation<>(frame, (ageInTicks - (totalFrameTime - frame.length())));
+                return new AzKeyframeLocation<>(frame, (ageInTicks - (totalFrameTime - frame.length())));
             }
         }
 
-        return new KeyframeLocation<>(frames.get(frames.size() - 1), ageInTicks);
+        return new AzKeyframeLocation<>(frames.get(frames.size() - 1), ageInTicks);
     }
 }

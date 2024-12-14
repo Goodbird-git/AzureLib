@@ -99,8 +99,11 @@ public interface AzEasingType {
     static double lerpWithOverride(AzAnimationPoint animationPoint, AzEasingType override) {
         AzEasingType easingType = override;
 
-        if (override == null)
-            easingType = animationPoint.keyFrame() == null ? LINEAR : animationPoint.keyFrame().easingType();
+        if (override == null) {
+            easingType = animationPoint.keyFrame() == null
+                ? LINEAR
+                : animationPoint.keyFrame().easingType();
+        }
 
         return easingType.apply(animationPoint);
     }

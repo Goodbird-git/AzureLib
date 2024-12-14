@@ -2,7 +2,6 @@ package mod.azure.azurelib.core2.animation;
 
 import java.util.Map;
 
-import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
@@ -51,7 +50,7 @@ public class AzAnimationProcessor<T> {
     private void updateBoneSnapshots(
         AzAnimationController<T> controller,
         Map<String, AzBoneSnapshot> boneSnapshots,
-        EasingType easingType
+        AzEasingType easingType
     ) {
         // Progresses the current bones according to the animation queue.
         for (var boneAnimation : controller.getBoneAnimationQueues()) {

@@ -13,11 +13,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
-import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.AzEasingType;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
@@ -76,7 +76,7 @@ public class AzAnimationController<T> {
 
     protected ToDoubleFunction<T> animationSpeedModifier = obj -> 1d;
 
-    protected Function<T, EasingType> overrideEasingTypeFunction = obj -> null;
+    protected Function<T, AzEasingType> overrideEasingTypeFunction = obj -> null;
 
     protected boolean justStopped = true;
 
@@ -127,28 +127,28 @@ public class AzAnimationController<T> {
     }
 
     /**
-     * Sets the controller's {@link EasingType} override for animations.<br>
+     * Sets the controller's {@link AzEasingType} override for animations.<br>
      * By default, the controller will use whatever {@code EasingType} was defined in the animation json
      *
      * @param easingTypeFunction The new {@code EasingType} to use
      * @return this
      */
-    public AzAnimationController<T> setOverrideEasingType(EasingType easingTypeFunction) {
+    public AzAnimationController<T> setOverrideEasingType(AzEasingType easingTypeFunction) {
         return setOverrideEasingTypeFunction(obj -> easingTypeFunction);
     }
 
-    public Function<T, EasingType> getOverrideEasingTypeFunction() {
+    public Function<T, AzEasingType> getOverrideEasingTypeFunction() {
         return overrideEasingTypeFunction;
     }
 
     /**
-     * Sets the controller's {@link EasingType} override function for animations.<br>
+     * Sets the controller's {@link AzEasingType} override function for animations.<br>
      * By default, the controller will use whatever {@code EasingType} was defined in the animation json
      *
      * @param easingType The new {@code EasingType} to use
      * @return this
      */
-    public AzAnimationController<T> setOverrideEasingTypeFunction(Function<T, EasingType> easingType) {
+    public AzAnimationController<T> setOverrideEasingTypeFunction(Function<T, AzEasingType> easingType) {
         this.overrideEasingTypeFunction = easingType;
 
         return this;
