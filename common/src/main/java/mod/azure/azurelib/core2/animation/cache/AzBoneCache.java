@@ -5,17 +5,17 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Collection;
 import java.util.Map;
 
-import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzCachedBoneUpdateUtil;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
 public class AzBoneCache {
 
     private AzBakedModel bakedModel;
 
-    private final Map<String, BoneSnapshot> boneSnapshotsByName;
+    private final Map<String, AzBoneSnapshot> boneSnapshotsByName;
 
     public AzBoneCache() {
         this.bakedModel = AzBakedModel.EMPTY;
@@ -23,12 +23,12 @@ public class AzBoneCache {
     }
 
     /**
-     * Create new bone {@link BoneSnapshot} based on the bone's initial snapshot for the currently registered
+     * Create new bone {@link AzBoneSnapshot} based on the bone's initial snapshot for the currently registered
      * {@link AzBone AzBones}, filtered by the bones already present in the master snapshots map
      */
     public void snapshot() {
         for (var bone : getRegisteredBones()) {
-            boneSnapshotsByName.computeIfAbsent(bone.getName(), $ -> BoneSnapshot.copy(bone.getInitialSnapshot()));
+            boneSnapshotsByName.computeIfAbsent(bone.getName(), $ -> AzBoneSnapshot.copy(bone.getInitialAzSnapshot()));
         }
     }
 
@@ -74,7 +74,7 @@ public class AzBoneCache {
         return bakedModel.getBonesByName();
     }
 
-    public Map<String, BoneSnapshot> getBoneSnapshotsByName() {
+    public Map<String, AzBoneSnapshot> getBoneSnapshotsByName() {
         return boneSnapshotsByName;
     }
 

@@ -413,6 +413,7 @@ public abstract class AzRendererPipeline<T> {
             if (quad == null)
                 continue;
 
+            // TODO: Optimize
             Vector3f normal = normalisedPoseState.transform(new Vector3f(quad.normal()));
 
             RenderUtils.fixInvertedFlatCube(cube, normal);
@@ -435,6 +436,7 @@ public abstract class AzRendererPipeline<T> {
     ) {
         for (var vertex : quad.vertices()) {
             var position = vertex.position();
+            // TODO: Optimize
             var vector4f = poseState.transform(new Vector4f(position.x(), position.y(), position.z(), 1.0f));
 
             buffer.addVertex(

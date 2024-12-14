@@ -19,6 +19,7 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameProcessor;
@@ -39,7 +40,7 @@ public class AzAnimationController<T> {
 
     protected final String name;
 
-    protected final Map<String, BoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
+    protected final Map<String, AzBoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
 
     protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
 
@@ -94,7 +95,7 @@ public class AzAnimationController<T> {
         this.animator = animator;
         this.name = name;
         this.transitionLength = transitionTickTime;
-        this.animationQueue = new AzAnimationQueue<>(animator);
+        this.animationQueue = new AzAnimationQueue<>();
         this.boneSnapshotCache = new AzBoneSnapshotCache();
         this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
         this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
@@ -190,7 +191,7 @@ public class AzAnimationController<T> {
     /**
      * Gets the currently loaded animation's {@link BoneAnimationQueue BoneAnimationQueues}.
      */
-    public Map<String, BoneAnimationQueue> getBoneAnimationQueues() {
+    public Map<String, AzBoneAnimationQueue> getBoneAnimationQueues() {
         return boneAnimationQueues;
     }
 
@@ -484,7 +485,8 @@ public class AzAnimationController<T> {
         boneAnimationQueues.clear();
 
         for (var modelRenderer : modelRendererList) {
-            boneAnimationQueues.put(modelRenderer.getName(), new BoneAnimationQueue(modelRenderer));
+            // TODO: Optimize.
+            boneAnimationQueues.put(modelRenderer.getName(), new AzBoneAnimationQueue(modelRenderer));
         }
     }
 

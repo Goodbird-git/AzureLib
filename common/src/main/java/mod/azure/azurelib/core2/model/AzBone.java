@@ -6,10 +6,10 @@
 package mod.azure.azurelib.core2.model;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.List;
@@ -25,21 +25,11 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
  */
 public class AzBone implements CoreGeoBone {
 
-    private final AzBone parent;
-
-    private final String name;
+    private final AzBoneMetadata metadata;
 
     private final List<AzBone> children = new ObjectArrayList<>();
 
     private final List<GeoCube> cubes = new ObjectArrayList<>();
-
-    private final Boolean mirror;
-
-    private final Double inflate;
-
-    private final Boolean dontRender;
-
-    private final Boolean reset;
 
     private final Matrix4f modelSpaceMatrix = new Matrix4f();
 
@@ -47,35 +37,19 @@ public class AzBone implements CoreGeoBone {
 
     private final Matrix4f worldSpaceMatrix = new Matrix4f();
 
-    private BoneSnapshot initialSnapshot;
+    private AzBoneSnapshot initialSnapshot;
 
     private boolean hidden;
 
     private boolean childrenHidden = false;
 
-    private float scaleX = 1;
+    private final Vector3f pivot;
 
-    private float scaleY = 1;
+    private final Vector3f position;
 
-    private float scaleZ = 1;
+    private final Vector3f rotation;
 
-    private float positionX;
-
-    private float positionY;
-
-    private float positionZ;
-
-    private float pivotX;
-
-    private float pivotY;
-
-    private float pivotZ;
-
-    private float rotX;
-
-    private float rotY;
-
-    private float rotZ;
+    private final Vector3f scale;
 
     private boolean positionChanged = false;
 
@@ -87,22 +61,15 @@ public class AzBone implements CoreGeoBone {
 
     private boolean trackingMatrices;
 
-    public AzBone(
-        @Nullable AzBone parent,
-        String name,
-        Boolean mirror,
-        @Nullable Double inflate,
-        @Nullable Boolean dontRender,
-        @Nullable Boolean reset
-    ) {
-        this.parent = parent;
-        this.name = name;
-        this.mirror = mirror;
-        this.inflate = inflate;
-        this.dontRender = dontRender;
-        this.reset = reset;
+    public AzBone(AzBoneMetadata metadata) {
+        this.metadata = metadata;
         this.trackingMatrices = false;
-        this.hidden = this.dontRender == Boolean.TRUE;
+        this.hidden = metadata.dontRender() == Boolean.TRUE;
+
+        this.position = new Vector3f();
+        this.pivot = new Vector3f();
+        this.rotation = new Vector3f();
+        this.scale = new Vector3f(1, 1, 1);
 
         this.worldSpaceNormal.identity();
         this.worldSpaceMatrix.identity();
@@ -112,118 +79,118 @@ public class AzBone implements CoreGeoBone {
 
     @Override
     public String getName() {
-        return this.name;
+        return metadata.name();
     }
 
     @Override
     public AzBone getParent() {
-        return this.parent;
+        return metadata.parent();
     }
 
     @Override
     public float getRotX() {
-        return this.rotX;
+        return this.rotation.x;
     }
 
     @Override
     public void setRotX(float value) {
-        this.rotX = value;
+        this.rotation.x = value;
 
         markRotationAsChanged();
     }
 
     @Override
     public float getRotY() {
-        return this.rotY;
+        return this.rotation.y;
     }
 
     @Override
     public void setRotY(float value) {
-        this.rotY = value;
+        this.rotation.y = value;
 
         markRotationAsChanged();
     }
 
     @Override
     public float getRotZ() {
-        return this.rotZ;
+        return this.rotation.z;
     }
 
     @Override
     public void setRotZ(float value) {
-        this.rotZ = value;
+        this.rotation.z = value;
 
         markRotationAsChanged();
     }
 
     @Override
     public float getPosX() {
-        return this.positionX;
+        return this.position.x;
     }
 
     @Override
     public void setPosX(float value) {
-        this.positionX = value;
+        this.position.x = value;
 
         markPositionAsChanged();
     }
 
     @Override
     public float getPosY() {
-        return this.positionY;
+        return this.position.y;
     }
 
     @Override
     public void setPosY(float value) {
-        this.positionY = value;
+        this.position.y = value;
 
         markPositionAsChanged();
     }
 
     @Override
     public float getPosZ() {
-        return this.positionZ;
+        return this.position.z;
     }
 
     @Override
     public void setPosZ(float value) {
-        this.positionZ = value;
+        this.position.z = value;
 
         markPositionAsChanged();
     }
 
     @Override
     public float getScaleX() {
-        return this.scaleX;
+        return this.scale.x;
     }
 
     @Override
     public void setScaleX(float value) {
-        this.scaleX = value;
+        this.scale.x = value;
 
         markScaleAsChanged();
     }
 
     @Override
     public float getScaleY() {
-        return this.scaleY;
+        return this.scale.y;
     }
 
     @Override
     public void setScaleY(float value) {
-        this.scaleY = value;
+        this.scale.y = value;
 
         markScaleAsChanged();
     }
 
     @Override
     public float getScaleZ() {
-        return this.scaleZ;
+        return this.scale.z;
     }
 
     @Override
     public void setScaleZ(float value) {
-        this.scaleZ = value;
+        this.scale.z = value;
 
         markScaleAsChanged();
     }
@@ -247,32 +214,32 @@ public class AzBone implements CoreGeoBone {
 
     @Override
     public float getPivotX() {
-        return this.pivotX;
+        return this.pivot.x;
     }
 
     @Override
     public void setPivotX(float value) {
-        this.pivotX = value;
+        this.pivot.x = value;
     }
 
     @Override
     public float getPivotY() {
-        return this.pivotY;
+        return this.pivot.y;
     }
 
     @Override
     public void setPivotY(float value) {
-        this.pivotY = value;
+        this.pivot.y = value;
     }
 
     @Override
     public float getPivotZ() {
-        return this.pivotZ;
+        return this.pivot.z;
     }
 
     @Override
     public void setPivotZ(float value) {
-        this.pivotZ = value;
+        this.pivot.z = value;
     }
 
     @Override
@@ -317,8 +284,16 @@ public class AzBone implements CoreGeoBone {
         this.positionChanged = false;
     }
 
+    /**
+     * @deprecated DO NOT USE OR I WILL FIND YOU.
+     */
     @Override
+    @Deprecated(forRemoval = true)
     public BoneSnapshot getInitialSnapshot() {
+        throw new UnsupportedOperationException();
+    }
+
+    public AzBoneSnapshot getInitialAzSnapshot() {
         return this.initialSnapshot;
     }
 
@@ -329,24 +304,25 @@ public class AzBone implements CoreGeoBone {
 
     @Override
     public void saveInitialSnapshot() {
-        if (this.initialSnapshot == null)
-            this.initialSnapshot = saveSnapshot();
+        if (this.initialSnapshot == null) {
+            this.initialSnapshot = new AzBoneSnapshot(this);
+        }
     }
 
     public Boolean getMirror() {
-        return this.mirror;
+        return metadata.mirror();
     }
 
     public Double getInflate() {
-        return this.inflate;
+        return metadata.inflate();
     }
 
     public Boolean shouldNeverRender() {
-        return this.dontRender;
+        return metadata.dontRender();
     }
 
     public Boolean getReset() {
-        return this.reset;
+        return metadata.reset();
     }
 
     public List<GeoCube> getCubes() {
@@ -419,7 +395,7 @@ public class AzBone implements CoreGeoBone {
 
     public void setModelPosition(Vector3d pos) {
         // Doesn't work on bones with parent transforms
-        AzBone parent = getParent();
+        AzBone parent = metadata.parent();
         Matrix4f matrix = (parent == null ? new Matrix4f().identity() : new Matrix4f(parent.getModelSpaceMatrix()))
             .invert();
         Vector4f vec = matrix.transform(
@@ -460,9 +436,9 @@ public class AzBone implements CoreGeoBone {
     }
 
     public void addRotationOffsetFromBone(AzBone source) {
-        setRotX(getRotX() + source.getRotX() - source.getInitialSnapshot().getRotX());
-        setRotY(getRotY() + source.getRotY() - source.getInitialSnapshot().getRotY());
-        setRotZ(getRotZ() + source.getRotZ() - source.getInitialSnapshot().getRotZ());
+        setRotX(getRotX() + source.getRotX() - source.getInitialAzSnapshot().getRotX());
+        setRotY(getRotY() + source.getRotY() - source.getInitialAzSnapshot().getRotY());
+        setRotZ(getRotZ() + source.getRotZ() - source.getInitialAzSnapshot().getRotZ());
     }
 
     @Override

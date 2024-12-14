@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import mod.azure.azurelib.core.keyframe.AnimationPoint;
-import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.keyframe.Keyframe;
 import mod.azure.azurelib.core.keyframe.KeyframeLocation;
 import mod.azure.azurelib.core.math.Constant;
@@ -35,7 +34,7 @@ public class AzKeyFrameProcessor<T> {
      *                              bone, or continue with the remaining bones
      */
     public void runCurrentAnimation(
-        Map<String, BoneAnimationQueue> boneAnimationQueues,
+        Map<String, AzBoneAnimationQueue> boneAnimationQueues,
         T animatable,
         double adjustedTick,
         double seekTime,
@@ -124,7 +123,7 @@ public class AzKeyFrameProcessor<T> {
     }
 
     public void transitionFromCurrentAnimation(
-        Map<String, BoneAnimationQueue> boneAnimationQueues,
+        Map<String, AzBoneAnimationQueue> boneAnimationQueues,
         Map<String, AzBone> bones,
         boolean crashWhenCantFindBone,
         double adjustedTick
@@ -157,7 +156,7 @@ public class AzKeyFrameProcessor<T> {
                     adjustedTick,
                     transitionLength,
                     boneSnapshot,
-                    bone.getInitialSnapshot(),
+                    bone.getInitialAzSnapshot(),
                     getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), 0, true, Axis.X),
                     getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), 0, true, Axis.Y),
                     getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), 0, true, Axis.Z)

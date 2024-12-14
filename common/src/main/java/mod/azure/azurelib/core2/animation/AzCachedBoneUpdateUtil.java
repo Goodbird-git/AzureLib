@@ -2,15 +2,15 @@ package mod.azure.azurelib.core2.animation;
 
 import java.util.Map;
 
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
-import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core.utils.Interpolations;
+import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
 public class AzCachedBoneUpdateUtil {
 
     public static void updateCachedBonePosition(
-        CoreGeoBone bone,
-        Map<String, BoneSnapshot> boneSnapshots,
+        AzBone bone,
+        Map<String, AzBoneSnapshot> boneSnapshots,
         double animTime,
         double resetTickLength
     ) {
@@ -18,7 +18,7 @@ public class AzCachedBoneUpdateUtil {
             return;
         }
 
-        var initialSnapshot = bone.getInitialSnapshot();
+        var initialSnapshot = bone.getInitialAzSnapshot();
         var saveSnapshot = boneSnapshots.get(bone.getName());
 
         if (saveSnapshot.isPosAnimInProgress()) {
@@ -58,8 +58,8 @@ public class AzCachedBoneUpdateUtil {
     }
 
     public static void updateCachedBoneRotation(
-        CoreGeoBone bone,
-        Map<String, BoneSnapshot> boneSnapshots,
+        AzBone bone,
+        Map<String, AzBoneSnapshot> boneSnapshots,
         double animTime,
         double resetTickLength
     ) {
@@ -67,7 +67,7 @@ public class AzCachedBoneUpdateUtil {
             return;
         }
 
-        var initialSnapshot = bone.getInitialSnapshot();
+        var initialSnapshot = bone.getInitialAzSnapshot();
         var saveSnapshot = boneSnapshots.get(bone.getName());
 
         if (saveSnapshot.isRotAnimInProgress()) {
@@ -95,8 +95,8 @@ public class AzCachedBoneUpdateUtil {
     }
 
     public static void updateCachedBoneScale(
-        CoreGeoBone bone,
-        Map<String, BoneSnapshot> boneSnapshots,
+        AzBone bone,
+        Map<String, AzBoneSnapshot> boneSnapshots,
         double animTime,
         double resetTickLength
     ) {
@@ -104,7 +104,7 @@ public class AzCachedBoneUpdateUtil {
             return;
         }
 
-        var initialSnapshot = bone.getInitialSnapshot();
+        var initialSnapshot = bone.getInitialAzSnapshot();
         var saveSnapshot = boneSnapshots.get(bone.getName());
 
         if (saveSnapshot.isScaleAnimInProgress()) {

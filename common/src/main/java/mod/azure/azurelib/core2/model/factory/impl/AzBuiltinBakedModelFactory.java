@@ -11,6 +11,7 @@ import mod.azure.azurelib.common.internal.common.loading.object.BoneStructure;
 import mod.azure.azurelib.common.internal.common.loading.object.GeometryTree;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.model.AzBoneMetadata;
 import mod.azure.azurelib.core2.model.factory.AzBakedModelFactory;
 import mod.azure.azurelib.core2.model.factory.primitive.VertexSet;
 
@@ -30,14 +31,8 @@ public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
     @Override
     public AzBone constructBone(BoneStructure boneStructure, ModelProperties properties, AzBone parent) {
         var bone = boneStructure.self();
-        var newBone = new AzBone(
-            parent,
-            bone.name(),
-            bone.mirror(),
-            bone.inflate(),
-            bone.neverRender(),
-            bone.reset()
-        );
+        var boneMetadata = new AzBoneMetadata(bone, parent);
+        var newBone = new AzBone(boneMetadata);
         var rotation = RenderUtils.arrayToVec(bone.rotation());
         var pivot = RenderUtils.arrayToVec(bone.pivot());
 

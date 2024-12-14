@@ -1,17 +1,17 @@
 package mod.azure.azurelib.core2.animation;
 
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
-import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
-import mod.azure.azurelib.core.state.BoneSnapshot;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
+import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
 public class AzBoneAnimationUpdateUtil {
 
     public static void updatePositions(
-        BoneAnimationQueue boneAnimation,
-        CoreGeoBone bone,
+        AzBoneAnimationQueue boneAnimation,
+        AzBone bone,
         EasingType easingType,
-        BoneSnapshot snapshot
+        AzBoneSnapshot snapshot
     ) {
         var posXPoint = boneAnimation.positionXQueue().poll();
         var posYPoint = boneAnimation.positionYQueue().poll();
@@ -28,11 +28,11 @@ public class AzBoneAnimationUpdateUtil {
     }
 
     public static void updateRotations(
-        BoneAnimationQueue boneAnimation,
-        CoreGeoBone bone,
+        AzBoneAnimationQueue boneAnimation,
+        AzBone bone,
         EasingType easingType,
-        BoneSnapshot initialSnapshot,
-        BoneSnapshot snapshot
+        AzBoneSnapshot initialSnapshot,
+        AzBoneSnapshot snapshot
     ) {
         var rotXPoint = boneAnimation.rotationXQueue().poll();
         var rotYPoint = boneAnimation.rotationYQueue().poll();
@@ -55,10 +55,10 @@ public class AzBoneAnimationUpdateUtil {
     }
 
     public static void updateScale(
-        BoneAnimationQueue boneAnimation,
-        CoreGeoBone bone,
+        AzBoneAnimationQueue boneAnimation,
+        AzBone bone,
         EasingType easingType,
-        BoneSnapshot snapshot
+        AzBoneSnapshot snapshot
     ) {
         var scaleXPoint = boneAnimation.scaleXQueue().poll();
         var scaleYPoint = boneAnimation.scaleYQueue().poll();
