@@ -2,8 +2,8 @@ package mod.azure.azurelib.core2.animation.cache;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzCachedBoneUpdateUtil;
@@ -22,21 +22,15 @@ public class AzBoneCache {
         this.boneSnapshotsByName = new Object2ObjectOpenHashMap<>();
     }
 
-    /**
-     * Create new bone {@link AzBoneSnapshot} based on the bone's initial snapshot for the currently registered
-     * {@link AzBone AzBones}, filtered by the bones already present in the master snapshots map
-     */
-    public void snapshot() {
-        for (var bone : getRegisteredBones()) {
-            boneSnapshotsByName.computeIfAbsent(bone.getName(), $ -> AzBoneSnapshot.copy(bone.getInitialAzSnapshot()));
-        }
-    }
-
-    /**
-     * Sets the current model from which to
-     */
-    public void setActiveModel(AzBakedModel model) {
+    public boolean setActiveModel(AzBakedModel model) {
+        var willModelChange = !Objects.equals(bakedModel, model);
         this.bakedModel = model;
+
+        if (willModelChange) {
+            snapshot();
+        }
+
+        return willModelChange;
     }
 
     public void update(AzAnimationContext<?> context) {
@@ -47,7 +41,7 @@ public class AzBoneCache {
         var resetTickLength = config.boneResetTime();
 
         // Updates the cached bone snapshots (only if they have changed).
-        for (var bone : getRegisteredBones()) {
+        for (var bone : bakedModel.getBonesByName().values()) {
             AzCachedBoneUpdateUtil.updateCachedBoneRotation(bone, boneSnapshots, animTime, resetTickLength);
             AzCachedBoneUpdateUtil.updateCachedBonePosition(bone, boneSnapshots, animTime, resetTickLength);
             AzCachedBoneUpdateUtil.updateCachedBoneScale(bone, boneSnapshots, animTime, resetTickLength);
@@ -60,18 +54,23 @@ public class AzBoneCache {
      * Reset the transformation markers applied to each {@link AzBone} ready for the next render frame
      */
     private void resetBoneTransformationMarkers() {
-        getRegisteredBones().forEach(AzBone::resetStateChanges);
+        bakedModel.getBonesByName().values().forEach(AzBone::resetStateChanges);
     }
 
     /**
-     * Get an iterable collection of the {@link AzBone AzBones} currently registered to the processor
+     * Create new bone {@link AzBoneSnapshot} based on the bone's initial snapshot for the currently registered
+     * {@link AzBone AzBones}, filtered by the bones already present in the master snapshots map
      */
-    private Collection<AzBone> getRegisteredBones() {
-        return getBonesByName().values();
+    private void snapshot() {
+        boneSnapshotsByName.clear();
+
+        for (var bone : bakedModel.getBonesByName().values()) {
+            boneSnapshotsByName.put(bone.getName(), AzBoneSnapshot.copy(bone.getInitialAzSnapshot()));
+        }
     }
 
-    public Map<String, AzBone> getBonesByName() {
-        return bakedModel.getBonesByName();
+    public AzBakedModel getBakedModel() {
+        return bakedModel;
     }
 
     public Map<String, AzBoneSnapshot> getBoneSnapshotsByName() {
@@ -79,6 +78,6 @@ public class AzBoneCache {
     }
 
     public boolean isEmpty() {
-        return getRegisteredBones().isEmpty();
+        return bakedModel.getBonesByName().isEmpty();
     }
 }

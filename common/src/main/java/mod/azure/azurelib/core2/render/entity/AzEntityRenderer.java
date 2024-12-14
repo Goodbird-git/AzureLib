@@ -65,7 +65,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         var azBakedModel = provideBakedModel(entity);
 
         if (cachedEntityAnimator != null && azBakedModel != null) {
-            cachedEntityAnimator.context().boneCache().setActiveModel(azBakedModel);
+            cachedEntityAnimator.setActiveModel(azBakedModel);
         }
 
         // Point the renderer's current animator reference to the cached entity animator before rendering.

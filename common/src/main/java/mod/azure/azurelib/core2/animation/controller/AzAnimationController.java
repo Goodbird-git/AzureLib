@@ -17,7 +17,6 @@ import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
-import mod.azure.azurelib.core2.animation.AzAnimationProcessor;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
@@ -27,7 +26,6 @@ import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzStage;
-import mod.azure.azurelib.core2.model.AzBone;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
@@ -40,13 +38,13 @@ public class AzAnimationController<T> {
 
     protected final String name;
 
-    protected final Map<String, AzBoneAnimationQueue> boneAnimationQueues = new Object2ObjectOpenHashMap<>();
-
     protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
 
-    private final AzAnimationQueue<T> animationQueue;
+    private final AzAnimationQueue animationQueue;
 
     private final AzAnimator<T> animator;
+
+    private final AzBoneAnimationQueueCache boneAnimationQueueCache;
 
     private final AzBoneSnapshotCache boneSnapshotCache;
 
@@ -95,11 +93,12 @@ public class AzAnimationController<T> {
         this.animator = animator;
         this.name = name;
         this.transitionLength = transitionTickTime;
-        this.animationQueue = new AzAnimationQueue<>();
+        this.animationQueue = new AzAnimationQueue();
+        this.boneAnimationQueueCache = new AzBoneAnimationQueueCache(animator.context().boneCache());
         this.boneSnapshotCache = new AzBoneSnapshotCache();
         this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
         this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
-        this.keyFrameProcessor = new AzKeyFrameProcessor<>(this);
+        this.keyFrameProcessor = new AzKeyFrameProcessor<>(this, boneAnimationQueueCache);
     }
 
     public AzAnimationController<T> setKeyFrameCallbacks(@NotNull AzKeyFrameCallbacks<T> keyFrameCallbacks) {
@@ -191,8 +190,8 @@ public class AzAnimationController<T> {
     /**
      * Gets the currently loaded animation's {@link BoneAnimationQueue BoneAnimationQueues}.
      */
-    public Map<String, AzBoneAnimationQueue> getBoneAnimationQueues() {
-        return boneAnimationQueues;
+    public Collection<AzBoneAnimationQueue> getBoneAnimationQueues() {
+        return boneAnimationQueueCache.values();
     }
 
     /**
@@ -394,7 +393,7 @@ public class AzAnimationController<T> {
     public void update(AzAnimationContext<T> context) {
         var animatable = context.animatable();
         var boneCache = context.boneCache();
-        var bones = boneCache.getBonesByName();
+        var bones = boneCache.getBakedModel().getBonesByName();
         var snapshots = boneCache.getBoneSnapshotsByName();
         var crashWhenCantFindBone = context.config().crashIfBoneMissing();
         var timer = context.timer();
@@ -419,8 +418,6 @@ public class AzAnimationController<T> {
             return;
         }
 
-        createInitialQueues(bones.values());
-
         if (justStartedTransition && (shouldResetTick || justStopped)) {
             this.justStopped = false;
             adjustedTick = adjustTick(animatable, seekTime);
@@ -439,13 +436,7 @@ public class AzAnimationController<T> {
         }
 
         if (getAnimationState() == AzAnimationControllerState.RUNNING) {
-            keyFrameProcessor.runCurrentAnimation(
-                boneAnimationQueues,
-                animatable,
-                adjustedTick,
-                seekTime,
-                crashWhenCantFindBone
-            );
+            keyFrameProcessor.runCurrentAnimation(animatable, adjustedTick, seekTime, crashWhenCantFindBone);
             var canTransition = transitionLength == 0 && shouldResetTick;
 
             if (canTransition && animationState == AzAnimationControllerState.TRANSITIONING) {
@@ -466,27 +457,8 @@ public class AzAnimationController<T> {
             }
 
             if (currentAnimation != null) {
-                keyFrameProcessor.transitionFromCurrentAnimation(
-                    boneAnimationQueues,
-                    bones,
-                    crashWhenCantFindBone,
-                    adjustedTick
-                );
+                keyFrameProcessor.transitionFromCurrentAnimation(bones, crashWhenCantFindBone, adjustedTick);
             }
-        }
-    }
-
-    /**
-     * Prepare the {@link BoneAnimationQueue} map for the current render frame
-     *
-     * @param modelRendererList The bone list from the {@link AzAnimationProcessor}
-     */
-    protected void createInitialQueues(Collection<AzBone> modelRendererList) {
-        boneAnimationQueues.clear();
-
-        for (var modelRenderer : modelRendererList) {
-            // TODO: Optimize.
-            boneAnimationQueues.put(modelRenderer.getName(), new AzBoneAnimationQueue(modelRenderer));
         }
     }
 
@@ -525,6 +497,10 @@ public class AzAnimationController<T> {
 
     public AzAnimationQueue getAnimationQueue() {
         return animationQueue;
+    }
+
+    public AzBoneAnimationQueueCache getBoneAnimationQueueCache() {
+        return boneAnimationQueueCache;
     }
 
     public AzBoneSnapshotCache getBoneSnapshotCache() {

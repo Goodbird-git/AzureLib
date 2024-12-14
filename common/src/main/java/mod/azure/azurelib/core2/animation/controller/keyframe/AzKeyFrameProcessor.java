@@ -14,27 +14,29 @@ import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
+import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
 import mod.azure.azurelib.core2.model.AzBone;
 
 public class AzKeyFrameProcessor<T> {
 
     private final AzAnimationController<T> animationController;
 
-    public AzKeyFrameProcessor(AzAnimationController<T> animationController) {
+    private final AzBoneAnimationQueueCache boneAnimationQueueCache;
+
+    public AzKeyFrameProcessor(AzAnimationController<T> animationController, AzBoneAnimationQueueCache boneAnimationQueueCache) {
         this.animationController = animationController;
+        this.boneAnimationQueueCache = boneAnimationQueueCache;
     }
 
     /**
      * Handle the current animation's state modifications and translations
      *
-     * @param boneAnimationQueues
      * @param adjustedTick          The controller-adjusted tick for animation purposes
      * @param seekTime              The lerped tick (current tick + partial tick)
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required
      *                              bone, or continue with the remaining bones
      */
     public void runCurrentAnimation(
-        Map<String, AzBoneAnimationQueue> boneAnimationQueues,
         T animatable,
         double adjustedTick,
         double seekTime,
@@ -79,7 +81,7 @@ public class AzKeyFrameProcessor<T> {
         MolangParser.INSTANCE.setMemoizedValue(MolangQueries.ANIM_TIME, () -> finalAdjustedTick / 20d);
 
         for (var boneAnimation : currentAnimation.animation().boneAnimations()) {
-            var boneAnimationQueue = boneAnimationQueues.get(boneAnimation.boneName());
+            var boneAnimationQueue = boneAnimationQueueCache.getOrNull(boneAnimation.boneName());
 
             if (boneAnimationQueue == null) {
                 if (crashWhenCantFindBone)
@@ -123,7 +125,6 @@ public class AzKeyFrameProcessor<T> {
     }
 
     public void transitionFromCurrentAnimation(
-        Map<String, AzBoneAnimationQueue> boneAnimationQueues,
         Map<String, AzBone> bones,
         boolean crashWhenCantFindBone,
         double adjustedTick
@@ -135,7 +136,7 @@ public class AzKeyFrameProcessor<T> {
         MolangParser.INSTANCE.setValue(MolangQueries.ANIM_TIME, () -> 0);
 
         for (var boneAnimation : currentAnimation.animation().boneAnimations()) {
-            var boneAnimationQueue = boneAnimationQueues.get(boneAnimation.boneName());
+            var boneAnimationQueue = boneAnimationQueueCache.getOrNull(boneAnimation.boneName());
             var boneSnapshot = boneSnapshotCache.getOrNull(boneAnimation.boneName());
             var bone = bones.get(boneAnimation.boneName());
 

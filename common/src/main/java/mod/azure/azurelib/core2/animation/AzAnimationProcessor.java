@@ -27,7 +27,6 @@ public class AzAnimationProcessor<T> {
         var timer = context.timer();
         var boneCache = context.boneCache();
 
-        boneCache.snapshot();
         var boneSnapshots = boneCache.getBoneSnapshotsByName();
 
         for (var controller : animator.getAnimationControllerContainer().getAll()) {
@@ -55,7 +54,7 @@ public class AzAnimationProcessor<T> {
         EasingType easingType
     ) {
         // Progresses the current bones according to the animation queue.
-        for (var boneAnimation : controller.getBoneAnimationQueues().values()) {
+        for (var boneAnimation : controller.getBoneAnimationQueues()) {
             var bone = boneAnimation.bone();
             var snapshot = boneSnapshots.get(bone.getName());
             var initialSnapshot = bone.getInitialAzSnapshot();

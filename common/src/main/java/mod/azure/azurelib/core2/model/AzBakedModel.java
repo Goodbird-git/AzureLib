@@ -1,5 +1,7 @@
 package mod.azure.azurelib.core2.model;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,8 +36,12 @@ public class AzBakedModel {
         return bonesByName;
     }
 
-    public Optional<AzBone> getBoneByName(String name) {
-        return Optional.ofNullable(bonesByName.get(name));
+    public @Nullable AzBone getBoneOrNull(String name) {
+        return bonesByName.get(name);
+    }
+
+    public Optional<AzBone> getBone(String name) {
+        return Optional.ofNullable(getBoneOrNull(name));
     }
 
     public Map<String, AzBone> getBonesByName() {

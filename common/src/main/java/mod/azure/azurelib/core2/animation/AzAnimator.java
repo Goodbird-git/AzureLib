@@ -1,5 +1,6 @@
 package mod.azure.azurelib.core2.animation;
 
+import mod.azure.azurelib.core2.model.AzBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -83,6 +84,19 @@ public abstract class AzAnimator<T> {
      * @param animatable The {@code GeoAnimatable} instance currently being rendered
      */
     public void setCustomAnimations(T animatable) {}
+
+    public void setActiveModel(AzBakedModel model) {
+        var modelChanged = reusableContext.boneCache().setActiveModel(model);
+
+        if (modelChanged) {
+            // If the model changed, we need to clear the bone animation queue cache for every controller.
+            // TODO: We shouldn't have to remember to do this. If the baked model changes, then the bone cache
+            // should be re-instantiated. If the bone cache is re-instantiated, then so should the bone animation
+            // queue caches.
+            animationControllerContainer.getAll()
+                .forEach(controller -> controller.getBoneAnimationQueueCache().clear());
+        }
+    }
 
     /**
      * Get the baked animation object used for rendering from the given resource path
