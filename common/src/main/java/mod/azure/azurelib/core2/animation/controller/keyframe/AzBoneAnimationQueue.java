@@ -5,8 +5,10 @@
  */
 package mod.azure.azurelib.core2.animation.controller.keyframe;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import mod.azure.azurelib.core.keyframe.AnimationPoint;
-import mod.azure.azurelib.core.keyframe.AnimationPointQueue;
 import mod.azure.azurelib.core.keyframe.Keyframe;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.model.AzBone;
@@ -18,30 +20,30 @@ import mod.azure.azurelib.core2.model.AzBoneSnapshot;
  */
 public record AzBoneAnimationQueue(
     AzBone bone,
-    AnimationPointQueue rotationXQueue,
-    AnimationPointQueue rotationYQueue,
-    AnimationPointQueue rotationZQueue,
-    AnimationPointQueue positionXQueue,
-    AnimationPointQueue positionYQueue,
-    AnimationPointQueue positionZQueue,
-    AnimationPointQueue scaleXQueue,
-    AnimationPointQueue scaleYQueue,
-    AnimationPointQueue scaleZQueue
+    Queue<AnimationPoint> rotationXQueue,
+    Queue<AnimationPoint> rotationYQueue,
+    Queue<AnimationPoint> rotationZQueue,
+    Queue<AnimationPoint> positionXQueue,
+    Queue<AnimationPoint> positionYQueue,
+    Queue<AnimationPoint> positionZQueue,
+    Queue<AnimationPoint> scaleXQueue,
+    Queue<AnimationPoint> scaleYQueue,
+    Queue<AnimationPoint> scaleZQueue
 ) {
 
     public AzBoneAnimationQueue(AzBone bone) {
         // TODO: Optimize
         this(
             bone,
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue(),
-            new AnimationPointQueue()
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>(),
+            new LinkedList<>()
         );
     }
 
