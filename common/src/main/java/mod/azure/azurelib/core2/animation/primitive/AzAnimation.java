@@ -1,9 +1,9 @@
 package mod.azure.azurelib.core2.animation.primitive;
 
+import mod.azure.azurelib.core.keyframe.BoneAnimation;
 import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
-import mod.azure.azurelib.core2.animation.AzBoneAnimation;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 
 /**
@@ -15,7 +15,7 @@ public record AzAnimation(
     String name,
     double length,
     AzLoopType loopType,
-    AzBoneAnimation[] boneAnimations,
+    BoneAnimation[] boneAnimations,
     AzKeyframes keyFrames
 ) {
 
@@ -24,7 +24,7 @@ public record AzAnimation(
             AzStage.WAIT,
             length,
             AzLoopType.PLAY_ONCE,
-            new AzBoneAnimation[0],
+            new BoneAnimation[0],
             new AzKeyframes(
                 new SoundKeyframeData[0],
                 new ParticleKeyframeData[0],

@@ -14,14 +14,15 @@ import java.util.Map;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.util.JsonUtil;
+import mod.azure.azurelib.core.animation.EasingType;
+import mod.azure.azurelib.core.keyframe.BoneAnimation;
+import mod.azure.azurelib.core.keyframe.Keyframe;
+import mod.azure.azurelib.core.keyframe.KeyframeStack;
 import mod.azure.azurelib.core.math.Constant;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.molang.MolangException;
 import mod.azure.azurelib.core.molang.MolangParser;
-import mod.azure.azurelib.core2.animation.AzBoneAnimation;
-import mod.azure.azurelib.core2.animation.AzEasingType;
-import mod.azure.azurelib.core2.animation.AzKeyframe;
-import mod.azure.azurelib.core2.animation.AzKeyframeStack;
+import mod.azure.azurelib.core.molang.expressions.MolangValue;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.core2.animation.primitive.AzKeyframes;
@@ -34,12 +35,11 @@ import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimations> {
 
     private static List<Pair<String, JsonElement>> getTripletObj(JsonElement element) {
-        if (element == null) {
+        if (element == null)
             return List.of();
-        }
 
         if (element instanceof JsonPrimitive primitive) {
-            var array = new JsonArray(3);
+            JsonArray array = new JsonArray(3);
 
             array.add(primitive);
             array.add(primitive);
@@ -52,11 +52,12 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
             return ObjectArrayList.of(Pair.of("0", array));
 
         if (element instanceof JsonObject obj) {
-            var list = new ObjectArrayList<Pair<String, JsonElement>>();
+            List<Pair<String, JsonElement>> list = new ObjectArrayList<>();
 
-            for (var entry : obj.entrySet()) {
+            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
                 if (entry.getValue() instanceof JsonObject entryObj && !entryObj.has("vector")) {
                     list.add(getTripletObjBedrock(entry.getKey(), entryObj));
+
                     continue;
                 }
 
@@ -73,28 +74,27 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         JsonArray keyframeValues = null;
 
         if (keyframe.has("pre")) {
-            var pre = keyframe.get("pre");
+            JsonElement pre = keyframe.get("pre");
             keyframeValues = pre.isJsonArray()
                 ? pre.getAsJsonArray()
                 : GsonHelper.getAsJsonArray(pre.getAsJsonObject(), "vector");
         } else if (keyframe.has("post")) {
-            var post = keyframe.get("post");
+            JsonElement post = keyframe.get("post");
             keyframeValues = post.isJsonArray()
                 ? post.getAsJsonArray()
                 : GsonHelper.getAsJsonArray(post.getAsJsonObject(), "vector");
         }
 
-        if (keyframeValues != null) {
+        if (keyframeValues != null)
             return Pair.of(NumberUtils.isCreatable(timestamp) ? timestamp : "0", keyframeValues);
-        }
 
         throw new JsonParseException("Invalid keyframe data - expected array, found " + keyframe);
     }
 
-    private static double calculateAnimationLength(AzBoneAnimation[] boneAnimations) {
-        var length = 0.0;
+    private static double calculateAnimationLength(BoneAnimation[] boneAnimations) {
+        double length = 0;
 
-        for (var animation : boneAnimations) {
+        for (BoneAnimation animation : boneAnimations) {
             length = Math.max(length, animation.rotationKeyFrames().getLastKeyframeTime());
             length = Math.max(length, animation.positionKeyFrames().getLastKeyframeTime());
             length = Math.max(length, animation.scaleKeyFrames().getLastKeyframeTime());
@@ -109,22 +109,18 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         Type type,
         JsonDeserializationContext context
     ) throws JsonParseException {
-        var jsonObj = json.getAsJsonObject();
+        JsonObject jsonObj = json.getAsJsonObject();
 
-        var animationJsonList = jsonObj.getAsJsonObject("animations");
-        var includeListJSONObj = jsonObj.getAsJsonArray("includes");
+        JsonObject animationJsonList = jsonObj.getAsJsonObject("animations");
+        JsonArray includeListJSONObj = jsonObj.getAsJsonArray("includes");
         Map<String, ResourceLocation> includes = null;
-
         if (includeListJSONObj != null) {
             includes = new Object2ObjectOpenHashMap<>(includeListJSONObj.size());
-
-            for (var entry : includeListJSONObj.asList()) {
-                var obj = entry.getAsJsonObject();
-                var fileId = ResourceLocation.parse(obj.get("file_id").getAsString());
-
-                for (var animName : obj.getAsJsonArray("animations")) {
-                    var ani = animName.getAsString();
-
+            for (JsonElement entry : includeListJSONObj.asList()) {
+                JsonObject obj = entry.getAsJsonObject();
+                ResourceLocation fileId = ResourceLocation.parse(obj.get("file_id").getAsString());
+                for (JsonElement animName : obj.getAsJsonArray("animations")) {
+                    String ani = animName.getAsString();
                     if (includes.containsKey(ani)) {
                         AzureLib.LOGGER.warn(
                             "Animation {} is already included! File already including: {}  File trying to include from again: {}",
@@ -139,9 +135,9 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
             }
         }
 
-        var animations = new Object2ObjectOpenHashMap<String, AzAnimation>(animationJsonList.size());
+        Map<String, AzAnimation> animations = new Object2ObjectOpenHashMap<>(animationJsonList.size());
 
-        for (var entry : animationJsonList.entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : animationJsonList.entrySet()) {
             try {
                 animations.put(
                     entry.getKey(),
@@ -161,112 +157,109 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         JsonObject animationObj,
         JsonDeserializationContext context
     ) throws MolangException {
-        var length = animationObj.has("animation_length")
+        double length = animationObj.has("animation_length")
             ? GsonHelper.getAsDouble(animationObj, "animation_length") * 20d
-            : -1.0;
-        var loopType = AzLoopType.fromJson(animationObj.get("loop"));
-        var boneAnimations = bakeBoneAnimations(
+            : -1;
+        AzLoopType loopType = AzLoopType.fromJson(animationObj.get("loop"));
+        BoneAnimation[] boneAnimations = bakeBoneAnimations(
             GsonHelper.getAsJsonObject(animationObj, "bones", new JsonObject())
         );
-        var keyframes = (AzKeyframes) context.deserialize(animationObj, AzKeyframes.class);
+        AzKeyframes keyframes = context.deserialize(animationObj, AzKeyframes.class);
 
-        if (length == -1) {
+        if (length == -1)
             length = calculateAnimationLength(boneAnimations);
-        }
 
         return new AzAnimation(name, length, loopType, boneAnimations, keyframes);
     }
 
-    private AzBoneAnimation[] bakeBoneAnimations(JsonObject bonesObj) throws MolangException {
-        var animations = new AzBoneAnimation[bonesObj.size()];
-        var index = 0;
+    private BoneAnimation[] bakeBoneAnimations(JsonObject bonesObj) throws MolangException {
+        BoneAnimation[] animations = new BoneAnimation[bonesObj.size()];
+        int index = 0;
 
-        for (var entry : bonesObj.entrySet()) {
-            var entryObj = entry.getValue().getAsJsonObject();
-            var scaleFrames = buildKeyframeStack(
+        for (Map.Entry<String, JsonElement> entry : bonesObj.entrySet()) {
+            JsonObject entryObj = entry.getValue().getAsJsonObject();
+            KeyframeStack<Keyframe<IValue>> scaleFrames = buildKeyframeStack(
                 getTripletObj(entryObj.get("scale")),
                 false
             );
-            var positionFrames = buildKeyframeStack(
+            KeyframeStack<Keyframe<IValue>> positionFrames = buildKeyframeStack(
                 getTripletObj(entryObj.get("position")),
                 false
             );
-            var rotationFrames = buildKeyframeStack(
+            KeyframeStack<Keyframe<IValue>> rotationFrames = buildKeyframeStack(
                 getTripletObj(entryObj.get("rotation")),
                 true
             );
 
-            animations[index] = new AzBoneAnimation(entry.getKey(), rotationFrames, positionFrames, scaleFrames);
+            animations[index] = new BoneAnimation(entry.getKey(), rotationFrames, positionFrames, scaleFrames);
             index++;
         }
 
         return animations;
     }
 
-    private AzKeyframeStack<AzKeyframe<IValue>> buildKeyframeStack(
+    private KeyframeStack<Keyframe<IValue>> buildKeyframeStack(
         List<Pair<String, JsonElement>> entries,
         boolean isForRotation
     ) throws MolangException {
-        if (entries.isEmpty()) {
-            return new AzKeyframeStack<>();
-        }
+        if (entries.isEmpty())
+            return new KeyframeStack<>();
 
-        var xFrames = new ObjectArrayList<AzKeyframe<IValue>>();
-        var yFrames = new ObjectArrayList<AzKeyframe<IValue>>();
-        var zFrames = new ObjectArrayList<AzKeyframe<IValue>>();
+        List<Keyframe<IValue>> xFrames = new ObjectArrayList<>();
+        List<Keyframe<IValue>> yFrames = new ObjectArrayList<>();
+        List<Keyframe<IValue>> zFrames = new ObjectArrayList<>();
 
         IValue xPrev = null;
         IValue yPrev = null;
         IValue zPrev = null;
         Pair<String, JsonElement> prevEntry = null;
 
-        for (var entry : entries) {
-            var key = entry.getFirst();
-            var element = entry.getSecond();
+        for (Pair<String, JsonElement> entry : entries) {
+            String key = entry.getFirst();
+            JsonElement element = entry.getSecond();
 
-            if (key.equals("easing") || key.equals("easingArgs") || key.equals("lerp_mode")) {
+            if (key.equals("easing") || key.equals("easingArgs") || key.equals("lerp_mode"))
                 continue;
-            }
 
             double prevTime = prevEntry != null ? Double.parseDouble(prevEntry.getFirst()) : 0;
             double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(entry.getFirst()) : 0;
             double timeDelta = curTime - prevTime;
 
-            var keyFrameVector = element instanceof JsonArray array
+            JsonArray keyFrameVector = element instanceof JsonArray array
                 ? array
                 : GsonHelper.getAsJsonArray(element.getAsJsonObject(), "vector");
-            var rawXValue = MolangParser.parseJson(keyFrameVector.get(0));
-            var rawYValue = MolangParser.parseJson(keyFrameVector.get(1));
-            var rawZValue = MolangParser.parseJson(keyFrameVector.get(2));
-            var xValue = isForRotation && rawXValue.isConstant()
+            MolangValue rawXValue = MolangParser.parseJson(keyFrameVector.get(0));
+            MolangValue rawYValue = MolangParser.parseJson(keyFrameVector.get(1));
+            MolangValue rawZValue = MolangParser.parseJson(keyFrameVector.get(2));
+            IValue xValue = isForRotation && rawXValue.isConstant()
                 ? new Constant(Math.toRadians(-rawXValue.get()))
                 : rawXValue;
-            var yValue = isForRotation && rawYValue.isConstant()
+            IValue yValue = isForRotation && rawYValue.isConstant()
                 ? new Constant(Math.toRadians(-rawYValue.get()))
                 : rawYValue;
-            var zValue = isForRotation && rawZValue.isConstant()
+            IValue zValue = isForRotation && rawZValue.isConstant()
                 ? new Constant(Math.toRadians(rawZValue.get()))
                 : rawZValue;
 
-            var entryObj = element instanceof JsonObject obj ? obj : null;
-            var easingType = entryObj != null && entryObj.has("easing")
-                ? AzEasingType.fromJson(entryObj.get("easing"))
-                : AzEasingType.LINEAR;
-            var easingArgs = entryObj != null && entryObj.has("easingArgs")
-                ? JsonUtil.<IValue>jsonArrayToList(
+            JsonObject entryObj = element instanceof JsonObject obj ? obj : null;
+            EasingType easingType = entryObj != null && entryObj.has("easing")
+                ? EasingType.fromJson(entryObj.get("easing"))
+                : EasingType.LINEAR;
+            List<IValue> easingArgs = entryObj != null && entryObj.has("easingArgs")
+                ? JsonUtil.jsonArrayToList(
                     GsonHelper.getAsJsonArray(entryObj, "easingArgs"),
                     ele -> new Constant(ele.getAsDouble())
                 )
-                : new ObjectArrayList<IValue>();
+                : new ObjectArrayList<>();
 
             xFrames.add(
-                new AzKeyframe<>(timeDelta * 20, prevEntry == null ? xValue : xPrev, xValue, easingType, easingArgs)
+                new Keyframe<>(timeDelta * 20, prevEntry == null ? xValue : xPrev, xValue, easingType, easingArgs)
             );
             yFrames.add(
-                new AzKeyframe<>(timeDelta * 20, prevEntry == null ? yValue : yPrev, yValue, easingType, easingArgs)
+                new Keyframe<>(timeDelta * 20, prevEntry == null ? yValue : yPrev, yValue, easingType, easingArgs)
             );
             zFrames.add(
-                new AzKeyframe<>(timeDelta * 20, prevEntry == null ? zValue : zPrev, zValue, easingType, easingArgs)
+                new Keyframe<>(timeDelta * 20, prevEntry == null ? zValue : zPrev, zValue, easingType, easingArgs)
             );
 
             xPrev = xValue;
@@ -275,6 +268,6 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
             prevEntry = entry;
         }
 
-        return new AzKeyframeStack<>(xFrames, yFrames, zFrames);
+        return new KeyframeStack<>(xFrames, yFrames, zFrames);
     }
 }
