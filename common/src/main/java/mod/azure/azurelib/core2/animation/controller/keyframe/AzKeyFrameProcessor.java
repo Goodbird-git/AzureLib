@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.keyframe.AnimationPoint;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.keyframe.Keyframe;
@@ -16,6 +15,7 @@ import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
+import mod.azure.azurelib.core2.model.AzBone;
 
 public class AzKeyFrameProcessor<T> {
 
@@ -125,7 +125,7 @@ public class AzKeyFrameProcessor<T> {
 
     public void transitionFromCurrentAnimation(
         Map<String, BoneAnimationQueue> boneAnimationQueues,
-        Map<String, CoreGeoBone> bones,
+        Map<String, AzBone> bones,
         boolean crashWhenCantFindBone,
         double adjustedTick
     ) {

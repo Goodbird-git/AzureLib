@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
 import mod.azure.azurelib.core.object.PlayState;
@@ -27,6 +26,7 @@ import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzStage;
+import mod.azure.azurelib.core2.model.AzBone;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
@@ -480,7 +480,7 @@ public class AzAnimationController<T> {
      *
      * @param modelRendererList The bone list from the {@link AzAnimationProcessor}
      */
-    protected void createInitialQueues(Collection<CoreGeoBone> modelRendererList) {
+    protected void createInitialQueues(Collection<AzBone> modelRendererList) {
         boneAnimationQueues.clear();
 
         for (var modelRenderer : modelRendererList) {

@@ -35,7 +35,7 @@ public class AzBakedModelCache extends AzResourceCache {
             Model model = FileLoader.loadModelFile(resource, resourceManager);
 
             return AzBakedModelFactoryRegistry.getForNamespace(resource.getNamespace())
-                .constructGeoModel(resource, GeometryTree.fromModel(model));
+                .constructGeoModel(GeometryTree.fromModel(model));
         }, bakedModels::put);
     }
 

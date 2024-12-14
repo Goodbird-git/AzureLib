@@ -1,33 +1,30 @@
 package mod.azure.azurelib.core2.animation.cache;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.Map;
 
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.state.BoneSnapshot;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzCachedBoneUpdateUtil;
 import mod.azure.azurelib.core2.model.AzBakedModel;
+import mod.azure.azurelib.core2.model.AzBone;
 
 public class AzBoneCache {
 
-    private final Map<String, CoreGeoBone> bonesByName;
+    private AzBakedModel bakedModel;
 
     private final Map<String, BoneSnapshot> boneSnapshotsByName;
 
-    private ResourceLocation cachedResourceLocation;
-
     public AzBoneCache() {
-        this.bonesByName = new Object2ObjectOpenHashMap<>();
+        this.bakedModel = AzBakedModel.EMPTY;
         this.boneSnapshotsByName = new Object2ObjectOpenHashMap<>();
     }
 
     /**
      * Create new bone {@link BoneSnapshot} based on the bone's initial snapshot for the currently registered
-     * {@link CoreGeoBone GeoBones}, filtered by the bones already present in the master snapshots map
+     * {@link AzBone AzBones}, filtered by the bones already present in the master snapshots map
      */
     public void snapshot() {
         for (var bone : getRegisteredBones()) {
@@ -36,21 +33,10 @@ public class AzBoneCache {
     }
 
     /**
-     * Clear the {@link CoreGeoBone GeoBones} currently registered to the processor, then prepares the processor for a
-     * new model.<br>
-     * Should be called whenever switching models to render/animate
+     * Sets the current model from which to
      */
     public void setActiveModel(AzBakedModel model) {
-        var newModelResourceLocation = model.getResourceLocation();
-
-        // If the cached resource location has not been set, or if the new resource location is different,
-        // then flush the bone cache and repopulate it with the new model's bones.
-        if (cachedResourceLocation == null || !cachedResourceLocation.equals(newModelResourceLocation)) {
-            bonesByName.clear();
-            model.getBonesByName().forEach(($, value) -> value.saveInitialSnapshot());
-            bonesByName.putAll(model.getBonesByName());
-            this.cachedResourceLocation = newModelResourceLocation;
-        }
+        this.bakedModel = model;
     }
 
     public void update(AzAnimationContext<?> context) {
@@ -71,21 +57,21 @@ public class AzBoneCache {
     }
 
     /**
-     * Reset the transformation markers applied to each {@link CoreGeoBone} ready for the next render frame
+     * Reset the transformation markers applied to each {@link AzBone} ready for the next render frame
      */
     private void resetBoneTransformationMarkers() {
-        getRegisteredBones().forEach(CoreGeoBone::resetStateChanges);
+        getRegisteredBones().forEach(AzBone::resetStateChanges);
     }
 
     /**
-     * Get an iterable collection of the {@link CoreGeoBone GeoBones} currently registered to the processor
+     * Get an iterable collection of the {@link AzBone AzBones} currently registered to the processor
      */
-    private Collection<CoreGeoBone> getRegisteredBones() {
-        return this.bonesByName.values();
+    private Collection<AzBone> getRegisteredBones() {
+        return getBonesByName().values();
     }
 
-    public Map<String, CoreGeoBone> getBonesByName() {
-        return bonesByName;
+    public Map<String, AzBone> getBonesByName() {
+        return bakedModel.getBonesByName();
     }
 
     public Map<String, BoneSnapshot> getBoneSnapshotsByName() {

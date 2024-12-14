@@ -1,7 +1,5 @@
 package mod.azure.azurelib.core2.model;
 
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,14 +9,13 @@ import java.util.Optional;
 
 public class AzBakedModel {
 
-    private final Map<String, AzBone> bonesByName;
+    public static final AzBakedModel EMPTY = new AzBakedModel(List.of());
 
-    private final ResourceLocation resourceLocation;
+    private final Map<String, AzBone> bonesByName;
 
     private final List<AzBone> topLevelBones;
 
-    public AzBakedModel(ResourceLocation resourceLocation, List<AzBone> topLevelBones) {
-        this.resourceLocation = resourceLocation;
+    public AzBakedModel(List<AzBone> topLevelBones) {
         this.topLevelBones = Collections.unmodifiableList(topLevelBones);
         this.bonesByName = Collections.unmodifiableMap(mapBonesByName(topLevelBones));
     }
@@ -30,6 +27,7 @@ public class AzBakedModel {
         while (!nodesToMap.isEmpty()) {
             var currentBone = nodesToMap.poll();
             nodesToMap.addAll(currentBone.getChildBones());
+            currentBone.saveInitialSnapshot();
             bonesByName.put(currentBone.getName(), currentBone);
         }
 
@@ -42,10 +40,6 @@ public class AzBakedModel {
 
     public Map<String, AzBone> getBonesByName() {
         return bonesByName;
-    }
-
-    public ResourceLocation getResourceLocation() {
-        return resourceLocation;
     }
 
     public List<AzBone> getTopLevelBones() {

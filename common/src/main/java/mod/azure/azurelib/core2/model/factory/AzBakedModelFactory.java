@@ -1,7 +1,6 @@
 package mod.azure.azurelib.core2.model.factory;
 
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +21,7 @@ public abstract class AzBakedModelFactory {
     /**
      * Construct the output model from the given {@link GeometryTree}.<br>
      */
-    public abstract AzBakedModel constructGeoModel(ResourceLocation resourceLocation, GeometryTree geometryTree);
+    public abstract AzBakedModel constructGeoModel(GeometryTree geometryTree);
 
     /**
      * Construct a {@link AzBone} from the relevant raw input data
