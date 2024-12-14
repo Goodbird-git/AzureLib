@@ -26,7 +26,7 @@ public interface AzLoopType {
     );
 
     AzLoopType HOLD_ON_LAST_FRAME = register("hold_on_last_frame", (animatable, controller, currentAnimation) -> {
-        // controller.setState(DEPRECATED_AzAnimationPlayState.PAUSED);
+        controller.getStateMachine().pause();
 
         return true;
     });
