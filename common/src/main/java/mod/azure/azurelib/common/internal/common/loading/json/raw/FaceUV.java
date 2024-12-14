@@ -9,8 +9,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
+import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.util.JsonUtil;
 
 /**
@@ -19,7 +21,8 @@ import mod.azure.azurelib.common.internal.common.util.JsonUtil;
 public record FaceUV(
     @Nullable String materialInstance,
     double[] uv,
-    double[] uvSize
+    double[] uvSize,
+    Rotation uvRotation
 ) {
 
     public static JsonDeserializer<FaceUV> deserializer() throws JsonParseException {
@@ -28,8 +31,36 @@ public record FaceUV(
             String materialInstance = GsonHelper.getAsString(obj, "material_instance", null);
             double[] uv = JsonUtil.jsonArrayToDoubleArray(GsonHelper.getAsJsonArray(obj, "uv", null));
             double[] uvSize = JsonUtil.jsonArrayToDoubleArray(GsonHelper.getAsJsonArray(obj, "uv_size", null));
+            Rotation uvRotation = Rotation.fromValue(GsonHelper.getAsInt(obj, "uv_rotation", 0));
 
-            return new FaceUV(materialInstance, uv, uvSize);
+            return new FaceUV(materialInstance, uv, uvSize, uvRotation);
         };
+    }
+
+    public enum Rotation {
+
+        NONE,
+        CLOCKWISE_90,
+        CLOCKWISE_180,
+        CLOCKWISE_270;
+
+        public static Rotation fromValue(int value) throws JsonParseException {
+            try {
+                return Rotation.values()[(value % 360) / 90];
+            } catch (Exception e) {
+                AzureLib.LOGGER.error("Invalid Face UV rotation: " + value);
+
+                return fromValue(Mth.floor(Math.abs(value) / 90f) * 90);
+            }
+        }
+
+        public float[] rotateUvs(float u, float v, float uWidth, float vHeight) {
+            return switch (this) {
+                case NONE -> new float[] { u, v, uWidth, v, uWidth, vHeight, u, vHeight };
+                case CLOCKWISE_90 -> new float[] { uWidth, v, uWidth, vHeight, u, vHeight, u, v };
+                case CLOCKWISE_180 -> new float[] { uWidth, vHeight, u, vHeight, u, v, uWidth, v };
+                case CLOCKWISE_270 -> new float[] { u, vHeight, u, v, uWidth, v, uWidth, vHeight };
+            };
+        }
     }
 }
