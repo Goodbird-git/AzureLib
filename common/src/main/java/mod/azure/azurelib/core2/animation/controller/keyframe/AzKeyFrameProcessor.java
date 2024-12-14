@@ -13,7 +13,6 @@ import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
-import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
 import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
 import mod.azure.azurelib.core2.model.AzBone;
 
@@ -34,32 +33,28 @@ public class AzKeyFrameProcessor<T> {
     /**
      * Handle the current animation's state modifications and translations
      *
-     * @param adjustedTick          The controller-adjusted tick for animation purposes
      * @param seekTime              The lerped tick (current tick + partial tick)
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required
      *                              bone, or continue with the remaining bones
      */
-    public void runCurrentAnimation(
-        T animatable,
-        double adjustedTick,
-        double seekTime,
-        boolean crashWhenCantFindBone
-    ) {
+    public void runCurrentAnimation(T animatable, double seekTime, boolean crashWhenCantFindBone) {
         var animationQueue = animationController.getAnimationQueue();
-        var animationState = animationController.getAnimationState();
+        var animationState = animationController.getStateMachine().getState();
         var currentAnimation = animationController.getCurrentAnimation();
         var keyFrameCallbackManager = animationController.getKeyFrameCallbackManager();
+        var stateMachine = animationController.getStateMachine();
+        var stateMachineContext = stateMachine.getContext();
         var transitionLength = animationController.getTransitionLength();
 
-        if (adjustedTick >= currentAnimation.animation().length()) {
+        if (stateMachineContext.adjustedTick >= currentAnimation.animation().length()) {
             if (
                 currentAnimation.loopType()
                     .shouldPlayAgain(animatable, animationController, currentAnimation.animation())
             ) {
-                if (animationState != AzAnimationControllerState.PAUSED) {
+                if (!stateMachine.isPaused()) {
                     animationController.setShouldResetTick(true);
 
-                    adjustedTick = animationController.adjustTick(animatable, seekTime);
+                    stateMachineContext.adjustedTick = animationController.adjustTick(animatable, seekTime);
                     keyFrameCallbackManager.reset();
                 }
             } else {
@@ -68,18 +63,18 @@ public class AzKeyFrameProcessor<T> {
                 keyFrameCallbackManager.reset();
 
                 if (nextAnimation == null) {
-                    animationController.setAnimationState(AzAnimationControllerState.STOPPED);
+                    stateMachine.stop();
 
                     return;
                 } else {
-                    animationController.setAnimationState(AzAnimationControllerState.TRANSITIONING);
+                    stateMachine.transition();
                     animationController.setShouldResetTick(true);
                     animationController.setCurrentAnimation(nextAnimation);
                 }
             }
         }
 
-        final double finalAdjustedTick = adjustedTick;
+        final double finalAdjustedTick = stateMachineContext.adjustedTick;
 
         MolangParser.INSTANCE.setMemoizedValue(MolangQueries.ANIM_TIME, () -> finalAdjustedTick / 20d);
 
@@ -99,32 +94,77 @@ public class AzKeyFrameProcessor<T> {
 
             if (!rotationKeyFrames.xKeyframes().isEmpty()) {
                 boneAnimationQueue.addRotations(
-                    getAnimationPointAtTick(rotationKeyFrames.xKeyframes(), adjustedTick, true, Axis.X),
-                    getAnimationPointAtTick(rotationKeyFrames.yKeyframes(), adjustedTick, true, Axis.Y),
-                    getAnimationPointAtTick(rotationKeyFrames.zKeyframes(), adjustedTick, true, Axis.Z)
+                    getAnimationPointAtTick(
+                        rotationKeyFrames.xKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        true,
+                        Axis.X
+                    ),
+                    getAnimationPointAtTick(
+                        rotationKeyFrames.yKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        true,
+                        Axis.Y
+                    ),
+                    getAnimationPointAtTick(
+                        rotationKeyFrames.zKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        true,
+                        Axis.Z
+                    )
                 );
             }
 
             if (!positionKeyFrames.xKeyframes().isEmpty()) {
                 boneAnimationQueue.addPositions(
-                    getAnimationPointAtTick(positionKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
-                    getAnimationPointAtTick(positionKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
-                    getAnimationPointAtTick(positionKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
+                    getAnimationPointAtTick(
+                        positionKeyFrames.xKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        false,
+                        Axis.X
+                    ),
+                    getAnimationPointAtTick(
+                        positionKeyFrames.yKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        false,
+                        Axis.Y
+                    ),
+                    getAnimationPointAtTick(
+                        positionKeyFrames.zKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        false,
+                        Axis.Z
+                    )
                 );
             }
 
             if (!scaleKeyFrames.xKeyframes().isEmpty()) {
                 boneAnimationQueue.addScales(
-                    getAnimationPointAtTick(scaleKeyFrames.xKeyframes(), adjustedTick, false, Axis.X),
-                    getAnimationPointAtTick(scaleKeyFrames.yKeyframes(), adjustedTick, false, Axis.Y),
-                    getAnimationPointAtTick(scaleKeyFrames.zKeyframes(), adjustedTick, false, Axis.Z)
+                    getAnimationPointAtTick(
+                        scaleKeyFrames.xKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        false,
+                        Axis.X
+                    ),
+                    getAnimationPointAtTick(
+                        scaleKeyFrames.yKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        false,
+                        Axis.Y
+                    ),
+                    getAnimationPointAtTick(
+                        scaleKeyFrames.zKeyframes(),
+                        stateMachineContext.adjustedTick,
+                        false,
+                        Axis.Z
+                    )
                 );
             }
         }
 
-        adjustedTick += transitionLength;
+        stateMachineContext.adjustedTick += transitionLength;
 
-        keyFrameCallbackManager.handle(animatable, adjustedTick);
+        keyFrameCallbackManager.handle(animatable, stateMachineContext.adjustedTick);
     }
 
     public void transitionFromCurrentAnimation(

@@ -15,11 +15,21 @@ public class Drone extends Monster {
         this.animationDispatcher = new AzAnimationDispatcher<>(this);
     }
 
+    private boolean walk;
+
     public void tick() {
         super.tick();
 
         if (this.level().isClientSide) {
-            animationDispatcher.dispatchFromClient("base_controller", "animation.idle");
+            if (this.tickCount % 40 == 0) {
+                walk = !walk;
+            }
+
+            var animName = walk
+                ? "animation.walk"
+                : "animation.idle";
+
+            animationDispatcher.dispatchFromClient("base_controller", animName);
         }
     }
 }

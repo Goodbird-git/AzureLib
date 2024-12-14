@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
-import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerState;
 
 /**
  * Loop type functional interface to define post-play handling for a given animation. <br>
@@ -27,7 +26,7 @@ public interface AzLoopType {
     );
 
     AzLoopType HOLD_ON_LAST_FRAME = register("hold_on_last_frame", (animatable, controller, currentAnimation) -> {
-        controller.setAnimationState(AzAnimationControllerState.PAUSED);
+        // controller.setState(DEPRECATED_AzAnimationPlayState.PAUSED);
 
         return true;
     });

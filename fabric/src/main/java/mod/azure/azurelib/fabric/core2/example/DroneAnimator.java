@@ -16,7 +16,11 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
 
     private static final String IDLE_ANIMATION_NAME = "animation.idle";
 
+    private static final String WALK_ANIMATION_NAME = "animation.walk";
+
     private static final AzRawAnimation IDLE_ANIMATION = AzRawAnimation.begin().thenLoop(IDLE_ANIMATION_NAME);
+
+    private static final AzRawAnimation WALK_ANIMATION = AzRawAnimation.begin().thenLoop(WALK_ANIMATION_NAME);
 
     public DroneAnimator() {
         super(AzAnimatorConfig.defaultConfig());
@@ -25,8 +29,9 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
     @Override
     public void registerControllers(AzAnimationControllerContainer<Drone> animationControllerContainer) {
         animationControllerContainer.add(
-            new AzAnimationController<>(this, "base_controller", 0)
+            new AzAnimationController<>(this, "base_controller", 5)
                 .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
+                .triggerableAnim(WALK_ANIMATION_NAME, WALK_ANIMATION)
         );
     }
 

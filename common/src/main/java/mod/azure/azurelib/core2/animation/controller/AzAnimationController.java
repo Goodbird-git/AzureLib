@@ -2,6 +2,7 @@ package mod.azure.azurelib.core2.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,14 +15,17 @@ import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
 import mod.azure.azurelib.core.animation.EasingType;
-import mod.azure.azurelib.core.keyframe.BoneAnimationQueue;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameProcessor;
+import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPauseState;
+import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayState;
+import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
+import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationTransitionState;
+import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
@@ -36,11 +40,13 @@ public class AzAnimationController<T> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationController.class);
 
-    protected final String name;
+    private final String name;
 
-    protected final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
+    private final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
 
     private final AzAnimationQueue animationQueue;
+
+    private final AzAnimationControllerStateMachine<T> stateMachine;
 
     private final AzAnimator<T> animator;
 
@@ -52,13 +58,7 @@ public class AzAnimationController<T> {
 
     private final AzKeyFrameProcessor<T> keyFrameProcessor;
 
-    protected boolean isJustStarting = false;
-
     protected boolean needsAnimationReload = false;
-
-    protected boolean shouldResetTick = false;
-
-    protected boolean justStartedTransition = false;
 
     protected AzKeyFrameCallbacks<T> keyFrameCallbacks;
 
@@ -70,15 +70,11 @@ public class AzAnimationController<T> {
 
     protected AzQueuedAnimation currentAnimation;
 
-    protected AzAnimationControllerState animationState = AzAnimationControllerState.STOPPED;
-
     protected double tickOffset;
 
     protected ToDoubleFunction<T> animationSpeedModifier = obj -> 1d;
 
     protected Function<T, EasingType> overrideEasingTypeFunction = obj -> null;
-
-    protected boolean justStopped = true;
 
     // FIXME: There used to be more constructors here. We should bring those back as a builder pattern.
 
@@ -99,6 +95,15 @@ public class AzAnimationController<T> {
         this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
         this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
         this.keyFrameProcessor = new AzKeyFrameProcessor<>(this, boneAnimationQueueCache);
+
+        var stateHolder = new AzAnimationControllerStateMachine.StateHolder<T>(
+            new AzAnimationPlayState<>(),
+            new AzAnimationPauseState<>(),
+            new AzAnimationStopState<>(),
+            new AzAnimationTransitionState<>()
+        );
+
+        this.stateMachine = new AzAnimationControllerStateMachine<>(stateHolder, this, animator.context());
     }
 
     public AzAnimationController<T> setKeyFrameCallbacks(@NotNull AzKeyFrameCallbacks<T> keyFrameCallbacks) {
@@ -120,10 +125,6 @@ public class AzAnimationController<T> {
         this.animationSpeedModifier = speedModFunction;
 
         return this;
-    }
-
-    public void setJustStarting(boolean justStarting) {
-        isJustStarting = justStarting;
     }
 
     /**
@@ -168,28 +169,14 @@ public class AzAnimationController<T> {
         return this;
     }
 
-    /**
-     * Gets the controller's name.
-     *
-     * @return The name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Gets the currently loaded {@link AzAnimation}. Can be null<br>
-     * An animation returned here does not guarantee it is currently playing, just that it is the currently loaded
-     * animation for this controller
-     */
-
-    public AzQueuedAnimation getCurrentAnimation() {
+    public @Nullable AzQueuedAnimation getCurrentAnimation() {
         return currentAnimation;
     }
 
-    /**
-     * Gets the currently loaded animation's {@link BoneAnimationQueue BoneAnimationQueues}.
-     */
     public Collection<AzBoneAnimationQueue> getBoneAnimationQueues() {
         return boneAnimationQueueCache.values();
     }
@@ -229,23 +216,6 @@ public class AzAnimationController<T> {
     }
 
     /**
-     * Tells the controller to stop all animations until told otherwise.<br>
-     * Calling this will prevent the controller from continuing to play the currently loaded animation until either
-     * {@link AzAnimationController#forceAnimationReset()} is called, or
-     * {@link AzAnimationController#setAnimation(T, AzRawAnimation)} is called with a different animation
-     */
-    public void stop() {
-        this.animationState = AzAnimationControllerState.STOPPED;
-    }
-
-    /**
-     * Overrides the animation transition time for the controller
-     */
-    public void setTransitionLength(int ticks) {
-        this.transitionLength = ticks;
-    }
-
-    /**
      * Checks whether the last animation that was playing on this controller has finished or not.<br>
      * This will return true if the controller has had an animation set previously, and it has finished playing and
      * isn't going to loop or proceed to another animation.<br>
@@ -253,7 +223,7 @@ public class AzAnimationController<T> {
      * @return Whether the previous animation finished or not
      */
     public boolean hasAnimationFinished() {
-        return currentRawAnimation != null && animationState == AzAnimationControllerState.STOPPED;
+        return currentRawAnimation != null && stateMachine.isStopped();
     }
 
     /**
@@ -314,7 +284,7 @@ public class AzAnimationController<T> {
      */
     public void setAnimation(T animatable, AzRawAnimation rawAnimation) {
         if (rawAnimation == null || rawAnimation.getAnimationStages().isEmpty()) {
-            stop();
+            stateMachine.stop();
 
             return;
         }
@@ -326,15 +296,13 @@ public class AzAnimationController<T> {
                 animationQueue.clear();
                 animationQueue.addAll(animations);
                 this.currentRawAnimation = rawAnimation;
-                this.shouldResetTick = true;
-                this.animationState = AzAnimationControllerState.TRANSITIONING;
-                this.justStartedTransition = true;
+                stateMachine.transition();
                 this.needsAnimationReload = false;
 
                 return;
             }
 
-            stop();
+            stateMachine.stop();
         }
     }
 
@@ -354,10 +322,8 @@ public class AzAnimationController<T> {
 
         this.triggeredAnimation = anim;
 
-        if (animationState == AzAnimationControllerState.STOPPED) {
-            this.animationState = AzAnimationControllerState.TRANSITIONING;
-            this.shouldResetTick = true;
-            this.justStartedTransition = true;
+        if (stateMachine.isStopped()) {
+            stateMachine.transition();
         }
 
         return true;
@@ -366,7 +332,7 @@ public class AzAnimationController<T> {
     /**
      * Handle a given AnimationState, alongside the current triggered animation if applicable
      */
-    protected PlayState handleAnimationState(T animatable) {
+    private void handleAnimationState(T animatable) {
         if (triggeredAnimation != null) {
             if (currentRawAnimation != triggeredAnimation) {
                 this.currentAnimation = null;
@@ -375,15 +341,12 @@ public class AzAnimationController<T> {
             setAnimation(animatable, triggeredAnimation);
 
             if (!hasAnimationFinished()) {
-                return PlayState.CONTINUE;
+                return;
             }
 
             this.triggeredAnimation = null;
             this.needsAnimationReload = true;
         }
-
-        // TODO: Revisit this.
-        return PlayState.CONTINUE;
     }
 
     /**
@@ -392,73 +355,25 @@ public class AzAnimationController<T> {
      */
     public void update(AzAnimationContext<T> context) {
         var animatable = context.animatable();
-        var boneCache = context.boneCache();
-        var bones = boneCache.getBakedModel().getBonesByName();
-        var snapshots = boneCache.getBoneSnapshotsByName();
-        var crashWhenCantFindBone = context.config().crashIfBoneMissing();
         var timer = context.timer();
         var seekTime = timer.getAnimTime();
 
-        setJustStarting(timer.isFirstTick());
+        handleAnimationState(animatable);
 
-        double adjustedTick = adjustTick(animatable, seekTime);
+        // Adjust the tick before making any updates.
+        stateMachine.getContext().adjustedTick = adjustTick(animatable, seekTime);
+        // Run state machine updates.
+        stateMachine.update();
 
-        if (animationState == AzAnimationControllerState.TRANSITIONING && adjustedTick >= transitionLength) {
-            this.shouldResetTick = true;
-            this.animationState = AzAnimationControllerState.RUNNING;
-            adjustedTick = adjustTick(animatable, seekTime);
-        }
-
-        PlayState playState = handleAnimationState(animatable);
-
-        if (playState == PlayState.STOP || (currentAnimation == null && animationQueue.isEmpty())) {
-            this.animationState = AzAnimationControllerState.STOPPED;
-            this.justStopped = true;
-
-            return;
-        }
-
-        if (justStartedTransition && (shouldResetTick || justStopped)) {
-            this.justStopped = false;
-            adjustedTick = adjustTick(animatable, seekTime);
-
-            if (currentAnimation == null) {
-                this.animationState = AzAnimationControllerState.TRANSITIONING;
+        if (currentAnimation == null) {
+            if (animationQueue.isEmpty()) {
+                // If there is no animation to play, stop.
+                stateMachine.stop();
+                return;
             }
-        } else if (currentAnimation == null) {
-            this.shouldResetTick = true;
-            this.animationState = AzAnimationControllerState.TRANSITIONING;
-            this.justStartedTransition = true;
+
             this.needsAnimationReload = false;
-            adjustedTick = adjustTick(animatable, seekTime);
-        } else if (animationState != AzAnimationControllerState.TRANSITIONING) {
-            this.animationState = AzAnimationControllerState.RUNNING;
-        }
-
-        if (getAnimationState() == AzAnimationControllerState.RUNNING) {
-            keyFrameProcessor.runCurrentAnimation(animatable, adjustedTick, seekTime, crashWhenCantFindBone);
-            var canTransition = transitionLength == 0 && shouldResetTick;
-
-            if (canTransition && animationState == AzAnimationControllerState.TRANSITIONING) {
-                this.currentAnimation = this.animationQueue.next();
-            }
-        } else if (animationState == AzAnimationControllerState.TRANSITIONING) {
-            if (adjustedTick == 0 || isJustStarting) {
-                this.justStartedTransition = false;
-                this.currentAnimation = animationQueue.next();
-
-                keyFrameCallbackManager.reset();
-
-                if (currentAnimation == null) {
-                    return;
-                }
-
-                boneSnapshotCache.put(currentAnimation, snapshots.values());
-            }
-
-            if (currentAnimation != null) {
-                keyFrameProcessor.transitionFromCurrentAnimation(bones, crashWhenCantFindBone, adjustedTick);
-            }
+            stateMachine.getContext().adjustedTick = adjustTick(animatable, seekTime);
         }
     }
 
@@ -467,32 +382,21 @@ public class AzAnimationController<T> {
      * Is used when starting a new animation, transitioning, and a few other key areas
      *
      * @param tick The currently used tick value
-     * @return 0 if {@link AzAnimationController#shouldResetTick} is set to false, or a
+     * @return 0 if {@link AzAnimationControllerStateMachine#shouldResetTick()} is set to false, or a
      *         {@link AzAnimationController#animationSpeedModifier} modified value otherwise
      */
     public double adjustTick(T animatable, double tick) {
-        if (!shouldResetTick) {
+        if (!stateMachine.shouldResetTick()) {
             return animationSpeedModifier.applyAsDouble(animatable) * Math.max(tick - tickOffset, 0);
         }
 
-        if (getAnimationState() != AzAnimationControllerState.STOPPED) {
+        if (!stateMachine.isStopped()) {
             this.tickOffset = tick;
         }
 
-        this.shouldResetTick = false;
+        stateMachine.setShouldResetTick(false);
 
         return 0;
-    }
-
-    /**
-     * Returns the current state of this controller.
-     */
-    public AzAnimationControllerState getAnimationState() {
-        return animationState;
-    }
-
-    public void setAnimationState(AzAnimationControllerState animationState) {
-        this.animationState = animationState;
     }
 
     public AzAnimationQueue getAnimationQueue() {
@@ -515,16 +419,20 @@ public class AzAnimationController<T> {
         return keyFrameCallbackManager;
     }
 
+    public AzKeyFrameProcessor<T> getKeyFrameProcessor() {
+        return keyFrameProcessor;
+    }
+
+    public AzAnimationControllerStateMachine<T> getStateMachine() {
+        return stateMachine;
+    }
+
     public double getTransitionLength() {
         return transitionLength;
     }
 
-    public boolean shouldResetTick() {
-        return shouldResetTick;
-    }
-
     public void setShouldResetTick(boolean shouldResetTick) {
-        this.shouldResetTick = shouldResetTick;
+        stateMachine.setShouldResetTick(shouldResetTick);
     }
 
     public void setCurrentAnimation(AzQueuedAnimation currentAnimation) {
