@@ -11,7 +11,7 @@ public abstract class StateMachine<C extends StateMachineContext, T extends Stat
         this.reusableContext = createContext();
     }
 
-    public abstract C createContext();
+    protected abstract C createContext();
 
     public void update(C context) {
         state.onUpdate(context);
