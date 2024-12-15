@@ -2,19 +2,23 @@ package mod.azure.azurelib.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import org.lwjgl.glfw.GLFW;
 
 import mod.azure.azurelib.common.api.client.helper.ClientUtils;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
-import mod.azure.azurelib.fabric.core2.example.DroneRenderer;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
-import mod.azure.azurelib.fabric.core2.example.FacehuggerRenderer;
-import mod.azure.azurelib.fabric.core2.example.azure.DoomHunterRenderer;
+import mod.azure.azurelib.fabric.core2.example.blocks.StargateRender;
+import mod.azure.azurelib.fabric.core2.example.entities.doomhunter.DoomHunterRenderer;
+import mod.azure.azurelib.fabric.core2.example.entities.drone.DroneRenderer;
 
 public final class ClientListener implements ClientModInitializer {
 
@@ -65,7 +69,11 @@ public final class ClientListener implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SendConfigDataPacket.TYPE, (packet, context) -> packet.handle());
 
         EntityRendererRegistry.register(ExampleEntityTypes.DRONE, DroneRenderer::new);
-        EntityRendererRegistry.register(ExampleEntityTypes.FACEHUGGER, FacehuggerRenderer::new);
         EntityRendererRegistry.register(ExampleEntityTypes.DOOMHUNTER, DoomHunterRenderer::new);
+        BlockRenderLayerMap.INSTANCE.putBlock(FabricAzureLibMod.STARGATE, RenderType.translucent());
+        BlockEntityRenderers.register(
+            ExampleEntityTypes.STARGATE,
+            (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new StargateRender()
+        );
     }
 }

@@ -1,14 +1,19 @@
 package mod.azure.azurelib.fabric.core2.example;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.fabric.core2.example.azure.DoomHunter;
+import mod.azure.azurelib.fabric.FabricAzureLibMod;
+import mod.azure.azurelib.fabric.core2.example.blocks.StargateBlockEntity;
+import mod.azure.azurelib.fabric.core2.example.entities.doomhunter.DoomHunter;
+import mod.azure.azurelib.fabric.core2.example.entities.drone.Drone;
 
 public class ExampleEntityTypes {
 
@@ -29,9 +34,14 @@ public class ExampleEntityTypes {
         return entityType;
     }
 
+    public static BlockEntityType<StargateBlockEntity> STARGATE = Registry.register(
+        BuiltInRegistries.BLOCK_ENTITY_TYPE,
+        AzureLib.modResource("stargate"),
+        FabricBlockEntityTypeBuilder.create(StargateBlockEntity::new, FabricAzureLibMod.STARGATE).build(null)
+    );;
+
     public static void initialize() {
         FabricDefaultAttributeRegistry.register(DRONE, Drone.createMonsterAttributes());
-        FabricDefaultAttributeRegistry.register(FACEHUGGER, Facehugger.createMonsterAttributes());
         FabricDefaultAttributeRegistry.register(DOOMHUNTER, DoomHunter.createMonsterAttributes());
     }
 }
