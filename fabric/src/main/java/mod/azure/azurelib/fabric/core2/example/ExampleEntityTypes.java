@@ -17,11 +17,6 @@ public class ExampleEntityTypes {
         EntityType.Builder.of(Drone::new, MobCategory.MONSTER).sized(0.8f, 1.98f)
     );
 
-    public static final EntityType<Facehugger> FACEHUGGER = register(
-        "facehugger",
-        EntityType.Builder.of(Facehugger::new, MobCategory.MONSTER).sized(0.75f, 0.25f)
-    );
-
     public static final EntityType<DoomHunter> DOOMHUNTER = register(
         "doomhunter",
         EntityType.Builder.of(DoomHunter::new, MobCategory.MONSTER).sized(3.0f, 7.0f)
