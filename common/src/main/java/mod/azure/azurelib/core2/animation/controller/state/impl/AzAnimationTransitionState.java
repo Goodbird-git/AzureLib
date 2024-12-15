@@ -25,26 +25,14 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
         var stateMachine = context.getStateMachine();
         var boneCache = animContext.boneCache();
 
-        if (context.adjustedTick >= controller.getTransitionLength()) {
-            // If we've exceeded the amount of time we should be transitioning, then switch to play state.
-
-            stateMachine.setShouldResetTick(true);
-            stateMachine.play();
-            context.adjustedTick = controller.adjustTick(animatable, animTime);
-            return;
-        }
-
-        if (stateMachine.shouldResetTick() /* || justStopped */) {
-            // TODO:
+        if (stateMachine.shouldResetTick()) {
             context.adjustedTick = controller.adjustTick(animatable, animTime);
         }
 
         if (context.adjustedTick == 0 || stateMachine.isJustStarting()) {
-            // FIXME: POTENTIAL REGRESSION
-            // this.justStartedTransition = false;
             controller.setCurrentAnimation(controller.getAnimationQueue().next());
 
-            controller.getKeyFrameCallbackManager().reset();
+            controller.getKeyFrameManager().keyFrameCallbackHandler().reset();
 
             if (controller.getCurrentAnimation() == null) {
                 return;
@@ -55,10 +43,18 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
             boneSnapshotCache.put(controller.getCurrentAnimation(), snapshots.values());
         }
 
+        if (context.adjustedTick >= controller.getTransitionLength()) {
+            // If we've exceeded the amount of time we should be transitioning, then switch to play state.
+            stateMachine.setShouldResetTick(true);
+            stateMachine.play();
+            context.adjustedTick = controller.adjustTick(animatable, animTime);
+            return;
+        }
+
         if (controller.getCurrentAnimation() != null) {
             var bones = boneCache.getBakedModel().getBonesByName();
             var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
-            var keyFrameProcessor = controller.getKeyFrameProcessor();
+            var keyFrameProcessor = controller.getKeyFrameManager().getKeyFrameProcessor();
             keyFrameProcessor.transitionFromCurrentAnimation(bones, crashWhenCantFindBone, context.adjustedTick);
         }
     }
