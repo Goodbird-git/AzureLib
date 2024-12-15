@@ -11,9 +11,7 @@ import mod.azure.azurelib.core.object.Axis;
 
 public class AzAbstractKeyFrameExecutor {
 
-    protected AzAbstractKeyFrameExecutor() {
-
-    }
+    protected AzAbstractKeyFrameExecutor() {}
 
     /**
      * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}

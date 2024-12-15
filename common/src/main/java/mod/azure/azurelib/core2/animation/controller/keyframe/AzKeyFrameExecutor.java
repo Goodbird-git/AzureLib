@@ -1,5 +1,7 @@
 package mod.azure.azurelib.core2.animation.controller.keyframe;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.NoSuchElementException;
 
 import mod.azure.azurelib.core.keyframe.Keyframe;
@@ -10,6 +12,7 @@ import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
+import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
 public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
 
@@ -28,50 +31,14 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
     /**
      * Handle the current animation's state modifications and translations
      *
-     * @param seekTime              The lerped tick (current tick + partial tick)
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required
      *                              bone, or continue with the remaining bones
      */
-    public void execute(T animatable, double seekTime, boolean crashWhenCantFindBone) {
-        var animationQueue = animationController.getAnimationQueue();
-        var currentAnimation = animationController.getCurrentAnimation();
+    public void execute(@NotNull AzQueuedAnimation currentAnimation, T animatable, boolean crashWhenCantFindBone) {
         var keyFrameCallbackHandler = animationController.getKeyFrameManager().keyFrameCallbackHandler();
         var stateMachine = animationController.getStateMachine();
         var stateMachineContext = stateMachine.getContext();
         var transitionLength = animationController.getTransitionLength();
-
-        var hasAnimationFinished = stateMachineContext.adjustedTick >= currentAnimation.animation().length();
-
-        // TODO: This logic REALLY doesn't belong here... it belongs in the play state.
-        if (hasAnimationFinished) {
-            var shouldPlayAgain = currentAnimation.loopType()
-                .shouldPlayAgain(animatable, animationController, currentAnimation.animation());
-
-            if (shouldPlayAgain) {
-                var isNotPaused = !stateMachine.isPaused();
-
-                if (isNotPaused) {
-                    animationController.setShouldResetTick(true);
-
-                    stateMachineContext.adjustedTick = animationController.adjustTick(animatable, seekTime);
-                    keyFrameCallbackHandler.reset();
-                }
-            } else {
-                var nextAnimation = animationQueue.peek();
-
-                keyFrameCallbackHandler.reset();
-
-                if (nextAnimation == null) {
-                    stateMachine.stop();
-
-                    return;
-                } else {
-                    stateMachine.transition();
-                    animationController.setShouldResetTick(true);
-                    animationController.setCurrentAnimation(nextAnimation);
-                }
-            }
-        }
 
         final double finalAdjustedTick = stateMachineContext.adjustedTick;
 
@@ -81,8 +48,9 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
             var boneAnimationQueue = boneAnimationQueueCache.getOrNull(boneAnimation.boneName());
 
             if (boneAnimationQueue == null) {
-                if (crashWhenCantFindBone)
+                if (crashWhenCantFindBone) {
                     throw new NoSuchElementException("Could not find bone: " + boneAnimation.boneName());
+                }
 
                 continue;
             }
