@@ -54,8 +54,9 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
         if (controller.getCurrentAnimation() != null) {
             var bones = boneCache.getBakedModel().getBonesByName();
             var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
-            var keyFrameProcessor = controller.getKeyFrameManager().getKeyFrameProcessor();
-            keyFrameProcessor.transitionFromCurrentAnimation(bones, crashWhenCantFindBone, context.adjustedTick);
+            var keyFrameTransitioner = controller.getKeyFrameManager().getKeyFrameTransitioner();
+
+            keyFrameTransitioner.transition(bones, crashWhenCantFindBone, context.adjustedTick);
         }
     }
 

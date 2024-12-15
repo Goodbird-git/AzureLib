@@ -15,7 +15,7 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
     @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.getAnimationController();
-        var keyFrameProcessor = controller.getKeyFrameManager().getKeyFrameProcessor();
+        var keyFrameExecutor = controller.getKeyFrameManager().getKeyFrameExecutor();
         var animContext = context.getAnimationContext();
         var timer = animContext.timer();
 
@@ -24,7 +24,7 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
         var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
 
         // Run the current animation.
-        keyFrameProcessor.runCurrentAnimation(animatable, animTime, crashWhenCantFindBone);
+        keyFrameExecutor.execute(animatable, animTime, crashWhenCantFindBone);
     }
 
     @Override

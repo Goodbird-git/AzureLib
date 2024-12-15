@@ -8,16 +8,19 @@ public class AzKeyFrameManager<T> {
 
     private final AzKeyFrameCallbackHandler<T> keyFrameCallbackHandler;
 
-    private final AzKeyFrameProcessor<T> keyFrameProcessor;
+    private final AzKeyFrameExecutor<T> keyFrameExecutor;
+
+    private final AzKeyFrameTransitioner<T> keyFrameTransitioner;
 
     public AzKeyFrameManager(
         AzAnimationController<T> animationController,
-        AzBoneAnimationQueueCache boneAnimationQueueCache,
+        AzBoneAnimationQueueCache<T> boneAnimationQueueCache,
         AzBoneSnapshotCache boneSnapshotCache,
         AzKeyFrameCallbacks<T> keyFrameCallbacks
     ) {
         this.keyFrameCallbackHandler = new AzKeyFrameCallbackHandler<>(animationController, keyFrameCallbacks);
-        this.keyFrameProcessor = new AzKeyFrameProcessor<>(
+        this.keyFrameExecutor = new AzKeyFrameExecutor<>(animationController, boneAnimationQueueCache);
+        this.keyFrameTransitioner = new AzKeyFrameTransitioner<>(
             animationController,
             boneAnimationQueueCache,
             boneSnapshotCache
@@ -28,7 +31,11 @@ public class AzKeyFrameManager<T> {
         return keyFrameCallbackHandler;
     }
 
-    public AzKeyFrameProcessor<T> getKeyFrameProcessor() {
-        return keyFrameProcessor;
+    public AzKeyFrameExecutor<T> getKeyFrameExecutor() {
+        return keyFrameExecutor;
+    }
+
+    public AzKeyFrameTransitioner<T> getKeyFrameTransitioner() {
+        return keyFrameTransitioner;
     }
 }
