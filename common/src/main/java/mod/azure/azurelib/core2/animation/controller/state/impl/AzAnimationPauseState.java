@@ -8,17 +8,7 @@ public final class AzAnimationPauseState<T> extends AzAnimationState<T> {
     public AzAnimationPauseState() {}
 
     @Override
-    public void onEnter(AzAnimationControllerStateMachine.Context<T> context) {
-        super.onEnter(context);
-    }
-
-    @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
         // Pause state does not need to do anything.
-    }
-
-    @Override
-    public void onExit(AzAnimationControllerStateMachine.Context<T> context) {
-        super.onExit(context);
     }
 }
