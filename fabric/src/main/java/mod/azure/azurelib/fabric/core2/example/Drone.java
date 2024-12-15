@@ -8,11 +8,11 @@ import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 
 public class Drone extends Monster {
 
-    private final AzAnimationDispatcher<Drone> animationDispatcher;
+    private final AzAnimationDispatcher animationDispatcher;
 
     public Drone(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.animationDispatcher = new AzAnimationDispatcher<>(this);
+        this.animationDispatcher = new AzAnimationDispatcher(this);
     }
 
     private boolean walk;

@@ -7,11 +7,11 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.platform.Services;
 
-public class AzAnimationDispatcher<T extends Entity> {
+public class AzAnimationDispatcher {
 
-    private final T entity;
+    private final Entity entity;
 
-    public AzAnimationDispatcher(T entity) {
+    public AzAnimationDispatcher(Entity entity) {
         this.entity = entity;
     }
 

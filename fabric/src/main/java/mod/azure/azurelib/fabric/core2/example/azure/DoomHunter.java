@@ -18,11 +18,11 @@ import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 
 public class DoomHunter extends Monster {
 
-    private final AzAnimationDispatcher<DoomHunter> animationDispatcher;
+    private final AzAnimationDispatcher animationDispatcher;
 
     public DoomHunter(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.animationDispatcher = new AzAnimationDispatcher<>(this);
+        this.animationDispatcher = new AzAnimationDispatcher(this);
     }
 
     @Override

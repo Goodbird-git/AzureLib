@@ -8,11 +8,11 @@ import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 
 public class Facehugger extends Monster {
 
-    private final AzAnimationDispatcher<Facehugger> animationDispatcher;
+    private final AzAnimationDispatcher animationDispatcher;
 
     public Facehugger(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.animationDispatcher = new AzAnimationDispatcher<>(this);
+        this.animationDispatcher = new AzAnimationDispatcher(this);
     }
 
     public void tick() {
