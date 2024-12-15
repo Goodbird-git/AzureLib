@@ -1,18 +1,17 @@
-package mod.azure.azurelib.fabric.core2.example;
+package mod.azure.azurelib.fabric.core2.example.entities.drone;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
+import mod.azure.azurelib.fabric.core2.example.MoveAnalysis;
 
 public class Drone extends Monster {
 
     private final AzAnimationDispatcher<Drone> animationDispatcher;
+
     private final MoveAnalysis moveAnalysis;
 
     public Drone(EntityType<? extends Monster> entityType, Level level) {
@@ -28,8 +27,8 @@ public class Drone extends Monster {
         if (this.level().isClientSide) {
             var isMovingOnGround = moveAnalysis.isMovingHorizontally() && onGround();
             var animName = isMovingOnGround
-                    ? "animation.walk"
-                    : "animation.idle";
+                ? "animation.walk"
+                : "animation.idle";
             animationDispatcher.dispatchFromClient("base_controller", animName);
         } else {
             // Doing other stuff server-side...
