@@ -57,7 +57,7 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
     }
 
     public void stop() {
-        this.setState(stateHolder.stopState);
+        setState(stateHolder.stopState);
     }
 
     public boolean isPlaying() {
