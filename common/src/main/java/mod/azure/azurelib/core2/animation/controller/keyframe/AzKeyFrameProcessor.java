@@ -39,9 +39,8 @@ public class AzKeyFrameProcessor<T> {
      */
     public void runCurrentAnimation(T animatable, double seekTime, boolean crashWhenCantFindBone) {
         var animationQueue = animationController.getAnimationQueue();
-        var animationState = animationController.getStateMachine().getState();
         var currentAnimation = animationController.getCurrentAnimation();
-        var keyFrameCallbackManager = animationController.getKeyFrameCallbackManager();
+        var keyFrameCallbackHandler = animationController.getKeyFrameManager().keyFrameCallbackHandler();
         var stateMachine = animationController.getStateMachine();
         var stateMachineContext = stateMachine.getContext();
         var transitionLength = animationController.getTransitionLength();
@@ -55,12 +54,12 @@ public class AzKeyFrameProcessor<T> {
                     animationController.setShouldResetTick(true);
 
                     stateMachineContext.adjustedTick = animationController.adjustTick(animatable, seekTime);
-                    keyFrameCallbackManager.reset();
+                    keyFrameCallbackHandler.reset();
                 }
             } else {
                 var nextAnimation = animationQueue.peek();
 
-                keyFrameCallbackManager.reset();
+                keyFrameCallbackHandler.reset();
 
                 if (nextAnimation == null) {
                     stateMachine.stop();
@@ -164,7 +163,7 @@ public class AzKeyFrameProcessor<T> {
 
         stateMachineContext.adjustedTick += transitionLength;
 
-        keyFrameCallbackManager.handle(animatable, stateMachineContext.adjustedTick);
+        keyFrameCallbackHandler.handle(animatable, stateMachineContext.adjustedTick);
     }
 
     public void transitionFromCurrentAnimation(

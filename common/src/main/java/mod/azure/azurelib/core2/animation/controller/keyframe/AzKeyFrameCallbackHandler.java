@@ -14,17 +14,23 @@ import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
 // TODO: reduce the boilerplate of the specialized handle functions in this class.
-public class AzKeyFrameCallbackManager<T> {
+public class AzKeyFrameCallbackHandler<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AzKeyFrameCallbackManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AzKeyFrameCallbackHandler.class);
 
     private final AzAnimationController<T> animationController;
 
     private final Set<KeyFrameData> executedKeyFrames;
 
-    public AzKeyFrameCallbackManager(AzAnimationController<T> animationController) {
+    private final AzKeyFrameCallbacks<T> keyFrameCallbacks;
+
+    public AzKeyFrameCallbackHandler(
+        AzAnimationController<T> animationController,
+        AzKeyFrameCallbacks<T> keyFrameCallbacks
+    ) {
         this.animationController = animationController;
         this.executedKeyFrames = new ObjectOpenHashSet<>();
+        this.keyFrameCallbacks = keyFrameCallbacks;
     }
 
     public void handle(T animatable, double adjustedTick) {
@@ -34,7 +40,7 @@ public class AzKeyFrameCallbackManager<T> {
     }
 
     private void handleCustomKeyframes(T animatable, double adjustedTick) {
-        var customKeyframeHandler = getCallbacks().getCustomKeyframeHandler();
+        var customKeyframeHandler = keyFrameCallbacks.getCustomKeyframeHandler();
         var customInstructions = getCurrentAnimation().animation().keyFrames().customInstructions();
 
         for (var keyframeData : customInstructions) {
@@ -56,7 +62,7 @@ public class AzKeyFrameCallbackManager<T> {
     }
 
     private void handleParticleKeyframes(T animatable, double adjustedTick) {
-        var particleKeyframeHandler = getCallbacks().getParticleKeyframeHandler();
+        var particleKeyframeHandler = keyFrameCallbacks.getParticleKeyframeHandler();
         var particleInstructions = getCurrentAnimation().animation().keyFrames().particles();
 
         for (var keyframeData : particleInstructions) {
@@ -78,7 +84,7 @@ public class AzKeyFrameCallbackManager<T> {
     }
 
     private void handleSoundKeyframes(T animatable, double adjustedTick) {
-        var soundKeyframeHandler = getCallbacks().getSoundKeyframeHandler();
+        var soundKeyframeHandler = keyFrameCallbacks.getSoundKeyframeHandler();
         var soundInstructions = getCurrentAnimation().animation().keyFrames().sounds();
 
         for (var keyframeData : soundInstructions) {
@@ -104,10 +110,6 @@ public class AzKeyFrameCallbackManager<T> {
      */
     public void reset() {
         executedKeyFrames.clear();
-    }
-
-    private AzKeyFrameCallbacks<T> getCallbacks() {
-        return animationController.getKeyFrameCallbacks();
     }
 
     private AzQueuedAnimation getCurrentAnimation() {

@@ -1,7 +1,5 @@
 package mod.azure.azurelib.core2.animation.controller;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +16,8 @@ import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbackManager;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameProcessor;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameManager;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPauseState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
@@ -40,9 +37,13 @@ public class AzAnimationController<T> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AzAnimationController.class);
 
+    public static <T> AzAnimationControllerBuilder<T> builder(AzAnimator<T> animator, String name) {
+        return new AzAnimationControllerBuilder<>(animator, name);
+    }
+
     private final String name;
 
-    private final Map<String, AzRawAnimation> triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
+    private final ToDoubleFunction<T> animationSpeedModifier;
 
     private final AzAnimationQueue animationQueue;
 
@@ -54,29 +55,23 @@ public class AzAnimationController<T> {
 
     private final AzBoneSnapshotCache boneSnapshotCache;
 
-    private final AzKeyFrameCallbackManager<T> keyFrameCallbackManager;
+    private final AzKeyFrameManager<T> keyFrameManager;
 
-    private final AzKeyFrameProcessor<T> keyFrameProcessor;
+    private final Function<T, EasingType> overrideEasingTypeFunction;
 
-    protected boolean needsAnimationReload = false;
+    private final double transitionLength;
 
-    protected AzKeyFrameCallbacks<T> keyFrameCallbacks;
-
-    protected AzRawAnimation triggeredAnimation = null;
-
-    protected double transitionLength;
-
-    protected AzRawAnimation currentRawAnimation;
+    private final Map<String, AzRawAnimation> triggerableAnimations;
 
     protected AzQueuedAnimation currentAnimation;
 
+    protected AzRawAnimation currentRawAnimation;
+
+    protected boolean needsAnimationReload = false;
+
     protected double tickOffset;
 
-    protected ToDoubleFunction<T> animationSpeedModifier = obj -> 1d;
-
-    protected Function<T, EasingType> overrideEasingTypeFunction = obj -> null;
-
-    // FIXME: There used to be more constructors here. We should bring those back as a builder pattern.
+    protected AzRawAnimation triggeredAnimation = null;
 
     /**
      * Instantiates a new {@code AnimationController}.<br>
@@ -85,16 +80,26 @@ public class AzAnimationController<T> {
      * @param transitionTickTime The amount of time (in <b>ticks</b>) that the controller should take to transition
      *                           between animations. Lerping is automatically applied where possible
      */
-    public AzAnimationController(AzAnimator<T> animator, String name, int transitionTickTime) {
-        this.animator = animator;
+    AzAnimationController(
+        String name,
+        AzAnimator<T> animator,
+        int transitionTickTime,
+        ToDoubleFunction<T> animationSpeedModifier,
+        AzKeyFrameCallbacks<T> keyFrameCallbacks,
+        Function<T, EasingType> overrideEasingTypeFunction,
+        Map<String, AzRawAnimation> triggerableAnimations
+    ) {
         this.name = name;
+        this.animator = animator;
         this.transitionLength = transitionTickTime;
+        this.animationSpeedModifier = animationSpeedModifier;
+        this.overrideEasingTypeFunction = overrideEasingTypeFunction;
+        this.triggerableAnimations = triggerableAnimations;
+
         this.animationQueue = new AzAnimationQueue();
         this.boneAnimationQueueCache = new AzBoneAnimationQueueCache(animator.context().boneCache());
         this.boneSnapshotCache = new AzBoneSnapshotCache();
-        this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
-        this.keyFrameCallbackManager = new AzKeyFrameCallbackManager<>(this);
-        this.keyFrameProcessor = new AzKeyFrameProcessor<>(this, boneAnimationQueueCache);
+        this.keyFrameManager = new AzKeyFrameManager<>(this, boneAnimationQueueCache, keyFrameCallbacks);
 
         var stateHolder = new AzAnimationControllerStateMachine.StateHolder<T>(
             new AzAnimationPlayState<>(),
@@ -106,102 +111,15 @@ public class AzAnimationController<T> {
         this.stateMachine = new AzAnimationControllerStateMachine<>(stateHolder, this, animator.context());
     }
 
-    public AzAnimationController<T> setKeyFrameCallbacks(@NotNull AzKeyFrameCallbacks<T> keyFrameCallbacks) {
-        Objects.requireNonNull(keyFrameCallbacks);
-        this.keyFrameCallbacks = keyFrameCallbacks;
-        return this;
-    }
-
     /**
-     * Applies the given modifier function to this controller, for handling the speed that the controller should play
-     * its animations at.<br>
-     * An output value of 1 is considered neutral, with 2 playing an animation twice as fast, 0.5 playing half as fast,
-     * etc.
-     *
-     * @param speedModFunction The function to apply to this controller to handle animation speed
-     * @return this
-     */
-    public AzAnimationController<T> setAnimationSpeedHandler(ToDoubleFunction<T> speedModFunction) {
-        this.animationSpeedModifier = speedModFunction;
-
-        return this;
-    }
-
-    /**
-     * Sets the controller's {@link EasingType} override for animations.<br>
-     * By default, the controller will use whatever {@code EasingType} was defined in the animation json
-     *
-     * @param easingTypeFunction The new {@code EasingType} to use
-     * @return this
-     */
-    public AzAnimationController<T> setOverrideEasingType(EasingType easingTypeFunction) {
-        return setOverrideEasingTypeFunction(obj -> easingTypeFunction);
-    }
-
-    public Function<T, EasingType> getOverrideEasingTypeFunction() {
-        return overrideEasingTypeFunction;
-    }
-
-    /**
-     * Sets the controller's {@link EasingType} override function for animations.<br>
-     * By default, the controller will use whatever {@code EasingType} was defined in the animation json
-     *
-     * @param easingType The new {@code EasingType} to use
-     * @return this
-     */
-    public AzAnimationController<T> setOverrideEasingTypeFunction(Function<T, EasingType> easingType) {
-        this.overrideEasingTypeFunction = easingType;
-
-        return this;
-    }
-
-    /**
-     * Registers a triggerable {@link AzRawAnimation} with the controller.<br>
-     * These can then be triggered by the various {@code triggerAnim} methods in {@code GeoAnimatable's} subclasses
-     *
-     * @param name      The name of the triggerable animation
-     * @param animation The RawAnimation for this triggerable animation
-     * @return this
-     */
-    public AzAnimationController<T> triggerableAnim(String name, AzRawAnimation animation) {
-        this.triggerableAnimations.put(name, animation);
-
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public @Nullable AzQueuedAnimation getCurrentAnimation() {
-        return currentAnimation;
-    }
-
-    public Collection<AzBoneAnimationQueue> getBoneAnimationQueues() {
-        return boneAnimationQueueCache.values();
-    }
-
-    /**
-     * Gets the current animation speed modifier.<br>
+     * Computes the current animation speed modifier.<br>
      * This modifier defines the relative speed in which animations will be played based on the current state of the
      * game.
      *
      * @return The computed current animation speed modifier
      */
-    public double getAnimationSpeed(T animatable) {
+    public double computeAnimationSpeed(T animatable) {
         return animationSpeedModifier.applyAsDouble(animatable);
-    }
-
-    /**
-     * Applies the given modifier value to this controller, for handlign the speed that the controller hsould play its
-     * animations at.<br>
-     * A value of 1 is considered neutral, with 2 playing an animation twice as fast, 0.5 playing half as fast, etc.
-     *
-     * @param speed The speed modifier to apply to this controller to handle animation speed.
-     * @return this
-     */
-    public AzAnimationController<T> setAnimationSpeed(double speed) {
-        return setAnimationSpeedHandler(obj -> speed);
     }
 
     /**
@@ -213,34 +131,6 @@ public class AzAnimationController<T> {
      */
     public void forceAnimationReset() {
         this.needsAnimationReload = true;
-    }
-
-    /**
-     * Checks whether the last animation that was playing on this controller has finished or not.<br>
-     * This will return true if the controller has had an animation set previously, and it has finished playing and
-     * isn't going to loop or proceed to another animation.<br>
-     *
-     * @return Whether the previous animation finished or not
-     */
-    public boolean hasAnimationFinished() {
-        return currentRawAnimation != null && stateMachine.isStopped();
-    }
-
-    /**
-     * Returns the currently cached {@link AzRawAnimation}.<br>
-     * This animation may or may not still be playing, but it is the last one to be set in
-     * {@link AzAnimationController#setAnimation}
-     */
-    public AzRawAnimation getCurrentRawAnimation() {
-        return currentRawAnimation;
-    }
-
-    /**
-     * Returns whether the controller is currently playing a triggered animation registered in
-     * {@link AzAnimationController#triggerableAnim}<br>
-     */
-    public boolean isPlayingTriggeredAnimation() {
-        return triggeredAnimation != null && !hasAnimationFinished();
     }
 
     /**
@@ -407,20 +297,28 @@ public class AzAnimationController<T> {
         return boneAnimationQueueCache;
     }
 
+    public Collection<AzBoneAnimationQueue> getBoneAnimationQueues() {
+        return boneAnimationQueueCache.values();
+    }
+
     public AzBoneSnapshotCache getBoneSnapshotCache() {
         return boneSnapshotCache;
     }
 
-    public AzKeyFrameCallbacks<T> getKeyFrameCallbacks() {
-        return keyFrameCallbacks;
+    public @Nullable AzQueuedAnimation getCurrentAnimation() {
+        return currentAnimation;
     }
 
-    public AzKeyFrameCallbackManager<T> getKeyFrameCallbackManager() {
-        return keyFrameCallbackManager;
+    public AzKeyFrameManager<T> getKeyFrameManager() {
+        return keyFrameManager;
     }
 
-    public AzKeyFrameProcessor<T> getKeyFrameProcessor() {
-        return keyFrameProcessor;
+    public String getName() {
+        return name;
+    }
+
+    public Function<T, EasingType> getOverrideEasingTypeFunction() {
+        return overrideEasingTypeFunction;
     }
 
     public AzAnimationControllerStateMachine<T> getStateMachine() {
@@ -429,6 +327,17 @@ public class AzAnimationController<T> {
 
     public double getTransitionLength() {
         return transitionLength;
+    }
+
+    /**
+     * Checks whether the last animation that was playing on this controller has finished or not.<br>
+     * This will return true if the controller has had an animation set previously, and it has finished playing and
+     * isn't going to loop or proceed to another animation.<br>
+     *
+     * @return Whether the previous animation finished or not
+     */
+    public boolean hasAnimationFinished() {
+        return currentRawAnimation != null && stateMachine.isStopped();
     }
 
     public void setShouldResetTick(boolean shouldResetTick) {

@@ -29,9 +29,11 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
     @Override
     public void registerControllers(AzAnimationControllerContainer<Drone> animationControllerContainer) {
         animationControllerContainer.add(
-            new AzAnimationController<>(this, "base_controller", 5)
+            AzAnimationController.builder(this, "base_controller")
+                .setTransitionLength(5)
                 .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
                 .triggerableAnim(WALK_ANIMATION_NAME, WALK_ANIMATION)
+                .build()
         );
     }
 

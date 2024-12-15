@@ -31,9 +31,10 @@ public class DoomHunterAnimator extends AzEntityAnimator<DoomHunter> {
     @Override
     public void registerControllers(AzAnimationControllerContainer<DoomHunter> animationControllerContainer) {
         animationControllerContainer.add(
-            new AzAnimationController<>(this, "base_controller", 0)
+            AzAnimationController.builder(this, "base_controller")
                 .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
                 .triggerableAnim(MELEE_ANIMATION_NAME, MELEE_ANIMATION)
+                .build()
         );
     }
 

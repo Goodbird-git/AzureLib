@@ -27,8 +27,9 @@ public class FacehuggerAnimator extends AzEntityAnimator<Facehugger> {
     @Override
     public void registerControllers(AzAnimationControllerContainer<Facehugger> animationControllerContainer) {
         animationControllerContainer.add(
-            new AzAnimationController<>(this, "base_controller", 0)
+            AzAnimationController.builder(this, "base_controller")
                 .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
+                .build()
         );
     }
 
