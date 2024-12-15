@@ -15,26 +15,16 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
     @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.getAnimationController();
-        var keyFrameProcessor = controller.getKeyFrameProcessor();
+        var keyFrameProcessor = controller.getKeyFrameManager().getKeyFrameProcessor();
         var animContext = context.getAnimationContext();
         var timer = animContext.timer();
+
         var animatable = animContext.animatable();
         var animTime = timer.getAnimTime();
         var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
 
-        var stateMachine = context.getStateMachine();
-
         // Run the current animation.
         keyFrameProcessor.runCurrentAnimation(animatable, animTime, crashWhenCantFindBone);
-
-        // Can we transition?
-        var canTransition = controller.getTransitionLength() == 0 && stateMachine.shouldResetTick();
-
-        // TODO: Remove the transition state check here, potentially.
-        if (canTransition && stateMachine.isTransitioning()) {
-            // Then transition.
-            controller.setCurrentAnimation(controller.getAnimationQueue().next());
-        }
     }
 
     @Override
