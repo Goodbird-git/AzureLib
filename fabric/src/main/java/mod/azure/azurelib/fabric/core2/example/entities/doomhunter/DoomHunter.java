@@ -1,4 +1,4 @@
-package mod.azure.azurelib.fabric.core2.example.azure;
+package mod.azure.azurelib.fabric.core2.example.entities.doomhunter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;

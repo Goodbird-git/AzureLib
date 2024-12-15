@@ -1,4 +1,4 @@
-package mod.azure.azurelib.fabric.core2.example.azure;
+package mod.azure.azurelib.fabric.core2.example.entities.doomhunter;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;

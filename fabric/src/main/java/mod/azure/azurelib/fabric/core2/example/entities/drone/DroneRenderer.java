@@ -1,4 +1,4 @@
-package mod.azure.azurelib.fabric.core2.example;
+package mod.azure.azurelib.fabric.core2.example.entities.drone;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
