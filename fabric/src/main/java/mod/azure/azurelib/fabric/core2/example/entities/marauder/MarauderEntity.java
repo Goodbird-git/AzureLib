@@ -16,7 +16,7 @@ import mod.azure.azurelib.fabric.core2.example.MoveAnalysis;
 
 public class MarauderEntity extends Monster {
 
-    private final AzAnimationDispatcher<MarauderEntity> animationDispatcher;
+    private final AzAnimationDispatcher animationDispatcher;
 
     private final MoveAnalysis moveAnalysis;
 
@@ -24,7 +24,7 @@ public class MarauderEntity extends Monster {
 
     public MarauderEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.animationDispatcher = new AzAnimationDispatcher<>(this);
+        this.animationDispatcher = new AzAnimationDispatcher(this);
         this.moveAnalysis = new MoveAnalysis(this);
     }
 
