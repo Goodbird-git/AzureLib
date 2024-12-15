@@ -19,6 +19,7 @@ import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.core2.example.blocks.StargateRender;
 import mod.azure.azurelib.fabric.core2.example.entities.doomhunter.DoomHunterRenderer;
 import mod.azure.azurelib.fabric.core2.example.entities.drone.DroneRenderer;
+import mod.azure.azurelib.fabric.core2.example.entities.marauder.MarauderRenderer;
 
 public final class ClientListener implements ClientModInitializer {
 
@@ -70,6 +71,7 @@ public final class ClientListener implements ClientModInitializer {
 
         EntityRendererRegistry.register(ExampleEntityTypes.DRONE, DroneRenderer::new);
         EntityRendererRegistry.register(ExampleEntityTypes.DOOMHUNTER, DoomHunterRenderer::new);
+        EntityRendererRegistry.register(ExampleEntityTypes.MARAUDER, MarauderRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(FabricAzureLibMod.STARGATE, RenderType.translucent());
         BlockEntityRenderers.register(
             ExampleEntityTypes.STARGATE,

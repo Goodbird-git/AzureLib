@@ -14,6 +14,7 @@ import mod.azure.azurelib.fabric.FabricAzureLibMod;
 import mod.azure.azurelib.fabric.core2.example.blocks.StargateBlockEntity;
 import mod.azure.azurelib.fabric.core2.example.entities.doomhunter.DoomHunter;
 import mod.azure.azurelib.fabric.core2.example.entities.drone.Drone;
+import mod.azure.azurelib.fabric.core2.example.entities.marauder.MarauderEntity;
 
 public class ExampleEntityTypes {
 
@@ -25,6 +26,11 @@ public class ExampleEntityTypes {
     public static final EntityType<DoomHunter> DOOMHUNTER = register(
         "doomhunter",
         EntityType.Builder.of(DoomHunter::new, MobCategory.MONSTER).sized(3.0f, 7.0f)
+    );
+
+    public static final EntityType<MarauderEntity> MARAUDER = register(
+        "marauder",
+        EntityType.Builder.of(MarauderEntity::new, MobCategory.MONSTER).sized(1.5f, 2.6f)
     );
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
@@ -43,5 +49,6 @@ public class ExampleEntityTypes {
     public static void initialize() {
         FabricDefaultAttributeRegistry.register(DRONE, Drone.createMonsterAttributes());
         FabricDefaultAttributeRegistry.register(DOOMHUNTER, DoomHunter.createMonsterAttributes());
+        FabricDefaultAttributeRegistry.register(MARAUDER, MarauderEntity.createMonsterAttributes());
     }
 }
