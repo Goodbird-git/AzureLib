@@ -8,10 +8,13 @@ public class MoveAnalysis {
     private final Entity entity;
 
     private int lastTick;
+
     private Vec3 lastPosition;
 
     private double deltaX;
+
     private double deltaY;
+
     private double deltaZ;
 
     public MoveAnalysis(Entity entity) {
