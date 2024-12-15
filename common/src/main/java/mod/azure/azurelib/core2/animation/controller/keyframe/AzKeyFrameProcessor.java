@@ -14,20 +14,25 @@ import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core.object.Axis;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
+import mod.azure.azurelib.core2.animation.controller.AzBoneSnapshotCache;
 import mod.azure.azurelib.core2.model.AzBone;
 
 public class AzKeyFrameProcessor<T> {
 
     private final AzAnimationController<T> animationController;
 
-    private final AzBoneAnimationQueueCache boneAnimationQueueCache;
+    private final AzBoneAnimationQueueCache<T> boneAnimationQueueCache;
+
+    private final AzBoneSnapshotCache boneSnapshotCache;
 
     public AzKeyFrameProcessor(
         AzAnimationController<T> animationController,
-        AzBoneAnimationQueueCache boneAnimationQueueCache
+        AzBoneAnimationQueueCache<T> boneAnimationQueueCache,
+        AzBoneSnapshotCache boneSnapshotCache
     ) {
         this.animationController = animationController;
         this.boneAnimationQueueCache = boneAnimationQueueCache;
+        this.boneSnapshotCache = boneSnapshotCache;
     }
 
     /**
@@ -171,7 +176,6 @@ public class AzKeyFrameProcessor<T> {
         boolean crashWhenCantFindBone,
         double adjustedTick
     ) {
-        var boneSnapshotCache = animationController.getBoneSnapshotCache();
         var currentAnimation = animationController.getCurrentAnimation();
         var transitionLength = animationController.getTransitionLength();
 

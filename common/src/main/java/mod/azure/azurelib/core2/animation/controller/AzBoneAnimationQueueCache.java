@@ -5,11 +5,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
 
+import mod.azure.azurelib.core.animation.EasingType;
+import mod.azure.azurelib.core2.animation.AzAnimationContext;
+import mod.azure.azurelib.core2.animation.AzBoneAnimationUpdateUtil;
 import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 
-public class AzBoneAnimationQueueCache {
+public class AzBoneAnimationQueueCache<T> {
 
     private final Map<String, AzBoneAnimationQueue> boneAnimationQueues;
 
@@ -18,6 +22,22 @@ public class AzBoneAnimationQueueCache {
     public AzBoneAnimationQueueCache(AzBoneCache boneCache) {
         this.boneAnimationQueues = new Object2ObjectOpenHashMap<>();
         this.boneCache = boneCache;
+    }
+
+    public void update(AzAnimationContext<T> context, Function<T, EasingType> overridingEasingTypeFunction) {
+        var animatable = context.animatable();
+        var boneSnapshots = boneCache.getBoneSnapshotsByName();
+        var easingType = overridingEasingTypeFunction.apply(animatable);
+
+        for (var boneAnimation : boneAnimationQueues.values()) {
+            var bone = boneAnimation.bone();
+            var snapshot = boneSnapshots.get(bone.getName());
+            var initialSnapshot = bone.getInitialAzSnapshot();
+
+            AzBoneAnimationUpdateUtil.updateRotations(boneAnimation, bone, easingType, initialSnapshot, snapshot);
+            AzBoneAnimationUpdateUtil.updatePositions(boneAnimation, bone, easingType, snapshot);
+            AzBoneAnimationUpdateUtil.updateScale(boneAnimation, bone, easingType, snapshot);
+        }
     }
 
     public Collection<AzBoneAnimationQueue> values() {

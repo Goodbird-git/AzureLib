@@ -22,12 +22,10 @@ public abstract class AzAnimator<T> {
     // Holds animation controllers.
     private final AzAnimationControllerContainer<T> animationControllerContainer;
 
-    // Processes animations.
-    private final AzAnimationProcessor<T> animationProcessor;
+    public boolean reloadAnimations;
 
     protected AzAnimator(AzAnimatorConfig config) {
         this.animationControllerContainer = new AzAnimationControllerContainer<>();
-        this.animationProcessor = new AzAnimationProcessor<>(this);
 
         var boneCache = new AzBoneCache();
         var timer = new AzAnimationTimer(config);
@@ -54,7 +52,15 @@ public abstract class AzAnimator<T> {
         var shouldRun = !minecraft.isPaused() || config.shouldPlayAnimationsWhileGamePaused();
 
         if (shouldRun && !boneCache.isEmpty()) {
-            animationProcessor.update(reusableContext);
+
+            for (var controller : animationControllerContainer.getAll()) {
+                controller.update(reusableContext);
+            }
+
+            this.reloadAnimations = false;
+
+            boneCache.update(reusableContext);
+            timer.finishFirstTick();
         }
 
         setCustomAnimations(animatable);
