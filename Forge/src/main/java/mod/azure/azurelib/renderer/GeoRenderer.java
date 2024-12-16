@@ -290,7 +290,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
             if (quad == null)
                 continue;
 
-            Vector3f normal = quad.normal().copy();
+            Vector3f normal = quad.getNormal().copy();
 
             normal.transform(normalisedPoseState);
 
@@ -303,7 +303,7 @@ public interface GeoRenderer<T extends GeoAnimatable> {
      * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link IVertexBuilder buffer} for rendering
      */
     default void createVerticesOfQuad(GeoQuad quad, Matrix4f poseState, Vector3f normal, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        for (GeoVertex vertex : quad.vertices()) {
+        for (GeoVertex vertex : quad.getVertices()) {
             Vector4f vector4f = new Vector4f(vertex.position().x(), vertex.position().y(), vertex.position().z(), 1);
 
             vector4f.transform(poseState);

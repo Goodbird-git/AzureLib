@@ -7,6 +7,9 @@
  */
 package mod.azure.azurelib.loading.json.raw;
 
+import mod.azure.azurelib.AzureLib;
+import mod.azure.azurelib.core.utils.MathHelper;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.JsonDeserializer;
@@ -20,28 +23,34 @@ import net.minecraft.util.GsonHelper;
  * Container class for face UV information, only used in deserialization at startup
  */
 public class FaceUV {
-	@Nullable
-	public String materialInstance;
-	public double[] uv;
-	public double[] uvSize;
 
-	public FaceUV(@Nullable String materialInstance, double[] uv, double[] uvSize) {
+	private final String materialInstance;
+	private final double[] uv;
+	private final double[] uvSize;
+	private final Rotation uvRotation;
+
+	public FaceUV(@Nullable String materialInstance, double[] uv, double[] uvSize, Rotation uvRotation) {
 		this.materialInstance = materialInstance;
 		this.uv = uv;
 		this.uvSize = uvSize;
+		this.uvRotation = uvRotation;
 	}
 
 	@Nullable
-	public String materialInstance() {
+	public String getMaterialInstance() {
 		return materialInstance;
 	}
 
-	public double[] uv() {
+	public double[] getUv() {
 		return uv;
 	}
 
-	public double[] uvSize() {
+	public double[] getUvSize() {
 		return uvSize;
+	}
+
+	public Rotation getUvRotation() {
+		return uvRotation;
 	}
 
 	public static JsonDeserializer<FaceUV> deserializer() throws JsonParseException {
@@ -50,8 +59,41 @@ public class FaceUV {
 			String materialInstance = GsonHelper.getAsString(obj, "material_instance", null);
 			double[] uv = JsonUtil.jsonArrayToDoubleArray(GsonHelper.getAsJsonArray(obj, "uv", null));
 			double[] uvSize = JsonUtil.jsonArrayToDoubleArray(GsonHelper.getAsJsonArray(obj, "uv_size", null));
+			Rotation uvRotation = Rotation.fromValue(GsonHelper.getAsInt(obj, "uv_rotation", 0));
 
-			return new FaceUV(materialInstance, uv, uvSize);
+			return new FaceUV(materialInstance, uv, uvSize, uvRotation);
 		};
+	}
+
+	public enum Rotation {
+
+		NONE,
+		CLOCKWISE_90,
+		CLOCKWISE_180,
+		CLOCKWISE_270;
+
+		public static Rotation fromValue(int value) throws JsonParseException {
+			try {
+				return Rotation.values()[(value % 360) / 90];
+			} catch (Exception e) {
+				AzureLib.LOGGER.error("Invalid Face UV rotation: " + value);
+				return fromValue(Mth.floor(Math.abs(value) / 90f) * 90);
+			}
+		}
+
+		public float[] rotateUvs(float u, float v, float uWidth, float vHeight) {
+			switch (this) {
+				case NONE:
+					return new float[]{u, v, uWidth, v, uWidth, vHeight, u, vHeight};
+				case CLOCKWISE_90:
+					return new float[]{uWidth, v, uWidth, vHeight, u, vHeight, u, v};
+				case CLOCKWISE_180:
+					return new float[]{uWidth, vHeight, u, vHeight, u, v, uWidth, v};
+				case CLOCKWISE_270:
+					return new float[]{u, vHeight, u, v, uWidth, v, uWidth, vHeight};
+				default:
+					throw new IllegalStateException("Unexpected value: " + this);
+			}
+		}
 	}
 }
