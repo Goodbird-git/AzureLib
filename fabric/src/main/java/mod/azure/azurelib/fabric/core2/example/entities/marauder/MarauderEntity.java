@@ -57,14 +57,12 @@ public class MarauderEntity extends Monster {
         if (this.level().isClientSide) {
             var isMovingOnGround = moveAnalysis.isMovingHorizontally() && onGround();
             String animName;
-            if (isMovingOnGround && !this.isAggressive() && this.tickCount >= 300 && this.isAlive()) {
-                animName = "walk";
-            } else if (isMovingOnGround && this.isAggressive() && this.tickCount >= 300 && this.isAlive()) {
-                animName = "run";
-            } else if (this.tickCount < 300 && this.isAlive()) {
-                animName = "spawn";
-            }  else if (!this.isAlive()) {
+            if (!this.isAlive()) {
                 animName = "death";
+            } else if (this.tickCount < 300) {
+                animName = "spawn";
+            } else if (isMovingOnGround) {
+                animName = this.isAggressive() ? "run" : "walk";
             } else {
                 animName = "idle";
             }
