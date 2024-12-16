@@ -8,19 +8,10 @@ import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
 public class DroneAnimator extends AzEntityAnimator<Drone> {
 
     private static final ResourceLocation ANIMATIONS = AzureLib.modResource("animations/entity/drone.animation.json");
-
-    private static final String IDLE_ANIMATION_NAME = "animation.idle";
-
-    private static final String WALK_ANIMATION_NAME = "animation.walk";
-
-    private static final AzRawAnimation IDLE_ANIMATION = AzRawAnimation.begin().thenLoop(IDLE_ANIMATION_NAME);
-
-    private static final AzRawAnimation WALK_ANIMATION = AzRawAnimation.begin().thenLoop(WALK_ANIMATION_NAME);
 
     public DroneAnimator() {
         super(AzAnimatorConfig.defaultConfig());
@@ -29,16 +20,29 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
     @Override
     public void registerControllers(AzAnimationControllerContainer<Drone> animationControllerContainer) {
         animationControllerContainer.add(
-            AzAnimationController.builder(this, "base_controller")
+            AzAnimationController.builder(this, DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME)
                 .setTransitionLength(5)
-                .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
-                .triggerableAnim(WALK_ANIMATION_NAME, WALK_ANIMATION)
+                .triggerableAnim(
+                    DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME,
+                    DroneAnimationRefs.ATTACK_CLAW_ANIMATION
+                )
+                .triggerableAnim(
+                    DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME,
+                    DroneAnimationRefs.ATTACK_TAIL_ANIMATION
+                )
+                .triggerableAnim(DroneAnimationRefs.CRAWL_ANIMATION_NAME, DroneAnimationRefs.CRAWL_ANIMATION)
+                .triggerableAnim(DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION)
+                .triggerableAnim(DroneAnimationRefs.IDLE_ANIMATION_NAME, DroneAnimationRefs.IDLE_ANIMATION)
+                .triggerableAnim(DroneAnimationRefs.RUN_ANIMATION_NAME, DroneAnimationRefs.RUN_ANIMATION)
+                .triggerableAnim(DroneAnimationRefs.SWIM_ANIMATION_NAME, DroneAnimationRefs.SWIM_ANIMATION)
+                .triggerableAnim(DroneAnimationRefs.WALK_ANIMATION_NAME, DroneAnimationRefs.WALK_ANIMATION)
                 .build()
         );
     }
 
     @Override
-    public @NotNull ResourceLocation getAnimationLocation(Drone drone) {
+    public @NotNull ResourceLocation getAnimationLocation(Drone animatable) {
         return ANIMATIONS;
     }
+
 }

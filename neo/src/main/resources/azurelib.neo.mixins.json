@@ -11,6 +11,7 @@
   "client": [
     "EntityMixin_AzEntityAnimatorCache",
     "ItemRendererAccessor",
+    "LivingEntityMixin_EDARefManagement",
     "MinecraftMixin",
     "MixinItemRenderer",
     "TextureManagerMixin"
