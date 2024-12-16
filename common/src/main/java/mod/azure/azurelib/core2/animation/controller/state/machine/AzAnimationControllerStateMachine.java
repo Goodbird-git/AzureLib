@@ -7,8 +7,8 @@ import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPause
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationTransitionState;
-import mod.azure.azurelib.core2.util.StateMachine;
-import mod.azure.azurelib.core2.util.StateMachineContext;
+import mod.azure.azurelib.core2.util.state.StateMachine;
+import mod.azure.azurelib.core2.util.state.StateMachineContext;
 
 public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimationControllerStateMachine.Context<T>, AzAnimationState<T>> {
 

@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.util;
+package mod.azure.azurelib.core2.util.state;
 
 public abstract class StateMachine<C extends StateMachineContext, T extends State<C>> {
 

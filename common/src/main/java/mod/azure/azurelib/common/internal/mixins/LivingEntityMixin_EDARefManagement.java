@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import mod.azure.azurelib.core2.util.EDARef;
-import mod.azure.azurelib.core2.util.EDARefHolder;
+import mod.azure.azurelib.core2.util.eda.EDARef;
+import mod.azure.azurelib.core2.util.eda.EDARefHolder;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin_EDARefManagement implements EDARefHolder {

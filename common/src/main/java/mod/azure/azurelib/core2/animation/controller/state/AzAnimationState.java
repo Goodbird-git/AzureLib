@@ -1,7 +1,7 @@
 package mod.azure.azurelib.core2.animation.controller.state;
 
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
-import mod.azure.azurelib.core2.util.State;
+import mod.azure.azurelib.core2.util.state.State;
 
 public abstract class AzAnimationState<T> implements State<AzAnimationControllerStateMachine.Context<T>> {
 

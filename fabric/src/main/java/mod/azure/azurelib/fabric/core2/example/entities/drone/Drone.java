@@ -20,8 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import org.jetbrains.annotations.NotNull;
 
-import mod.azure.azurelib.core2.util.EDARef;
-import mod.azure.azurelib.core2.util.EDARefSerializers;
+import mod.azure.azurelib.core2.util.eda.EDARef;
+import mod.azure.azurelib.core2.util.eda.EDARefSerializers;
 import mod.azure.azurelib.fabric.core2.example.MoveAnalysis;
 import mod.azure.azurelib.fabric.core2.example.entities.drone.util.CrawlPathNodeEvaluator;
 

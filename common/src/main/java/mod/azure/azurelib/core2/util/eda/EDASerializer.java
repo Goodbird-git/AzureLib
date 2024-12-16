@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.util;
+package mod.azure.azurelib.core2.util.eda;
 
 import net.minecraft.nbt.CompoundTag;
 
