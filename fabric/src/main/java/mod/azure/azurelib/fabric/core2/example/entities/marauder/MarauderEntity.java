@@ -40,19 +40,11 @@ public class MarauderEntity extends Monster {
         return 2.0F;
     }
 
-    /**
-     * TODO: Get this working, also figure out how to change death rotation from the default 90, needs to be 0 for
-     * animation to be correct
-     */
     @Override
     protected void tickDeath() {
         ++this.deathTime;
         if (this.deathTime >= 80 && !this.level().isClientSide() && !this.isRemoved()) {
-            if (this.level().isClientSide && !this.hasPlayedDeath) {
-                animationDispatcher.dispatchFromClient("base_controller", "death");
-                this.hasPlayedDeath = true;
-            }
-            this.level().broadcastEntityEvent(this, (byte) 60);
+            this.level().broadcastEntityEvent(this, (byte)60);
             this.remove(RemovalReason.KILLED);
         }
     }
@@ -65,16 +57,30 @@ public class MarauderEntity extends Monster {
         if (this.level().isClientSide) {
             var isMovingOnGround = moveAnalysis.isMovingHorizontally() && onGround();
             String animName;
-            if (isMovingOnGround && !this.isAggressive() && this.isAlive()) {
+            if (isMovingOnGround && !this.isAggressive() && this.tickCount >= 300 && this.isAlive()) {
                 animName = "walk";
-            } else if (isMovingOnGround && this.isAggressive() && this.isAlive()) {
+            } else if (isMovingOnGround && this.isAggressive() && this.tickCount >= 300 && this.isAlive()) {
                 animName = "run";
+            } else if (this.tickCount < 300 && this.isAlive()) {
+                animName = "spawn";
+            }  else if (!this.isAlive()) {
+                animName = "death";
             } else {
                 animName = "idle";
             }
             animationDispatcher.dispatchFromClient("base_controller", animName);
         } else {
-            // Doing other stuff server-side...
+            if (this.tickCount < 300 && this.isAlive()) {
+                if (this.getNavigation() instanceof AzureNavigation azureNavigation) {
+                    azureNavigation.hardStop();
+                    azureNavigation.stop();
+                }
+                this.setYBodyRot(0);
+                this.setYHeadRot(0);
+                this.getEyePosition(90);
+                this.setXRot(0);
+                this.setYRot(0);
+            }
         }
     }
 
@@ -83,7 +89,7 @@ public class MarauderEntity extends Monster {
      */
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.15F));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.2F));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.6F, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
     }
