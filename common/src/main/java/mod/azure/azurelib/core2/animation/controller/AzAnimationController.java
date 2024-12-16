@@ -39,6 +39,8 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         return new AzAnimationControllerBuilder<>(animator, name);
     }
 
+    private final AzAnimationControllerTimer<T> controllerTimer;
+
     private final ToDoubleFunction<T> animationSpeedModifier;
 
     private final AzAnimationQueue animationQueue;
@@ -61,8 +63,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     protected boolean needsAnimationReload = false;
 
-    protected double tickOffset;
-
     /**
      * Instantiates a new {@code AnimationController}.<br>
      *
@@ -82,6 +82,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         super(name, triggerableAnimations);
 
         this.animator = animator;
+        this.controllerTimer = new AzAnimationControllerTimer<>(this);
         this.transitionLength = transitionTickTime;
         this.animationSpeedModifier = animationSpeedModifier;
         this.overrideEasingTypeFunction = overrideEasingTypeFunction;
@@ -224,13 +225,11 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         }
 
         var animatable = context.animatable();
-        var timer = context.timer();
-        var seekTime = timer.getAnimTime();
 
         handleAnimationState(animatable);
 
         // Adjust the tick before making any updates.
-        stateMachine.getContext().adjustedTick = adjustTick(animatable, seekTime);
+        controllerTimer.update();
         // Run state machine updates.
         stateMachine.update();
 
@@ -242,7 +241,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
             }
 
             this.needsAnimationReload = false;
-            stateMachine.getContext().adjustedTick = adjustTick(animatable, seekTime);
+            controllerTimer.update();
         }
 
         boneAnimationQueueCache.update(context, overrideEasingTypeFunction);
@@ -260,30 +259,12 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         boneAnimationQueueCache.clear();
     }
 
-    /**
-     * Adjust a tick value depending on the controller's current state and speed modifier.<br>
-     * Is used when starting a new animation, transitioning, and a few other key areas
-     *
-     * @param tick The currently used tick value
-     * @return 0 if {@link AzAnimationControllerStateMachine#shouldResetTick()} is set to false, or a
-     *         {@link AzAnimationController#animationSpeedModifier} modified value otherwise
-     */
-    public double adjustTick(T animatable, double tick) {
-        if (!stateMachine.shouldResetTick()) {
-            return animationSpeedModifier.applyAsDouble(animatable) * Math.max(tick - tickOffset, 0);
-        }
-
-        if (!stateMachine.isStopped()) {
-            this.tickOffset = tick;
-        }
-
-        stateMachine.setShouldResetTick(false);
-
-        return 0;
-    }
-
     public AzAnimationQueue getAnimationQueue() {
         return animationQueue;
+    }
+
+    public ToDoubleFunction<T> getAnimationSpeedModifier() {
+        return animationSpeedModifier;
     }
 
     public AzBoneAnimationQueueCache<T> getBoneAnimationQueueCache() {
@@ -292,6 +273,10 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     public AzBoneSnapshotCache getBoneSnapshotCache() {
         return boneSnapshotCache;
+    }
+
+    public AzAnimationControllerTimer<T> getControllerTimer() {
+        return controllerTimer;
     }
 
     public @Nullable AzQueuedAnimation getCurrentAnimation() {
@@ -308,10 +293,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     public double getTransitionLength() {
         return transitionLength;
-    }
-
-    public void setShouldResetTick(boolean shouldResetTick) {
-        stateMachine.setShouldResetTick(shouldResetTick);
     }
 
     public void setCurrentAnimation(AzQueuedAnimation currentAnimation) {

@@ -36,11 +36,10 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
      */
     public void execute(@NotNull AzQueuedAnimation currentAnimation, T animatable, boolean crashWhenCantFindBone) {
         var keyFrameCallbackHandler = animationController.getKeyFrameManager().keyFrameCallbackHandler();
-        var stateMachine = animationController.getStateMachine();
-        var stateMachineContext = stateMachine.getContext();
+        var controllerTimer = animationController.getControllerTimer();
         var transitionLength = animationController.getTransitionLength();
 
-        final double finalAdjustedTick = stateMachineContext.adjustedTick;
+        final double finalAdjustedTick = controllerTimer.getAdjustedTick();
 
         MolangParser.INSTANCE.setMemoizedValue(MolangQueries.ANIM_TIME, () -> finalAdjustedTick / 20d);
 
@@ -58,16 +57,17 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
             var rotationKeyFrames = boneAnimation.rotationKeyFrames();
             var positionKeyFrames = boneAnimation.positionKeyFrames();
             var scaleKeyFrames = boneAnimation.scaleKeyFrames();
-            var adjustedTick = stateMachineContext.adjustedTick;
+            var adjustedTick = controllerTimer.getAdjustedTick();
 
             updateRotation(rotationKeyFrames, boneAnimationQueue, adjustedTick);
             updatePosition(positionKeyFrames, boneAnimationQueue, adjustedTick);
             updateScale(scaleKeyFrames, boneAnimationQueue, adjustedTick);
         }
 
-        stateMachineContext.adjustedTick += transitionLength;
+        // TODO: Is this correct???
+        controllerTimer.addToAdjustedTick(transitionLength);
 
-        keyFrameCallbackHandler.handle(animatable, stateMachineContext.adjustedTick);
+        keyFrameCallbackHandler.handle(animatable, controllerTimer.getAdjustedTick());
     }
 
     private void updateRotation(

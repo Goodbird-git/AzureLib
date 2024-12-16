@@ -10,26 +10,22 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
     @Override
     public void onEnter(AzAnimationControllerStateMachine.Context<T> context) {
         super.onEnter(context);
-        context.getStateMachine().setShouldResetTick(true);
+        var controller = context.getAnimationController();
+        var controllerTimer = controller.getControllerTimer();
+        controllerTimer.reset();
     }
 
     @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.getAnimationController();
+        var controllerTimer = controller.getControllerTimer();
         var boneSnapshotCache = controller.getBoneSnapshotCache();
         var animContext = context.getAnimationContext();
-        var timer = animContext.timer();
-        var animatable = animContext.animatable();
-        var animTime = timer.getAnimTime();
 
         var stateMachine = context.getStateMachine();
         var boneCache = animContext.boneCache();
 
-        if (stateMachine.shouldResetTick()) {
-            context.adjustedTick = controller.adjustTick(animatable, animTime);
-        }
-
-        if (context.adjustedTick == 0 || stateMachine.isJustStarting()) {
+        if (controllerTimer.getAdjustedTick() == 0 || stateMachine.isJustStarting()) {
             controller.setCurrentAnimation(controller.getAnimationQueue().next());
 
             controller.getKeyFrameManager().keyFrameCallbackHandler().reset();
@@ -43,7 +39,7 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
             boneSnapshotCache.put(controller.getCurrentAnimation(), snapshots.values());
         }
 
-        var hasFinishedTransitioning = context.adjustedTick >= controller.getTransitionLength();
+        var hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.getTransitionLength();
 
         if (hasFinishedTransitioning) {
             // If we've exceeded the amount of time we should be transitioning, then switch to play state.
@@ -56,12 +52,7 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
             var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
             var keyFrameTransitioner = controller.getKeyFrameManager().getKeyFrameTransitioner();
 
-            keyFrameTransitioner.transition(bones, crashWhenCantFindBone, context.adjustedTick);
+            keyFrameTransitioner.transition(bones, crashWhenCantFindBone, controllerTimer.getAdjustedTick());
         }
-    }
-
-    @Override
-    public void onExit(AzAnimationControllerStateMachine.Context<T> context) {
-        super.onExit(context);
     }
 }

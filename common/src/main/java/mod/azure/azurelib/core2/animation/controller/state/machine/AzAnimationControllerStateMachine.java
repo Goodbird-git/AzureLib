@@ -16,8 +16,6 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
 
     private boolean isJustStarting;
 
-    private boolean shouldResetTick = false;
-
     public AzAnimationControllerStateMachine(
         StateHolder<T> stateHolder,
         AzAnimationController<T> animationController,
@@ -76,14 +74,6 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
         return getState() == stateHolder.transitionState;
     }
 
-    public void setShouldResetTick(boolean shouldResetTick) {
-        this.shouldResetTick = shouldResetTick;
-    }
-
-    public boolean shouldResetTick() {
-        return shouldResetTick;
-    }
-
     public boolean isJustStarting() {
         return isJustStarting;
     }
@@ -106,8 +96,6 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
         private AzAnimationController<T> animationController;
 
         private AzAnimationControllerStateMachine<T> stateMachine;
-
-        public double adjustedTick;
 
         private Context() {}
 

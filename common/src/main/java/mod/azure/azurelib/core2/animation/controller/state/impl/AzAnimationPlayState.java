@@ -12,18 +12,15 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
     public void onEnter(AzAnimationControllerStateMachine.Context<T> context) {
         super.onEnter(context);
         var controller = context.getAnimationController();
-        var stateMachine = context.getStateMachine();
-        var animContext = context.getAnimationContext();
-        var animatable = animContext.animatable();
-        var animTime = animContext.timer().getAnimTime();
+        var controllerTimer = controller.getControllerTimer();
 
-        stateMachine.setShouldResetTick(true);
-        context.adjustedTick = controller.adjustTick(animatable, animTime);
+        controllerTimer.reset();
     }
 
     @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.getAnimationController();
+        var controllerTimer = controller.getControllerTimer();
         var currentAnimation = controller.getCurrentAnimation();
 
         if (currentAnimation == null) {
@@ -36,7 +33,7 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
         var animContext = context.getAnimationContext();
         var animatable = animContext.animatable();
-        var hasAnimationFinished = context.adjustedTick >= currentAnimation.animation().length();
+        var hasAnimationFinished = controllerTimer.getAdjustedTick() >= currentAnimation.animation().length();
 
         if (hasAnimationFinished) {
             tryPlayAgain(context, currentAnimation);
@@ -74,7 +71,6 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
         // If we can play the next animation successfully, then let's do that.
         stateMachine.transition();
-        controller.setShouldResetTick(true);
         controller.setCurrentAnimation(nextAnimation);
     }
 
@@ -97,16 +93,11 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
     private void playAgain(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.getAnimationController();
+        var controllerTimer = controller.getControllerTimer();
         var keyFrameManager = controller.getKeyFrameManager();
         var keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
 
-        var animContext = context.getAnimationContext();
-        var timer = animContext.timer();
-        var animatable = animContext.animatable();
-        var animTime = timer.getAnimTime();
-
-        controller.setShouldResetTick(true);
-        context.adjustedTick = controller.adjustTick(animatable, animTime);
+        controllerTimer.reset();
         keyFrameCallbackHandler.reset();
     }
 }
