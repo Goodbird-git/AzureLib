@@ -69,7 +69,7 @@ public interface BakedModelFactory {
 			if (faceUV == null)
 				return null;
 
-			return GeoQuad.build(vertices.verticesForQuad(direction, false, mirror || cube.mirror() == Boolean.TRUE), faceUV.uv(), faceUV.uvSize(),
+			return GeoQuad.build(vertices.verticesForQuad(direction, false, mirror || cube.mirror() == Boolean.TRUE), faceUV.uv(), faceUV.uvSize(), faceUV.uvRotation(),
 					textureWidth, textureHeight, mirror, direction);
 		}
 
@@ -103,7 +103,7 @@ public interface BakedModelFactory {
 			};
 		};
 
-		return GeoQuad.build(vertices.verticesForQuad(direction, true, mirror || cube.mirror() == Boolean.TRUE), uvData[0], uvData[1], textureWidth, textureHeight, mirror, direction);
+		return GeoQuad.build(vertices.verticesForQuad(direction, true, mirror || cube.mirror() == Boolean.TRUE), uvData[0], uvData[1], FaceUV.Rotation.NONE, textureWidth, textureHeight, mirror, direction);
 	}
 
 	static BakedModelFactory getForNamespace(String namespace) {
