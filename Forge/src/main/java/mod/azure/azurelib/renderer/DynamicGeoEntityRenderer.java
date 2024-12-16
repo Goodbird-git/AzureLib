@@ -167,7 +167,7 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
             return;
         }
 
-        for (GeoVertex vertex : quad.vertices()) {
+        for (GeoVertex vertex : quad.getVertices()) {
             Vector4f vector4f = new Vector4f(vertex.position().getX(), vertex.position().getY(), vertex.position().getZ(), 1);
             float texU = (vertex.texU() * entityTextureSize.getA()) / boneTextureSize.getA();
             float texV = (vertex.texV() * entityTextureSize.getB()) / boneTextureSize.getB();
