@@ -109,7 +109,7 @@ public class GeoGlowingTextureMeta {
 			int color = originalImage.getPixelRGBA(pixel.x, pixel.y);
 
 			if (pixel.alpha > 0)
-				color = NativeImage.getCombined(pixel.alpha, NativeImage.getBlue(color), NativeImage.getGreen(color), NativeImage.getRed(color));
+				color = NativeImage.getCombined(pixel.alpha, NativeImage.getRed(color), NativeImage.getGreen(color), NativeImage.getBlue(color));
 
 			newImage.setPixelRGBA(pixel.x, pixel.y, color);
 			originalImage.setPixelRGBA(pixel.x, pixel.y, 0);
