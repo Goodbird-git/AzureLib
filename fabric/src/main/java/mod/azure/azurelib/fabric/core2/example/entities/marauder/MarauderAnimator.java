@@ -1,12 +1,15 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.NotNull;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
@@ -48,6 +51,42 @@ public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
         animationControllerContainer.add(
             AzAnimationController.builder(this, "base_controller")
                 .setTransitionLength(5)
+                .setKeyFrameCallbacks(
+                    AzKeyFrameCallbacks.<MarauderEntity>builder()
+                        .setSoundKeyframeHandler(
+                            event -> {
+                                if (event.getKeyframeData().getSound().equals("walk")) {
+                                    event.getAnimatable()
+                                        .level()
+                                        .playLocalSound(
+                                            event.getAnimatable().getX(),
+                                            event.getAnimatable().getY(),
+                                            event.getAnimatable().getZ(),
+                                            SoundEvents.METAL_STEP,
+                                            SoundSource.HOSTILE,
+                                            1.00F,
+                                            1.0F,
+                                            true
+                                        );
+                                }
+                                if (event.getKeyframeData().getSound().equals("run")) {
+                                    event.getAnimatable()
+                                        .level()
+                                        .playLocalSound(
+                                            event.getAnimatable().getX(),
+                                            event.getAnimatable().getY(),
+                                            event.getAnimatable().getZ(),
+                                            SoundEvents.SKELETON_STEP,
+                                            SoundSource.HOSTILE,
+                                            1.00F,
+                                            1.0F,
+                                            true
+                                        );
+                                }
+                            }
+                        )
+                        .build()
+                )
                 .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
                 .triggerableAnim(WALK_ANIMATION_NAME, WALK_ANIMATION)
                 .triggerableAnim(RUN_ANIMATION_NAME, RUN_ANIMATION)

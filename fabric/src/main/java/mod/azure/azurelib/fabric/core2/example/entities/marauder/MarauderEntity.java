@@ -1,5 +1,6 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import mod.azure.azurelib.common.api.common.ai.pathing.AzureNavigation;
@@ -84,4 +86,7 @@ public class MarauderEntity extends Monster {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.6F, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
     }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {}
 }
