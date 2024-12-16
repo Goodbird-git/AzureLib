@@ -1,4 +1,7 @@
-v2.3.27
+v2.3.28
 
-- Remove format version check, unneeded
-- Add GeoItemRender#useNewOffset() which will remove the y offset on item displays, due to change in BlockBench 4.11 item displays
+- Port color changes from a geckolib pr that was left to die
+- Port UV Face Rotation support
+- Port GeoGlowingTextureMeta data using wrong colors
+
+**WARNING 1.21.1 IS CURRENTLY UNDERGOING A HEAVY REWRITE THAT WILL BE RELEASED AS ALPHA FOR TESTING, DO NOT UPDATE TO THAT ALPHA UNLESS THE MODS USING AZURELIB REQUIRE IT**
