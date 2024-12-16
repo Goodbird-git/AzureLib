@@ -57,6 +57,7 @@ public class MarauderEntity extends Monster {
         }
     }
 
+    @Override
     public void tick() {
         super.tick();
         moveAnalysis.update();
