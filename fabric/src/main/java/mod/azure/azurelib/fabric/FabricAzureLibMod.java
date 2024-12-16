@@ -28,6 +28,7 @@ import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPa
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.core2.example.armors.DoomArmor;
 import mod.azure.azurelib.fabric.core2.example.blocks.Stargate;
+import mod.azure.azurelib.fabric.core2.example.items.AzPistol;
 import mod.azure.azurelib.fabric.core2.example.items.Pistol;
 import mod.azure.azurelib.fabric.platform.FabricAzureLibNetwork;
 
@@ -63,6 +64,11 @@ public final class FabricAzureLibMod implements ModInitializer {
             BuiltInRegistries.ITEM,
             AzureLib.modResource("pistol"),
             new Pistol()
+        );
+        Registry.register(
+            BuiltInRegistries.ITEM,
+            AzureLib.modResource("az_pistol"),
+            new AzPistol()
         );
         Registry.register(
             BuiltInRegistries.ITEM,

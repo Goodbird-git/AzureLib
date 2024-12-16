@@ -22,20 +22,20 @@ import mod.azure.azurelib.core2.render.pipeline.impl.AzEntityRendererPipeline;
 
 public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<T> {
 
+    private final AzEntityRendererPipeline<T> rendererPipeline;
+
+    private final List<AzRenderLayer<T>> renderLayers;
+
     private float scaleWidth = 1;
 
     private float scaleHeight = 1;
-
-    private final AzEntityRendererPipeline<T> azEntityRendererPipeline;
-
-    private final List<AzRenderLayer<T>> renderLayers;
 
     @Nullable
     private AzEntityAnimator<T> reusedAzEntityAnimator;
 
     protected AzEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.azEntityRendererPipeline = new AzEntityRendererPipeline<>(this);
+        this.rendererPipeline = new AzEntityRendererPipeline<>(this);
         this.renderLayers = new ObjectArrayList<>();
     }
 
@@ -72,7 +72,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         reusedAzEntityAnimator = cachedEntityAnimator;
 
         // Execute the render pipeline.
-        azEntityRendererPipeline.render(
+        rendererPipeline.render(
             poseStack,
             azBakedModel,
             entity,

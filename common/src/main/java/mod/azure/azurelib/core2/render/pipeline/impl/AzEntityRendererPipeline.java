@@ -26,14 +26,14 @@ import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
 public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeline<T> {
 
-    private final AzEntityRenderer<T> azEntityRenderer;
+    private final AzEntityRenderer<T> entityRenderer;
 
     protected Matrix4f entityRenderTranslations = new Matrix4f();
 
     protected Matrix4f modelRenderTranslations = new Matrix4f();
 
-    public AzEntityRendererPipeline(AzEntityRenderer<T> azEntityRenderer) {
-        this.azEntityRenderer = azEntityRenderer;
+    public AzEntityRendererPipeline(AzEntityRenderer<T> entityRenderer) {
+        this.entityRenderer = entityRenderer;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
     @Override
     protected @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
-        return azEntityRenderer.getTextureLocation(animatable);
+        return entityRenderer.getTextureLocation(animatable);
     }
 
     /**
@@ -73,8 +73,8 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
         scaleModelForRender(
             context,
-            this.azEntityRenderer.getScaleWidth(),
-            this.azEntityRenderer.getScaleHeight(),
+            this.entityRenderer.getScaleWidth(),
+            this.entityRenderer.getScaleHeight(),
             isReRender
         );
     }
@@ -184,7 +184,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             //
             // this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
 
-            var animator = azEntityRenderer.getAnimator();
+            var animator = entityRenderer.getAnimator();
 
             if (animator != null) {
                 animator.animate(animatable);
@@ -194,7 +194,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         if (!animatable.isInvisibleTo(Minecraft.getInstance().player)) {
-            AzEntityRendererPipeline.super.actuallyRender(context, isReRender);
+            super.actuallyRender(context, isReRender);
         }
 
         poseStack.popPose();
@@ -208,7 +208,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         var animatable = context.animatable();
 
         if (!animatable.isSpectator()) {
-            AzEntityRendererPipeline.super.applyRenderLayers(context);
+            super.applyRenderLayers(context);
         }
     }
 
@@ -235,7 +235,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(
-                RenderUtils.translateMatrix(localMatrix, azEntityRenderer.getRenderOffset(entity, 1).toVector3f())
+                RenderUtils.translateMatrix(localMatrix, entityRenderer.getRenderOffset(entity, 1).toVector3f())
             );
             bone.setWorldSpaceMatrix(
                 RenderUtils.translateMatrix(new Matrix4f(localMatrix), entity.position().toVector3f())
@@ -267,7 +267,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         var partialTick = context.partialTick();
         var poseStack = context.poseStack();
 
-        azEntityRenderer.superRender(entity, 0, partialTick, poseStack, bufferSource, packedLight);
+        entityRenderer.superRender(entity, 0, partialTick, poseStack, bufferSource, packedLight);
 
         if (!(entity instanceof Mob mob)) {
             return;
@@ -279,7 +279,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             return;
         }
 
-        AzEntityLeashRenderUtil.renderLeash(azEntityRenderer, mob, partialTick, poseStack, bufferSource, leashHolder);
+        AzEntityLeashRenderUtil.renderLeash(entityRenderer, mob, partialTick, poseStack, bufferSource, leashHolder);
     }
 
     /**

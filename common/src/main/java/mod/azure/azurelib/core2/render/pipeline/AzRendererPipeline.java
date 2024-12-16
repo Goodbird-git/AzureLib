@@ -295,6 +295,10 @@ public abstract class AzRendererPipeline<T> {
         }
     }
 
+    public AzRendererPipelineContext<T> getContext() {
+        return context;
+    }
+
     /**
      * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
      */
