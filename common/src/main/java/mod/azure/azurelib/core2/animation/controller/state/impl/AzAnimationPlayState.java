@@ -4,7 +4,7 @@ import mod.azure.azurelib.core2.animation.controller.state.AzAnimationState;
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
-public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
+public class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
     public AzAnimationPlayState() {}
 
@@ -38,7 +38,6 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
         if (hasAnimationFinished) {
             tryPlayAgain(context, currentAnimation);
             // Regardless of if we should play again, the animation has finished, so return.
-            return;
         }
 
         // The animation is still running at this point, proceed with updating the bones according to keyframes.
@@ -91,7 +90,7 @@ public final class AzAnimationPlayState<T> extends AzAnimationState<T> {
         }
     }
 
-    private void playAgain(AzAnimationControllerStateMachine.Context<T> context) {
+    protected void playAgain(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.getAnimationController();
         var controllerTimer = controller.getControllerTimer();
         var keyFrameManager = controller.getKeyFrameManager();
