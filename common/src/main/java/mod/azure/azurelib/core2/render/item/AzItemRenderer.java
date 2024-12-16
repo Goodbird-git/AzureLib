@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -28,11 +28,11 @@ import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.impl.AzItemRendererPipeline;
 
-public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutLevelRenderer {
+public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-    private final AzItemRendererPipeline<T> rendererPipeline;
+    private final AzItemRendererPipeline rendererPipeline;
 
-    private final List<AzRenderLayer<T>> renderLayers;
+    private final List<AzRenderLayer<ItemStack>> renderLayers;
 
     protected float scaleWidth = 1;
 
@@ -41,7 +41,7 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
     protected boolean useEntityGuiLighting = false;
 
     @Nullable
-    private AzItemAnimator<T> reusedAzItemAnimator;
+    private AzItemAnimator reusedAzItemAnimator;
 
     protected AzItemRenderer() {
         this(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
@@ -49,13 +49,13 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
 
     protected AzItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
         super(dispatcher, modelSet);
-        this.rendererPipeline = new AzItemRendererPipeline<>(this);
+        this.rendererPipeline = new AzItemRendererPipeline(this);
         this.renderLayers = new ObjectArrayList<>();
     }
 
-    protected abstract @NotNull ResourceLocation getModelLocation(T item);
+    protected abstract @NotNull ResourceLocation getModelLocation(ItemStack item);
 
-    public abstract @NotNull ResourceLocation getTextureLocation(T item);
+    public abstract @NotNull ResourceLocation getTextureLocation(ItemStack item);
 
     @Override
     public void renderByItem(
@@ -67,12 +67,11 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
         int packedOverlay
     ) {
         @SuppressWarnings("unchecked")
-        var animatable = (T) stack.getItem();
-        var currentItemStack = stack;
+        var animatable = stack;
         // TODO: What was this used for?
         var renderPerspective = transformType;
 
-        var cachedEntityAnimator = provideAnimator(animatable);
+        var cachedEntityAnimator = provideAnimator(stack, animatable);
         var azBakedModel = provideBakedModel(animatable);
 
         if (cachedEntityAnimator != null && azBakedModel != null) {
@@ -86,7 +85,7 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
             renderInGui(
                 animatable,
                 azBakedModel,
-                currentItemStack,
+                stack,
                 transformType,
                 poseStack,
                 bufferSource,
@@ -106,7 +105,7 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
                 renderType,
                 false,
                 // TODO: Why the null check here?
-                currentItemStack != null && currentItemStack.hasFoil()
+                stack != null && stack.hasFoil()
             );
 
             rendererPipeline.render(
@@ -129,7 +128,7 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
      * Just includes some additional required transformations and settings.
      */
     protected void renderInGui(
-        T animatable,
+        ItemStack animatable,
         AzBakedModel azBakedModel,
         ItemStack currentItemStack,
         ItemDisplayContext transformType,
@@ -179,38 +178,35 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
         poseStack.popPose();
     }
 
-    protected @Nullable AzItemAnimator<T> createAnimator() {
+    protected @Nullable AzItemAnimator createAnimator() {
         return null;
     }
 
-    protected @Nullable AzBakedModel provideBakedModel(@NotNull T item) {
+    protected @Nullable AzBakedModel provideBakedModel(@NotNull ItemStack item) {
         var modelResourceLocation = getModelLocation(item);
         return AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
     }
 
-    protected @Nullable AzItemAnimator<T> provideAnimator(T item) {
-        // // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for
-        // the
-        // // item.
-        // var accessor = AzAnimatorAccessor.cast(item);
-        // // TODO: This won't work for items. Need to use an itemStack + id, instead.
-        // var cachedItemAnimator = (AzItemAnimator<T>) accessor.getAnimatorOrNull();
-        //
-        // if (cachedItemAnimator == null) {
-        // // If the cached animator is null, create a new one. We use a separate reference here just for some
-        // cachedItemAnimator = createAnimator();
-        //
-        // if (cachedItemAnimator != null) {
-        // // If the new animator we created is not null, then register its controllers.
-        // cachedItemAnimator.registerControllers(cachedItemAnimator.getAnimationControllerContainer());
-        // // Also cache the animator so that the next time we fetch the animator, it's ready for us.
-        // accessor.setAnimator(cachedItemAnimator);
-        // }
-        // }
-        //
-        // return cachedItemAnimator;
-        // FIXME:
-        return null;
+    protected @Nullable AzItemAnimator provideAnimator(ItemStack itemStack, ItemStack item) {
+        // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for
+        // the item.
+         var accessor = AzAnimatorAccessor.cast(itemStack);
+         // TODO: This won't work for items. Need to use an itemStack + id, instead.
+         var cachedItemAnimator = (AzItemAnimator) accessor.getAnimatorOrNull();
+
+         if (cachedItemAnimator == null) {
+            // If the cached animator is null, create a new one. We use a separate reference here just for some
+             cachedItemAnimator = createAnimator();
+
+             if (cachedItemAnimator != null) {
+                 // If the new animator we created is not null, then register its controllers.
+                 cachedItemAnimator.registerControllers(cachedItemAnimator.getAnimationControllerContainer());
+                 // Also cache the animator so that the next time we fetch the animator, it's ready for us.
+                 accessor.setAnimator(cachedItemAnimator);
+             }
+         }
+
+         return cachedItemAnimator;
     }
 
     /**
@@ -218,7 +214,7 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
      * <p>
      * This can help with improperly lit 3d models
      */
-    public AzItemRenderer<T> useAlternateGuiLighting() {
+    public AzItemRenderer useAlternateGuiLighting() {
         this.useEntityGuiLighting = true;
         return this;
     }
@@ -226,14 +222,14 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
     /**
      * Sets a scale override for this renderer, telling AzureLib to pre-scale the model
      */
-    public AzItemRenderer<T> withScale(float scale) {
+    public AzItemRenderer withScale(float scale) {
         return withScale(scale, scale);
     }
 
     /**
      * Sets a scale override for this renderer, telling AzureLib to pre-scale the model
      */
-    public AzItemRenderer<T> withScale(float scaleWidth, float scaleHeight) {
+    public AzItemRenderer withScale(float scaleWidth, float scaleHeight) {
         this.scaleWidth = scaleWidth;
         this.scaleHeight = scaleHeight;
         return this;
@@ -242,19 +238,19 @@ public abstract class AzItemRenderer<T extends Item> extends BlockEntityWithoutL
     /**
      * Returns the list of registered {@link GeoRenderLayer GeoRenderLayers} for this renderer
      */
-    public List<AzRenderLayer<T>> getRenderLayers() {
+    public List<AzRenderLayer<ItemStack>> getRenderLayers() {
         return renderLayers;
     }
 
     /**
      * Adds a {@link GeoRenderLayer} to this renderer, to be called after the main model is rendered each frame
      */
-    public AzItemRenderer<T> addRenderLayer(AzRenderLayer<T> renderLayer) {
+    public AzItemRenderer addRenderLayer(AzRenderLayer<ItemStack> renderLayer) {
         this.renderLayers.add(renderLayer);
         return this;
     }
 
-    public @Nullable AzItemAnimator<T> getAnimator() {
+    public @Nullable AzItemAnimator getAnimator() {
         return reusedAzItemAnimator;
     }
 

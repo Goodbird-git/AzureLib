@@ -3,6 +3,7 @@ package mod.azure.azurelib.core2.render.pipeline.impl;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -15,25 +16,25 @@ import mod.azure.azurelib.core2.render.item.AzItemRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
-public class AzItemRendererPipeline<T extends Item> extends AzRendererPipeline<T> {
+public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
 
-    private final AzItemRenderer<T> itemRenderer;
+    private final AzItemRenderer itemRenderer;
 
     protected Matrix4f itemRenderTranslations = new Matrix4f();
 
     protected Matrix4f modelRenderTranslations = new Matrix4f();
 
-    public AzItemRendererPipeline(AzItemRenderer<T> itemRenderer) {
+    public AzItemRendererPipeline(AzItemRenderer itemRenderer) {
         this.itemRenderer = itemRenderer;
     }
 
     @Override
-    protected AzRendererPipelineContext<T> createContext(AzRendererPipeline<T> rendererPipeline) {
-        return new AzItemRendererPipelineContext<>(this);
+    protected AzRendererPipelineContext<ItemStack> createContext(AzRendererPipeline<ItemStack> rendererPipeline) {
+        return new AzItemRendererPipelineContext(rendererPipeline);
     }
 
     @Override
-    protected @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
+    protected @NotNull ResourceLocation getTextureLocation(@NotNull ItemStack animatable) {
         return itemRenderer.getTextureLocation(animatable);
     }
 
@@ -43,7 +44,7 @@ public class AzItemRendererPipeline<T extends Item> extends AzRendererPipeline<T
      * {@link PoseStack} translations made here are kept until the end of the render process
      */
     @Override
-    public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
+    public void preRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
         var poseStack = context.poseStack();
         this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -60,7 +61,7 @@ public class AzItemRendererPipeline<T extends Item> extends AzRendererPipeline<T
      * called directly after
      */
     @Override
-    public void actuallyRender(AzRendererPipelineContext<T> context, boolean isReRender) {
+    public void actuallyRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
         if (!isReRender) {
             var animatable = context.animatable();
             var animator = itemRenderer.getAnimator();
@@ -81,7 +82,7 @@ public class AzItemRendererPipeline<T extends Item> extends AzRendererPipeline<T
      * Renders the provided {@link AzBone} and its associated child bones
      */
     @Override
-    public void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
+    public void renderRecursively(AzRendererPipelineContext<ItemStack> context, AzBone bone, boolean isReRender) {
         if (bone.isTrackingMatrices()) {
             var animatable = context.animatable();
             var poseStack = context.poseStack();
@@ -105,14 +106,14 @@ public class AzItemRendererPipeline<T extends Item> extends AzRendererPipeline<T
      * @see AnimatableTexture#setAndUpdate(ResourceLocation, int)
      */
     @Override
-    public void updateAnimatedTextureFrame(T animatable) {
+    public void updateAnimatedTextureFrame(ItemStack animatable) {
         AnimatableTexture.setAndUpdate(
             getTextureLocation(animatable),
-            Item.getId(animatable) + (int) RenderUtils.getCurrentTick()
+            Item.getId(animatable.getItem()) + (int) RenderUtils.getCurrentTick()
         );
     }
 
-    public Vec3 getRenderOffset(Item entity, float f) {
+    public Vec3 getRenderOffset(ItemStack itemStack, float f) {
         return Vec3.ZERO;
     }
 
