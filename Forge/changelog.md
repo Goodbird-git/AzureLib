@@ -1,4 +1,4 @@
-v1.0.9
+v1.0.10
 
-- Remove format version check, unneeded
-- Add GeoItemRender#useNewOffset() which will remove the y offset on item displays, due to change in BlockBench 4.11 item displays
+- Port UV Face Rotation support
+- Port GeoGlowingTextureMeta using wrong colors
