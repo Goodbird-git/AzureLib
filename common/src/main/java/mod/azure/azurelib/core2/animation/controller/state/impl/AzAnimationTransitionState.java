@@ -25,7 +25,7 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
         var stateMachine = context.getStateMachine();
         var boneCache = animContext.boneCache();
 
-        if (controllerTimer.getAdjustedTick() == 0 || stateMachine.isJustStarting()) {
+        if (controllerTimer.getAdjustedTick() == 0) {
             controller.setCurrentAnimation(controller.getAnimationQueue().next());
 
             controller.getKeyFrameManager().keyFrameCallbackHandler().reset();

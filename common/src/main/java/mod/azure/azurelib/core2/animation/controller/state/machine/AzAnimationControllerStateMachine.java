@@ -14,8 +14,6 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
 
     private final StateHolder<T> stateHolder;
 
-    private boolean isJustStarting;
-
     public AzAnimationControllerStateMachine(
         StateHolder<T> stateHolder,
         AzAnimationController<T> animationController,
@@ -35,11 +33,6 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
 
     public void update() {
         super.update(getContext());
-
-        var animContext = getContext().animationContext;
-        var timer = animContext.timer();
-
-        setJustStarting(timer.isFirstTick());
     }
 
     public void pause() {
@@ -72,14 +65,6 @@ public class AzAnimationControllerStateMachine<T> extends StateMachine<AzAnimati
 
     public boolean isTransitioning() {
         return getState() == stateHolder.transitionState;
-    }
-
-    public boolean isJustStarting() {
-        return isJustStarting;
-    }
-
-    public void setJustStarting(boolean justStarting) {
-        isJustStarting = justStarting;
     }
 
     public record StateHolder<T>(

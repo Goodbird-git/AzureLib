@@ -41,17 +41,13 @@ public abstract class AzAnimator<T> {
         reusableContext.animatable = animatable;
 
         var boneCache = reusableContext.boneCache();
-        var config = reusableContext.config();
         var timer = reusableContext.timer();
 
         timer.tick();
 
         preAnimationSetup(animatable, timer.getAnimTime());
 
-        var minecraft = Minecraft.getInstance();
-        var shouldRun = !minecraft.isPaused() || config.shouldPlayAnimationsWhileGamePaused();
-
-        if (shouldRun && !boneCache.isEmpty()) {
+        if (!boneCache.isEmpty()) {
 
             for (var controller : animationControllerContainer.getAll()) {
                 controller.update(reusableContext);
@@ -60,7 +56,6 @@ public abstract class AzAnimator<T> {
             this.reloadAnimations = false;
 
             boneCache.update(reusableContext);
-            timer.finishFirstTick();
         }
 
         setCustomAnimations(animatable);
