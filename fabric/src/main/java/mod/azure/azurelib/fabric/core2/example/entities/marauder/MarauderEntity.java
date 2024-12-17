@@ -22,8 +22,6 @@ public class MarauderEntity extends Monster {
 
     private final MoveAnalysis moveAnalysis;
 
-    private boolean hasPlayedDeath = false;
-
     public MarauderEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.animationDispatcher = new AzAnimationDispatcher(this);
