@@ -8,17 +8,12 @@ public class AzAnimationTimer {
 
     private final AzAnimatorConfig config;
 
-    // Remnants from AnimatableManager.
-    private double lastUpdateTime;
-
-    private boolean isFirstTick = true;
-
-    private double firstTickTime = -1;
-
     // Remnants from GeoModel.
     private double animTime;
 
     private double lastGameTickTime;
+
+    private boolean wasPausedLastFrame;
 
     public AzAnimationTimer(AzAnimatorConfig config) {
         this.config = config;
@@ -26,38 +21,39 @@ public class AzAnimationTimer {
 
     public void tick() {
         var minecraft = Minecraft.getInstance();
-        // TODO: If encountering rendering smoothness issues, break glass (this used to be a DataTickets.TICK fetch).
-        var currentTick = RenderUtils.getCurrentTick();
+        var currentRenderTick = RenderUtils.getCurrentTick();
 
-        if (firstTickTime == -1) {
-            firstTickTime = currentTick + minecraft.getTimer().getGameTimeDeltaTicks();
+        if (minecraft.isPaused()) {
+            if (!wasPausedLastFrame) {
+                // If this is the first frame of the game pause time, we need to set a flag.
+                this.wasPausedLastFrame = true;
+            }
+
+            if (!config.shouldPlayAnimationsWhileGamePaused()) {
+                // If we cannot play animations while the game is paused, then return early.
+                return;
+            }
         }
 
-        double currentFrameTime = currentTick - firstTickTime;
-        boolean isReRender = !isFirstTick && currentFrameTime == lastUpdateTime;
+        // Compute the delta render tick for this frame. This calculation by default does not account for the game
+        // pause state, which means that the difference here could be massive by the time the player unpauses.
+        var deltaRenderTick = currentRenderTick - lastGameTickTime;
 
-        // TODO: Figure out why this was here to begin with.
-        // if (isReRender && instanceId == this.lastRenderedInstance) {
-        // return;
-        // }
-
-        if (!isReRender && (!minecraft.isPaused() || config.shouldPlayAnimationsWhileGamePaused())) {
-            this.lastUpdateTime = currentFrameTime;
-
-            this.animTime += lastUpdateTime - this.lastGameTickTime;
-            this.lastGameTickTime = lastUpdateTime;
+        if (wasPausedLastFrame && !minecraft.isPaused()) {
+            // If this is the first frame of the game play time, we need to set a flag and adjust the deltaRenderTick.
+            this.wasPausedLastFrame = false;
+            // To account for the deltaRenderTick being massive on exiting the game pause state, we simply set
+            // it to 0. This will result in no difference being added to animTime, allowing animations to
+            // continue right where it left off.
+            deltaRenderTick = 0;
         }
+
+        // Add the deltaRenderTick to animTime. animTime is what controls the progress of animations.
+        this.animTime += deltaRenderTick;
+        this.lastGameTickTime = currentRenderTick;
     }
 
     public double getAnimTime() {
         return animTime;
-    }
-
-    public boolean isFirstTick() {
-        return this.isFirstTick;
-    }
-
-    protected void finishFirstTick() {
-        this.isFirstTick = false;
     }
 }
