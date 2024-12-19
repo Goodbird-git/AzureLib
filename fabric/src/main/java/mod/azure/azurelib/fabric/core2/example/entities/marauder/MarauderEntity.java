@@ -3,7 +3,7 @@ package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
@@ -85,7 +85,7 @@ public class MarauderEntity extends Monster {
      */
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.2F));
+        this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.3F));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.6F, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
     }
