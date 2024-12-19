@@ -1,10 +1,10 @@
 package mod.azure.azurelib.core2.animation.dispatch.command;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
-import mod.azure.azurelib.core2.animation.dispatch.command.action.codec.AzDispatchCommandCodec;
-
 import java.util.Collection;
 import java.util.List;
+
+import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.codec.AzDispatchCommandCodec;
 
 public class AzDispatchCommand {
 

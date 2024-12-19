@@ -9,7 +9,10 @@ public class AzDispatchControllerCommandBuilder extends AzDispatchCommandBuilder
         return this;
     }
 
-    public AzDispatchControllerCommandBuilder playAnimation(String animationName, UnaryOperator<AzDispatchAnimationCommandBuilder> builderUnaryOperator) {
+    public AzDispatchControllerCommandBuilder playAnimation(
+        String animationName,
+        UnaryOperator<AzDispatchAnimationCommandBuilder> builderUnaryOperator
+    ) {
         // TODO:
         return this;
     }

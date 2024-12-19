@@ -1,13 +1,14 @@
 package mod.azure.azurelib.core2.animation.dispatch;
 
+import net.minecraft.world.entity.Entity;
+
+import java.util.List;
+
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import net.minecraft.world.entity.Entity;
-
-import java.util.List;
 
 public record AzDispatchExecutor(
     List<AzDispatchCommand> commands,

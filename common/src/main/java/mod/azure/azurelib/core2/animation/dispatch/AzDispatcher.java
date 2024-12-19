@@ -1,10 +1,11 @@
 package mod.azure.azurelib.core2.animation.dispatch;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
 
 public class AzDispatcher {
 
@@ -20,7 +21,10 @@ public class AzDispatcher {
         return new AzDispatchExecutor(commands, AzDispatchSide.SERVER);
     }
 
-    private static @NotNull ArrayList<AzDispatchCommand> unifyCommands(AzDispatchCommand command, AzDispatchCommand[] additionalCommands) {
+    private static @NotNull ArrayList<AzDispatchCommand> unifyCommands(
+        AzDispatchCommand command,
+        AzDispatchCommand[] additionalCommands
+    ) {
         var commands = new ArrayList<AzDispatchCommand>();
         commands.add(command);
         commands.addAll(List.of(additionalCommands));

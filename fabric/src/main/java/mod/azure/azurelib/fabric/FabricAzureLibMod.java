@@ -1,6 +1,5 @@
 package mod.azure.azurelib.fabric;
 
-import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -21,6 +20,7 @@ import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.AnimDataSyncPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimDataSyncPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimDataSyncPacket;

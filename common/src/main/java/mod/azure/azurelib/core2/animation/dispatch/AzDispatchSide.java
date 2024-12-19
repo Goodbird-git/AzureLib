@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public enum AzDispatchSide implements StringRepresentable {
+
     CLIENT(0),
     SERVER(1);
 

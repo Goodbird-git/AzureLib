@@ -1,9 +1,9 @@
 package mod.azure.azurelib.core2.animation.dispatch.command;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 
 public class AzDispatchCommandBuilder<T extends AzDispatchCommandBuilder<T>> {
 
