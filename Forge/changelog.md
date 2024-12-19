@@ -1,4 +1,3 @@
-v1.0.10
+v1.0.11
 
-- Port UV Face Rotation support
-- Port GeoGlowingTextureMeta using wrong colors
+- Revert GeoGlowingTextureMeta change.
