@@ -36,8 +36,16 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
         var hasAnimationFinished = controllerTimer.getAdjustedTick() >= currentAnimation.animation().length();
 
         if (hasAnimationFinished) {
-            tryPlayAgain(context, currentAnimation);
-            // Regardless of if we should play again, the animation has finished, so return.
+            var shouldPlayAgain = shouldPlayAgain(context, currentAnimation);
+
+            if (shouldPlayAgain) {
+                // If it should play again, then we simply play the animation again.
+                playAgain(context);
+            } else {
+                // Nothing more to do at this point since we can't play the animation again, so stop.
+                context.getStateMachine().stop();
+                return;
+            }
         }
 
         // The animation is still running at this point, proceed with updating the bones according to keyframes.
@@ -73,7 +81,7 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
         controller.setCurrentAnimation(nextAnimation);
     }
 
-    private void tryPlayAgain(
+    private boolean shouldPlayAgain(
         AzAnimationControllerStateMachine.Context<T> context,
         AzQueuedAnimation currentAnimation
     ) {
@@ -81,13 +89,8 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
         var controller = context.getAnimationController();
 
         // If it has, we then need to see if the animation should play again.
-        var shouldPlayAgain = currentAnimation.loopType()
+        return currentAnimation.loopType()
             .shouldPlayAgain(animatable, controller, currentAnimation.animation());
-
-        if (shouldPlayAgain) {
-            // If it should play again, then we simply play the animation again.
-            playAgain(context);
-        }
     }
 
     protected void playAgain(AzAnimationControllerStateMachine.Context<T> context) {
