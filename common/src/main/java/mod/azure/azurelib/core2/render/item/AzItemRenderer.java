@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -22,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
+import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
@@ -190,23 +190,22 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
     protected @Nullable AzItemAnimator provideAnimator(ItemStack itemStack, ItemStack item) {
         // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for
         // the item.
-         var accessor = AzAnimatorAccessor.cast(itemStack);
-         // TODO: This won't work for items. Need to use an itemStack + id, instead.
-         var cachedItemAnimator = (AzItemAnimator) accessor.getAnimatorOrNull();
+        var accessor = AzAnimatorAccessor.cast(itemStack);
+        var cachedItemAnimator = (AzItemAnimator) accessor.getAnimatorOrNull();
 
-         if (cachedItemAnimator == null) {
+        if (cachedItemAnimator == null) {
             // If the cached animator is null, create a new one. We use a separate reference here just for some
-             cachedItemAnimator = createAnimator();
+            cachedItemAnimator = createAnimator();
 
-             if (cachedItemAnimator != null) {
-                 // If the new animator we created is not null, then register its controllers.
-                 cachedItemAnimator.registerControllers(cachedItemAnimator.getAnimationControllerContainer());
-                 // Also cache the animator so that the next time we fetch the animator, it's ready for us.
-                 accessor.setAnimator(cachedItemAnimator);
-             }
-         }
+            if (cachedItemAnimator != null) {
+                // If the new animator we created is not null, then register its controllers.
+                cachedItemAnimator.registerControllers(cachedItemAnimator.getAnimationControllerContainer());
+                // Also cache the animator so that the next time we fetch the animator, it's ready for us.
+                accessor.setAnimator(cachedItemAnimator);
+            }
+        }
 
-         return cachedItemAnimator;
+        return cachedItemAnimator;
     }
 
     /**
