@@ -1,11 +1,15 @@
 package mod.azure.azurelib.core2.animation.dispatch;
 
+import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.UUID;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.AzItemStackDispatchCommandPacket;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
@@ -16,25 +20,44 @@ public record AzDispatchExecutor(
 ) {
 
     public void sendForEntity(Entity entity) {
+        if (!canNotProceed(entity)) {
+            // TODO: Log here.
+            return;
+        }
+
         switch (origin) {
             case CLIENT -> dispatchFromClient(entity);
-            case SERVER -> dispatchFromServer(entity);
+            case SERVER -> handleServerDispatchForEntity(entity);
         }
     }
 
+    public void sendForItem(Entity entity, ItemStack itemStack) {
+        if (!canNotProceed(entity)) {
+            // TODO: Log here.
+            return;
+        }
+
+        // TODO: What if this isn't a PatchedDataComponentMap?
+        if (
+            itemStack.getComponents() instanceof PatchedDataComponentMap components && !components.has(
+                AzureLib.AZ_ID.get()
+            )
+        ) {
+            components.set(AzureLib.AZ_ID.get(), UUID.randomUUID());
+        }
+
+        switch (origin) {
+            case CLIENT -> dispatchFromClient(itemStack);
+            case SERVER -> handleServerDispatchForItem(entity, itemStack);
+        }
+    }
+
+    private <T> boolean canNotProceed(T animatable) {
+        var isLogicalClientSide = isClientSide(animatable);
+        return (origin == AzDispatchSide.CLIENT) == isLogicalClientSide;
+    }
+
     private <T> void dispatchFromClient(T animatable) {
-        if (origin != AzDispatchSide.CLIENT) {
-            AzureLib.LOGGER.warn("Dispatch origin mismatch - expected CLIENT, got {}.", origin);
-            return;
-        }
-
-        var isClientSide = isClientSide(animatable);
-
-        if (!isClientSide) {
-            AzureLib.LOGGER.warn("Attempted client-side animation dispatch from server side.");
-            return;
-        }
-
         var animator = AzAnimatorAccessor.getOrNull(animatable);
 
         if (animator != null) {
@@ -44,33 +67,21 @@ public record AzDispatchExecutor(
         }
     }
 
-    private <T> void dispatchFromServer(T animatable) {
-        if (origin != AzDispatchSide.SERVER) {
-            AzureLib.LOGGER.warn("Dispatch origin mismatch - expected SERVER, got {}.", origin);
-            return;
-        }
-
-        var isClientSide = isClientSide(animatable);
-
-        if (isClientSide) {
-            AzureLib.LOGGER.warn("Attempted server-side animation dispatch from client side.");
-            return;
-        }
-
-        if (animatable instanceof Entity entity) {
-            handleServerDispatchForEntity(entity);
-        }
-        // TODO: Armors
-        // TODO: Blocks
-        // TODO: Items
-    }
-
     private void handleServerDispatchForEntity(Entity entity) {
         var entityId = entity.getId();
 
         commands.forEach(command -> {
             // TODO: Buffer commands together.
             var packet = new AzEntityDispatchCommandPacket(entityId, command, origin);
+            Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
+        });
+    }
+
+    private void handleServerDispatchForItem(Entity entity, ItemStack itemStack) {
+        var uuid = itemStack.get(AzureLib.AZ_ID.get());
+        commands.forEach(command -> {
+            // TODO: Buffer commands together.
+            var packet = new AzItemStackDispatchCommandPacket(uuid, command, origin);
             Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         });
     }

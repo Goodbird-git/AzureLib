@@ -21,6 +21,7 @@ import mod.azure.azurelib.common.internal.common.network.packet.AnimDataSyncPack
 import mod.azure.azurelib.common.internal.common.network.packet.AnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
+import mod.azure.azurelib.common.internal.common.network.packet.AzItemStackDispatchCommandPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimDataSyncPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimDataSyncPacket;
@@ -39,6 +40,8 @@ public final class FabricAzureLibMod implements ModInitializer {
         BlockBehaviour.Properties.of().sound(SoundType.DRIPSTONE_BLOCK).strength(5.0f, 8.0f).noOcclusion()
     );
 
+    public static final Item AZ_PISTOL = new AzPistol();
+
     @Override
     public void onInitialize() {
         ConfigIO.FILE_WATCH_MANAGER.startService();
@@ -52,6 +55,8 @@ public final class FabricAzureLibMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AzEntityAnimTriggerPacket.TYPE, AzEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AzEntityDispatchCommandPacket.TYPE, AzEntityDispatchCommandPacket.CODEC);
+        PayloadTypeRegistry.playS2C()
+            .register(AzItemStackDispatchCommandPacket.TYPE, AzItemStackDispatchCommandPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(EntityAnimDataSyncPacket.TYPE, EntityAnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AnimTriggerPacket.TYPE, AnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AnimDataSyncPacket.TYPE, AnimDataSyncPacket.CODEC);
@@ -70,7 +75,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         Registry.register(
             BuiltInRegistries.ITEM,
             AzureLib.modResource("az_pistol"),
-            new AzPistol()
+            AZ_PISTOL
         );
         Registry.register(
             BuiltInRegistries.ITEM,

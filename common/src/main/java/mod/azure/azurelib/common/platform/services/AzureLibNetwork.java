@@ -30,6 +30,10 @@ public interface AzureLibNetwork {
         "az_entity_dispatch_command_sync"
     );
 
+    ResourceLocation AZ_ITEM_STACK_DISPATCH_COMMAND_SYNC_PACKET_ID = AzureLib.modResource(
+        "az_item_stack_dispatch_command_sync"
+    );
+
     ResourceLocation ENTITY_ANIM_DATA_SYNC_PACKET_ID = AzureLib.modResource("entity_anim_data_sync");
 
     ResourceLocation ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = AzureLib.modResource("entity_anim_trigger_sync");

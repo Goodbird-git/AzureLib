@@ -18,14 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.core2.render.item.AzItemRendererRegistry;
 
 /**
  * Render hook to inject AzureLib's ISTER rendering callback
- *
- * @deprecated
  */
 @Mixin(ItemRenderer.class)
-@Deprecated(forRemoval = true)
 public class MixinItemRenderer {
 
     @Inject(
@@ -45,9 +43,18 @@ public class MixinItemRenderer {
         BakedModel bakedModel,
         CallbackInfo ci
     ) {
-        if (itemStack.getItem() instanceof GeoItem)
+        // TODO: Remove this along with Geo-code.
+        if (itemStack.getItem() instanceof GeoItem) {
             RenderProvider.of(itemStack)
                 .getCustomRenderer()
                 .renderByItem(itemStack, transformType, poseStack, multiBufferSource, i, j);
+        }
+
+        var item = itemStack.getItem();
+        var renderer = AzItemRendererRegistry.getOrNull(item);
+
+        if (renderer != null) {
+            renderer.renderByItem(itemStack, transformType, poseStack, multiBufferSource, i, j);
+        }
     }
 }
