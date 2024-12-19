@@ -36,7 +36,8 @@ public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
 
     private static final AzRawAnimation WALK_ANIMATION = AzRawAnimation.begin().thenLoop(WALK_ANIMATION_NAME);
 
-    private static final AzRawAnimation SPAWN_ANIMATION = AzRawAnimation.begin().then(SPAWN_ANIMATION_NAME, AzLoopType.PLAY_ONCE);
+    private static final AzRawAnimation SPAWN_ANIMATION = AzRawAnimation.begin()
+        .then(SPAWN_ANIMATION_NAME, AzLoopType.PLAY_ONCE);
 
     private static final AzRawAnimation DEATH_ANIMATION = AzRawAnimation.begin()
         .then(DEATH_ANIMATION_NAME, AzLoopType.HOLD_ON_LAST_FRAME);
@@ -89,31 +90,31 @@ public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
                                 }
                                 if (event.getKeyframeData().getSound().equals("portal")) {
                                     event.getAnimatable()
-                                            .level()
-                                            .playLocalSound(
-                                                    event.getAnimatable().getX(),
-                                                    event.getAnimatable().getY(),
-                                                    event.getAnimatable().getZ(),
-                                                    SoundEvents.PORTAL_AMBIENT,
-                                                    SoundSource.HOSTILE,
-                                                    0.20F,
-                                                    1.0F,
-                                                    true
-                                            );
+                                        .level()
+                                        .playLocalSound(
+                                            event.getAnimatable().getX(),
+                                            event.getAnimatable().getY(),
+                                            event.getAnimatable().getZ(),
+                                            SoundEvents.PORTAL_AMBIENT,
+                                            SoundSource.HOSTILE,
+                                            0.20F,
+                                            1.0F,
+                                            true
+                                        );
                                 }
                                 if (event.getKeyframeData().getSound().equals("axe")) {
                                     event.getAnimatable()
-                                            .level()
-                                            .playLocalSound(
-                                                    event.getAnimatable().getX(),
-                                                    event.getAnimatable().getY(),
-                                                    event.getAnimatable().getZ(),
-                                                    SoundEvents.ENDER_EYE_LAUNCH,
-                                                    SoundSource.HOSTILE,
-                                                    1.00F,
-                                                    1.0F,
-                                                    true
-                                            );
+                                        .level()
+                                        .playLocalSound(
+                                            event.getAnimatable().getX(),
+                                            event.getAnimatable().getY(),
+                                            event.getAnimatable().getZ(),
+                                            SoundEvents.ENDER_EYE_LAUNCH,
+                                            SoundSource.HOSTILE,
+                                            1.00F,
+                                            1.0F,
+                                            true
+                                        );
                                 }
                             }
                         )

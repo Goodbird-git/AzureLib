@@ -42,7 +42,7 @@ public class MarauderEntity extends Monster {
     protected void tickDeath() {
         ++this.deathTime;
         if (this.deathTime >= 80 && !this.level().isClientSide() && !this.isRemoved()) {
-            this.level().broadcastEntityEvent(this, (byte)60);
+            this.level().broadcastEntityEvent(this, (byte) 60);
             this.remove(RemovalReason.KILLED);
         }
     }
