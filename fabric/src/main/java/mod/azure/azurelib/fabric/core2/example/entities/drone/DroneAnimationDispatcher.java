@@ -1,27 +1,53 @@
 package mod.azure.azurelib.fabric.core2.example.entities.drone;
 
 import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
+import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
 
 public class DroneAnimationDispatcher extends AzAnimationDispatcher {
 
-    public DroneAnimationDispatcher(Drone entity) {
-        super(entity);
+    private static final AzDispatchCommand ATTACK_CLAW_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME);
+
+    private static final AzDispatchCommand ATTACK_TAIL_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME);
+
+    private static final AzDispatchCommand CRAWL_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_ANIMATION_NAME);
+
+    private static final AzDispatchCommand CRAWL_HOLD_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME);
+
+    private static final AzDispatchCommand IDLE_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME);
+
+    private static final AzDispatchCommand RUN_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME);
+
+    private static final AzDispatchCommand WALK_COMMAND = AzDispatchCommand
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME);
+
+    private final Drone drone;
+
+    public DroneAnimationDispatcher(Drone drone) {
+        super(drone);
+        this.drone = drone;
     }
 
     public void clientCrawl() {
-        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_ANIMATION_NAME);
+        AzDispatcher.fromClient(CRAWL_COMMAND).sendForEntity(drone);
     }
 
     public void clientCrawlHold() {
-        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME);
+        AzDispatcher.fromClient(CRAWL_HOLD_COMMAND).sendForEntity(drone);
     }
 
     public void clientIdle() {
-        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME);
+        AzDispatcher.fromClient(IDLE_COMMAND).sendForEntity(drone);
     }
 
     public void clientRun() {
-        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME);
+        AzDispatcher.fromClient(RUN_COMMAND).sendForEntity(drone);
     }
 
     public void clientSwim() {
@@ -29,14 +55,14 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
     }
 
     public void clientWalk() {
-        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME);
+        AzDispatcher.fromClient(WALK_COMMAND).sendForEntity(drone);
     }
 
     public void serverClawAttack() {
-        dispatchFromServer(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME);
+        AzDispatcher.fromServer(ATTACK_CLAW_COMMAND).sendForEntity(drone);
     }
 
     public void serverTailAttack() {
-        dispatchFromServer(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME);
+        AzDispatcher.fromServer(ATTACK_TAIL_COMMAND).sendForEntity(drone);
     }
 }

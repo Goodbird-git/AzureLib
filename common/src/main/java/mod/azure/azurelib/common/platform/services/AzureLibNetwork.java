@@ -26,6 +26,8 @@ public interface AzureLibNetwork {
 
     ResourceLocation AZ_ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = AzureLib.modResource("az_entity_anim_trigger_sync");
 
+    ResourceLocation AZ_ENTITY_DISPATCH_COMMAND_SYNC_PACKET_ID = AzureLib.modResource("az_entity_dispatch_command_sync");
+
     ResourceLocation ENTITY_ANIM_DATA_SYNC_PACKET_ID = AzureLib.modResource("entity_anim_data_sync");
 
     ResourceLocation ENTITY_ANIM_TRIGGER_SYNC_PACKET_ID = AzureLib.modResource("entity_anim_trigger_sync");
