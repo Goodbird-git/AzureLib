@@ -124,6 +124,10 @@ public abstract class AzRendererPipelineContext<T> {
         return packedLight;
     }
 
+    public void setPackedLight(int packedLight) {
+        this.packedLight = packedLight;
+    }
+
     public int packedOverlay() {
         return packedOverlay;
     }
@@ -142,6 +146,10 @@ public abstract class AzRendererPipelineContext<T> {
 
     public @Nullable RenderType renderType() {
         return renderType;
+    }
+
+    public void setRenderType(@Nullable RenderType renderType) {
+        this.renderType = renderType;
     }
 
     public VertexConsumer vertexConsumer() {
