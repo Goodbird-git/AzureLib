@@ -34,7 +34,7 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
     }
 
     @Override
-    protected @NotNull ResourceLocation getTextureLocation(@NotNull ItemStack animatable) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull ItemStack animatable) {
         return itemRenderer.getTextureLocation(animatable);
     }
 

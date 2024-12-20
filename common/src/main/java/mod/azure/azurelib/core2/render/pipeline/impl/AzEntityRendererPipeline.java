@@ -42,7 +42,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     }
 
     @Override
-    protected @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
         return entityRenderer.getTextureLocation(animatable);
     }
 

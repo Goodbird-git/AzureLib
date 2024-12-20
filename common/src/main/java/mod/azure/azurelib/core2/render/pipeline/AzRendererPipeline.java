@@ -33,7 +33,7 @@ public abstract class AzRendererPipeline<T> {
 
     protected abstract AzRendererPipelineContext<T> createContext(AzRendererPipeline<T> rendererPipeline);
 
-    protected abstract @NotNull ResourceLocation getTextureLocation(@NotNull T animatable);
+    public abstract @NotNull ResourceLocation getTextureLocation(@NotNull T animatable);
 
     /**
      * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this
