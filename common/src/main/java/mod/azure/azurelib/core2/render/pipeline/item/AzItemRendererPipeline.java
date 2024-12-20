@@ -1,18 +1,17 @@
 package mod.azure.azurelib.core2.render.pipeline.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-import java.util.List;
-
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
+import mod.azure.azurelib.core2.render.AzItemRendererConfig;
 import mod.azure.azurelib.core2.render.item.AzItemRenderer;
-import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
@@ -25,8 +24,8 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
 
     protected Matrix4f modelRenderTranslations = new Matrix4f();
 
-    public AzItemRendererPipeline(AzItemRenderer itemRenderer) {
-        super();
+    public AzItemRendererPipeline(AzItemRendererConfig config, AzItemRenderer itemRenderer) {
+        super(config);
         this.itemRenderer = itemRenderer;
     }
 
@@ -41,18 +40,13 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
     }
 
     @Override
-    protected AzLayerRenderer<ItemStack> createLayerRenderer() {
-        return new AzLayerRenderer<>(this::getRenderLayers);
+    protected AzLayerRenderer<ItemStack> createLayerRenderer(AzRendererConfig<ItemStack> config) {
+        return new AzLayerRenderer<>(config::renderLayers);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull ItemStack animatable) {
         return itemRenderer.getTextureLocation(animatable);
-    }
-
-    @Override
-    protected List<AzRenderLayer<ItemStack>> getRenderLayers() {
-        return itemRenderer.getRenderLayers();
     }
 
     /**

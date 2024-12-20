@@ -20,11 +20,11 @@ public class MarauderRenderer extends AzEntityRenderer<MarauderEntity> {
     public MarauderRenderer(EntityRendererProvider.Context context) {
         super(
             AzEntityRendererConfig.<MarauderEntity>builder()
+                .addRenderLayer(new AzAutoGlowingLayer<>())
                 .setDeathMaxRotationProvider($ -> 0F)
                 .build(),
             context
         );
-        addRenderLayer(new AzAutoGlowingLayer<>());
     }
 
     @Override

@@ -2,18 +2,22 @@ package mod.azure.azurelib.core2.render;
 
 import net.minecraft.world.entity.Entity;
 
+import java.util.List;
 import java.util.function.Function;
 
-public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig {
+import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
+
+public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig<T> {
 
     private final Function<T, Float> deathMaxRotationProvider;
 
     private AzEntityRendererConfig(
+        List<AzRenderLayer<T>> renderLayers,
         float scaleHeight,
         float scaleWidth,
         Function<T, Float> deathMaxRotationProvider
     ) {
-        super(scaleHeight, scaleWidth);
+        super(renderLayers, scaleHeight, scaleWidth);
         this.deathMaxRotationProvider = deathMaxRotationProvider;
     }
 
@@ -30,13 +34,18 @@ public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig {
         return new Builder<>();
     }
 
-    public static class Builder<T extends Entity> extends AzRendererConfig.Builder {
+    public static class Builder<T extends Entity> extends AzRendererConfig.Builder<T> {
 
         private Function<T, Float> deathMaxRotationProvider;
 
         protected Builder() {
             super();
             this.deathMaxRotationProvider = $ -> 90F;
+        }
+
+        @Override
+        public Builder<T> addRenderLayer(AzRenderLayer<T> renderLayer) {
+            return (Builder<T>) super.addRenderLayer(renderLayer);
         }
 
         /**
@@ -54,6 +63,7 @@ public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig {
             var baseConfig = super.build();
 
             return new AzEntityRendererConfig<T>(
+                baseConfig.renderLayers(),
                 baseConfig.scaleHeight(),
                 baseConfig.scaleWidth(),
                 deathMaxRotationProvider

@@ -2,13 +2,12 @@ package mod.azure.azurelib.core2.render.pipeline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.model.AzBakedModel;
@@ -22,9 +21,9 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
 
     private final AzModelRenderer<T> modelRenderer;
 
-    protected AzRendererPipeline() {
+    protected AzRendererPipeline(AzRendererConfig<T> config) {
         this.context = createContext(this);
-        this.layerRenderer = createLayerRenderer();
+        this.layerRenderer = createLayerRenderer(config);
         this.modelRenderer = createModelRenderer(layerRenderer);
     }
 
@@ -32,14 +31,9 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
 
     protected abstract AzModelRenderer<T> createModelRenderer(AzLayerRenderer<T> layerRenderer);
 
-    protected abstract AzLayerRenderer<T> createLayerRenderer();
+    protected abstract AzLayerRenderer<T> createLayerRenderer(AzRendererConfig<T> config);
 
     public abstract @NotNull ResourceLocation getTextureLocation(@NotNull T animatable);
-
-    /**
-     * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
-     */
-    protected abstract List<AzRenderLayer<T>> getRenderLayers();
 
     /**
      * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this

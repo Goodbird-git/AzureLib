@@ -1,18 +1,25 @@
 package mod.azure.azurelib.core2.render;
 
-public class AzItemRendererConfig extends AzRendererConfig {
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+
+import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
+
+public class AzItemRendererConfig extends AzRendererConfig<ItemStack> {
 
     private final boolean useEntityGuiLighting;
 
     private final boolean useNewOffset;
 
     private AzItemRendererConfig(
+        List<AzRenderLayer<ItemStack>> renderLayers,
         float scaleHeight,
         float scaleWidth,
         boolean useEntityGuiLighting,
         boolean useNewOffset
     ) {
-        super(scaleHeight, scaleWidth);
+        super(renderLayers, scaleHeight, scaleWidth);
         this.useEntityGuiLighting = useEntityGuiLighting;
         this.useNewOffset = useNewOffset;
     }
@@ -33,7 +40,7 @@ public class AzItemRendererConfig extends AzRendererConfig {
         return new Builder();
     }
 
-    public static class Builder extends AzRendererConfig.Builder {
+    public static class Builder extends AzRendererConfig.Builder<ItemStack> {
 
         private boolean useEntityGuiLighting;
 
@@ -45,6 +52,11 @@ public class AzItemRendererConfig extends AzRendererConfig {
             this.useNewOffset = false;
         }
 
+        @Override
+        public Builder addRenderLayer(AzRenderLayer<ItemStack> renderLayer) {
+            return (Builder) super.addRenderLayer(renderLayer);
+        }
+
         public Builder useEntityGuiLighting() {
             this.useEntityGuiLighting = true;
             return this;
@@ -54,7 +66,7 @@ public class AzItemRendererConfig extends AzRendererConfig {
          * @param useNewOffset Determines whether to apply the y offset for a model due to the change in BlockBench
          *                     4.11.
          */
-        public AzRendererConfig.Builder useNewOffset(boolean useNewOffset) {
+        public AzRendererConfig.Builder<ItemStack> useNewOffset(boolean useNewOffset) {
             this.useNewOffset = useNewOffset;
             return this;
         }
@@ -63,6 +75,7 @@ public class AzItemRendererConfig extends AzRendererConfig {
             var baseConfig = super.build();
 
             return new AzItemRendererConfig(
+                baseConfig.renderLayers(),
                 baseConfig.scaleHeight(),
                 baseConfig.scaleWidth(),
                 useEntityGuiLighting,

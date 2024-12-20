@@ -1,18 +1,17 @@
 package mod.azure.azurelib.core2.render.pipeline.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-import java.util.List;
-
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
+import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
 import mod.azure.azurelib.core2.render.entity.AzEntityLeashRenderUtil;
 import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
-import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
@@ -26,8 +25,8 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
     protected Matrix4f modelRenderTranslations = new Matrix4f();
 
-    public AzEntityRendererPipeline(AzEntityRenderer<T> entityRenderer) {
-        super();
+    public AzEntityRendererPipeline(AzEntityRendererConfig<T> config, AzEntityRenderer<T> entityRenderer) {
+        super(config);
         this.entityRenderer = entityRenderer;
     }
 
@@ -42,18 +41,13 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     }
 
     @Override
-    protected AzLayerRenderer<T> createLayerRenderer() {
-        return new AzEntityLayerRenderer<>(this::getRenderLayers);
+    protected AzLayerRenderer<T> createLayerRenderer(AzRendererConfig<T> config) {
+        return new AzEntityLayerRenderer<>(config::renderLayers);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
         return entityRenderer.getTextureLocation(animatable);
-    }
-
-    @Override
-    protected List<AzRenderLayer<T>> getRenderLayers() {
-        return entityRenderer.getRenderLayers();
     }
 
     /**

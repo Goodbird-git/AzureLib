@@ -1,7 +1,6 @@
 package mod.azure.azurelib.core2.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,21 +10,16 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
 import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
-import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.entity.AzEntityRendererPipeline;
 
 public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<T> {
 
     private final AzEntityRendererPipeline<T> rendererPipeline;
-
-    private final List<AzRenderLayer<T>> renderLayers;
 
     private final AzEntityRendererConfig<T> config;
 
@@ -39,8 +33,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
     protected AzEntityRenderer(AzEntityRendererConfig<T> config, EntityRendererProvider.Context context) {
         super(context);
         this.config = config;
-        this.rendererPipeline = new AzEntityRendererPipeline<>(this);
-        this.renderLayers = new ObjectArrayList<>();
+        this.rendererPipeline = new AzEntityRendererPipeline<>(config, this);
     }
 
     protected abstract @NotNull ResourceLocation getModelLocation(T entity);
@@ -117,22 +110,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         }
 
         return cachedEntityAnimator;
-    }
-
-    /**
-     * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
-     */
-    public List<AzRenderLayer<T>> getRenderLayers() {
-        return this.renderLayers;
-    }
-
-    /**
-     * Adds a {@link AzRenderLayer} to this renderer, to be called after the main model is rendered each frame
-     */
-    public AzEntityRenderer<T> addRenderLayer(AzRenderLayer<T> renderLayer) {
-        this.renderLayers.add(renderLayer);
-
-        return this;
     }
 
     /**

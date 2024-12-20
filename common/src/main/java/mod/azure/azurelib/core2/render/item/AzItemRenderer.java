@@ -45,19 +45,19 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     protected AzItemRenderer(AzItemRendererConfig config) {
         this(
+            config,
             Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-            Minecraft.getInstance().getEntityModels(),
-            config
+            Minecraft.getInstance().getEntityModels()
         );
     }
 
     protected AzItemRenderer(
+        AzItemRendererConfig config,
         BlockEntityRenderDispatcher dispatcher,
-        EntityModelSet modelSet,
-        AzItemRendererConfig config
+        EntityModelSet modelSet
     ) {
         super(dispatcher, modelSet);
-        this.rendererPipeline = new AzItemRendererPipeline(this);
+        this.rendererPipeline = new AzItemRendererPipeline(config, this);
         this.renderLayers = new ObjectArrayList<>();
         this.config = config;
     }
