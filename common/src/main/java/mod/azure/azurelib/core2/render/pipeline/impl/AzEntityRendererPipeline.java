@@ -15,12 +15,15 @@ import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
+import java.util.List;
+
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.render.entity.AzEntityLeashRenderUtil;
 import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
+import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
@@ -44,6 +47,11 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
         return entityRenderer.getTextureLocation(animatable);
+    }
+
+    @Override
+    protected List<AzRenderLayer<T>> getRenderLayers() {
+        return entityRenderer.getRenderLayers();
     }
 
     /**

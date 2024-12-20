@@ -8,11 +8,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
+import java.util.List;
+
 import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.render.item.AzItemRenderer;
+import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
@@ -36,6 +39,11 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull ItemStack animatable) {
         return itemRenderer.getTextureLocation(animatable);
+    }
+
+    @Override
+    protected List<AzRenderLayer<ItemStack>> getRenderLayers() {
+        return itemRenderer.getRenderLayers();
     }
 
     /**

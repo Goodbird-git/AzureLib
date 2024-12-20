@@ -36,6 +36,11 @@ public abstract class AzRendererPipeline<T> {
     public abstract @NotNull ResourceLocation getTextureLocation(@NotNull T animatable);
 
     /**
+     * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
+     */
+    protected abstract List<AzRenderLayer<T>> getRenderLayers();
+
+    /**
      * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this
      * GeoRenderer.<br>
      * This should only be called immediately prior to rendering, and only
@@ -61,6 +66,7 @@ public abstract class AzRendererPipeline<T> {
         int packedLight
     ) {
         context.populate(animatable, model, bufferSource, packedLight, partialTick, poseStack, renderType, buffer);
+
         poseStack.pushPose();
 
         preRender(context, false);
@@ -88,10 +94,13 @@ public abstract class AzRendererPipeline<T> {
      */
     public void reRender(AzRendererPipelineContext<T> context) {
         var poseStack = context.poseStack();
+
         poseStack.pushPose();
+
         preRender(context, true);
         actuallyRender(context, true);
         postRender(context, true);
+
         poseStack.popPose();
     }
 
@@ -139,7 +148,9 @@ public abstract class AzRendererPipeline<T> {
 
         for (var cube : bone.getCubes()) {
             poseStack.pushPose();
+
             renderCube(context, cube);
+
             poseStack.popPose();
         }
     }
@@ -297,12 +308,5 @@ public abstract class AzRendererPipeline<T> {
 
     public AzRendererPipelineContext<T> getContext() {
         return context;
-    }
-
-    /**
-     * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
-     */
-    protected List<AzRenderLayer<T>> getRenderLayers() {
-        return List.of();
     }
 }
