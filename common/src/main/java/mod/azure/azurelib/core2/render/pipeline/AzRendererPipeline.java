@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -169,6 +168,9 @@ public abstract class AzRendererPipeline<T> {
         }
     }
 
+    private final Matrix4f poseStateCache = new Matrix4f();
+    private final Vector3f normalCache = new Vector3f();
+
     /**
      * Renders an individual {@link GeoCube}.<br>
      * This tends to be called recursively from something like {@link AzRendererPipeline#renderCubesOfBone}
@@ -180,21 +182,23 @@ public abstract class AzRendererPipeline<T> {
         RenderUtils.rotateMatrixAroundCube(poseStack, cube);
         RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
 
-        Matrix3f normalisedPoseState = poseStack.last().normal();
-        Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+        var normalisedPoseState = poseStack.last().normal();
+        var poseState = poseStateCache.set(poseStack.last().pose());
 
         for (var quad : cube.quads()) {
             if (quad == null) {
                 continue;
             }
 
-            // TODO: Optimize
-            var normal = normalisedPoseState.transform(new Vector3f(quad.normal()));
+            normalCache.set(quad.normal());
+            var normal = normalisedPoseState.transform(normalCache);
 
             RenderUtils.fixInvertedFlatCube(cube, normal);
             createVerticesOfQuad(context, quad, poseState, normal);
         }
     }
+
+    private final Vector4f poseStateTransformCache = new Vector4f();
 
     /**
      * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link VertexConsumer buffer} for
@@ -213,8 +217,8 @@ public abstract class AzRendererPipeline<T> {
 
         for (var vertex : quad.vertices()) {
             var position = vertex.position();
-            // TODO: Optimize
-            var vector4f = poseState.transform(new Vector4f(position.x(), position.y(), position.z(), 1.0f));
+            poseStateTransformCache.set(position.x(), position.y(), position.z(), 1.0f);
+            var vector4f = poseState.transform(poseStateTransformCache);
 
             buffer.addVertex(
                 vector4f.x(),
