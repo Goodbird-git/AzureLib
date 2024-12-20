@@ -104,6 +104,10 @@ public abstract class AzRendererPipelineContext<T> {
         return OverlayTexture.NO_OVERLAY;
     }
 
+    public AzRendererPipeline<T> rendererPipeline() {
+        return rendererPipeline;
+    }
+
     public T animatable() {
         return animatable;
     }
