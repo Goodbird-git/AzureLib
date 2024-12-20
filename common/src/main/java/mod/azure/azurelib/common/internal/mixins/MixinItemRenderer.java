@@ -54,7 +54,10 @@ public class MixinItemRenderer {
         var renderer = AzItemRendererRegistry.getOrNull(item);
 
         if (renderer != null) {
-            renderer.renderByItem(itemStack, transformType, poseStack, multiBufferSource, i, j);
+            switch (transformType) {
+                case GUI -> renderer.renderByGui(itemStack, poseStack, multiBufferSource, i);
+                default -> renderer.renderByItem(itemStack, poseStack, multiBufferSource, i);
+            }
         }
     }
 }

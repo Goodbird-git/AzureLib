@@ -2,20 +2,17 @@ package mod.azure.azurelib.core2.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
+import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.render.AzProvider;
 
-public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
+public abstract class AzItemRenderer {
 
     private final AzItemRendererConfig config;
 
@@ -26,39 +23,49 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
     @Nullable
     private AzItemAnimator reusedAzItemAnimator;
 
-    protected AzItemRenderer(AzItemRendererConfig config) {
-        this(
-            config,
-            Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-            Minecraft.getInstance().getEntityModels()
-        );
-    }
-
     protected AzItemRenderer(
-        AzItemRendererConfig config,
-        BlockEntityRenderDispatcher dispatcher,
-        EntityModelSet modelSet
+        AzItemRendererConfig config
     ) {
-        super(dispatcher, modelSet);
         this.rendererPipeline = new AzItemRendererPipeline(config, this);
         this.provider = new AzProvider<>(config::createAnimator, config::modelLocation);
         this.config = config;
     }
 
-    @Override
+    public void renderByGui(
+        ItemStack stack,
+        @NotNull PoseStack poseStack,
+        @NotNull MultiBufferSource source,
+        int packedLight
+    ) {
+        var model = provider.provideBakedModel(stack);
+
+        prepareAnimator(stack, model);
+
+        AzItemGuiRenderUtil.renderInGui(config, rendererPipeline, stack, model, stack, poseStack, source, packedLight);
+    }
+
     public void renderByItem(
         ItemStack stack,
-        @NotNull ItemDisplayContext transformType,
         @NotNull PoseStack poseStack,
-        @NotNull MultiBufferSource bufferSource,
-        int packedLight,
-        int packedOverlay
+        @NotNull MultiBufferSource source,
+        int packedLight
     ) {
-        // TODO: What was this used for?
-        var renderPerspective = transformType;
-
-        var cachedEntityAnimator = (AzItemAnimator) provider.provideAnimator(stack);
         var model = provider.provideBakedModel(stack);
+        var partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
+        var textureLocation = config.textureLocation(stack);
+        var renderType = rendererPipeline.context()
+            .getDefaultRenderType(stack, textureLocation, source, partialTick);
+        // TODO: Why the null check here?
+        var withGlint = stack != null && stack.hasFoil();
+        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, false, withGlint);
+
+        prepareAnimator(stack, model);
+
+        rendererPipeline.render(poseStack, model, stack, source, renderType, buffer, 0, partialTick, packedLight);
+    }
+
+    private void prepareAnimator(ItemStack stack, AzBakedModel model) {
+        var cachedEntityAnimator = (AzItemAnimator) provider.provideAnimator(stack);
 
         if (cachedEntityAnimator != null && model != null) {
             cachedEntityAnimator.setActiveModel(model);
@@ -66,45 +73,6 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         // Point the renderer's current animator reference to the cached entity animator before rendering.
         reusedAzItemAnimator = cachedEntityAnimator;
-
-        if (transformType == ItemDisplayContext.GUI) {
-            AzItemGuiRenderUtil.renderInGui(
-                config,
-                rendererPipeline,
-                stack,
-                model,
-                stack,
-                transformType,
-                poseStack,
-                bufferSource,
-                packedLight,
-                packedOverlay
-            );
-        } else {
-            var partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
-            var textureLocation = config.textureLocation(stack);
-            var renderType = rendererPipeline.context()
-                .getDefaultRenderType(stack, textureLocation, bufferSource, partialTick);
-            var buffer = ItemRenderer.getFoilBufferDirect(
-                bufferSource,
-                renderType,
-                false,
-                // TODO: Why the null check here?
-                stack != null && stack.hasFoil()
-            );
-
-            rendererPipeline.render(
-                poseStack,
-                model,
-                stack,
-                bufferSource,
-                renderType,
-                buffer,
-                0,
-                partialTick,
-                packedLight
-            );
-        }
     }
 
     public @Nullable AzItemAnimator getAnimator() {
