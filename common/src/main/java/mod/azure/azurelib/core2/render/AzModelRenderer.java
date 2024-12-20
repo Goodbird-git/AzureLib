@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline;
+package mod.azure.azurelib.core2.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.joml.Matrix4f;

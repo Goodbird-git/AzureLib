@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline;
+package mod.azure.azurelib.core2.render;
 
 import java.util.Collection;
 import java.util.function.Supplier;

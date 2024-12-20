@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render;
+package mod.azure.azurelib.core2.render.block;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public class AzBlockEntityRendererConfig<T extends BlockEntity> extends AzRendererConfig<T> {

@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline.entity;
+package mod.azure.azurelib.core2.render.entity;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -14,9 +14,9 @@ import org.joml.Matrix4f;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzLayerRenderer;
+import mod.azure.azurelib.core2.render.AzModelRenderer;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> {
 

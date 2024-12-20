@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzRendererPipeline;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 /**
  * Render layer base class for rendering additional layers of effects or textures over an existing model at runtime.<br>

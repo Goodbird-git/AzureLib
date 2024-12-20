@@ -11,8 +11,6 @@ import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzBlockAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
-import mod.azure.azurelib.core2.render.AzBlockEntityRendererConfig;
-import mod.azure.azurelib.core2.render.pipeline.block.AzBlockEntityRendererPipeline;
 
 public abstract class AzBlockRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
 

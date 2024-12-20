@@ -11,8 +11,8 @@ import java.util.function.Function;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzRendererPipeline;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 /**
  * A {@link AzRenderLayer} responsible for rendering {@link net.minecraft.world.level.block.state.BlockState

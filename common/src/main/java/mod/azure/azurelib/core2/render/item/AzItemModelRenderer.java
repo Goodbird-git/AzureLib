@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline.item;
+package mod.azure.azurelib.core2.render.item;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -6,10 +6,10 @@ import org.joml.Matrix4f;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzPhasedRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzLayerRenderer;
+import mod.azure.azurelib.core2.render.AzModelRenderer;
+import mod.azure.azurelib.core2.render.AzPhasedRenderer;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
 

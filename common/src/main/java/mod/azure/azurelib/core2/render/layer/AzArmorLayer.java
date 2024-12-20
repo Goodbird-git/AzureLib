@@ -26,7 +26,7 @@ import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.azurelib.common.internal.client.RenderProvider;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 /**
  * Builtin class for handling dynamic armor rendering on AzureLib entities.<br>

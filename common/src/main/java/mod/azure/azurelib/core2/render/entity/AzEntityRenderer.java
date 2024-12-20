@@ -14,8 +14,6 @@ import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
-import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
-import mod.azure.azurelib.core2.render.pipeline.entity.AzEntityRendererPipeline;
 
 public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<T> {
 

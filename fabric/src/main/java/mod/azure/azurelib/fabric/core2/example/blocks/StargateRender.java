@@ -3,7 +3,7 @@ package mod.azure.azurelib.fabric.core2.example.blocks;
 import net.minecraft.resources.ResourceLocation;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.core2.render.AzBlockEntityRendererConfig;
+import mod.azure.azurelib.core2.render.block.AzBlockEntityRendererConfig;
 import mod.azure.azurelib.core2.render.block.AzBlockRenderer;
 
 public class StargateRender extends AzBlockRenderer<StargateBlockEntity> {

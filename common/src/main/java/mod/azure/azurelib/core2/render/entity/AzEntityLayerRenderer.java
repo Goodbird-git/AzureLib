@@ -1,13 +1,13 @@
-package mod.azure.azurelib.core2.render.pipeline.entity;
+package mod.azure.azurelib.core2.render.entity;
 
 import net.minecraft.world.entity.Entity;
 
 import java.util.Collection;
 import java.util.function.Supplier;
 
+import mod.azure.azurelib.core2.render.AzLayerRenderer;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
-import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
 public class AzEntityLayerRenderer<T extends Entity> extends AzLayerRenderer<T> {
 

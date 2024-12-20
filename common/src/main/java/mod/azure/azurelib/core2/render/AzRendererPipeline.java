@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline;
+package mod.azure.azurelib.core2.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.model.AzBakedModel;
-import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {

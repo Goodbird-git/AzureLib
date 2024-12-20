@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline.block;
+package mod.azure.azurelib.core2.render.block;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzRendererPipeline;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 public class AzBlockEntityRendererPipelineContext<T extends BlockEntity> extends AzRendererPipelineContext<T> {
 

@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render;
+package mod.azure.azurelib.core2.render.entity;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig<T> {

@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline.item;
+package mod.azure.azurelib.core2.render.item;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -7,8 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import mod.azure.azurelib.core2.render.AzRendererPipeline;
+import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 public class AzItemRendererPipelineContext extends AzRendererPipelineContext<ItemStack> {
 

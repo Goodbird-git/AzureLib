@@ -3,7 +3,7 @@ package mod.azure.azurelib.fabric.core2.example.items;
 import net.minecraft.resources.ResourceLocation;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.core2.render.AzItemRendererConfig;
+import mod.azure.azurelib.core2.render.entity.AzItemRendererConfig;
 import mod.azure.azurelib.core2.render.item.AzItemRenderer;
 
 public class AzPistolRenderer extends AzItemRenderer {

@@ -4,8 +4,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
 import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
+import mod.azure.azurelib.core2.render.entity.AzEntityRendererConfig;
 
 public class DroneRenderer extends AzEntityRenderer<Drone> {
 
