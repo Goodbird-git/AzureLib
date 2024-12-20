@@ -16,6 +16,7 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
  * Base interface for a container for {@link GeoRenderLayer GeoRenderLayers}<br>
  * Each renderer should contain an instance of this, for holding its layers and handling events.
  */
+@Deprecated(forRemoval = true)
 public class GeoRenderLayersContainer<T extends GeoAnimatable> {
 
     private final GeoRenderer<T> renderer;

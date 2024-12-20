@@ -25,6 +25,8 @@ import mod.azure.azurelib.core.animation.AnimationController;
 
 /**
  * The {@link GeoAnimatable} interface specific to singleton objects. This primarily applies to armor and items
+ *
+ * @deprecated
  */
 public interface SingletonGeoAnimatable extends GeoAnimatable {
 

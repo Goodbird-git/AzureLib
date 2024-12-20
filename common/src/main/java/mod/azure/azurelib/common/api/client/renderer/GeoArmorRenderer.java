@@ -49,6 +49,7 @@ import mod.azure.azurelib.core.object.Color;
  * @param <T>
  * @see GeoItem
  */
+@Deprecated(forRemoval = true)
 public class GeoArmorRenderer<T extends Item & GeoItem> extends HumanoidModel implements GeoRenderer<T> {
 
     protected final GeoRenderLayersContainer<T> renderLayers = new GeoRenderLayersContainer<>(this);
