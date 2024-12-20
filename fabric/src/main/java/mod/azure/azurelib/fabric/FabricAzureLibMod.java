@@ -1,5 +1,6 @@
 package mod.azure.azurelib.fabric;
 
+import mod.azure.azurelib.common.internal.common.network.packet.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -17,16 +18,6 @@ import mod.azure.azurelib.common.internal.common.AzureLibMod;
 import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
-import mod.azure.azurelib.common.internal.common.network.packet.AnimDataSyncPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.AnimTriggerPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.AzItemStackDispatchCommandPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimDataSyncPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.BlockEntityAnimTriggerPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimDataSyncPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.EntityAnimTriggerPacket;
-import mod.azure.azurelib.common.internal.common.network.packet.SendConfigDataPacket;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.core2.example.armors.DoomArmor;
 import mod.azure.azurelib.fabric.core2.example.blocks.Stargate;
@@ -52,6 +43,7 @@ public final class FabricAzureLibMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimTriggerPacket.TYPE, BlockEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockEntityAnimDataSyncPacket.TYPE, BlockEntityAnimDataSyncPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(AzBlockEntityDispatchCommandPacket.TYPE, AzBlockEntityDispatchCommandPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AzEntityAnimTriggerPacket.TYPE, AzEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AzEntityDispatchCommandPacket.TYPE, AzEntityDispatchCommandPacket.CODEC);
         PayloadTypeRegistry.playS2C()
