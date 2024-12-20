@@ -3,12 +3,28 @@ package mod.azure.azurelib.core2.render.layer;
 import mod.azure.azurelib.common.internal.common.cache.texture.AutoGlowingTexture;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+import net.minecraft.client.renderer.RenderType;
 
+/**
+ * A {@link AzRenderLayer} dedicated to rendering the auto-generated glow layer functionality provided by AzureLib.
+ * This utilizes texture files with the <i>_glowing</i> suffix to create glowing effects for models.
+ */
 public class AzAutoGlowingLayer<T> extends AzRenderLayer<T> {
 
     @Override
     public void preRender(AzRendererPipelineContext<T> context) {}
 
+    /**
+     * Handles the main rendering logic for the animatable object in the pipeline context.
+     * This includes switching to a custom {@link RenderType} for glowing textures and rendering
+     * the object using the pipeline's re-render mechanism.
+     * <p>
+     * The rendering context's state is modified temporarily to apply a custom render type and packed light.
+     * After rendering, the context is restored to its original state for consistency.
+     * </p>
+     *
+     * @param context the rendering pipeline context, containing the animatable object and rendering state
+     */
     @Override
     public void render(AzRendererPipelineContext<T> context) {
         var animatable = context.animatable();
