@@ -19,10 +19,6 @@ public class MarauderRenderer extends AzEntityRenderer<MarauderEntity> {
     public MarauderRenderer(EntityRendererProvider.Context context) {
         super(context);
         addRenderLayer(new AzAutoGlowingLayer<>());
-        /**
-         * TODO: Port this to new system, as it currently requries this be a GeoEntity and use the GeoLayers as well
-         */
-        // addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
 
     @Override
