@@ -23,7 +23,6 @@ import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
-import mod.azure.azurelib.core2.render.entity.AzItemRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {

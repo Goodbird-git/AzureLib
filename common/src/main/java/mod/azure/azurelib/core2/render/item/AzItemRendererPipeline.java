@@ -12,7 +12,6 @@ import mod.azure.azurelib.core2.render.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
-import mod.azure.azurelib.core2.render.entity.AzItemRendererConfig;
 
 public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
 

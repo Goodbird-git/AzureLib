@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.entity;
+package mod.azure.azurelib.core2.render.item;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
