@@ -1,21 +1,21 @@
 package mod.azure.azurelib.core2.animation.dispatch;
 
-import mod.azure.azurelib.common.internal.common.network.packet.AzBlockEntityDispatchCommandPacket;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.common.internal.common.network.packet.AzBlockEntityDispatchCommandPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatchCommandPacket;
 import mod.azure.azurelib.common.internal.common.network.packet.AzItemStackDispatchCommandPacket;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public record AzDispatchExecutor(
     List<AzDispatchCommand> commands,

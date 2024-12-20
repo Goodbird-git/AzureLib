@@ -34,9 +34,9 @@ public class Stargate extends BaseEntityBlock implements EntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-            @NotNull Level level,
-            @NotNull BlockState state,
-            @NotNull BlockEntityType<T> type
+        @NotNull Level level,
+        @NotNull BlockState state,
+        @NotNull BlockEntityType<T> type
     ) {
         return createTickerHelper(type, ExampleEntityTypes.STARGATE, StargateBlockEntity::tick);
     }
