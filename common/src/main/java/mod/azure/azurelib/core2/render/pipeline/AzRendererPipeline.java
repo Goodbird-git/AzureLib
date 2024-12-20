@@ -86,7 +86,7 @@ public abstract class AzRendererPipeline<T> {
      * Usually you'd use this for rendering alternate {@link RenderType} layers or for sub-model rendering whilst inside
      * a {@link AzRenderLayer} or similar
      */
-    protected void reRender(AzRendererPipelineContext<T> context) {
+    public void reRender(AzRendererPipelineContext<T> context) {
         var poseStack = context.poseStack();
         poseStack.pushPose();
         preRender(context, true);
