@@ -1,6 +1,5 @@
 package mod.azure.azurelib.core2.render.layer;
 
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,11 +11,12 @@ import java.util.function.Function;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
 /**
- * A {@link AzRenderLayer} responsible for rendering {@link net.minecraft.world.level.block.state.BlockState BlockStates}
- * or {@link net.minecraft.world.item.ItemStack ItemStacks} onto a specified {@link AzRendererPipeline}.
+ * A {@link AzRenderLayer} responsible for rendering {@link net.minecraft.world.level.block.state.BlockState
+ * BlockStates} or {@link net.minecraft.world.item.ItemStack ItemStacks} onto a specified {@link AzRendererPipeline}.
  * This layer handles the rendering of physical elements, such as blocks and items, associated with animation bones.
  */
 public class AzBlockAndItemLayer extends AzRenderLayer {
@@ -49,8 +49,8 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
      * Renders an {@link ItemStack} or {@link BlockState} associated with the specified bone in the rendering context.
      * If both the {@link ItemStack} and {@link BlockState} are {@code null}, no rendering occurs.
      * <p>
-     * This method applies the bone's transformations to the current rendering matrix stack before rendering,
-     * ensuring the item or block appears correctly positioned and oriented relative to the bone.
+     * This method applies the bone's transformations to the current rendering matrix stack before rendering, ensuring
+     * the item or block appears correctly positioned and oriented relative to the bone.
      * </p>
      *
      * @param context the rendering pipeline context, containing rendering state and utilities
@@ -111,8 +111,8 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
     }
 
     /**
-     * Renders the given {@link ItemStack} for the specified bone in the rendering context.
-     * The rendering adjusts based on whether the animatable object is a {@link LivingEntity}.
+     * Renders the given {@link ItemStack} for the specified bone in the rendering context. The rendering adjusts based
+     * on whether the animatable object is a {@link LivingEntity}.
      *
      * @param context   the rendering pipeline context
      * @param bone      the bone where the {@link ItemStack} will be rendered
@@ -121,38 +121,38 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
     protected void renderItemForBone(AzRendererPipelineContext context, AzBone bone, ItemStack itemStack) {
         if (context.animatable() instanceof LivingEntity livingEntity) {
             Minecraft.getInstance()
-                    .getItemRenderer()
-                    .renderStatic(
-                            livingEntity,
-                            itemStack,
-                            getTransformTypeForStack(bone, itemStack),
-                            false,
-                            context.poseStack(),
-                            context.multiBufferSource(),
-                            livingEntity.level(),
-                            context.packedLight(),
-                            context.packedOverlay(),
-                            livingEntity.getId()
-                    );
+                .getItemRenderer()
+                .renderStatic(
+                    livingEntity,
+                    itemStack,
+                    getTransformTypeForStack(bone, itemStack),
+                    false,
+                    context.poseStack(),
+                    context.multiBufferSource(),
+                    livingEntity.level(),
+                    context.packedLight(),
+                    context.packedOverlay(),
+                    livingEntity.getId()
+                );
         } else {
             Minecraft.getInstance()
-                    .getItemRenderer()
-                    .renderStatic(
-                            itemStack,
-                            getTransformTypeForStack(bone, itemStack),
-                            context.packedLight(),
-                            context.packedOverlay(),
-                            context.poseStack(),
-                            context.multiBufferSource(),
-                            Minecraft.getInstance().level,
-                            context.animatable().hashCode()
-                    );
+                .getItemRenderer()
+                .renderStatic(
+                    itemStack,
+                    getTransformTypeForStack(bone, itemStack),
+                    context.packedLight(),
+                    context.packedOverlay(),
+                    context.poseStack(),
+                    context.multiBufferSource(),
+                    Minecraft.getInstance().level,
+                    context.animatable().hashCode()
+                );
         }
     }
 
     /**
-     * Renders the given {@link BlockState} for the specified bone in the rendering context.
-     * The block is rendered with adjusted position and scale to fit within the bone's space.
+     * Renders the given {@link BlockState} for the specified bone in the rendering context. The block is rendered with
+     * adjusted position and scale to fit within the bone's space.
      *
      * @param context    the rendering pipeline context
      * @param bone       the bone where the {@link BlockState} will be rendered
@@ -165,14 +165,14 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
         context.poseStack().scale(0.5f, 0.5f, 0.5f);
 
         Minecraft.getInstance()
-                .getBlockRenderer()
-                .renderSingleBlock(
-                        blockState,
-                        context.poseStack(),
-                        context.multiBufferSource(),
-                        context.packedLight(),
-                        OverlayTexture.NO_OVERLAY
-                );
+            .getBlockRenderer()
+            .renderSingleBlock(
+                blockState,
+                context.poseStack(),
+                context.multiBufferSource(),
+                context.packedLight(),
+                OverlayTexture.NO_OVERLAY
+            );
 
         context.poseStack().popPose();
     }
