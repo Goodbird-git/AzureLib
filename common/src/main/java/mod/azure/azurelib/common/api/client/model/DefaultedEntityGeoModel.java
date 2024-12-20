@@ -19,6 +19,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
  * provided asset paths into the "entity" subdirectory Additionally it can automatically handle head-turning if the
  * entity has a "head" bone
  */
+@Deprecated(forRemoval = true)
 public class DefaultedEntityGeoModel<T extends GeoAnimatable> extends DefaultedGeoModel<T> {
 
     private final boolean turnsHead;

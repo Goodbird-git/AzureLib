@@ -20,6 +20,7 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
  * {@link GeoRenderLayer} for rendering the auto-generated glowlayer functionality implemented by AzureLib using the
  * <i>_glowing</i> appendixed texture files.
  */
+@Deprecated(forRemoval = true)
 public class AutoGlowingGeoLayer<T extends GeoAnimatable> extends GeoRenderLayer<T> {
 
     public AutoGlowingGeoLayer(GeoRenderer<T> renderer) {

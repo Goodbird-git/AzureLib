@@ -13,6 +13,7 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
  * {@link DefaultedGeoModel} specific to {@link net.minecraft.world.level.block.Block Blocks}. Using this class
  * pre-sorts provided asset paths into the "block" subdirectory
  */
+@Deprecated(forRemoval = true)
 public class DefaultedBlockGeoModel<T extends GeoAnimatable> extends DefaultedGeoModel<T> {
 
     /**
