@@ -19,14 +19,6 @@ public class AzRendererConfig {
         return scaleWidth;
     }
 
-    public static AzRendererConfig defaultConfig() {
-        return builder().build();
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static class Builder {
 
         private float scaleHeight;
@@ -38,11 +30,11 @@ public class AzRendererConfig {
             this.scaleWidth = 1;
         }
 
-        public Builder withScale(float scale) {
-            return withScale(scale, scale);
+        public Builder setScale(float scale) {
+            return setScale(scale, scale);
         }
 
-        public Builder withScale(float scaleWidth, float scaleHeight) {
+        public Builder setScale(float scaleWidth, float scaleHeight) {
             this.scaleHeight = scaleHeight;
             this.scaleWidth = scaleWidth;
             return this;

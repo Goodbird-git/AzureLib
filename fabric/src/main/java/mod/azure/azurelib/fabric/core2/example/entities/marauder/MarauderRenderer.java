@@ -1,5 +1,6 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
+import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,12 @@ public class MarauderRenderer extends AzEntityRenderer<MarauderEntity> {
     private static final ResourceLocation TEXTURE = AzureLib.modResource("textures/entity/marauder.png");
 
     public MarauderRenderer(EntityRendererProvider.Context context) {
-        super(context);
+        super(
+            AzEntityRendererConfig.<MarauderEntity>builder()
+                .setDeathMaxRotationProvider($ -> 0F)
+                .build(),
+            context
+        );
         addRenderLayer(new AzAutoGlowingLayer<>());
     }
 

@@ -229,7 +229,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
         float partialTick,
         float nativeScale
     ) {
-        if (entityRendererPipeline.isShaking(animatable)) {
+        if (animatable.isFullyFrozen()) {
             rotationYaw += (float) (Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
         }
 
@@ -238,8 +238,8 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
         }
 
         if (animatable instanceof LivingEntity livingEntity) {
-
-            var deathMaxRotation = entityRendererPipeline.getDeathMaxRotation(animatable);
+            var config = entityRendererPipeline.getRenderer().config();
+            var deathMaxRotation = config.getDeathMaxRotation(animatable);
 
             if (livingEntity.deathTime > 0) {
                 float deathRotation = (livingEntity.deathTime + partialTick - 1f) / 20f * 1.6f;

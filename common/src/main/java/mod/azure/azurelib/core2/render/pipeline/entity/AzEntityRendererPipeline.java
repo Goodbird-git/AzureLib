@@ -114,20 +114,6 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         AzEntityLeashRenderUtil.renderLeash(entityRenderer, mob, partialTick, poseStack, bufferSource, leashHolder);
     }
 
-    /**
-     * Gets the max rotation value for dying entities.<br>
-     * You might want to modify this for different aesthetics, such as a
-     * {@link net.minecraft.world.entity.monster.Spider} flipping upside down on death.<br>
-     * Functionally equivalent to {@link net.minecraft.client.renderer.entity.LivingEntityRenderer#getFlipDegrees}
-     */
-    protected float getDeathMaxRotation(T entity) {
-        return 90f;
-    }
-
-    public boolean isShaking(T entity) {
-        return entity.isFullyFrozen();
-    }
-
     public AzEntityRenderer<T> getRenderer() {
         return entityRenderer;
     }

@@ -17,7 +17,7 @@ import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
-import mod.azure.azurelib.core2.render.AzRendererConfig;
+import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.entity.AzEntityRendererPipeline;
 
@@ -27,16 +27,16 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
 
     private final List<AzRenderLayer<T>> renderLayers;
 
-    private final AzRendererConfig config;
+    private final AzEntityRendererConfig<T> config;
 
     @Nullable
     private AzEntityAnimator<T> reusedAzEntityAnimator;
 
     protected AzEntityRenderer(EntityRendererProvider.Context context) {
-        this(AzRendererConfig.defaultConfig(), context);
+        this(AzEntityRendererConfig.defaultConfig(), context);
     }
 
-    protected AzEntityRenderer(AzRendererConfig config, EntityRendererProvider.Context context) {
+    protected AzEntityRenderer(AzEntityRendererConfig<T> config, EntityRendererProvider.Context context) {
         super(context);
         this.config = config;
         this.rendererPipeline = new AzEntityRendererPipeline<>(this);
@@ -154,7 +154,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         return reusedAzEntityAnimator;
     }
 
-    public AzRendererConfig config() {
+    public AzEntityRendererConfig<T> config() {
         return config;
     }
 }

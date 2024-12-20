@@ -50,10 +50,6 @@ public class AzItemRendererConfig extends AzRendererConfig {
             return this;
         }
 
-        public boolean useNewOffset() {
-            return useNewOffset;
-        }
-
         /**
          * @param useNewOffset Determines whether to apply the y offset for a model due to the change in BlockBench
          *                     4.11.
@@ -65,6 +61,7 @@ public class AzItemRendererConfig extends AzRendererConfig {
 
         public AzItemRendererConfig build() {
             var baseConfig = super.build();
+
             return new AzItemRendererConfig(
                 baseConfig.scaleHeight(),
                 baseConfig.scaleWidth(),
