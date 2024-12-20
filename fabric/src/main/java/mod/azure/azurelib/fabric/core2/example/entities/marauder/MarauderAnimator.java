@@ -6,7 +6,6 @@ import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.NotNull;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
@@ -48,7 +47,7 @@ public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
         .then(MELEE_ANIMATION_NAME, AzLoopType.PLAY_ONCE);
 
     public MarauderAnimator() {
-        super(AzAnimatorConfig.defaultConfig());
+        super();
     }
 
     @Override

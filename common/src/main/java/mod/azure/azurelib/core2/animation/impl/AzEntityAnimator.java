@@ -13,6 +13,10 @@ import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 
 public abstract class AzEntityAnimator<T extends Entity> extends AzAnimator<T> {
 
+    protected AzEntityAnimator() {
+        super();
+    }
+
     protected AzEntityAnimator(AzAnimatorConfig config) {
         super(config);
     }

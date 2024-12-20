@@ -1,6 +1,5 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
-import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -8,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
+import mod.azure.azurelib.core2.render.AzEntityRendererConfig;
 import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
 import mod.azure.azurelib.core2.render.layer.AzAutoGlowingLayer;
 

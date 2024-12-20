@@ -24,6 +24,10 @@ public abstract class AzAnimator<T> {
 
     public boolean reloadAnimations;
 
+    protected AzAnimator() {
+        this(AzAnimatorConfig.defaultConfig());
+    }
+
     protected AzAnimator(AzAnimatorConfig config) {
         this.animationControllerContainer = new AzAnimationControllerContainer<>();
 
