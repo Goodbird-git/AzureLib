@@ -26,6 +26,10 @@ public abstract class AzRendererPipeline<T> {
 
     private final AzRendererPipelineContext<T> context;
 
+    private final Matrix4f poseStateCache = new Matrix4f();
+
+    private final Vector3f normalCache = new Vector3f();
+
     protected AzRendererPipeline() {
         this.context = createContext(this);
     }
@@ -167,9 +171,6 @@ public abstract class AzRendererPipeline<T> {
             renderRecursively(context, childBone, isReRender);
         }
     }
-
-    private final Matrix4f poseStateCache = new Matrix4f();
-    private final Vector3f normalCache = new Vector3f();
 
     /**
      * Renders an individual {@link GeoCube}.<br>

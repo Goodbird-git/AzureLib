@@ -77,7 +77,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     @Override
     public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
         var poseStack = context.poseStack();
-        this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.entityRenderTranslations.set(poseStack.last().pose());
 
         scaleModelForRender(
             context,
@@ -199,7 +199,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             }
         }
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.modelRenderTranslations.set(poseStack.last().pose());
 
         if (!animatable.isInvisibleTo(Minecraft.getInstance().player)) {
             super.actuallyRender(context, isReRender);
