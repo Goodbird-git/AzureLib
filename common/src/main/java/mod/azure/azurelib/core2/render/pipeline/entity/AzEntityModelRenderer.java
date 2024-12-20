@@ -1,90 +1,29 @@
-package mod.azure.azurelib.core2.render.pipeline.impl;
+package mod.azure.azurelib.core2.render.pipeline.entity;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
+import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
+import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-import java.util.List;
+public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> {
 
-import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
-import mod.azure.azurelib.common.internal.client.util.RenderUtils;
-import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
-import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.entity.AzEntityLeashRenderUtil;
-import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
-import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
+    private final AzEntityRendererPipeline<T> entityRendererPipeline;
 
-public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeline<T> {
-
-    private final AzEntityRenderer<T> entityRenderer;
-
-    protected Matrix4f entityRenderTranslations = new Matrix4f();
-
-    protected Matrix4f modelRenderTranslations = new Matrix4f();
-
-    public AzEntityRendererPipeline(AzEntityRenderer<T> entityRenderer) {
-        this.entityRenderer = entityRenderer;
-    }
-
-    @Override
-    protected AzRendererPipelineContext<T> createContext(AzRendererPipeline<T> rendererPipeline) {
-        return new AzEntityRendererPipelineContext<>(this);
-    }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
-        return entityRenderer.getTextureLocation(animatable);
-    }
-
-    @Override
-    protected List<AzRenderLayer<T>> getRenderLayers() {
-        return entityRenderer.getRenderLayers();
-    }
-
-    /**
-     * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this
-     * GeoRenderer.<br>
-     * This should only be called immediately prior to rendering, and only
-     *
-     * @see AnimatableTexture#setAndUpdate(ResourceLocation, int)
-     */
-    @Override
-    public void updateAnimatedTextureFrame(T entity) {
-        AnimatableTexture.setAndUpdate(
-            getTextureLocation(entity),
-            entity.getId() + entity.tickCount
-        );
-    }
-
-    /**
-     * Called before rendering the model to buffer. Allows for render modifications and preparatory work such as scaling
-     * and translating.<br>
-     * {@link PoseStack} translations made here are kept until the end of the render process
-     */
-    @Override
-    public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
-        var poseStack = context.poseStack();
-        this.entityRenderTranslations.set(poseStack.last().pose());
-
-        scaleModelForRender(
-            context,
-            this.entityRenderer.getScaleWidth(),
-            this.entityRenderer.getScaleHeight(),
-            isReRender
-        );
+    public AzEntityModelRenderer(AzEntityRendererPipeline<T> entityRendererPipeline, AzLayerRenderer<T> layerRenderer) {
+        super(entityRendererPipeline, layerRenderer);
+        this.entityRendererPipeline = entityRendererPipeline;
     }
 
     /**
@@ -93,7 +32,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
      * {@link AzEntityRendererPipeline#postRender} will be called directly after
      */
     @Override
-    public void actuallyRender(AzRendererPipelineContext<T> context, boolean isReRender) {
+    public void render(AzRendererPipelineContext<T> context, boolean isReRender) {
         var animatable = context.animatable();
         var partialTick = context.partialTick();
         var poseStack = context.poseStack();
@@ -106,17 +45,17 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         float lerpBodyRot = livingEntity == null
             ? 0
             : Mth.rotLerp(
-                partialTick,
-                livingEntity.yBodyRotO,
-                livingEntity.yBodyRot
-            );
+            partialTick,
+            livingEntity.yBodyRotO,
+            livingEntity.yBodyRot
+        );
         float lerpHeadRot = livingEntity == null
             ? 0
             : Mth.rotLerp(
-                partialTick,
-                livingEntity.yHeadRotO,
-                livingEntity.yHeadRot
-            );
+            partialTick,
+            livingEntity.yHeadRotO,
+            livingEntity.yHeadRot
+        );
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
 
         if (shouldSit && animatable.getVehicle() instanceof LivingEntity livingentity) {
@@ -192,32 +131,20 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             //
             // this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
 
-            var animator = entityRenderer.getAnimator();
+            var animator = entityRendererPipeline.getRenderer().getAnimator();
 
             if (animator != null) {
                 animator.animate(animatable);
             }
         }
 
-        this.modelRenderTranslations.set(poseStack.last().pose());
+        entityRendererPipeline.modelRenderTranslations.set(poseStack.last().pose());
 
         if (!animatable.isInvisibleTo(Minecraft.getInstance().player)) {
-            super.actuallyRender(context, isReRender);
+            super.render(context, isReRender);
         }
 
         poseStack.popPose();
-    }
-
-    /**
-     * Render the various {@link GeoRenderLayer RenderLayers} that have been registered to this renderer
-     */
-    @Override
-    public void applyRenderLayers(AzRendererPipelineContext<T> context) {
-        var animatable = context.animatable();
-
-        if (!animatable.isSpectator()) {
-            super.applyRenderLayers(context);
-        }
     }
 
     /**
@@ -239,11 +166,11 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
-            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations);
+            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, entityRendererPipeline.entityRenderTranslations);
 
-            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
+            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, entityRendererPipeline.modelRenderTranslations));
             bone.setLocalSpaceMatrix(
-                RenderUtils.translateMatrix(localMatrix, entityRenderer.getRenderOffset(entity, 1).toVector3f())
+                RenderUtils.translateMatrix(localMatrix, entityRendererPipeline.getRenderer().getRenderOffset(entity, 1).toVector3f())
             );
             bone.setWorldSpaceMatrix(
                 RenderUtils.translateMatrix(new Matrix4f(localMatrix), entity.position().toVector3f())
@@ -259,35 +186,12 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         renderCubesOfBone(context, bone);
 
         if (!isReRender) {
-            applyRenderLayersForBone(context, bone);
+            layerRenderer.applyRenderLayersForBone(context, bone);
         }
 
         renderChildBones(context, bone, isReRender);
 
         poseStack.popPose();
-    }
-
-    @Override
-    public void renderFinal(AzRendererPipelineContext<T> context) {
-        var bufferSource = context.multiBufferSource();
-        var entity = context.animatable();
-        var packedLight = context.packedLight();
-        var partialTick = context.partialTick();
-        var poseStack = context.poseStack();
-
-        entityRenderer.superRender(entity, 0, partialTick, poseStack, bufferSource, packedLight);
-
-        if (!(entity instanceof Mob mob)) {
-            return;
-        }
-
-        var leashHolder = mob.getLeashHolder();
-
-        if (leashHolder == null) {
-            return;
-        }
-
-        AzEntityLeashRenderUtil.renderLeash(entityRenderer, mob, partialTick, poseStack, bufferSource, leashHolder);
     }
 
     /**
@@ -316,7 +220,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         float partialTick,
         float nativeScale
     ) {
-        if (isShaking(animatable)) {
+        if (entityRendererPipeline.isShaking(animatable)) {
             rotationYaw += (float) (Math.cos(animatable.tickCount * 3.25d) * Math.PI * 0.4d);
         }
 
@@ -325,11 +229,14 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         }
 
         if (animatable instanceof LivingEntity livingEntity) {
+
+            var deathMaxRotation = entityRendererPipeline.getDeathMaxRotation(animatable);
+
             if (livingEntity.deathTime > 0) {
                 float deathRotation = (livingEntity.deathTime + partialTick - 1f) / 20f * 1.6f;
 
                 poseStack.mulPose(
-                    Axis.ZP.rotationDegrees(Math.min(Mth.sqrt(deathRotation), 1) * getDeathMaxRotation(animatable))
+                    Axis.ZP.rotationDegrees(Math.min(Mth.sqrt(deathRotation), 1) * deathMaxRotation)
                 );
             } else if (livingEntity.isAutoSpinAttack()) {
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90f - livingEntity.getXRot()));
@@ -342,7 +249,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
                         bedOrientation != null ? RenderUtils.getDirectionAngle(bedOrientation) : rotationYaw
                     )
                 );
-                poseStack.mulPose(Axis.ZP.rotationDegrees(getDeathMaxRotation(animatable)));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(deathMaxRotation));
                 poseStack.mulPose(Axis.YP.rotationDegrees(270f));
             } else if (LivingEntityRenderer.isEntityUpsideDown(livingEntity)) {
                 poseStack.translate(0, (animatable.getBbHeight() + 0.1f) / nativeScale, 0);
@@ -350,19 +257,4 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             }
         }
     }
-
-    /**
-     * Gets the max rotation value for dying entities.<br>
-     * You might want to modify this for different aesthetics, such as a
-     * {@link net.minecraft.world.entity.monster.Spider} flipping upside down on death.<br>
-     * Functionally equivalent to {@link net.minecraft.client.renderer.entity.LivingEntityRenderer#getFlipDegrees}
-     */
-    protected float getDeathMaxRotation(T entity) {
-        return 90f;
-    }
-
-    public boolean isShaking(T entity) {
-        return entity.isFullyFrozen();
-    }
-
 }

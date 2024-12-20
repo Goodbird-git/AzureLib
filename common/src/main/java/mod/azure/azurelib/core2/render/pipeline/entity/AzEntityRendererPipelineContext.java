@@ -1,4 +1,4 @@
-package mod.azure.azurelib.core2.render.pipeline.impl;
+package mod.azure.azurelib.core2.render.pipeline.entity;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
