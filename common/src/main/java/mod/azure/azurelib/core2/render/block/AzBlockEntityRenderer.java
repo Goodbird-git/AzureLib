@@ -12,7 +12,7 @@ import mod.azure.azurelib.core2.animation.impl.AzBlockAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
 
-public abstract class AzBlockRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+public abstract class AzBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
 
     private final AzBlockEntityRendererConfig<T> config;
 
@@ -21,7 +21,7 @@ public abstract class AzBlockRenderer<T extends BlockEntity> implements BlockEnt
     @Nullable
     private AzBlockAnimator<T> reusedAzBlockAnimator;
 
-    protected AzBlockRenderer(AzBlockEntityRendererConfig<T> config) {
+    protected AzBlockEntityRenderer(AzBlockEntityRendererConfig<T> config) {
         super();
         this.config = config;
         this.rendererPipeline = new AzBlockEntityRendererPipeline<>(config, this);
