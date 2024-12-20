@@ -64,7 +64,7 @@ public abstract class AzRendererPipelineContext<T> {
         this.renderColor = getRenderColor(animatable, partialTick, packedLight).argbInt();
 
         if (renderType == null) {
-            var textureLocation = rendererPipeline.getTextureLocation(animatable);
+            var textureLocation = rendererPipeline.config().textureLocation(animatable);
             this.renderType = getDefaultRenderType(animatable, textureLocation, multiBufferSource, partialTick);
         }
 

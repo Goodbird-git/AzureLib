@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
@@ -45,11 +44,6 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         return new AzEntityLayerRenderer<>(config::renderLayers);
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
-        return entityRenderer.getTextureLocation(animatable);
-    }
-
     /**
      * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this
      * GeoRenderer.<br>
@@ -60,7 +54,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     @Override
     public void updateAnimatedTextureFrame(T entity) {
         AnimatableTexture.setAndUpdate(
-            getTextureLocation(entity),
+            config.textureLocation(entity),
             entity.getId() + entity.tickCount
         );
     }

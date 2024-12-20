@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -39,10 +38,6 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
     @Nullable
     private AzItemAnimator reusedAzItemAnimator;
 
-    protected AzItemRenderer() {
-        this(AzItemRendererConfig.defaultConfig());
-    }
-
     protected AzItemRenderer(AzItemRendererConfig config) {
         this(
             config,
@@ -61,10 +56,6 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
         this.renderLayers = new ObjectArrayList<>();
         this.config = config;
     }
-
-    protected abstract @NotNull ResourceLocation getModelLocation(ItemStack item);
-
-    public abstract @NotNull ResourceLocation getTextureLocation(ItemStack item);
 
     @Override
     public void renderByItem(
@@ -105,7 +96,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
             var renderType = rendererPipeline.getContext()
                 .getDefaultRenderType(
                     animatable,
-                    getTextureLocation(animatable),
+                    config.textureLocation(animatable),
                     bufferSource,
                     Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()
                 );
@@ -158,7 +149,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
         RenderType renderType = rendererPipeline.getContext()
             .getDefaultRenderType(
                 animatable,
-                getTextureLocation(animatable),
+                config.textureLocation(animatable),
                 defaultBufferSource,
                 Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()
             );
@@ -187,12 +178,8 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
         poseStack.popPose();
     }
 
-    protected @Nullable AzItemAnimator createAnimator() {
-        return null;
-    }
-
     protected @Nullable AzBakedModel provideBakedModel(@NotNull ItemStack item) {
-        var modelResourceLocation = getModelLocation(item);
+        var modelResourceLocation = config.modelLocation(item);
         return AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
     }
 
@@ -204,7 +191,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         if (cachedItemAnimator == null) {
             // If the cached animator is null, create a new one. We use a separate reference here just for some
-            cachedItemAnimator = createAnimator();
+            cachedItemAnimator = (AzItemAnimator) config.createAnimator();
 
             if (cachedItemAnimator != null) {
                 // If the new animator we created is not null, then register its controllers.

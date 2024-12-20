@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
@@ -44,11 +43,6 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
         return new AzLayerRenderer<>(config::renderLayers);
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull ItemStack animatable) {
-        return itemRenderer.getTextureLocation(animatable);
-    }
-
     /**
      * Called before rendering the model to buffer. Allows for render modifications and preparatory work such as scaling
      * and translating.<br>
@@ -83,7 +77,7 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
     @Override
     public void updateAnimatedTextureFrame(ItemStack animatable) {
         AnimatableTexture.setAndUpdate(
-            getTextureLocation(animatable),
+            config.textureLocation(animatable),
             Item.getId(animatable.getItem()) + (int) RenderUtils.getCurrentTick()
         );
     }

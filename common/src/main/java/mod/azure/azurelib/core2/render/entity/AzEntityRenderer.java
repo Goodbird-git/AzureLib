@@ -26,17 +26,16 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
     @Nullable
     private AzEntityAnimator<T> reusedAzEntityAnimator;
 
-    protected AzEntityRenderer(EntityRendererProvider.Context context) {
-        this(AzEntityRendererConfig.defaultConfig(), context);
-    }
-
     protected AzEntityRenderer(AzEntityRendererConfig<T> config, EntityRendererProvider.Context context) {
         super(context);
         this.config = config;
         this.rendererPipeline = new AzEntityRendererPipeline<>(config, this);
     }
 
-    protected abstract @NotNull ResourceLocation getModelLocation(T entity);
+    @Override
+    public final @NotNull ResourceLocation getTextureLocation(@NotNull T animatable) {
+        return config.textureLocation(animatable);
+    }
 
     public void superRender(
         @NotNull T entity,
@@ -82,16 +81,12 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         );
     }
 
-    protected @Nullable AzEntityAnimator<T> createAnimator() {
-        return null;
-    }
-
     protected @Nullable AzBakedModel provideBakedModel(@NotNull T entity) {
-        var modelResourceLocation = getModelLocation(entity);
+        var modelResourceLocation = config.modelLocation(entity);
         return AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
     }
 
-    protected @Nullable AzEntityAnimator<T> provideAnimator(T entity) {
+    private @Nullable AzEntityAnimator<T> provideAnimator(T entity) {
         // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for the
         // entity.
         var accessor = AzAnimatorAccessor.cast(entity);
@@ -99,7 +94,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
 
         if (cachedEntityAnimator == null) {
             // If the cached animator is null, create a new one. We use a separate reference here just for some
-            cachedEntityAnimator = createAnimator();
+            cachedEntityAnimator = (AzEntityAnimator<T>) config.createAnimator();
 
             if (cachedEntityAnimator != null) {
                 // If the new animator we created is not null, then register its controllers.

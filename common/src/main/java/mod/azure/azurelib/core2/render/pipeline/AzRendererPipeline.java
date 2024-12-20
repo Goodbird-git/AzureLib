@@ -4,8 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
@@ -15,6 +13,8 @@ import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
 
+    protected final AzRendererConfig<T> config;
+
     private final AzRendererPipelineContext<T> context;
 
     private final AzLayerRenderer<T> layerRenderer;
@@ -22,6 +22,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
     private final AzModelRenderer<T> modelRenderer;
 
     protected AzRendererPipeline(AzRendererConfig<T> config) {
+        this.config = config;
         this.context = createContext(this);
         this.layerRenderer = createLayerRenderer(config);
         this.modelRenderer = createModelRenderer(layerRenderer);
@@ -32,8 +33,6 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
     protected abstract AzModelRenderer<T> createModelRenderer(AzLayerRenderer<T> layerRenderer);
 
     protected abstract AzLayerRenderer<T> createLayerRenderer(AzRendererConfig<T> config);
-
-    public abstract @NotNull ResourceLocation getTextureLocation(@NotNull T animatable);
 
     /**
      * Update the current frame of a {@link AnimatableTexture potentially animated} texture used by this
@@ -129,6 +128,10 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
             var poseStack = context.poseStack();
             poseStack.scale(widthScale, heightScale, widthScale);
         }
+    }
+
+    public AzRendererConfig<T> config() {
+        return config;
     }
 
     public AzRendererPipelineContext<T> getContext() {

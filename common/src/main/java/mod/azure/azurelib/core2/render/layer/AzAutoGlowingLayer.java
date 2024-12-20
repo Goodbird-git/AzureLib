@@ -29,7 +29,7 @@ public class AzAutoGlowingLayer<T> extends AzRenderLayer<T> {
     public void render(AzRendererPipelineContext<T> context) {
         var animatable = context.animatable();
         var renderPipeline = context.rendererPipeline();
-        var textureLocation = renderPipeline.getTextureLocation(animatable);
+        var textureLocation = renderPipeline.config().textureLocation(animatable);
         var renderType = AutoGlowingTexture.getRenderType(textureLocation);
 
         if (context.renderType() != null) {
