@@ -27,7 +27,6 @@ import mod.azure.azurelib.core.object.DataTicket;
  */
 public record AzureLibUtil() {
 
-
     public static <T> T self(Object object) {
         return (T) object;
     }

@@ -1,10 +1,10 @@
 package mod.azure.azurelib.core2.render.pipeline;
 
-import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
-
 import java.util.Collection;
 import java.util.function.Supplier;
+
+import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public class AzLayerRenderer<T> {
 

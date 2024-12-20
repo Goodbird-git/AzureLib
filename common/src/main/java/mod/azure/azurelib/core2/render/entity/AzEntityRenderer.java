@@ -17,6 +17,7 @@ import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.entity.AzEntityRendererPipeline;
 
@@ -26,15 +27,18 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
 
     private final List<AzRenderLayer<T>> renderLayers;
 
-    private float scaleWidth = 1;
-
-    private float scaleHeight = 1;
+    private final AzRendererConfig config;
 
     @Nullable
     private AzEntityAnimator<T> reusedAzEntityAnimator;
 
     protected AzEntityRenderer(EntityRendererProvider.Context context) {
+        this(AzRendererConfig.defaultConfig(), context);
+    }
+
+    protected AzEntityRenderer(AzRendererConfig config, EntityRendererProvider.Context context) {
         super(context);
+        this.config = config;
         this.rendererPipeline = new AzEntityRendererPipeline<>(this);
         this.renderLayers = new ObjectArrayList<>();
     }
@@ -116,23 +120,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
     }
 
     /**
-     * Sets a scale override for this renderer, telling AzureLib to pre-scale the model
-     */
-    public AzEntityRenderer<T> withScale(float scale) {
-        return withScale(scale, scale);
-    }
-
-    /**
-     * Sets a scale override for this renderer, telling AzureLib to pre-scale the model
-     */
-    public AzEntityRenderer<T> withScale(float scaleWidth, float scaleHeight) {
-        this.scaleWidth = scaleWidth;
-        this.scaleHeight = scaleHeight;
-
-        return this;
-    }
-
-    /**
      * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
      */
     public List<AzRenderLayer<T>> getRenderLayers() {
@@ -167,11 +154,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         return reusedAzEntityAnimator;
     }
 
-    public float getScaleHeight() {
-        return scaleHeight;
-    }
-
-    public float getScaleWidth() {
-        return scaleWidth;
+    public AzRendererConfig config() {
+        return config;
     }
 }

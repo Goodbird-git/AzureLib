@@ -1,14 +1,15 @@
 package mod.azure.azurelib.core2.render.pipeline.item;
 
-import mod.azure.azurelib.core2.render.pipeline.AzPhasedRenderer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
+
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
+import mod.azure.azurelib.core2.render.pipeline.AzPhasedRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 
 public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
 
@@ -21,8 +22,8 @@ public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
 
     /**
      * The actual render method that subtype renderers should override to handle their specific rendering tasks.<br>
-     * {@link AzPhasedRenderer#preRender} has already been called by this stage, and {@link AzPhasedRenderer#postRender} will be
-     * called directly after
+     * {@link AzPhasedRenderer#preRender} has already been called by this stage, and {@link AzPhasedRenderer#postRender}
+     * will be called directly after
      */
     @Override
     public void render(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
@@ -51,9 +52,14 @@ public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
             var animatable = context.animatable();
             var poseStack = context.poseStack();
             var poseState = new Matrix4f(poseStack.last().pose());
-            var localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, itemRendererPipeline.itemRenderTranslations);
+            var localMatrix = RenderUtils.invertAndMultiplyMatrices(
+                poseState,
+                itemRendererPipeline.itemRenderTranslations
+            );
 
-            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, itemRendererPipeline.modelRenderTranslations));
+            bone.setModelSpaceMatrix(
+                RenderUtils.invertAndMultiplyMatrices(poseState, itemRendererPipeline.modelRenderTranslations)
+            );
             bone.setLocalSpaceMatrix(
                 RenderUtils.translateMatrix(localMatrix, getRenderOffset(animatable, 1).toVector3f())
             );

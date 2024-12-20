@@ -2,9 +2,6 @@ package mod.azure.azurelib.core2.render.pipeline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
-import mod.azure.azurelib.core2.model.AzBakedModel;
-import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
+import mod.azure.azurelib.core2.model.AzBakedModel;
+import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
 

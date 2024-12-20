@@ -3,11 +3,6 @@ package mod.azure.azurelib.core2.render.pipeline.entity;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.common.internal.client.util.RenderUtils;
-import mod.azure.azurelib.core2.model.AzBone;
-import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
-import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
@@ -16,6 +11,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import org.joml.Matrix4f;
+
+import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.core2.model.AzBone;
+import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
+import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
+import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
 
 public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> {
 
@@ -45,17 +46,17 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
         float lerpBodyRot = livingEntity == null
             ? 0
             : Mth.rotLerp(
-            partialTick,
-            livingEntity.yBodyRotO,
-            livingEntity.yBodyRot
-        );
+                partialTick,
+                livingEntity.yBodyRotO,
+                livingEntity.yBodyRot
+            );
         float lerpHeadRot = livingEntity == null
             ? 0
             : Mth.rotLerp(
-            partialTick,
-            livingEntity.yHeadRotO,
-            livingEntity.yHeadRot
-        );
+                partialTick,
+                livingEntity.yHeadRotO,
+                livingEntity.yHeadRot
+            );
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
 
         if (shouldSit && animatable.getVehicle() instanceof LivingEntity livingentity) {
@@ -166,11 +167,19 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
 
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
-            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, entityRendererPipeline.entityRenderTranslations);
+            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(
+                poseState,
+                entityRendererPipeline.entityRenderTranslations
+            );
 
-            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, entityRendererPipeline.modelRenderTranslations));
+            bone.setModelSpaceMatrix(
+                RenderUtils.invertAndMultiplyMatrices(poseState, entityRendererPipeline.modelRenderTranslations)
+            );
             bone.setLocalSpaceMatrix(
-                RenderUtils.translateMatrix(localMatrix, entityRendererPipeline.getRenderer().getRenderOffset(entity, 1).toVector3f())
+                RenderUtils.translateMatrix(
+                    localMatrix,
+                    entityRendererPipeline.getRenderer().getRenderOffset(entity, 1).toVector3f()
+                )
             );
             bone.setWorldSpaceMatrix(
                 RenderUtils.translateMatrix(new Matrix4f(localMatrix), entity.position().toVector3f())

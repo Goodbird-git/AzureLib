@@ -1,14 +1,15 @@
 package mod.azure.azurelib.core2.render.pipeline;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoCube;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoQuad;
 import mod.azure.azurelib.common.internal.common.cache.object.GeoVertex;
 import mod.azure.azurelib.core2.model.AzBone;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 public class AzModelRenderer<T> {
 

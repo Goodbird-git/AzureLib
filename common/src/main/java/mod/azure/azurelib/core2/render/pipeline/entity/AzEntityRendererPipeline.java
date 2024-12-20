@@ -1,6 +1,14 @@
 package mod.azure.azurelib.core2.render.pipeline.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+
+import java.util.List;
+
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.render.entity.AzEntityLeashRenderUtil;
 import mod.azure.azurelib.core2.render.entity.AzEntityRenderer;
@@ -9,13 +17,6 @@ import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzModelRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipelineContext;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
-
-import java.util.List;
 
 public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeline<T> {
 
@@ -80,12 +81,11 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
         var poseStack = context.poseStack();
         this.entityRenderTranslations.set(poseStack.last().pose());
 
-        scaleModelForRender(
-            context,
-            this.entityRenderer.getScaleWidth(),
-            this.entityRenderer.getScaleHeight(),
-            isReRender
-        );
+        var config = entityRenderer.config();
+        var scaleWidth = config.scaleWidth();
+        var scaleHeight = config.scaleHeight();
+
+        scaleModelForRender(context, scaleWidth, scaleHeight, isReRender);
     }
 
     @Override

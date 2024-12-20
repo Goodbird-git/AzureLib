@@ -20,11 +20,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
+import mod.azure.azurelib.core2.render.AzItemRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 import mod.azure.azurelib.core2.render.pipeline.item.AzItemRendererPipeline;
 
@@ -34,23 +34,32 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     private final List<AzRenderLayer<ItemStack>> renderLayers;
 
-    protected float scaleWidth = 1;
-
-    protected float scaleHeight = 1;
-
-    protected boolean useEntityGuiLighting = false;
+    private final AzItemRendererConfig config;
 
     @Nullable
     private AzItemAnimator reusedAzItemAnimator;
 
     protected AzItemRenderer() {
-        this(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+        this(AzItemRendererConfig.defaultConfig());
     }
 
-    protected AzItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
+    protected AzItemRenderer(AzItemRendererConfig config) {
+        this(
+            Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+            Minecraft.getInstance().getEntityModels(),
+            config
+        );
+    }
+
+    protected AzItemRenderer(
+        BlockEntityRenderDispatcher dispatcher,
+        EntityModelSet modelSet,
+        AzItemRendererConfig config
+    ) {
         super(dispatcher, modelSet);
         this.rendererPipeline = new AzItemRendererPipeline(this);
         this.renderLayers = new ObjectArrayList<>();
+        this.config = config;
     }
 
     protected abstract @NotNull ResourceLocation getModelLocation(ItemStack item);
@@ -137,7 +146,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
         int packedLight,
         int packedOverlay
     ) {
-        if (this.useEntityGuiLighting) {
+        if (config.useEntityGuiLighting()) {
             Lighting.setupForEntityInInventory();
         } else {
             Lighting.setupForFlatItems();
@@ -209,40 +218,14 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     /**
-     * Mark this renderer so that it uses an alternate lighting scheme when rendering the item in GUI
-     * <p>
-     * This can help with improperly lit 3d models
-     */
-    public AzItemRenderer useAlternateGuiLighting() {
-        this.useEntityGuiLighting = true;
-        return this;
-    }
-
-    /**
-     * Sets a scale override for this renderer, telling AzureLib to pre-scale the model
-     */
-    public AzItemRenderer withScale(float scale) {
-        return withScale(scale, scale);
-    }
-
-    /**
-     * Sets a scale override for this renderer, telling AzureLib to pre-scale the model
-     */
-    public AzItemRenderer withScale(float scaleWidth, float scaleHeight) {
-        this.scaleWidth = scaleWidth;
-        this.scaleHeight = scaleHeight;
-        return this;
-    }
-
-    /**
-     * Returns the list of registered {@link GeoRenderLayer GeoRenderLayers} for this renderer
+     * Returns the list of registered {@link AzRenderLayer GeoRenderLayers} for this renderer
      */
     public List<AzRenderLayer<ItemStack>> getRenderLayers() {
         return renderLayers;
     }
 
     /**
-     * Adds a {@link GeoRenderLayer} to this renderer, to be called after the main model is rendered each frame
+     * Adds a {@link AzRenderLayer} to this renderer, to be called after the main model is rendered each frame
      */
     public AzItemRenderer addRenderLayer(AzRenderLayer<ItemStack> renderLayer) {
         this.renderLayers.add(renderLayer);
@@ -253,11 +236,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
         return reusedAzItemAnimator;
     }
 
-    public float getScaleHeight() {
-        return scaleHeight;
-    }
-
-    public float getScaleWidth() {
-        return scaleWidth;
+    public AzItemRendererConfig config() {
+        return config;
     }
 }
