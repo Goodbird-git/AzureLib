@@ -33,7 +33,7 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
  * Supports both {@link GeoItem AzureLib} and {@link net.minecraft.world.item.ArmorItem Vanilla} armor models.<br>
  * Unlike a traditional armor renderer, this renderer renders per-bone, giving much more flexible armor rendering.
  */
-public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
+public class AzArmorLayer<T extends LivingEntity> implements AzRenderLayer<T> {
 
     protected static final HumanoidModel<LivingEntity> INNER_ARMOR_MODEL = new HumanoidModel<>(
         Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)
@@ -62,7 +62,7 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
     protected ItemStack bootsStack;
 
     @Override
-    public void preRender(AzRendererPipelineContext context) {
+    public void preRender(AzRendererPipelineContext<T> context) {
         if (!(context.animatable() instanceof LivingEntity livingEntity))
             return;
         this.mainHandStack = livingEntity.getItemBySlot(EquipmentSlot.MAINHAND);
@@ -74,10 +74,10 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
     }
 
     @Override
-    public void render(AzRendererPipelineContext context) {}
+    public void render(AzRendererPipelineContext<T> context) {}
 
     @Override
-    public void renderForBone(AzRendererPipelineContext context, AzBone bone) {
+    public void renderForBone(AzRendererPipelineContext<T> context, AzBone bone) {
         ItemStack armorStack = getArmorItemForBone(context, bone);
 
         if (armorStack == null)
@@ -153,7 +153,7 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
      * This is then transformed into position for the final render
      */
     @NotNull
-    protected ModelPart getModelPartForBone(AzRendererPipelineContext context, HumanoidModel<?> baseModel) {
+    protected ModelPart getModelPartForBone(AzRendererPipelineContext<T> context, HumanoidModel<?> baseModel) {
         return baseModel.body;
     }
 
@@ -162,15 +162,15 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
      * Return null if this bone should be ignored
      */
     @Nullable
-    protected ItemStack getArmorItemForBone(AzRendererPipelineContext context, AzBone bone) {
+    protected ItemStack getArmorItemForBone(AzRendererPipelineContext<T> context, AzBone bone) {
         return null;
     }
 
     /**
      * Renders an individual armor piece base on the given {@link AzBone} and {@link ItemStack}
      */
-    protected <I extends Item & GeoItem> void renderVanillaArmorPiece(
-        AzRendererPipelineContext context,
+    protected <I extends Item> void renderVanillaArmorPiece(
+        AzRendererPipelineContext<T> context,
         AzBone bone,
         EquipmentSlot slot,
         ItemStack armorStack,
@@ -226,7 +226,7 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
     }
 
     protected VertexConsumer getVanillaArmorBuffer(
-        AzRendererPipelineContext context,
+        AzRendererPipelineContext<T> context,
         ItemStack stack,
         EquipmentSlot slot,
         AzBone bone,
@@ -246,7 +246,7 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
      */
     @NotNull
     protected HumanoidModel<?> getModelForItem(
-        AzRendererPipelineContext context,
+        AzRendererPipelineContext<T> context,
         AzBone bone,
         EquipmentSlot slot,
         ItemStack stack
@@ -261,7 +261,7 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
      * Render a given {@link AbstractSkullBlock} as a worn armor piece in relation to a given {@link AzBone}
      */
     protected void renderSkullAsArmor(
-        AzRendererPipelineContext context,
+        AzRendererPipelineContext<T> context,
         AzBone bone,
         ItemStack stack,
         AbstractSkullBlock skullBlock
@@ -296,7 +296,7 @@ public class AzArmorLayer extends AzRenderLayer<LivingEntity> {
      * @param bone       The AzBone to base the translations on
      * @param sourcePart The ModelPart to translate
      */
-    protected void prepModelPartForRender(AzRendererPipelineContext context, AzBone bone, ModelPart sourcePart) {
+    protected void prepModelPartForRender(AzRendererPipelineContext<T> context, AzBone bone, ModelPart sourcePart) {
         final var firstCube = bone.getCubes().get(0);
         final var armorCube = sourcePart.cubes.get(0);
         final var armorBoneSizeX = firstCube.size().x();

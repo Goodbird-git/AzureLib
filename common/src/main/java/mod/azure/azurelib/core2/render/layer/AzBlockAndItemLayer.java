@@ -19,7 +19,7 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
  * BlockStates} or {@link net.minecraft.world.item.ItemStack ItemStacks} onto a specified {@link AzRendererPipeline}.
  * This layer handles the rendering of physical elements, such as blocks and items, associated with animation bones.
  */
-public class AzBlockAndItemLayer extends AzRenderLayer {
+public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
 
     protected final Function<AzBone, ItemStack> itemStackProvider;
 
@@ -40,10 +40,10 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
     }
 
     @Override
-    public void preRender(AzRendererPipelineContext context) {}
+    public void preRender(AzRendererPipelineContext<T> context) {}
 
     @Override
-    public void render(AzRendererPipelineContext context) {}
+    public void render(AzRendererPipelineContext<T> context) {}
 
     /**
      * Renders an {@link ItemStack} or {@link BlockState} associated with the specified bone in the rendering context.
@@ -57,7 +57,7 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
      * @param bone    the bone for which to render associated elements
      */
     @Override
-    public void renderForBone(AzRendererPipelineContext context, AzBone bone) {
+    public void renderForBone(AzRendererPipelineContext<T> context, AzBone bone) {
         var stack = itemStackForBone(bone);
         var blockState = blockStateForBone(bone);
 
@@ -118,7 +118,7 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
      * @param bone      the bone where the {@link ItemStack} will be rendered
      * @param itemStack the {@link ItemStack} to render
      */
-    protected void renderItemForBone(AzRendererPipelineContext context, AzBone bone, ItemStack itemStack) {
+    protected void renderItemForBone(AzRendererPipelineContext<T> context, AzBone bone, ItemStack itemStack) {
         if (context.animatable() instanceof LivingEntity livingEntity) {
             Minecraft.getInstance()
                 .getItemRenderer()
@@ -158,7 +158,7 @@ public class AzBlockAndItemLayer extends AzRenderLayer {
      * @param bone       the bone where the {@link BlockState} will be rendered
      * @param blockState the {@link BlockState} to render
      */
-    protected void renderBlockForBone(AzRendererPipelineContext context, AzBone bone, BlockState blockState) {
+    protected void renderBlockForBone(AzRendererPipelineContext<T> context, AzBone bone, BlockState blockState) {
         context.poseStack().pushPose();
 
         context.poseStack().translate(-0.25f, -0.25f, -0.25f);

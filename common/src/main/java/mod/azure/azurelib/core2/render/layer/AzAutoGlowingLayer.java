@@ -10,7 +10,7 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
  * A {@link AzRenderLayer} dedicated to rendering the auto-generated glow layer functionality provided by AzureLib. This
  * utilizes texture files with the <i>_glowing</i> suffix to create glowing effects for models.
  */
-public class AzAutoGlowingLayer<T> extends AzRenderLayer<T> {
+public class AzAutoGlowingLayer<T> implements AzRenderLayer<T> {
 
     @Override
     public void preRender(AzRendererPipelineContext<T> context) {}
