@@ -24,7 +24,6 @@ import mod.azure.azurelib.common.api.client.renderer.layer.AutoGlowingGeoLayer;
  * Metadata class that stores the data for AzureLib's {@link AutoGlowingGeoLayer emissive texture feature} for a given
  * texture
  *
- * @deprecated
  */
 public class GeoGlowingTextureMeta {
 
