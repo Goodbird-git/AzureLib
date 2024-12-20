@@ -31,7 +31,6 @@ import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.core2.example.armors.DoomArmor;
 import mod.azure.azurelib.fabric.core2.example.blocks.Stargate;
 import mod.azure.azurelib.fabric.core2.example.items.AzPistol;
-import mod.azure.azurelib.fabric.core2.example.items.Pistol;
 import mod.azure.azurelib.fabric.platform.FabricAzureLibNetwork;
 
 public final class FabricAzureLibMod implements ModInitializer {
@@ -66,11 +65,6 @@ public final class FabricAzureLibMod implements ModInitializer {
             BuiltInRegistries.ITEM,
             AzureLib.modResource("stargate"),
             new BlockItem(STARGATE, new Item.Properties())
-        );
-        Registry.register(
-            BuiltInRegistries.ITEM,
-            AzureLib.modResource("pistol"),
-            new Pistol()
         );
         Registry.register(
             BuiltInRegistries.ITEM,
