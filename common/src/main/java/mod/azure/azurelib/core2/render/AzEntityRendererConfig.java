@@ -48,13 +48,18 @@ public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig<T
             return (Builder<T>) super.addRenderLayer(renderLayer);
         }
 
+        public Builder<T> setDeathMaxRotation(float angle) {
+            this.deathMaxRotationProvider = $ -> angle;
+            return this;
+        }
+
         /**
          * Sets a provider for the max rotation value for dying entities.<br>
          * You might want to modify this for different aesthetics, such as a
          * {@link net.minecraft.world.entity.monster.Spider} flipping upside down on death.<br>
          * Functionally equivalent to {@link net.minecraft.client.renderer.entity.LivingEntityRenderer#getFlipDegrees}
          */
-        public Builder<T> setDeathMaxRotationProvider(Function<T, Float> deathMaxRotationProvider) {
+        public Builder<T> setDeathMaxRotation(Function<T, Float> deathMaxRotationProvider) {
             this.deathMaxRotationProvider = deathMaxRotationProvider;
             return this;
         }

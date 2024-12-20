@@ -21,7 +21,7 @@ public class MarauderRenderer extends AzEntityRenderer<MarauderEntity> {
         super(
             AzEntityRendererConfig.<MarauderEntity>builder()
                 .addRenderLayer(new AzAutoGlowingLayer<>())
-                .setDeathMaxRotationProvider($ -> 0F)
+                .setDeathMaxRotation(0F)
                 .build(),
             context
         );

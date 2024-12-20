@@ -1,7 +1,6 @@
 package mod.azure.azurelib.core2.render.pipeline.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mod.azure.azurelib.core2.render.AzRendererConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +10,7 @@ import org.joml.Matrix4f;
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture;
 import mod.azure.azurelib.core2.render.AzItemRendererConfig;
+import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.item.AzItemRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.pipeline.AzRendererPipeline;
