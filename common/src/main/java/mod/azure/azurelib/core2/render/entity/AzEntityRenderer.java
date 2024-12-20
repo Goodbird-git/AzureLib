@@ -10,16 +10,16 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
-import mod.azure.azurelib.core2.model.AzBakedModel;
-import mod.azure.azurelib.core2.model.cache.AzBakedModelCache;
+import mod.azure.azurelib.core2.render.AzProvider;
 
 public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<T> {
 
-    private final AzEntityRendererPipeline<T> rendererPipeline;
-
     private final AzEntityRendererConfig<T> config;
+
+    private final AzProvider<T> provider;
+
+    private final AzEntityRendererPipeline<T> rendererPipeline;
 
     @Nullable
     private AzEntityAnimator<T> reusedAzEntityAnimator;
@@ -27,6 +27,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
     protected AzEntityRenderer(AzEntityRendererConfig<T> config, EntityRendererProvider.Context context) {
         super(context);
         this.config = config;
+        this.provider = new AzProvider<>(config::createAnimator, config::modelLocation);
         this.rendererPipeline = new AzEntityRendererPipeline<>(config, this);
     }
 
@@ -55,8 +56,8 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
         @NotNull MultiBufferSource bufferSource,
         int packedLight
     ) {
-        var cachedEntityAnimator = provideAnimator(entity);
-        var azBakedModel = provideBakedModel(entity);
+        var cachedEntityAnimator = (AzEntityAnimator<T>) provider.provideAnimator(entity);
+        var azBakedModel = provider.provideBakedModel(entity);
 
         if (cachedEntityAnimator != null && azBakedModel != null) {
             cachedEntityAnimator.setActiveModel(azBakedModel);
@@ -77,32 +78,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<
             partialTick,
             packedLight
         );
-    }
-
-    protected @Nullable AzBakedModel provideBakedModel(@NotNull T entity) {
-        var modelResourceLocation = config.modelLocation(entity);
-        return AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
-    }
-
-    private @Nullable AzEntityAnimator<T> provideAnimator(T entity) {
-        // TODO: Instead of caching the entire animator itself, we're going to want to cache the relevant data for the
-        // entity.
-        var accessor = AzAnimatorAccessor.cast(entity);
-        var cachedEntityAnimator = (AzEntityAnimator<T>) accessor.getAnimatorOrNull();
-
-        if (cachedEntityAnimator == null) {
-            // If the cached animator is null, create a new one. We use a separate reference here just for some
-            cachedEntityAnimator = (AzEntityAnimator<T>) config.createAnimator();
-
-            if (cachedEntityAnimator != null) {
-                // If the new animator we created is not null, then register its controllers.
-                cachedEntityAnimator.registerControllers(cachedEntityAnimator.getAnimationControllerContainer());
-                // Also cache the animator so that the next time we fetch the animator, it's ready for us.
-                accessor.setAnimator(cachedEntityAnimator);
-            }
-        }
-
-        return cachedEntityAnimator;
     }
 
     /**
