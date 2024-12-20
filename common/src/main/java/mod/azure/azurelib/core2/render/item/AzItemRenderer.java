@@ -93,7 +93,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
                 packedOverlay
             );
         } else {
-            var renderType = rendererPipeline.getContext()
+            var renderType = rendererPipeline.context()
                 .getDefaultRenderType(
                     animatable,
                     config.textureLocation(animatable),
@@ -146,7 +146,7 @@ public abstract class AzItemRenderer extends BlockEntityWithoutLevelRenderer {
             bufferSource instanceof MultiBufferSource.BufferSource bufferSource2
                 ? bufferSource2
                 : Minecraft.getInstance().levelRenderer.renderBuffers.bufferSource();
-        RenderType renderType = rendererPipeline.getContext()
+        RenderType renderType = rendererPipeline.context()
             .getDefaultRenderType(
                 animatable,
                 config.textureLocation(animatable),

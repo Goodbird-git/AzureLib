@@ -134,7 +134,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         return config;
     }
 
-    public AzRendererPipelineContext<T> getContext() {
+    public AzRendererPipelineContext<T> context() {
         return context;
     }
 }
