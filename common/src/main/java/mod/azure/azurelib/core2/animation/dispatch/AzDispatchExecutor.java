@@ -1,6 +1,8 @@
 package mod.azure.azurelib.core2.animation.dispatch;
 
+import mod.azure.azurelib.common.internal.common.network.packet.AzBlockEntityDispatchCommandPacket;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
@@ -13,6 +15,7 @@ import mod.azure.azurelib.common.internal.common.network.packet.AzItemStackDispa
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public record AzDispatchExecutor(
     List<AzDispatchCommand> commands,
@@ -28,6 +31,18 @@ public record AzDispatchExecutor(
         switch (origin) {
             case CLIENT -> dispatchFromClient(entity);
             case SERVER -> handleServerDispatchForEntity(entity);
+        }
+    }
+
+    public void sendForBlockEntity(BlockEntity entity) {
+        if (!canNotProceed(entity)) {
+            // TODO: Log here.
+            return;
+        }
+
+        switch (origin) {
+            case CLIENT -> dispatchFromClient(entity);
+            case SERVER -> handleServerDispatchForBlockEntity(entity);
         }
     }
 
@@ -77,6 +92,16 @@ public record AzDispatchExecutor(
         });
     }
 
+    private void handleServerDispatchForBlockEntity(BlockEntity entity) {
+        var entityBlockPos = entity.getBlockPos();
+
+        commands.forEach(command -> {
+            // TODO: Buffer commands together.
+            var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, command, origin);
+            Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
+        });
+    }
+
     private void handleServerDispatchForItem(Entity entity, ItemStack itemStack) {
         var uuid = itemStack.get(AzureLib.AZ_ID.get());
         commands.forEach(command -> {
@@ -89,6 +114,10 @@ public record AzDispatchExecutor(
     private <T> boolean isClientSide(T animatable) {
         if (animatable instanceof Entity entity) {
             return entity.level().isClientSide();
+        }
+
+        if (animatable instanceof BlockEntity entity) {
+            return entity.getLevel().isClientSide();
         }
 
         throw new IllegalArgumentException("Unhandled animatable type: " + animatable);
