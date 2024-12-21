@@ -19,6 +19,7 @@ import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
+import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmor;
 import mod.azure.azurelib.fabric.core2.example.armors.DoomArmor;
 import mod.azure.azurelib.fabric.core2.example.blocks.Stargate;
 import mod.azure.azurelib.fabric.core2.example.items.AzPistol;
@@ -31,6 +32,22 @@ public final class FabricAzureLibMod implements ModInitializer {
     );
 
     public static final Item AZ_PISTOL = new AzPistol();
+
+    public static final Item AZ_DOOM_HELMET = new AzDoomArmor(ArmorItem.Type.HELMET);
+
+    public static final Item AZ_DOOM_CHESTPLATE = new AzDoomArmor(ArmorItem.Type.CHESTPLATE);
+
+    public static final Item AZ_DOOM_LEGGINGS = new AzDoomArmor(ArmorItem.Type.LEGGINGS);
+
+    public static final Item AZ_DOOM_BOOTS = new AzDoomArmor(ArmorItem.Type.BOOTS);
+
+    public static final Item DOOM_HELMET = new DoomArmor(ArmorItem.Type.HELMET);
+
+    public static final Item DOOM_CHESTPLATE = new DoomArmor(ArmorItem.Type.CHESTPLATE);
+
+    public static final Item DOOM_LEGGINGS = new DoomArmor(ArmorItem.Type.LEGGINGS);
+
+    public static final Item DOOM_BOOTS = new DoomArmor(ArmorItem.Type.BOOTS);
 
     @Override
     public void onInitialize() {
@@ -66,23 +83,43 @@ public final class FabricAzureLibMod implements ModInitializer {
         );
         Registry.register(
             BuiltInRegistries.ITEM,
+            AzureLib.modResource("az_doomicorn_helmet"),
+            AZ_DOOM_HELMET
+        );
+        Registry.register(
+            BuiltInRegistries.ITEM,
+            AzureLib.modResource("az_doomicorn_chestplate"),
+            AZ_DOOM_CHESTPLATE
+        );
+        Registry.register(
+            BuiltInRegistries.ITEM,
+            AzureLib.modResource("az_doomicorn_leggings"),
+            AZ_DOOM_LEGGINGS
+        );
+        Registry.register(
+            BuiltInRegistries.ITEM,
+            AzureLib.modResource("az_doomicorn_boots"),
+            AZ_DOOM_BOOTS
+        );
+        Registry.register(
+            BuiltInRegistries.ITEM,
             AzureLib.modResource("doomicorn_helmet"),
-            new DoomArmor(ArmorItem.Type.HELMET)
+            DOOM_HELMET
         );
         Registry.register(
             BuiltInRegistries.ITEM,
             AzureLib.modResource("doomicorn_chestplate"),
-            new DoomArmor(ArmorItem.Type.CHESTPLATE)
+            DOOM_CHESTPLATE
         );
         Registry.register(
             BuiltInRegistries.ITEM,
             AzureLib.modResource("doomicorn_leggings"),
-            new DoomArmor(ArmorItem.Type.LEGGINGS)
+            DOOM_LEGGINGS
         );
         Registry.register(
             BuiltInRegistries.ITEM,
             AzureLib.modResource("doomicorn_boots"),
-            new DoomArmor(ArmorItem.Type.BOOTS)
+            DOOM_BOOTS
         );
         ExampleEntityTypes.initialize();
     }

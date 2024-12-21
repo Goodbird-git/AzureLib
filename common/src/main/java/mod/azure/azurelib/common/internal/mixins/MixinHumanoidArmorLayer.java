@@ -10,7 +10,6 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -28,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import mod.azure.azurelib.common.api.client.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.core2.render.armor.AzArmorRendererRegistry;
 
 /**
  * @deprecated
@@ -67,29 +67,38 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, A extends 
         CallbackInfo ci,
         @Share("item_by_slot") LocalRef<ItemStack> itemBySlotRef
     ) {
-        final ItemStack stack = itemBySlotRef.get();
-        final Model geckolibModel = RenderProvider.of(stack)
-            .getGenericArmorModel(
-                entity,
-                stack,
-                equipmentSlot,
-                (HumanoidModel<LivingEntity>) baseModel
-            );
+        var stack = itemBySlotRef.get();
+        var renderProvider = RenderProvider.of(stack);
+        @SuppressWarnings("unchecked")
+        var humanoidModel = (HumanoidModel<LivingEntity>) baseModel;
+        var geckolibModel = renderProvider
+            .getGenericArmorModel(entity, stack, equipmentSlot, humanoidModel);
+        var i2 = stack.is(
+            ItemTags.DYEABLE
+        ) ? FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(stack, -6265536)) : -1;
 
         if (geckolibModel != null && stack.getItem() instanceof GeoItem) {
-            if (geckolibModel instanceof GeoArmorRenderer<?> geoArmorRenderer)
+            if (geckolibModel instanceof GeoArmorRenderer<?> geoArmorRenderer) {
                 geoArmorRenderer.prepForRender(entity, stack, equipmentSlot, baseModel);
+            }
 
             baseModel.copyPropertiesTo((A) geckolibModel);
-            geckolibModel.renderToBuffer(
-                poseStack,
-                null,
-                packedLight,
-                OverlayTexture.NO_OVERLAY,
-                stack.is(
-                    ItemTags.DYEABLE
-                ) ? FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(stack, -6265536)) : -1
-            );
+
+            geckolibModel.renderToBuffer(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, i2);
+            ci.cancel();
+        }
+
+        var renderer = AzArmorRendererRegistry.getOrNull(stack.getItem());
+
+        if (renderer != null) {
+            var rendererPipeline = renderer.rendererPipeline();
+            var armorModel = rendererPipeline.armorModel();
+            @SuppressWarnings("unchecked")
+            var typedHumanoidModel = (HumanoidModel<T>) armorModel;
+
+            renderer.prepForRender(entity, stack, equipmentSlot, baseModel);
+            baseModel.copyPropertiesTo(typedHumanoidModel);
+            armorModel.renderToBuffer(poseStack, null, packedLight, OverlayTexture.NO_OVERLAY, i2);
             ci.cancel();
         }
     }
