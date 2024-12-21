@@ -20,7 +20,6 @@ import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmor;
-import mod.azure.azurelib.fabric.core2.example.armors.DoomArmor;
 import mod.azure.azurelib.fabric.core2.example.blocks.Stargate;
 import mod.azure.azurelib.fabric.core2.example.items.AzPistol;
 import mod.azure.azurelib.fabric.platform.FabricAzureLibNetwork;
@@ -40,14 +39,6 @@ public final class FabricAzureLibMod implements ModInitializer {
     public static final Item AZ_DOOM_LEGGINGS = new AzDoomArmor(ArmorItem.Type.LEGGINGS);
 
     public static final Item AZ_DOOM_BOOTS = new AzDoomArmor(ArmorItem.Type.BOOTS);
-
-    public static final Item DOOM_HELMET = new DoomArmor(ArmorItem.Type.HELMET);
-
-    public static final Item DOOM_CHESTPLATE = new DoomArmor(ArmorItem.Type.CHESTPLATE);
-
-    public static final Item DOOM_LEGGINGS = new DoomArmor(ArmorItem.Type.LEGGINGS);
-
-    public static final Item DOOM_BOOTS = new DoomArmor(ArmorItem.Type.BOOTS);
 
     @Override
     public void onInitialize() {
@@ -100,26 +91,6 @@ public final class FabricAzureLibMod implements ModInitializer {
             BuiltInRegistries.ITEM,
             AzureLib.modResource("az_doomicorn_boots"),
             AZ_DOOM_BOOTS
-        );
-        Registry.register(
-            BuiltInRegistries.ITEM,
-            AzureLib.modResource("doomicorn_helmet"),
-            DOOM_HELMET
-        );
-        Registry.register(
-            BuiltInRegistries.ITEM,
-            AzureLib.modResource("doomicorn_chestplate"),
-            DOOM_CHESTPLATE
-        );
-        Registry.register(
-            BuiltInRegistries.ITEM,
-            AzureLib.modResource("doomicorn_leggings"),
-            DOOM_LEGGINGS
-        );
-        Registry.register(
-            BuiltInRegistries.ITEM,
-            AzureLib.modResource("doomicorn_boots"),
-            DOOM_BOOTS
         );
         ExampleEntityTypes.initialize();
     }
