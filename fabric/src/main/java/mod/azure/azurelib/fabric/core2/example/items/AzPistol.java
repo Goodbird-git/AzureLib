@@ -14,7 +14,7 @@ public class AzPistol extends Item {
     private final AzPistolAnimationDispatcher dispatcher;
 
     public AzPistol() {
-        super(new Properties());
+        super(new Properties().stacksTo(1));
         this.dispatcher = new AzPistolAnimationDispatcher();
     }
 
