@@ -20,7 +20,6 @@ public abstract class AzBlockEntityRenderer<T extends BlockEntity> implements Bl
     private AzBlockAnimator<T> reusedAzBlockAnimator;
 
     protected AzBlockEntityRenderer(AzBlockEntityRendererConfig<T> config) {
-        super();
         this.provider = new AzProvider<>(config::createAnimator, config::modelLocation);
         this.rendererPipeline = new AzBlockEntityRendererPipeline<>(config, this);
     }
@@ -30,32 +29,22 @@ public abstract class AzBlockEntityRenderer<T extends BlockEntity> implements Bl
         @NotNull T entity,
         float partialTick,
         @NotNull PoseStack poseStack,
-        @NotNull MultiBufferSource multiBufferSource,
+        @NotNull MultiBufferSource source,
         int packedLight,
         int packedOverlay
     ) {
         var cachedEntityAnimator = (AzBlockAnimator<T>) provider.provideAnimator(entity);
-        var azBakedModel = provider.provideBakedModel(entity);
+        var model = provider.provideBakedModel(entity);
 
-        if (cachedEntityAnimator != null && azBakedModel != null) {
-            cachedEntityAnimator.setActiveModel(azBakedModel);
+        if (cachedEntityAnimator != null && model != null) {
+            cachedEntityAnimator.setActiveModel(model);
         }
 
         // Point the renderer's current animator reference to the cached entity animator before rendering.
         reusedAzBlockAnimator = cachedEntityAnimator;
 
         // Execute the render pipeline.
-        rendererPipeline.render(
-            poseStack,
-            azBakedModel,
-            entity,
-            multiBufferSource,
-            null,
-            null,
-            0,
-            partialTick,
-            packedLight
-        );
+        rendererPipeline.render(poseStack, model, entity, source, null, null, 0, partialTick, packedLight);
     }
 
     public AzBlockAnimator<T> getAnimator() {

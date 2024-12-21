@@ -15,7 +15,7 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 public class AzBlockEntityRendererPipeline<T extends BlockEntity> extends AzRendererPipeline<T> {
 
-    private final AzBlockEntityRenderer<T> blockRenderer;
+    private final AzBlockEntityRenderer<T> blockEntityRenderer;
 
     protected Matrix4f entityRenderTranslations = new Matrix4f();
 
@@ -23,10 +23,10 @@ public class AzBlockEntityRendererPipeline<T extends BlockEntity> extends AzRend
 
     public AzBlockEntityRendererPipeline(
         AzBlockEntityRendererConfig<T> config,
-        AzBlockEntityRenderer<T> entityRenderer
+        AzBlockEntityRenderer<T> blockEntityRenderer
     ) {
         super(config);
-        this.blockRenderer = entityRenderer;
+        this.blockEntityRenderer = blockEntityRenderer;
     }
 
     @Override
@@ -79,6 +79,6 @@ public class AzBlockEntityRendererPipeline<T extends BlockEntity> extends AzRend
     public void postRender(AzRendererPipelineContext<T> context, boolean isReRender) {}
 
     public AzBlockEntityRenderer<T> getRenderer() {
-        return blockRenderer;
+        return blockEntityRenderer;
     }
 }
