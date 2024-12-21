@@ -18,6 +18,7 @@ import mod.azure.azurelib.common.internal.common.config.AzureLibConfig;
 import mod.azure.azurelib.common.internal.common.config.format.ConfigFormats;
 import mod.azure.azurelib.common.internal.common.config.io.ConfigIO;
 import mod.azure.azurelib.common.internal.common.network.packet.*;
+import mod.azure.azurelib.core2.animation.cache.AzIdentityRegistry;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
 import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmor;
 import mod.azure.azurelib.fabric.core2.example.blocks.Stargate;
@@ -93,5 +94,6 @@ public final class FabricAzureLibMod implements ModInitializer {
             AZ_DOOM_BOOTS
         );
         ExampleEntityTypes.initialize();
+        AzIdentityRegistry.register(AZ_PISTOL);
     }
 }
