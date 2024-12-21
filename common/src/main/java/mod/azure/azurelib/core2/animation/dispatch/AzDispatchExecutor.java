@@ -24,7 +24,11 @@ public record AzDispatchExecutor(
 
     public void sendForEntity(Entity entity) {
         if (!canNotProceed(entity)) {
-            // TODO: Log here.
+            AzureLib.LOGGER.warn(
+                "Could not dispatch animation command for entity. Origin: {}, Entity: {}",
+                origin,
+                entity.getType().toShortString()
+            );
             return;
         }
 
@@ -36,7 +40,11 @@ public record AzDispatchExecutor(
 
     public void sendForBlockEntity(BlockEntity entity) {
         if (!canNotProceed(entity)) {
-            // TODO: Log here.
+            AzureLib.LOGGER.warn(
+                "Could not dispatch animation command for block entity. Origin: {}, Block Entity: {}",
+                origin,
+                entity.getType()
+            );
             return;
         }
 
@@ -48,7 +56,12 @@ public record AzDispatchExecutor(
 
     public void sendForItem(Entity entity, ItemStack itemStack) {
         if (!canNotProceed(entity)) {
-            // TODO: Log here.
+            AzureLib.LOGGER.warn(
+                "Could not dispatch animation command for item. Origin: {}, Entity: {}, Item: {}",
+                origin,
+                entity.getType().toShortString(),
+                itemStack.getItem()
+            );
             return;
         }
 
@@ -76,9 +89,7 @@ public record AzDispatchExecutor(
         var animator = AzAnimatorAccessor.getOrNull(animatable);
 
         if (animator != null) {
-            commands.forEach(command -> {
-                command.getActions().forEach(action -> action.handle(animator));
-            });
+            commands.forEach(command -> command.getActions().forEach(action -> action.handle(animator)));
         }
     }
 
@@ -96,7 +107,7 @@ public record AzDispatchExecutor(
         var entityBlockPos = entity.getBlockPos();
 
         commands.forEach(command -> {
-            // TODO: Buffer commands together.
+            // TODO: Batch commands together.
             var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, command, origin);
             Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
         });
@@ -105,21 +116,21 @@ public record AzDispatchExecutor(
     private void handleServerDispatchForItem(Entity entity, ItemStack itemStack) {
         var uuid = itemStack.get(AzureLib.AZ_ID.get());
         commands.forEach(command -> {
-            // TODO: Buffer commands together.
+            // TODO: Batch commands together.
             var packet = new AzItemStackDispatchCommandPacket(uuid, command, origin);
             Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         });
     }
 
-    private <T> boolean isClientSide(T animatable) {
-        if (animatable instanceof Entity entity) {
+    private <T> boolean isClientSide(T levelHolder) {
+        if (levelHolder instanceof Entity entity) {
             return entity.level().isClientSide();
         }
 
-        if (animatable instanceof BlockEntity entity) {
+        if (levelHolder instanceof BlockEntity entity) {
             return entity.getLevel().isClientSide();
         }
 
-        throw new IllegalArgumentException("Unhandled animatable type: " + animatable);
+        throw new IllegalArgumentException("Unhandled animatable type: " + levelHolder);
     }
 }
