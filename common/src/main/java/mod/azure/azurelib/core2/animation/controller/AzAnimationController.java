@@ -233,6 +233,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         // Run state machine updates.
         stateMachine.update();
 
+        // TODO: Is this if-block necessary?
         if (currentAnimation == null) {
             if (animationQueue.isEmpty()) {
                 // If there is no animation to play, stop.
