@@ -10,7 +10,7 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 
 /**
- * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#getParticleKeyframeHandler()}.<br>
+ * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#particleKeyframeHandler()}.<br>
  * Called when a particle instruction keyframe is encountered
  */
 public class AzParticleKeyframeEvent<T> extends AzKeyFrameEvent<T, ParticleKeyframeData> {

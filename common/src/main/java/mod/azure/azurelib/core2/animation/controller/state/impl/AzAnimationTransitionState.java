@@ -19,36 +19,36 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
     @Override
     public void onEnter(AzAnimationControllerStateMachine.Context<T> context) {
         super.onEnter(context);
-        var controller = context.getAnimationController();
-        var controllerTimer = controller.getControllerTimer();
+        var controller = context.animationController();
+        var controllerTimer = controller.controllerTimer();
         controllerTimer.reset();
     }
 
     @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
-        var controller = context.getAnimationController();
-        var controllerTimer = controller.getControllerTimer();
-        var boneSnapshotCache = controller.getBoneSnapshotCache();
-        var animContext = context.getAnimationContext();
+        var controller = context.animationController();
+        var controllerTimer = controller.controllerTimer();
+        var boneSnapshotCache = controller.boneSnapshotCache();
+        var animContext = context.animationContext();
 
-        var stateMachine = context.getStateMachine();
+        var stateMachine = context.stateMachine();
         var boneCache = animContext.boneCache();
 
         if (controllerTimer.getAdjustedTick() == 0) {
-            controller.setCurrentAnimation(controller.getAnimationQueue().next());
+            controller.setCurrentAnimation(controller.animationQueue().next());
 
-            controller.getKeyFrameManager().keyFrameCallbackHandler().reset();
+            controller.keyFrameManager().keyFrameCallbackHandler().reset();
 
-            if (controller.getCurrentAnimation() == null) {
+            if (controller.currentAnimation() == null) {
                 return;
             }
 
             var snapshots = boneCache.getBoneSnapshotsByName();
 
-            boneSnapshotCache.put(controller.getCurrentAnimation(), snapshots.values());
+            boneSnapshotCache.put(controller.currentAnimation(), snapshots.values());
         }
 
-        var hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.getAnimationProperties()
+        var hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.animationProperties()
             .transitionLength();
 
         if (hasFinishedTransitioning) {
@@ -57,10 +57,10 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
             return;
         }
 
-        if (controller.getCurrentAnimation() != null) {
+        if (controller.currentAnimation() != null) {
             var bones = boneCache.getBakedModel().getBonesByName();
             var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
-            var keyFrameTransitioner = controller.getKeyFrameManager().getKeyFrameTransitioner();
+            var keyFrameTransitioner = controller.keyFrameManager().getKeyFrameTransitioner();
 
             keyFrameTransitioner.transition(bones, crashWhenCantFindBone, controllerTimer.getAdjustedTick());
         }

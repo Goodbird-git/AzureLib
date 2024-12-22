@@ -23,17 +23,17 @@ public class AzAnimationControllerTimer<T> {
      * Is used when starting a new animation, transitioning, and a few other key areas
      */
     public void update() {
-        var stateMachine = animationController.getStateMachine();
-        var animContext = stateMachine.getContext().getAnimationContext();
-        var animationSpeed = animationController.getAnimationProperties().animationSpeed();
+        var stateMachine = animationController.stateMachine();
+        var animContext = stateMachine.getContext().animationContext();
+        var animationSpeed = animationController.animationProperties().animationSpeed();
         var tick = animContext.timer().getAnimTime();
 
         adjustedTick = animationSpeed * Math.max(tick - tickOffset, 0);
     }
 
     public void reset() {
-        var stateMachine = animationController.getStateMachine();
-        var animContext = stateMachine.getContext().getAnimationContext();
+        var stateMachine = animationController.stateMachine();
+        var animContext = stateMachine.getContext().animationContext();
         var tick = animContext.timer().getAnimTime();
 
         if (!stateMachine.isStopped()) {

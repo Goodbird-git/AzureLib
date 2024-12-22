@@ -40,15 +40,15 @@ public class AzKeyFrameCallbacks<T> {
         this.soundKeyframeHandler = soundKeyframeHandler;
     }
 
-    public @Nullable AzCustomKeyframeHandler<T> getCustomKeyframeHandler() {
+    public @Nullable AzCustomKeyframeHandler<T> customKeyframeHandler() {
         return customKeyframeHandler;
     }
 
-    public @Nullable AzParticleKeyframeHandler<T> getParticleKeyframeHandler() {
+    public @Nullable AzParticleKeyframeHandler<T> particleKeyframeHandler() {
         return particleKeyframeHandler;
     }
 
-    public @Nullable AzSoundKeyframeHandler<T> getSoundKeyframeHandler() {
+    public @Nullable AzSoundKeyframeHandler<T> soundKeyframeHandler() {
         return soundKeyframeHandler;
     }
 

@@ -22,10 +22,10 @@ public class AzAnimationControllerContainer<T> {
 
     @SafeVarargs
     public final void add(AzAnimationController<T> controller, AzAnimationController<T>... controllers) {
-        animationControllersByName.put(controller.getName(), controller);
+        animationControllersByName.put(controller.name(), controller);
 
         for (var extraController : controllers) {
-            animationControllersByName.put(extraController.getName(), extraController);
+            animationControllersByName.put(extraController.name(), extraController);
         }
     }
 

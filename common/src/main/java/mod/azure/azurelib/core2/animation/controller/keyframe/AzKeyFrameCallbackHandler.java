@@ -49,8 +49,8 @@ public class AzKeyFrameCallbackHandler<T> {
     }
 
     private void handleCustomKeyframes(T animatable, double adjustedTick) {
-        var customKeyframeHandler = keyFrameCallbacks.getCustomKeyframeHandler();
-        var customInstructions = getCurrentAnimation().animation().keyFrames().customInstructions();
+        var customKeyframeHandler = keyFrameCallbacks.customKeyframeHandler();
+        var customInstructions = currentAnimation().animation().keyFrames().customInstructions();
 
         for (var keyframeData : customInstructions) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
@@ -58,7 +58,7 @@ public class AzKeyFrameCallbackHandler<T> {
                     LOGGER.warn(
                         "Custom Instruction Keyframe found for {} -> {}, but no keyframe handler registered",
                         animatable.getClass().getSimpleName(),
-                        getName()
+                        animationController.name()
                     );
                     break;
                 }
@@ -71,8 +71,8 @@ public class AzKeyFrameCallbackHandler<T> {
     }
 
     private void handleParticleKeyframes(T animatable, double adjustedTick) {
-        var particleKeyframeHandler = keyFrameCallbacks.getParticleKeyframeHandler();
-        var particleInstructions = getCurrentAnimation().animation().keyFrames().particles();
+        var particleKeyframeHandler = keyFrameCallbacks.particleKeyframeHandler();
+        var particleInstructions = currentAnimation().animation().keyFrames().particles();
 
         for (var keyframeData : particleInstructions) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
@@ -80,7 +80,7 @@ public class AzKeyFrameCallbackHandler<T> {
                     LOGGER.warn(
                         "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
                         animatable.getClass().getSimpleName(),
-                        getName()
+                        animationController.name()
                     );
                     break;
                 }
@@ -93,8 +93,8 @@ public class AzKeyFrameCallbackHandler<T> {
     }
 
     private void handleSoundKeyframes(T animatable, double adjustedTick) {
-        var soundKeyframeHandler = keyFrameCallbacks.getSoundKeyframeHandler();
-        var soundInstructions = getCurrentAnimation().animation().keyFrames().sounds();
+        var soundKeyframeHandler = keyFrameCallbacks.soundKeyframeHandler();
+        var soundInstructions = currentAnimation().animation().keyFrames().sounds();
 
         for (var keyframeData : soundInstructions) {
             if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
@@ -102,7 +102,7 @@ public class AzKeyFrameCallbackHandler<T> {
                     LOGGER.warn(
                         "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
                         animatable.getClass().getSimpleName(),
-                        getName()
+                        animationController.name()
                     );
                     break;
                 }
@@ -121,11 +121,7 @@ public class AzKeyFrameCallbackHandler<T> {
         executedKeyFrames.clear();
     }
 
-    private AzQueuedAnimation getCurrentAnimation() {
-        return animationController.getCurrentAnimation();
-    }
-
-    private String getName() {
-        return animationController.getName();
+    private AzQueuedAnimation currentAnimation() {
+        return animationController.currentAnimation();
     }
 }

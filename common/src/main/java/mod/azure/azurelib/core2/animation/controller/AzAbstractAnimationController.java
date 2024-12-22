@@ -26,7 +26,7 @@ public class AzAbstractAnimationController {
         this.triggeredAnimation = null;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

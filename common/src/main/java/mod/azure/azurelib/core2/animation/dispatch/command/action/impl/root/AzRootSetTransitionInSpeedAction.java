@@ -34,7 +34,7 @@ public record AzRootSetTransitionInSpeedAction(
         animator.getAnimationControllerContainer()
             .getAll()
             .forEach(
-                controller -> controller.getAnimationProperties()
+                controller -> controller.animationProperties()
                     .setTransitionLength(transitionSpeed)
             );
     }

@@ -51,7 +51,7 @@ public interface AzLoopType {
      * Returns `true`, indicating the controller should not proceed to the next state or reset/replay the animation.
      */
     AzLoopType HOLD_ON_LAST_FRAME = register("hold_on_last_frame", (animatable, controller, currentAnimation) -> {
-        controller.getStateMachine().pause();
+        controller.stateMachine().pause();
 
         return true;
     });

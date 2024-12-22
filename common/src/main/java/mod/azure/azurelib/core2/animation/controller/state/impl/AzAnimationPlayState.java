@@ -20,17 +20,17 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
     @Override
     public void onEnter(AzAnimationControllerStateMachine.Context<T> context) {
         super.onEnter(context);
-        var controller = context.getAnimationController();
-        var controllerTimer = controller.getControllerTimer();
+        var controller = context.animationController();
+        var controllerTimer = controller.controllerTimer();
 
         controllerTimer.reset();
     }
 
     @Override
     public void onUpdate(AzAnimationControllerStateMachine.Context<T> context) {
-        var controller = context.getAnimationController();
-        var controllerTimer = controller.getControllerTimer();
-        var currentAnimation = controller.getCurrentAnimation();
+        var controller = context.animationController();
+        var controllerTimer = controller.controllerTimer();
+        var currentAnimation = controller.currentAnimation();
 
         if (currentAnimation == null) {
             // If the current animation is null, we should try to play the next animation.
@@ -40,7 +40,7 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
         // At this point we have an animation currently playing. We need to query if that animation has finished.
 
-        var animContext = context.getAnimationContext();
+        var animContext = context.animationContext();
         var animatable = animContext.animatable();
         var hasAnimationFinished = controllerTimer.getAdjustedTick() >= currentAnimation.animation().length();
 
@@ -52,14 +52,14 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
                 playAgain(context);
             } else {
                 // Nothing more to do at this point since we can't play the animation again, so stop.
-                context.getStateMachine().stop();
+                context.stateMachine().stop();
                 return;
             }
         }
 
         // The animation is still running at this point, proceed with updating the bones according to keyframes.
 
-        var keyFrameManager = controller.getKeyFrameManager();
+        var keyFrameManager = controller.keyFrameManager();
         var keyFrameExecutor = keyFrameManager.getKeyFrameExecutor();
         var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
 
@@ -67,14 +67,14 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
     }
 
     private void tryPlayNextOrStop(AzAnimationControllerStateMachine.Context<T> context) {
-        var controller = context.getAnimationController();
-        var stateMachine = context.getStateMachine();
-        var keyFrameManager = controller.getKeyFrameManager();
+        var controller = context.animationController();
+        var stateMachine = context.stateMachine();
+        var keyFrameManager = controller.keyFrameManager();
         var keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
 
         keyFrameCallbackHandler.reset();
 
-        var animationQueue = controller.getAnimationQueue();
+        var animationQueue = controller.animationQueue();
         var nextAnimation = animationQueue.peek();
         var canPlayNextSuccessfully = nextAnimation != null;
 
@@ -94,8 +94,8 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
         AzAnimationControllerStateMachine.Context<T> context,
         AzQueuedAnimation currentAnimation
     ) {
-        var animatable = context.getAnimationContext().animatable();
-        var controller = context.getAnimationController();
+        var animatable = context.animationContext().animatable();
+        var controller = context.animationController();
 
         // If it has, we then need to see if the animation should play again.
         return currentAnimation.loopType()
@@ -103,9 +103,9 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
     }
 
     protected void playAgain(AzAnimationControllerStateMachine.Context<T> context) {
-        var controller = context.getAnimationController();
-        var controllerTimer = controller.getControllerTimer();
-        var keyFrameManager = controller.getKeyFrameManager();
+        var controller = context.animationController();
+        var controllerTimer = controller.controllerTimer();
+        var keyFrameManager = controller.keyFrameManager();
         var keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
 
         controllerTimer.reset();

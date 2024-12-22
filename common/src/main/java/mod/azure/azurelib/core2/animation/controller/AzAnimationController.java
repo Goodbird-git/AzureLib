@@ -197,35 +197,35 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         boneAnimationQueueCache.update(animationProperties.easingType());
     }
 
-    public AzAnimationProperties getAnimationProperties() {
+    public AzAnimationProperties animationProperties() {
         return animationProperties;
     }
 
-    public AzAnimationQueue getAnimationQueue() {
+    public AzAnimationQueue animationQueue() {
         return animationQueue;
     }
 
-    public AzBoneAnimationQueueCache<T> getBoneAnimationQueueCache() {
+    public AzBoneAnimationQueueCache<T> boneAnimationQueueCache() {
         return boneAnimationQueueCache;
     }
 
-    public AzBoneSnapshotCache getBoneSnapshotCache() {
+    public AzBoneSnapshotCache boneSnapshotCache() {
         return boneSnapshotCache;
     }
 
-    public AzAnimationControllerTimer<T> getControllerTimer() {
+    public AzAnimationControllerTimer<T> controllerTimer() {
         return controllerTimer;
     }
 
-    public @Nullable AzQueuedAnimation getCurrentAnimation() {
+    public @Nullable AzQueuedAnimation currentAnimation() {
         return currentAnimation;
     }
 
-    public AzKeyFrameManager<T> getKeyFrameManager() {
+    public AzKeyFrameManager<T> keyFrameManager() {
         return keyFrameManager;
     }
 
-    public AzAnimationControllerStateMachine<T> getStateMachine() {
+    public AzAnimationControllerStateMachine<T> stateMachine() {
         return stateMachine;
     }
 

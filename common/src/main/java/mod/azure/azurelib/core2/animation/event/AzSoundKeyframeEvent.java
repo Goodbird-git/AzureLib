@@ -10,7 +10,7 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 
 /**
- * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#getSoundKeyframeHandler()}.<br>
+ * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#soundKeyframeHandler()}.<br>
  * Called when a sound instruction keyframe is encountered
  */
 public class AzSoundKeyframeEvent<T> extends AzKeyFrameEvent<T, SoundKeyframeData> {

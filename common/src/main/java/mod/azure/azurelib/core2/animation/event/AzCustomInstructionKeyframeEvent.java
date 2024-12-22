@@ -5,7 +5,7 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 
 /**
- * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#getCustomKeyframeHandler()}.<br>
+ * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#customKeyframeHandler()}.<br>
  * Called when a custom instruction keyframe is encountered
  */
 public class AzCustomInstructionKeyframeEvent<T> extends AzKeyFrameEvent<T, CustomInstructionKeyframeData> {

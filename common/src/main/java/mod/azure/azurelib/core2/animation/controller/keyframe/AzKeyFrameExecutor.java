@@ -42,9 +42,9 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
      *                              bone, or continue with the remaining bones
      */
     public void execute(@NotNull AzQueuedAnimation currentAnimation, T animatable, boolean crashWhenCantFindBone) {
-        var keyFrameCallbackHandler = animationController.getKeyFrameManager().keyFrameCallbackHandler();
-        var controllerTimer = animationController.getControllerTimer();
-        var transitionLength = animationController.getAnimationProperties().transitionLength();
+        var keyFrameCallbackHandler = animationController.keyFrameManager().keyFrameCallbackHandler();
+        var controllerTimer = animationController.controllerTimer();
+        var transitionLength = animationController.animationProperties().transitionLength();
 
         final double finalAdjustedTick = controllerTimer.getAdjustedTick();
 

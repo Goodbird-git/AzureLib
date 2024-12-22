@@ -26,7 +26,7 @@ public record AzRootSetEasingTypeAction(
         animator.getAnimationControllerContainer()
             .getAll()
             .forEach(
-                controller -> controller.getAnimationProperties()
+                controller -> controller.animationProperties()
                     .setEasingType(easingType)
             );
     }

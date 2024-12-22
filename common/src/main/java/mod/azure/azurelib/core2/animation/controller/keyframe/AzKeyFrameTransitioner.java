@@ -39,8 +39,8 @@ public class AzKeyFrameTransitioner<T> extends AzAbstractKeyFrameExecutor {
     }
 
     public void transition(Map<String, AzBone> bones, boolean crashWhenCantFindBone, double adjustedTick) {
-        var currentAnimation = animationController.getCurrentAnimation();
-        var transitionLength = animationController.getAnimationProperties().transitionLength();
+        var currentAnimation = animationController.currentAnimation();
+        var transitionLength = animationController.animationProperties().transitionLength();
 
         MolangParser.INSTANCE.setValue(MolangQueries.ANIM_TIME, () -> 0);
 

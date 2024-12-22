@@ -106,7 +106,7 @@ public abstract class AzAnimator<T> {
             // should be re-instantiated. If the bone cache is re-instantiated, then so should the bone animation
             // queue caches.
             animationControllerContainer.getAll()
-                .forEach(controller -> controller.getBoneAnimationQueueCache().clear());
+                .forEach(controller -> controller.boneAnimationQueueCache().clear());
         }
     }
 

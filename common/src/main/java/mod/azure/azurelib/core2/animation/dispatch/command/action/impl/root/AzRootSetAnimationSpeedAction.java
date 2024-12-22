@@ -26,7 +26,7 @@ public record AzRootSetAnimationSpeedAction(
         animator.getAnimationControllerContainer()
             .getAll()
             .forEach(
-                controller -> controller.getAnimationProperties()
+                controller -> controller.animationProperties()
                     .setAnimationSpeed(animationSpeed)
             );
     }
