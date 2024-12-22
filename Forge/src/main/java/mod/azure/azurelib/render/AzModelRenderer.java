@@ -72,7 +72,7 @@ public class AzModelRenderer<T> {
 
         PoseStack poseStack = context.poseStack();
 
-        for (var cube : bone.getCubes()) {
+        for (GeoCube cube : bone.getCubes()) {
             poseStack.pushPose();
 
             renderCube(context, cube);

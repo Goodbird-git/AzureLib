@@ -7,7 +7,7 @@
  */
 package mod.azure.azurelib.mixin;
 
-import mod.azure.azurelib.client.texture.AnimatableTexture;
+import mod.azure.azurelib.render.textures.AnimatableTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;

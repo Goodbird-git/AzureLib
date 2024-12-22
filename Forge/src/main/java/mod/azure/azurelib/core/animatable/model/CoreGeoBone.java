@@ -1,6 +1,7 @@
 package mod.azure.azurelib.core.animatable.model;
 
 import mod.azure.azurelib.core.state.BoneSnapshot;
+import mod.azure.azurelib.model.AzBoneSnapshot;
 
 import java.util.List;
 
@@ -108,7 +109,7 @@ public interface CoreGeoBone {
 
 	void resetStateChanges();
 
-	BoneSnapshot getInitialSnapshot();
+	AzBoneSnapshot getInitialAzSnapshot();
 
 	List<? extends CoreGeoBone> getChildBones();
 

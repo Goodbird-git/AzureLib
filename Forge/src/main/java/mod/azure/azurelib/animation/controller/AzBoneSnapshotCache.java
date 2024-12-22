@@ -1,8 +1,8 @@
 package mod.azure.azurelib.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mod.azure.azurelib.animation.controller.keyframe.AzBoneAnimation;
 import mod.azure.azurelib.animation.primitive.AzQueuedAnimation;
-import mod.azure.azurelib.core.keyframe.BoneAnimation;
 import mod.azure.azurelib.model.AzBoneSnapshot;
 
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class AzBoneSnapshotCache {
         }
 
         for (AzBoneSnapshot snapshot : snapshots) {
-            for (BoneAnimation boneAnimation : animation.animation().boneAnimations()) {
+            for (AzBoneAnimation boneAnimation : animation.animation().boneAnimations()) {
                 if (boneAnimation.boneName().equals(snapshot.getBone().getName())) {
                     boneSnapshots.put(boneAnimation.boneName(), AzBoneSnapshot.copy(snapshot));
                     break;

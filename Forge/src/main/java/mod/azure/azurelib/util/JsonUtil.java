@@ -14,11 +14,7 @@ import mod.azure.azurelib.animation.parse.AzBakedAnimationsAdapter;
 import mod.azure.azurelib.animation.parse.AzKeyframesAdapter;
 import mod.azure.azurelib.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.animation.primitive.AzKeyframes;
-import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.loading.json.raw.*;
-import mod.azure.azurelib.loading.json.typeadapter.BakedAnimationsAdapter;
-import mod.azure.azurelib.loading.json.typeadapter.KeyFramesAdapter;
-import mod.azure.azurelib.loading.object.BakedAnimations;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
@@ -44,10 +40,6 @@ public final class JsonUtil {
 			.registerTypeAdapter(TextureMesh.class, TextureMesh.deserializer())
 			.registerTypeAdapter(UVFaces.class, UVFaces.deserializer())
 			.registerTypeAdapter(UVUnion.class, UVUnion.deserializer())
-			// TODO: Remove
-			.registerTypeAdapter(Animation.Keyframes.class, new KeyFramesAdapter())
-			// TODO: Remove
-			.registerTypeAdapter(BakedAnimations.class, new BakedAnimationsAdapter())
 			.registerTypeAdapter(AzKeyframes.class, new AzKeyframesAdapter())
 			.registerTypeAdapter(AzBakedAnimations.class, new AzBakedAnimationsAdapter())
 			.create();

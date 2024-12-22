@@ -2,7 +2,7 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Operator class
- *
+ * <br>
  * This class is responsible for performing a calculation of two values based on
  * given operation.
  */

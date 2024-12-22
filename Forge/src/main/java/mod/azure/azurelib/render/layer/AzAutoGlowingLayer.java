@@ -1,6 +1,6 @@
 package mod.azure.azurelib.render.layer;
 
-import mod.azure.azurelib.client.texture.AutoGlowingTexture;
+import mod.azure.azurelib.render.textures.AzAutoGlowingTexture;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
@@ -30,7 +30,7 @@ public class AzAutoGlowingLayer<T> implements AzRenderLayer<T> {
         T animatable = context.animatable();
         AzRendererPipeline<T> renderPipeline = context.rendererPipeline();
         ResourceLocation textureLocation = renderPipeline.config().textureLocation(animatable);
-        RenderType renderType = AutoGlowingTexture.getRenderType(textureLocation);
+        RenderType renderType = AzAutoGlowingTexture.getRenderType(textureLocation);
 
         if (context.renderType() != null) {
             RenderType prevRenderType = context.renderType();

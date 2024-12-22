@@ -1,6 +1,6 @@
 package mod.azure.azurelib.render.item;
 
-import mod.azure.azurelib.client.texture.AnimatableTexture;
+import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzRendererConfig;
 import mod.azure.azurelib.render.AzRendererPipeline;

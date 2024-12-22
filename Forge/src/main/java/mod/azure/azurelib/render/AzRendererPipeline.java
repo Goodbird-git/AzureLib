@@ -1,6 +1,6 @@
 package mod.azure.azurelib.render;
 
-import mod.azure.azurelib.client.texture.AnimatableTexture;
+import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
 

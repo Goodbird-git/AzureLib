@@ -36,21 +36,4 @@ public class MathHelper {
 
 		return value;
 	}
-
-	/**
-	 * Adjust the angle so that his value is in range [-180;180[
-	 */
-	public static int wrapDegrees(int angle) {
-		angle = angle % 360;
-
-		if (angle >= 180) {
-			angle -= 360;
-		}
-
-		if (angle < -180) {
-			angle += 360;
-		}
-
-		return angle;
-	}
 }

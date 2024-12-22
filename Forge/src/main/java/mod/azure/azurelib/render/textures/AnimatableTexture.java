@@ -5,17 +5,16 @@
  * Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
-package mod.azure.azurelib.client.texture;
+package mod.azure.azurelib.render.textures;
 
 import com.mojang.realmsclient.util.Pair;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.AzureLib;
-import mod.azure.azurelib.resource.AzureAnimationMetadataSection;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.render.textures.meta.AzureAnimationMetadataSection;
+import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -25,10 +24,8 @@ import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.client.resources.data.TextureMetadataSection;
 import net.minecraft.util.ResourceLocation;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,13 +38,6 @@ public class AnimatableTexture extends SimpleTexture {
 
     public AnimatableTexture(final ResourceLocation location) {
         super(location);
-    }
-
-    public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
-        ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(texturePath);
-
-        if (texture instanceof ITextureObject)
-            ((AnimatableTexture) texture).setAnimationFrame(frameTick);
     }
 
     private static void onRenderThread(IRenderCall renderCall) {
@@ -117,7 +107,11 @@ public class AnimatableTexture extends SimpleTexture {
     }
 
     public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
-        AbstractTexture texture = Minecraft.getMinecraft().getTextureManager().getTexture(texturePath);
+        ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(texturePath);
+
+        if (texture instanceof ITextureObject)
+            ((AnimatableTexture) texture).setAnimationFrame(frameTick);
+    }
 
     public void setAnimationFrame(int tick) {
         if (this.animationContents != null)
@@ -128,7 +122,7 @@ public class AnimatableTexture extends SimpleTexture {
         private final Pair<Integer, Integer> frameSize;
         private final Texture animatedTexture;
 
-        private AnimationContents(BufferedImage image, AzureAnimationMetadataSection animMeta) {
+        private AnimationContents(NativeImage image, AzureAnimationMetadataSection animMeta) {
             this.frameSize = animMeta.getFrameSize(image.getWidth(), image.getHeight());
             this.animatedTexture = generateAnimatedTexture(image, animMeta);
         }
@@ -137,12 +131,12 @@ public class AnimatableTexture extends SimpleTexture {
             return this.animatedTexture != null;
         }
 
-        private Texture generateAnimatedTexture(BufferedImage image, AzureAnimationMetadataSection animMeta) {
-            if (!AzureLibUtil.isMultipleOf(image.getWidth(), this.frameSize.getKey()) || !AzureLibUtil.isMultipleOf(
-                    image.getHeight(), this.frameSize.getValue())) {
+        private Texture generateAnimatedTexture(NativeImage image, AzureAnimationMetadataSection animMeta) {
+            if (!RenderUtils.isMultipleOf(image.getWidth(), this.frameSize.first()) || !RenderUtils.isMultipleOf(
+                    image.getHeight(), this.frameSize.second())) {
                 AzureLib.LOGGER.error("Image {} size {},{} is not multiple of frame size {},{}",
-                        AnimatableTexture.this.textureLocation, image.getWidth(), image.getHeight(), this.frameSize.getKey(),
-                        this.frameSize.getValue());
+                        AnimatableTexture.this.textureLocation, image.getWidth(), image.getHeight(), this.frameSize.first(),
+                        this.frameSize.second());
 
                 return null;
             }
@@ -197,22 +191,22 @@ public class AnimatableTexture extends SimpleTexture {
         }
 
         class Texture implements AutoCloseable {
-            private final BufferedImage baseImage;
+            private final NativeImage baseImage;
             private final Frame[] frames;
             private final int framePanelSize;
             private final boolean interpolating;
-            private final BufferedImage interpolatedFrame;
+            private final NativeImage interpolatedFrame;
             private final int totalFrameTime;
 
             private int currentFrame;
             private int currentSubframe;
 
-            private Texture(BufferedImage baseImage, Frame[] frames, int framePanelSize, boolean interpolating) {
+            private Texture(NativeImage baseImage, Frame[] frames, int framePanelSize, boolean interpolating) {
                 this.baseImage = baseImage;
                 this.frames = frames;
                 this.framePanelSize = framePanelSize;
                 this.interpolating = interpolating;
-                this.interpolatedFrame = interpolating ? new BufferedImage(AnimationContents.this.frameSize.first(),
+                this.interpolatedFrame = interpolating ? new NativeImage(AnimationContents.this.frameSize.first(),
                         AnimationContents.this.frameSize.second(), false) : null;
                 int time = 0;
 

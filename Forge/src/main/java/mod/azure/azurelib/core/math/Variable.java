@@ -2,11 +2,11 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Variable class
- *
+ * <br>
  * This class is responsible for providing a mutable {@link IValue} which can be
  * modifier during runtime and still getting referenced in the expressions
  * parsed by {@link MathBuilder}.
- *
+ * <br>
  * But in practice, it's simply returns stored value and provides a method to
  * modify it.
  */

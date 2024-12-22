@@ -19,16 +19,17 @@ import java.util.Map;
 
 /**
  * Math builder
- *
+ <br>*
  * This class is responsible for parsing math expressions provided by user in a
  * string to an {@link IValue} which can be used to compute some value
  * dynamically using different math operators, variables and functions.
- *
+ * <br>
  * It works by first breaking down given string into a list of tokens and then
  * putting them together in a binary tree-like {@link IValue}.
- *
- * TODO: maybe implement constant pool (to reuse same values)? TODO: maybe
- * pre-compute constant expressions?
+ * <br>
+ * TODO: maybe implement constant pool (to reuse same values)?
+ *  <br>
+ * TODO: maybe pre-compute constant expressions?
  */
 public class MathBuilder {
 	/**
@@ -218,11 +219,11 @@ public class MathBuilder {
 
 	/**
 	 * Parse symbols
-	 *
+	 * <br>
 	 * This function is the most important part of this class. It's responsible for
 	 * turning list of symbols into {@link IValue}. This is done by constructing a
 	 * binary tree-like {@link IValue} based on {@link Operator} class.
-	 *
+	 * <br>
 	 * However, beside parsing operations, it's also can return one or two item
 	 * sized symbol lists.
 	 */
@@ -311,28 +312,9 @@ public class MathBuilder {
 		return -1;
 	}
 
-	protected int seekFirstOperator(List<Object> symbols) {
-		return this.seekFirstOperator(symbols, 0);
-	}
-
-	/**
-	 * Find the index of the first operator
-	 */
-	protected int seekFirstOperator(List<Object> symbols, int offset) {
-		for (int i = offset, size = symbols.size(); i < size; i++) {
-			Object o = symbols.get(i);
-
-			if (this.isOperator(o)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
 	/**
 	 * Try parsing a ternary expression
-	 *
+	 * <br>
 	 * From what we know, with ternary expressions, we should have only one ? and :,
 	 * and some elements from beginning till ?, in between ? and :, and also some
 	 * remaining elements after :.
@@ -375,10 +357,10 @@ public class MathBuilder {
 
 	/**
 	 * Create a function value
-	 *
+	 * <br>
 	 * This method in comparison to {@link #valueFromObject(Object)} needs the name
 	 * of the function and list of args (which can't be stored in one object).
-	 *
+	 * <br>
 	 * This method will constructs {@link IValue}s from list of args mixed with
 	 * operators, groups, values and commas. And then plug it in to a class
 	 * constructor with given name.

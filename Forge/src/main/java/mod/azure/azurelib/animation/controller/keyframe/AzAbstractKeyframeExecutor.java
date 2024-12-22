@@ -1,8 +1,6 @@
 package mod.azure.azurelib.animation.controller.keyframe;
 
-import mod.azure.azurelib.core.keyframe.AnimationPoint;
 import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.keyframe.KeyframeLocation;
 import mod.azure.azurelib.core.math.Constant;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.object.Axis;
@@ -19,7 +17,7 @@ public class AzAbstractKeyframeExecutor {
     protected AzAbstractKeyframeExecutor() {}
 
     /**
-     * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
+     * Convert a {@link AzKeyframeLocation} to an {@link AzAnimationPoint}
      */
     protected AzAnimationPoint getAnimationPointAtTick(
         List<AzKeyframe<IValue>> frames,

@@ -1,6 +1,6 @@
 package mod.azure.azurelib.render.entity;
 
-import mod.azure.azurelib.client.texture.AnimatableTexture;
+import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.render.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;

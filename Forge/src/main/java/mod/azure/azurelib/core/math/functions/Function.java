@@ -4,7 +4,7 @@ import mod.azure.azurelib.core.math.IValue;
 
 /**
  * Abstract function class
- *
+ * <br>
  * This class provides function capability (i.e. giving it arguments and upon
  * {@link #get()} method you receive output).
  */

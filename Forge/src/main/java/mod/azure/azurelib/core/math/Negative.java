@@ -2,7 +2,7 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Negative operator class
- *
+ * <br>
  * This class is responsible for inverting given value
  */
 public class Negative implements IValue {

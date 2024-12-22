@@ -2,7 +2,7 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Group class
- *
+ * <br>
  * Simply wraps given {@link IValue} into parenthesis in the {@link #toString()}
  * method.
  */

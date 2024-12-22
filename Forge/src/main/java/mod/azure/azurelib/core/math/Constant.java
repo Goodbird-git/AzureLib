@@ -2,7 +2,7 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Constant class
- *
+ * <br>
  * This class simply returns supplied in the constructor value
  */
 public class Constant implements IValue {

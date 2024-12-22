@@ -1,43 +1,36 @@
-/**
- * This class is a fork of the matching class found in the Geckolib repository.
- * Original source: https://github.com/bernie-g/geckolib
- * Copyright © 2024 Bernie-G.
- * Licensed under the MIT License.
- * https://github.com/bernie-g/geckolib/blob/main/LICENSE
- */
-package mod.azure.azurelib.resource;
+package mod.azure.azurelib.render.textures.meta;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.render.layer.AzAutoGlowingLayer;
+import mod.azure.azurelib.render.textures.Pixel;
 import mod.azure.azurelib.util.JSONUtils;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.resources.data.IMetadataSectionSerializer;
+import net.minecraft.client.resources.data.IMetadataSection;
+import net.minecraft.client.resources.data.IMetadataSectionSerializer;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Metadata class that stores the data for AzureLib's {@link mod.azure.azurelib.render.layer.AutoGlowingGeoLayer emissive texture feature} for a given texture
+ * Metadata class that stores the data for AzureLib's {@link AzAutoGlowingLayer emissive texture feature} for a given texture
  */
-public class GeoGlowingTextureMeta {
-	public static final IMetadataSectionSerializer<GeoGlowingTextureMeta> DESERIALIZER = new IMetadataSectionSerializer<GeoGlowingTextureMeta>() {
+public class AzGlowingTextureMeta implements IMetadataSection {
+	public static final IMetadataSectionSerializer<AzGlowingTextureMeta> DESERIALIZER = new IMetadataSectionSerializer<AzGlowingTextureMeta>() {
 		@Override
-		public String getSectionName() {
-			return "glowsections";
-		}
-
-		@Override
-		public GeoGlowingTextureMeta deserialize(JsonObject json) {
-			List<Pixel> pixels = fromSections(JSONUtils.getJsonArray(json, "sections", null));
+		public AzGlowingTextureMeta deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			List<Pixel> pixels = fromSections(JSONUtils.getJsonArray(json, "sections"));
 
 			if (pixels.isEmpty())
 				throw new JsonParseException("Empty glowlayer sections file. Must have at least one glow section!");
 
-			return new GeoGlowingTextureMeta(pixels);
+			return new AzGlowingTextureMeta(pixels);
+		}
+
+		@Override
+		public String getSectionName() {
+			return "glowsections";
 		}
 
 		/**
@@ -75,44 +68,63 @@ public class GeoGlowingTextureMeta {
 
 	private final List<Pixel> pixels;
 
-	public GeoGlowingTextureMeta(List<Pixel> pixels) {
+	public AzGlowingTextureMeta(List<Pixel> pixels) {
 		this.pixels = pixels;
 	}
 
 	/**
 	 * Generate the GlowLayer pixels list from an existing image resource, instead of using the .png.mcmeta file
 	 */
-	public static GeoGlowingTextureMeta fromExistingImage(NativeImage glowLayer) {
+	public static AzGlowingTextureMeta fromExistingImage(BufferedImage glowLayer) {
 		List<Pixel> pixels = new ObjectArrayList<>();
 
 		for (int x = 0; x < glowLayer.getWidth(); x++) {
 			for (int y = 0; y < glowLayer.getHeight(); y++) {
 				int color = glowLayer.getRGB(x, y);
 
-				if (color != 0)
-					pixels.add(new Pixel(x, y, NativeImage.get(color)));
+				if (color != 0) {
+					int alpha = (color >> 24) & 0xFF;
+					int red = (color >> 16) & 0xFF;
+					int green = (color >> 8) & 0xFF;
+					int blue = color & 0xFF;
+
+					// Modify this expression based on what "BufferedImage.get(color)" is expected to return
+					int processedColor = processColor(alpha, red, green, blue);
+
+					pixels.add(new Pixel(x, y, processedColor));
+				}
 			}
 		}
 
 		if (pixels.isEmpty())
 			throw new IllegalStateException("Invalid glow layer texture provided, must have at least one pixel!");
 
-		return new GeoGlowingTextureMeta(pixels);
+		return new AzGlowingTextureMeta(pixels);
 	}
 
 	/**
 	 * Create a new mask image based on the pre-determined pixel data
 	 */
-	public void createImageMask(NativeImage originalImage, NativeImage newImage) {
+	public void createImageMask(BufferedImage originalImage, BufferedImage newImage) {
 		for (Pixel pixel : this.pixels) {
-			int color = originalImage.getPixelRGBA(pixel.x, pixel.y);
+			int color = originalImage.getRGB(pixel.x, pixel.y);
 
-			if (pixel.alpha > 0)
-				color = NativeImage.getCombined(pixel.alpha, NativeImage.getBlue(color), BufferedImage.getGreen(color), NativeImage.getRed(color));
+			if (pixel.alpha > 0) {
+				int alpha = (color >> 24) & 0xFF;  // Extract alpha
+				int red = (color >> 16) & 0xFF;    // Extract red
+				int green = (color >> 8) & 0xFF;   // Extract green
+				int blue = color & 0xFF;           // Extract blue
 
-			newImage.setPixelRGBA(pixel.x, pixel.y, color);
-			originalImage.setPixelRGBA(pixel.x, pixel.y, 0);
+				color = (pixel.alpha << 24) | (blue << 16) | (green << 8) | red;
+			}
+
+			newImage.setRGB(pixel.x, pixel.y, color);
+			originalImage.setRGB(pixel.x, pixel.y, 0);
 		}
+	}
+
+	private static int processColor(int alpha, int red, int green, int blue) {
+		return (alpha << 24) | (blue << 16) | (green << 8) | red;
 	}
 
 }

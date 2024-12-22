@@ -2,7 +2,7 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Ternary operator class
- *
+ * <br>
  * This value implementation allows to return different values depending on
  * given condition value
  */

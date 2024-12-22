@@ -279,15 +279,7 @@ public class AzBone implements CoreGeoBone {
         this.positionChanged = false;
     }
 
-    /**
-     * @deprecated DO NOT USE OR I WILL FIND YOU.
-     */
     @Override
-    @Deprecated(forRemoval = true)
-    public BoneSnapshot getInitialSnapshot() {
-        throw new UnsupportedOperationException();
-    }
-
     public AzBoneSnapshot getInitialAzSnapshot() {
         return this.initialSnapshot;
     }

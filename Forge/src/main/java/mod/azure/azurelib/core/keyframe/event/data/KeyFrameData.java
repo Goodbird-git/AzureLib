@@ -5,12 +5,12 @@
 
 package mod.azure.azurelib.core.keyframe.event.data;
 
-import mod.azure.azurelib.core.keyframe.Keyframe;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframe;
 
 import java.util.Objects;
 
 /**
- * Base class for custom {@link Keyframe} events.<br>
+ * Base class for custom {@link AzKeyframe} events.<br>
  * @see ParticleKeyframeData
  * @see SoundKeyframeData
  */

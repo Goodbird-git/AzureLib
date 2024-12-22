@@ -1,6 +1,6 @@
 package mod.azure.azurelib.render.block;
 
-import mod.azure.azurelib.client.texture.AnimatableTexture;
+import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.render.*;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.tileentity.TileEntity;

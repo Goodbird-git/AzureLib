@@ -2,7 +2,7 @@ package mod.azure.azurelib.core.math;
 
 /**
  * Negate operator class
- *
+ * <br>
  * This class is responsible for negating given value
  */
 public class Negate implements IValue {

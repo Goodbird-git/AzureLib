@@ -1,11 +1,11 @@
 package mod.azure.azurelib.core.keyframe.event.data;
 
-import mod.azure.azurelib.core.keyframe.Keyframe;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframe;
 
 import java.util.Objects;
 
 /**
- * Custom instruction {@link Keyframe} instruction holder
+ * Custom instruction {@link AzKeyframe} instruction holder
  */
 public class CustomInstructionKeyframeData extends KeyFrameData {
 	private final String instructions;
@@ -17,7 +17,7 @@ public class CustomInstructionKeyframeData extends KeyFrameData {
 	}
 
 	/**
-	 * Gets the instructions string given by the {@link Keyframe} instruction from the {@code animation.json}
+	 * Gets the instructions string given by the {@link AzKeyframe} instruction from the {@code animation.json}
 	 */
 	public String getInstructions() {
 		return this.instructions;

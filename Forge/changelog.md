@@ -17,9 +17,9 @@ TODO:
 - mod.azure.azurelib.animation.easing.AzEasingUtil
 - mod.azure.azurelib.animation.AzAnimationDispatcher
 - mod.azure.azurelib.cache.AzResourceCache
-- mod.azure.azurelib.client.texture.AnimatableTexture
-- mod.azure.azurelib.client.texture.AutoGlowingTexture
-- mod.azure.azurelib.client.texture.GeoAbstractTexture
+- mod.azure.azurelib.render.textures.AnimatableTexture
+- mod.azure.azurelib.render.textures.AzAutoGlowingTexture
+- mod.azure.azurelib.render.textures.AzAbstractTexture
 - mod.azure.azurelib.loading.json.raw.UVFaces
 - mod.azure.azurelib.loading.object.BakedAnimations
 - mod.azure.azurelib.loading.object.BakedModelFactory
@@ -33,7 +33,6 @@ TODO:
 - mod.azure.azurelib.network.AzEntityDispatchCommandPacket
 - mod.azure.azurelib.network.AzItemStackDispatchCommandPacket
 - mod.azure.azurelib.network.AzureLibNetwork
-- mod.azure.azurelib.resource.GeoGlowingTextureMeta
 - mod.azure.azurelib.util.RenderUtils
 - mod.azure.azurelib.render.armor.bone.AzArmorBoneContext
 - mod.azure.azurelib.render.armor.AzArmorModel

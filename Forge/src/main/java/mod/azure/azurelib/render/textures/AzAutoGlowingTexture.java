@@ -5,10 +5,10 @@
  * Licensed under the MIT License.
  * https://github.com/bernie-g/geckolib/blob/main/LICENSE
  */
-package mod.azure.azurelib.client.texture;
+package mod.azure.azurelib.render.textures;
 
 import mod.azure.azurelib.AzureLib;
-import mod.azure.azurelib.resource.GeoGlowingTextureMeta;
+import mod.azure.azurelib.render.textures.meta.AzGlowingTextureMeta;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Texture object type responsible for AzureLib's emissive render textures
  */
-public class AutoGlowingTexture extends GeoAbstractTexture {
+public class AzAutoGlowingTexture extends AzAbstractTexture {
 
 	static class GlowRenderType {
 
@@ -72,7 +72,7 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 	protected final ResourceLocation textureBase;
 	protected final ResourceLocation glowLayer;
 
-	public AutoGlowingTexture(ResourceLocation originalLocation, ResourceLocation location) {
+	public AzAutoGlowingTexture(ResourceLocation originalLocation, ResourceLocation location) {
 		this.textureBase = originalLocation;
 		this.glowLayer = location;
 	}
@@ -86,7 +86,7 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 	protected static ResourceLocation getEmissiveResource(ResourceLocation baseResource) {
 		ResourceLocation path = appendToPath(baseResource, APPENDIX);
 
-		generateTexture(path, textureManager -> textureManager.loadTexture(path, new AutoGlowingTexture(baseResource, path)));
+		generateTexture(path, textureManager -> textureManager.loadTexture(path, new AzAutoGlowingTexture(baseResource, path)));
 
 		return path;
 	}
@@ -114,13 +114,13 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 
 		try {
 			IResource glowLayerResource = resourceManager.getResource(this.glowLayer);
-			GeoGlowingTextureMeta glowLayerMeta = null;
+			AzGlowingTextureMeta glowLayerMeta = null;
 
 			if (glowLayerResource != null) {
 				glowImage = NativeImage.read(glowLayerResource.getInputStream());
-				glowLayerMeta = GeoGlowingTextureMeta.fromExistingImage(glowImage);
+				glowLayerMeta = AzGlowingTextureMeta.fromExistingImage(glowImage);
 			} else {
-				GeoGlowingTextureMeta meta = textureBaseResource.getMetadata(GeoGlowingTextureMeta.DESERIALIZER);
+				AzGlowingTextureMeta meta = textureBaseResource.getMetadata(AzGlowingTextureMeta.DESERIALIZER);
 
 				if (meta != null) {
 					glowLayerMeta = meta;
@@ -130,11 +130,6 @@ public class AutoGlowingTexture extends GeoAbstractTexture {
 
 			if (glowLayerMeta != null) {
 				glowLayerMeta.createImageMask(baseImage, glowImage);
-
-				if (!FMLEnvironment.production) {
-					printDebugImageToDisk(this.textureBase, baseImage);
-					printDebugImageToDisk(this.glowLayer, glowImage);
-				}
 			}
 		} catch (IOException e) {
 			AzureLib.LOGGER.warn("Resource failed to open for glowlayer meta: {}", this.glowLayer, e);
