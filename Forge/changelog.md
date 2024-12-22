@@ -1,7 +1,49 @@
-v1.0.39
+v3.0.0
 
-- Port Easing Fix
-- Add a helper SingleteonGeoAnimatable#registerSyncedAnimatable
-- Fixes isPerspectiveAware JavaDoc
-- Fix stale buffer on Entities/Layers
-- Add support for scale attribute/missing shaking for GeoReplaced
+TODO: 
+- mod.azure.azurelib.animation.dispatch.AzDispatchSide
+- mod.azure.azurelib.animation.dispatch.AzDispatchExecutor
+- mod.azure.azurelib.animation.dispatch.command.action.registry.AzDispatchActionRegistry
+- mod.azure.azurelib.animation.dispatch.command.action.impl.root.*
+- mod.azure.azurelib.animation.dispatch.command.action.codec.*
+- mod.azure.azurelib.animation.parse.AzBakedAnimationsAdapter
+- mod.azure.azurelib.animation.AzAnimationDispatcher
+- mod.azure.azurelib.cache.AzResourceCache
+- mod.azure.azurelib.client.texture.*
+- mod.azure.azurelib.loading.json.raw.UVFaces
+- mod.azure.azurelib.loading.object.BakedAnimations
+- mod.azure.azurelib.loading.object.BakedModelFactory
+- mod.azure.azurelib.model.factory.impl.AzBuiltinBakedModelFactory
+- mod.azure.azurelib.model.factory.primitive.VertexSet
+- mod.azure.azurelib.model.factory.AzBakedModelFactory
+- mod.azure.azurelib.model.AzBone
+- mod.azure.azurelib.model.AzBoneSnapshot
+- mod.azure.azurelib.network.*
+- mod.azure.azurelib.resource.GeoGlowingTextureMeta
+- mod.azure.azurelib.util.RenderUtils
+- mod.azure.azurelib.render.armor.bone.AzArmorBoneContext
+- mod.azure.azurelib.render.armor.AzArmorModel
+- mod.azure.azurelib.render.armor.AzArmorModelRenderer
+- mod.azure.azurelib.render.armor.AzArmorRendererPipeline
+- mod.azure.azurelib.render.armor.AzArmorRendererPipelineContext
+- mod.azure.azurelib.render.AzBlockEntityModelRenderer
+- mod.azure.azurelib.render.AzBlockEntityRenderer
+- mod.azure.azurelib.render.AzBlockEntityRendererPipeline
+- mod.azure.azurelib.render.AzBlockEntityRendererPipelineContext
+- mod.azure.azurelib.render.entity.AzEntityLeashRenderUtil
+- mod.azure.azurelib.render.entity.AzEntityModelRenderer
+- mod.azure.azurelib.render.entity.AzEntityNameRenderUtil
+- mod.azure.azurelib.render.entity.AzEntityRenderer
+- mod.azure.azurelib.render.entity.AzEntityRendererPipelineContext
+- mod.azure.azurelib.render.entity.AzEntityRendererPipeline
+- mod.azure.azurelib.render.item.AzItemGuiRenderUtil
+- mod.azure.azurelib.render.item.AzItemModelRenderer
+- mod.azure.azurelib.render.item.AzItemRenderer
+- mod.azure.azurelib.render.item.AzItemRendererPipeline
+- mod.azure.azurelib.render.item.AzItemRendererPipelineContext
+- mod.azure.azurelib.render.layer.AzArmorLayer
+- mod.azure.azurelib.render.layer.AzBlockAndItemLayer
+- mod.azure.azurelib.render.layer.AzAutoGlowingLayer
+- mod.azure.azurelib.render.AzModelRenderer
+- mod.azure.azurelib.render.AzRendererPipeline
+- mod.azure.azurelib.render.AzRendererPipelineContext

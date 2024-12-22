@@ -8,7 +8,7 @@
 package mod.azure.azurelib.loading.json.typeadapter;
 
 import com.google.gson.*;
-import com.mojang.datafixers.util.Pair;
+import com.mojang.realmsclient.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.AzureLib;
@@ -23,8 +23,8 @@ import mod.azure.azurelib.core.molang.MolangException;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.expressions.MolangValue;
 import mod.azure.azurelib.loading.object.BakedAnimations;
+import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -176,14 +176,14 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 		Pair<String, JsonElement> prevEntry = null;
 
 		for (Pair<String, JsonElement> entry : entries) {
-			String key = entry.getFirst();
-			JsonElement element = entry.getSecond();
+			String key = entry.first();
+			JsonElement element = entry.second();
 
 			if (key.equals("easing") || key.equals("easingArgs") || key.equals("lerp_mode"))
 				continue;
 
-			double prevTime = prevEntry != null ? Double.parseDouble(prevEntry.getFirst()) : 0;
-			double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(entry.getFirst()) : 0;
+			double prevTime = prevEntry != null ? Double.parseDouble(prevEntry.first()) : 0;
+			double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(String.valueOf(entry.second())) : 0;
 			double timeDelta = curTime - prevTime;
 
 			JsonArray keyFrameVector = element instanceof JsonArray ?  ((JsonArray)element) : JSONUtils.getJsonArray(element.getAsJsonObject(), "vector");

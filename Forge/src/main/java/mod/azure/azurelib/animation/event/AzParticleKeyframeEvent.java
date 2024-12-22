@@ -1,0 +1,34 @@
+/**
+ * This class is a fork of the matching class found in the Geckolib repository. Original source:
+ * https://github.com/bernie-g/geckolib Copyright © 2024 Bernie-G. Licensed under the MIT License.
+ * https://github.com/bernie-g/geckolib/blob/main/LICENSE
+ */
+package mod.azure.azurelib.animation.event;
+
+import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameCallbacks;
+import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
+
+/**
+ * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#getParticleKeyframeHandler()}.<br>
+ * Called when a particle instruction keyframe is encountered
+ */
+public class AzParticleKeyframeEvent<T> extends AzKeyFrameEvent<T, ParticleKeyframeData> {
+
+    public AzParticleKeyframeEvent(
+        T animatable,
+        double animationTick,
+        AzAnimationController<T> controller,
+        ParticleKeyframeData particleKeyFrameData
+    ) {
+        super(animatable, animationTick, controller, particleKeyFrameData);
+    }
+
+    /**
+     * Get the {@link ParticleKeyframeData} relevant to this event call
+     */
+    @Override
+    public ParticleKeyframeData getKeyframeData() {
+        return super.getKeyframeData();
+    }
+}

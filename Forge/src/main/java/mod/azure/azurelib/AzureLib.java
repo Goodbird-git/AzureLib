@@ -1,8 +1,13 @@
 package mod.azure.azurelib;
 
+import mod.azure.azurelib.cache.AzResourceCache;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.FutureTask;
 
 /**
  * Base class for AzureLib!<br>
@@ -19,8 +24,11 @@ public class AzureLib {
 
 	public static synchronized void initialize() {
 		if (!hasInitialized) {
-//			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AzureLibCache::registerReloadListener);
-//			AzureLibNetwork.init();
+			FMLCommonHandler.callFuture(new FutureTask<>(() -> {
+				if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+					AzResourceCache.registerReloadListener();
+				}
+			}, null));
 		}
 
 		hasInitialized = true;

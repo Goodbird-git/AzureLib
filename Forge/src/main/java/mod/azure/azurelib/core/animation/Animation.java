@@ -7,6 +7,7 @@ package mod.azure.azurelib.core.animation;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.sun.java.swing.plaf.windows.AnimationController;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.keyframe.BoneAnimation;
 import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * A compiled animation instance for use by the {@link AnimationController}<br>
  * Modifications or extensions of a compiled Animation are not supported, and therefore an instance of <code>Animation</code> is considered final and immutable.
  */
 public class Animation {

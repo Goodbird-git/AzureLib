@@ -21,7 +21,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
- * Metadata class that stores the data for AzureLib's {@link mod.azure.azurelib.renderer.layer.AutoGlowingGeoLayer emissive texture feature} for a given texture
+ * Metadata class that stores the data for AzureLib's {@link mod.azure.azurelib.render.layer.AutoGlowingGeoLayer emissive texture feature} for a given texture
  */
 public class GeoGlowingTextureMeta {
 	public static final IMetadataSectionSerializer<GeoGlowingTextureMeta> DESERIALIZER = new IMetadataSectionSerializer<GeoGlowingTextureMeta>() {
@@ -82,15 +82,15 @@ public class GeoGlowingTextureMeta {
 	/**
 	 * Generate the GlowLayer pixels list from an existing image resource, instead of using the .png.mcmeta file
 	 */
-	public static GeoGlowingTextureMeta fromExistingImage(BufferedImage glowLayer) {
+	public static GeoGlowingTextureMeta fromExistingImage(NativeImage glowLayer) {
 		List<Pixel> pixels = new ObjectArrayList<>();
 
 		for (int x = 0; x < glowLayer.getWidth(); x++) {
 			for (int y = 0; y < glowLayer.getHeight(); y++) {
-				int color = glowLayer.getPixelRGBA(x, y);
+				int color = glowLayer.getRGB(x, y);
 
 				if (color != 0)
-					pixels.add(new Pixel(x, y, BufferedImage.getAlpha(color)));
+					pixels.add(new Pixel(x, y, NativeImage.get(color)));
 			}
 		}
 
@@ -103,12 +103,12 @@ public class GeoGlowingTextureMeta {
 	/**
 	 * Create a new mask image based on the pre-determined pixel data
 	 */
-	public void createImageMask(BufferedImage originalImage, BufferedImage newImage) {
+	public void createImageMask(NativeImage originalImage, NativeImage newImage) {
 		for (Pixel pixel : this.pixels) {
 			int color = originalImage.getPixelRGBA(pixel.x, pixel.y);
 
 			if (pixel.alpha > 0)
-				color = BufferedImage.getCombined(pixel.alpha, BufferedImage.getBlue(color), BufferedImage.getGreen(color), BufferedImage.getRed(color));
+				color = NativeImage.getCombined(pixel.alpha, NativeImage.getBlue(color), BufferedImage.getGreen(color), NativeImage.getRed(color));
 
 			newImage.setPixelRGBA(pixel.x, pixel.y, color);
 			originalImage.setPixelRGBA(pixel.x, pixel.y, 0);

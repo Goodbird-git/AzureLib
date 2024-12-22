@@ -9,28 +9,19 @@ package mod.azure.azurelib.util;
 
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.cache.object.GeoCube;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
-import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.renderer.GeoArmorRenderer;
-import mod.azure.azurelib.renderer.GeoRenderer;
-import mod.azure.azurelib.renderer.GeoReplacedEntityRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import org.lwjgl.util.vector.Quaternion;
 
 import javax.annotation.Nullable;
@@ -113,8 +104,8 @@ public final class RenderUtils {
 	 * Usually used for rotating projectiles towards their trajectory, in an {@link GeoRenderer#preRender} override.<br>
 	 */
 	public static void faceRotation(Entity animatable, float partialTick) {
-		GlStateManager.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
-		GlStateManager.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
+		GlStateManager.rotate(Vec3i.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
+		GlStateManager.rotate(Vec3i.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
 	}
 
 	/**
@@ -193,10 +184,10 @@ public final class RenderUtils {
 	}
 
 	/**
-	 * If a {@link GeoCube} is a 2d plane the {@link mod.azure.azurelib.cache.object.GeoQuad Quad's} normal is inverted in an intersecting plane,it can cause issues with shaders and other lighting tasks.<br>
+	 * If a {@link GeoCube} is a 2d plane the {@link mod.azure.azurelib.client.object.GeoQuad Quad's} normal is inverted in an intersecting plane,it can cause issues with shaders and other lighting tasks.<br>
 	 * This performs a pseudo-ABS function to help resolve some of those issues.
 	 */
-	public static void fixInvertedFlatCube(GeoCube cube, Vector3f normal) {
+	public static void fixInvertedFlatCube(GeoCube cube, Vec3i normal) {
 		if (normal.getX() < 0 && (cube.size().y == 0 || cube.size().z == 0))
 			normal.mul(-1, 1, 1);
 
@@ -219,95 +210,5 @@ public final class RenderUtils {
 			return 180f;
 		else
 			return 0f;
-	}
-
-	/**
-	 * Gets a {@link GeoModel} instance from a given {@link EntityType}.<br>
-	 * This only works if you're calling this method for an EntityType known to be using a {@link GeoRenderer AzureLib Renderer}.<br>
-	 * Generally speaking you probably shouldn't be calling this method at all.
-	 * 
-	 * @param entityType The {@code EntityType} to retrieve the GeoModel for
-	 * @return The GeoModel, or null if one isn't found
-	 */
-	@Nullable
-	public static GeoModel<?> getGeoModelForEntityType(EntityType<?> entityType) {
-		RenderEntity renderer = Minecraft.getMinecraft().getRenderManager().renderers.get(entityType);
-
-		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
-	}
-
-	/**
-	 * Gets a GeoAnimatable instance that has been registered as the replacement renderer for a given {@link EntityType}
-	 * 
-	 * @param entityType The {@code EntityType} to retrieve the replaced {@link GeoAnimatable} for
-	 * @return The {@code GeoAnimatable} instance, or null if one isn't found
-	 */
-	@Nullable
-	public static GeoAnimatable getReplacedAnimatable(EntityType<?> entityType) {
-		RenderEntity renderer = Minecraft.getMinecraft().getRenderManager().renderers.get(entityType);
-
-		return renderer instanceof GeoReplacedEntityRenderer<?, ?> ? ((GeoReplacedEntityRenderer<?, ?>) renderer).getAnimatable() : null;
-	}
-
-	/**
-	 * Gets a {@link GeoModel} instance from a given {@link Entity}.<br>
-	 * This only works if you're calling this method for an Entity known to be using a {@link GeoRenderer AzureLib Renderer}.<br>
-	 * Generally speaking you probably shouldn't be calling this method at all.
-	 * 
-	 * @param entity The {@code Entity} to retrieve the GeoModel for
-	 * @return The GeoModel, or null if one isn't found
-	 */
-	@Nullable
-	public static GeoModel<?> getGeoModelForEntity(Entity entity) {
-		RenderEntity renderer = Minecraft.getMinecraft().getRenderManager().getRenderer(entity);
-
-		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
-	}
-
-	/**
-	 * Gets a {@link GeoModel} instance from a given {@link Item}.<br>
-	 * This only works if you're calling this method for an Item known to be using a {@link GeoRenderer AzureLib Renderer}.<br>
-	 * Generally speaking you probably shouldn't be calling this method at all.
-	 * 
-	 * @param item The {@code Item} to retrieve the GeoModel for
-	 * @return The GeoModel, or null if one isn't found
-	 */
-	@Nullable
-	public static GeoModel<?> getGeoModelForItem(Item item) {
-		if (item.getTileEntityItemStackRenderer() instanceof GeoRenderer<?>)
-			return ((GeoRenderer<?>) item.getTileEntityItemStackRenderer()).getGeoModel();
-
-		return null;
-	}
-
-	/**
-	 * Gets a {@link GeoModel} instance from a given {@link TileEntity}.<br>
-	 * This only works if you're calling this method for a TileEntity known to be using a {@link GeoRenderer AzureLib Renderer}.<br>
-	 * Generally speaking you probably shouldn't be calling this method at all.
-	 * 
-	 * @param blockEntity The {@code TileEntity} to retrieve the GeoModel for
-	 * @return The GeoModel, or null if one isn't found
-	 */
-	@Nullable
-	public static GeoModel<?> getGeoModelForBlock(TileEntity blockEntity) {
-		TileEntityRenderer<?> renderer = TileEntityRendererDispatcher.instance.getRenderer(blockEntity);
-
-		return renderer instanceof GeoRenderer<?> ? ((GeoRenderer<?>) renderer).getGeoModel() : null;
-	}
-
-	/**
-	 * Gets a {@link GeoModel} instance from a given {@link Item}.<br>
-	 * This only works if you're calling this method for an Item known to be using a {@link GeoArmorRenderer GeoArmorRenderer}.<br>
-	 * Generally speaking you probably shouldn't be calling this method at all.
-	 * 
-	 * @param stack The ItemStack to retrieve the GeoModel for
-	 * @return The GeoModel, or null if one isn't found
-	 */
-	@Nullable
-	public static GeoModel<?> getGeoModelForArmor(ItemStack stack) {
-		if (stack.getItem().getArmorModel(null, stack, null, null) instanceof GeoArmorRenderer<?>)
-			return ((GeoArmorRenderer<?>) stack.getItem().getArmorModel(null, stack, null, null)).getGeoModel();
-
-		return null;
 	}
 }

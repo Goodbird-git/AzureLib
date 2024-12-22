@@ -5,7 +5,6 @@ import mod.azure.azurelib.core.state.BoneSnapshot;
 import java.util.List;
 
 /**
- * Base class for AzureLib {@link CoreGeoModel model} bones.<br>
  * Mostly a placeholder to allow for splitting up core (non-Minecraft) libraries
  */
 public interface CoreGeoBone {

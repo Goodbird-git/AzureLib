@@ -6,10 +6,13 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "mixins": [],
+  "mixins": [
+    "BlockEntityMixin_AzBlockEntityAnimatorCache",
+    "EntityMixin_AzEntityAnimatorCache",
+    "ItemStackMixin_AzItemStackIdentityRegistry",
+    "ItemStackMixin_AzItemAnimatorCache"
+  ],
   "client": [
-    "MixinHumanoidArmorLayer",
-    "MixinItemRenderer",
     "TextureManagerMixin"
   ]
 }

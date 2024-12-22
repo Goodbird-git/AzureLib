@@ -9,7 +9,8 @@ package mod.azure.azurelib.loading;
 
 import com.google.gson.JsonObject;
 import mod.azure.azurelib.AzureLib;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.animation.primitive.AzAnimation;
+import mod.azure.azurelib.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.loading.json.raw.Model;
 import mod.azure.azurelib.loading.object.BakedAnimations;
 import mod.azure.azurelib.util.JSONUtils;
@@ -26,18 +27,19 @@ import java.nio.charset.Charset;
  * Extracts raw information from given files, and other similar functions
  */
 public final class FileLoader {
+
 	/**
-	 * Load up and deserialize an animation json file to its respective {@link mod.azure.azurelib.core.animation.Animation} components
-	 * 
+	 * Load up and deserialize an animation json file to its respective {@link AzAnimation} components
+	 *
 	 * @param location The resource path of the animations file
 	 * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access
 	 */
-	public static BakedAnimations loadAnimationsFile(ResourceLocation location, IResourceManager manager) {
-		return JsonUtil.GEO_GSON.fromJson(loadFile(location, manager), BakedAnimations.class);
+	public static AzBakedAnimations loadAzAnimationsFile(ResourceLocation location, IResourceManager manager) {
+		return JsonUtil.GEO_GSON.fromJson(loadFile(location, manager), AzBakedAnimations.class);
 	}
 
 	/**
-	 * Load up and deserialize a geo model json file to its respective {@link BakedGeoModel} format
+	 * Load up and deserialize a geo model json file to its respective format
 	 * 
 	 * @param location The resource path of the model file
 	 * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access

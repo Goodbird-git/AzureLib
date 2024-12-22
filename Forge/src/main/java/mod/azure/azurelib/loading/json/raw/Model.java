@@ -12,8 +12,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import mod.azure.azurelib.loading.json.FormatVersion;
+import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 
 /**
  * Container class for model information, only used in deserialization at startup

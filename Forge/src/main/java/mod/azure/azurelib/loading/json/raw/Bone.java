@@ -11,8 +11,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 
 import java.util.Map;
 
@@ -119,7 +119,8 @@ public class Bone {
 	public static JsonDeserializer<Bone> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			double[] bindPoseRotation = JsonUtil.jsonArrayToDoubleArray(JSONUtils.getJsonArray(obj, "bind_pose_rotation", null));
+			double[] bindPoseRotation = JsonUtil.jsonArrayToDoubleArray(
+					JSONUtils.getJsonArray(obj, "bind_pose_rotation", null));
 			Cube[] cubes = JsonUtil.jsonArrayToObjectArray(JSONUtils.getJsonArray(obj, "cubes", new JsonArray()), context, Cube.class);
 			Boolean debug = JsonUtil.getOptionalBoolean(obj, "debug");
 			Double inflate = JsonUtil.getOptionalDouble(obj, "inflate");

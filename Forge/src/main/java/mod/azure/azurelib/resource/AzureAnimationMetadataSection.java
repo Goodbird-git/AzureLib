@@ -1,12 +1,10 @@
 package mod.azure.azurelib.resource;
 
 import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
+import com.mojang.realmsclient.util.Pair;
 import net.minecraft.client.resources.data.AnimationFrame;
 import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.client.resources.data.AnimationMetadataSectionSerializer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -41,8 +39,8 @@ public class AzureAnimationMetadataSection extends AnimationMetadataSection {
 
 	public Pair<Integer, Integer> getFrameSize(int p_119028_, int p_119029_) {
 		Pair<Integer, Integer> pair = this.calculateFrameSize(p_119028_, p_119029_);
-		int i = pair.getFirst();
-		int j = pair.getSecond();
+		int i = pair.first();
+		int j = pair.second();
 		if (isDivisionInteger(p_119028_, i) && isDivisionInteger(p_119029_, j)) {
 			return pair;
 		} else {
@@ -85,7 +83,6 @@ public class AzureAnimationMetadataSection extends AnimationMetadataSection {
 	}
 
 	@FunctionalInterface
-	@OnlyIn(Dist.CLIENT)
 	public interface FrameOutput {
 		void accept(int p_174864_, int p_174865_);
 	}

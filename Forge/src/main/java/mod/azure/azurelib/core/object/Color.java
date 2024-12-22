@@ -7,7 +7,7 @@ package mod.azure.azurelib.core.object;
  * Color holder object for storing a packed int argb value.
  */
 public class Color {
-	private int argbInt;
+	public int argbInt;
 	public static final Color WHITE = new Color(0xFFFFFFFF);
 	public static final Color LIGHT_GRAY = new Color(0xFFC0C0C0);
 	public static final Color GRAY = new Color(0xFF808080);

@@ -8,9 +8,7 @@ package mod.azure.azurelib.core.state;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 
 /**
- * A state monitoring class for a given {@link CoreGeoBone}.<br>
- * Transformations applied to the bone is monitored by the {@link mod.azure.azurelib.core.animation.AnimationProcessor}
- * in the course of animations, and stored here for monitoring.
+ * A state monitoring class for a given {@link CoreGeoBone}.
  */
 public class BoneSnapshot {
 	private final CoreGeoBone bone;

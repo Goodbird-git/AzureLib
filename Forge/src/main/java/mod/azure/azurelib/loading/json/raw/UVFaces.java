@@ -9,8 +9,7 @@ package mod.azure.azurelib.loading.json.raw;
 
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
-import net.minecraft.util.Direction;
-import net.minecraft.util.JSONUtils;
+import mod.azure.azurelib.util.JSONUtils;
 
 /**
  * Container class for UV face information, only used in deserialization at startup

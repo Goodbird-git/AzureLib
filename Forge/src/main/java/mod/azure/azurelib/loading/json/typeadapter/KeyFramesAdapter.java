@@ -13,8 +13,8 @@ import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
+import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
-import net.minecraft.util.JSONUtils;
 
 import java.lang.reflect.Type;
 import java.util.Map;
