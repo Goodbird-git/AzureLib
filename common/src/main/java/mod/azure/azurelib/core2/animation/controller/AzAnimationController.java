@@ -18,7 +18,7 @@ import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayS
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationTransitionState;
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
-import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzStage;
@@ -105,7 +105,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
         for (var stage : stages) {
             var animation = Objects.equals(stage.animationName(), AzStage.WAIT)
-                ? AzAnimation.generateWaitAnimation(stage.additionalTicks())
+                ? AzBakedAnimation.generateWaitAnimation(stage.additionalTicks())
                 : animator.getAnimation(animatable, stage.animationName());
 
             if (animation == null) {

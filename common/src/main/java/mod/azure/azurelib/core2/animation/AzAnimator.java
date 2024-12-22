@@ -12,7 +12,7 @@ import mod.azure.azurelib.core.molang.MolangQueries;
 import mod.azure.azurelib.core2.animation.cache.AzBakedAnimationCache;
 import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
-import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 
 /**
@@ -113,7 +113,7 @@ public abstract class AzAnimator<T> {
     /**
      * Get the baked animation object used for rendering from the given resource path
      */
-    public AzAnimation getAnimation(T animatable, String name) {
+    public AzBakedAnimation getAnimation(T animatable, String name) {
         var location = getAnimationLocation(animatable);
         var bakedAnimations = AzBakedAnimationCache.getInstance().getNullable(location);
 

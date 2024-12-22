@@ -11,7 +11,7 @@ import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimation;
  * Modifications or extensions of a compiled Animation are not supported, and therefore an instance of
  * <code>Animation</code> is considered final and immutable.
  */
-public record AzAnimation(
+public record AzBakedAnimation(
     String name,
     double length,
     AzLoopType loopType,
@@ -26,8 +26,8 @@ public record AzAnimation(
      * @param length The duration of the animation in seconds.
      * @return An AzAnimation instance representing the wait animation with the specified duration.
      */
-    public static AzAnimation generateWaitAnimation(double length) {
-        return new AzAnimation(
+    public static AzBakedAnimation generateWaitAnimation(double length) {
+        return new AzBakedAnimation(
             AzStage.WAIT,
             length,
             AzLoopType.PLAY_ONCE,

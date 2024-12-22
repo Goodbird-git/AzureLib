@@ -128,6 +128,6 @@ public interface AzLoopType {
     boolean shouldPlayAgain(
         Object animatable,
         AzAnimationController<?> controller,
-        AzAnimation currentAnimation
+        AzBakedAnimation currentAnimation
     );
 }

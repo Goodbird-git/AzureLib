@@ -27,7 +27,7 @@ import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeStack;
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.easing.AzEasingTypeLoader;
 import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
-import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.core2.animation.primitive.AzKeyframes;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
@@ -189,7 +189,7 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
             }
         }
 
-        Map<String, AzAnimation> animations = new Object2ObjectOpenHashMap<>(animationJsonList.size());
+        Map<String, AzBakedAnimation> animations = new Object2ObjectOpenHashMap<>(animationJsonList.size());
 
         for (Map.Entry<String, JsonElement> entry : animationJsonList.entrySet()) {
             try {
@@ -207,7 +207,7 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
     }
 
     /**
-     * Processes the provided JSON data to create an instance of {@link AzAnimation}. This method interprets the
+     * Processes the provided JSON data to create an instance of {@link AzBakedAnimation}. This method interprets the
      * animation JSON object, constructs the necessary data structures such as bone animations and keyframes, and
      * applies logic to calculate the animation length if not explicitly defined.
      *
@@ -215,11 +215,11 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
      * @param animationObj The JSON object containing the animation definition. This object may include details such as
      *                     animation length, loop type, bones, and keyframe data.
      * @param context      The deserialization context used for nested data structures such as {@link AzKeyframes}.
-     * @return A constructed {@link AzAnimation} instance containing the parsed animation details.
+     * @return A constructed {@link AzBakedAnimation} instance containing the parsed animation details.
      * @throws MolangException If an error occurs while processing expressions or any other aspect of the Molang
      *                         language during animation creation.
      */
-    private AzAnimation bakeAnimation(
+    private AzBakedAnimation bakeAnimation(
         String name,
         JsonObject animationObj,
         JsonDeserializationContext context
@@ -236,7 +236,7 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         if (length == -1)
             length = calculateAnimationLength(boneAnimations);
 
-        return new AzAnimation(name, length, loopType, boneAnimations, keyframes);
+        return new AzBakedAnimation(name, length, loopType, boneAnimations, keyframes);
     }
 
     /**

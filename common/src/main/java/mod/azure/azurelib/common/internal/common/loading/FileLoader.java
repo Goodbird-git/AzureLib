@@ -21,7 +21,7 @@ import mod.azure.azurelib.common.internal.common.loading.json.raw.Model;
 import mod.azure.azurelib.common.internal.common.loading.object.BakedAnimations;
 import mod.azure.azurelib.common.internal.common.util.JsonUtil;
 import mod.azure.azurelib.core.animation.Animation;
-import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
+import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
 
 /**
@@ -45,7 +45,7 @@ public final class FileLoader {
     }
 
     /**
-     * Load up and deserialize an animation json file to its respective {@link AzAnimation} components
+     * Load up and deserialize an animation json file to its respective {@link AzBakedAnimation} components
      *
      * @param location The resource path of the animations file
      * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access
