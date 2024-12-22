@@ -7,6 +7,10 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.AzEntityAnimTriggerPacket;
 import mod.azure.azurelib.common.platform.Services;
 
+/**
+ * @deprecated
+ */
+@Deprecated(forRemoval = true)
 public class AzAnimationDispatcher {
 
     private final Entity entity;
