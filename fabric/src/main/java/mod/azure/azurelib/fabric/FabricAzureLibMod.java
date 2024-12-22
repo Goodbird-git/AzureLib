@@ -94,6 +94,6 @@ public final class FabricAzureLibMod implements ModInitializer {
             AZ_DOOM_BOOTS
         );
         ExampleEntityTypes.initialize();
-        AzIdentityRegistry.register(AZ_PISTOL);
+        AzIdentityRegistry.register(AZ_DOOM_HELMET, AZ_DOOM_CHESTPLATE, AZ_DOOM_LEGGINGS, AZ_DOOM_BOOTS, AZ_PISTOL);
     }
 }
