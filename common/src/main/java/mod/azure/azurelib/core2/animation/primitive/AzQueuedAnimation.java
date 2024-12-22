@@ -14,7 +14,10 @@ package mod.azure.azurelib.core2.animation.primitive;
  * <li>{@code loopType}: The {@link AzLoopType} that dictates the looping behavior or termination handling for the
  * animation.</li>
  * </ul>
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public record AzQueuedAnimation(
     AzBakedAnimation animation,
     AzLoopType loopType
