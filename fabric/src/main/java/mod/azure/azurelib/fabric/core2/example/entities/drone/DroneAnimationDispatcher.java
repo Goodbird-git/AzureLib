@@ -7,56 +7,60 @@ import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
 
 public class DroneAnimationDispatcher extends AzAnimationDispatcher {
 
-    private static final AzDispatchCommand ATTACK_CLAW_COMMAND = AzDispatchCommand
+    private final AzDispatchCommand attackClawCommand = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME);
 
-    private static final AzDispatchCommand ATTACK_TAIL_COMMAND = AzDispatchCommand
+    private final AzDispatchCommand attackTailCommand = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME);
 
-    private static final AzDispatchCommand CRAWL_COMMAND = AzDispatchCommand
+    private final AzDispatchCommand crawlCommand = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_ANIMATION_NAME);
 
-    private static final AzDispatchCommand CRAWL_HOLD_COMMAND = AzDispatchCommand
+    private final AzDispatchCommand crawlHoldCommand = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME);
 
-    private static final AzDispatchCommand IDLE_COMMAND = AzDispatchCommand.builder()
-        .setEasingType(AzEasingTypes.EASE_IN_OUT_SINE)
-        .setSpeed(1)
-        .setTransitionInSpeed(3)
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME)
-        .build();
+    private final AzDispatchCommand idleCommand;
 
-    private static final AzDispatchCommand RUN_COMMAND = AzDispatchCommand
+    private final AzDispatchCommand runCommand = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME);
 
-    private static final AzDispatchCommand WALK_COMMAND = AzDispatchCommand.builder()
-        .setEasingType(AzEasingTypes.EASE_IN_OUT_QUAD)
-        .setSpeed(2.5F)
-        .setTransitionInSpeed(20)
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME)
-        .build();
+    private final AzDispatchCommand walkCommand;
 
     private final Drone drone;
 
     public DroneAnimationDispatcher(Drone drone) {
         super(drone);
         this.drone = drone;
+
+        this.idleCommand = AzDispatchCommand.builder()
+            .setEasingType(AzEasingTypes.random())
+            .setSpeed(1 + (0.5F * drone.getRandom().nextFloat()))
+            .setTransitionInSpeed(drone.getRandom().nextInt(7) + 3)
+            .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME)
+            .build();
+
+        this.walkCommand = AzDispatchCommand.builder()
+            .setEasingType(AzEasingTypes.random())
+            .setSpeed(2.5F)
+            .setTransitionInSpeed(drone.getRandom().nextInt(7) + 3)
+            .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME)
+            .build();
     }
 
     public void clientCrawl() {
-        AzDispatcher.fromClient(CRAWL_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromClient(crawlCommand).sendForEntity(drone);
     }
 
     public void clientCrawlHold() {
-        AzDispatcher.fromClient(CRAWL_HOLD_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromClient(crawlHoldCommand).sendForEntity(drone);
     }
 
     public void clientIdle() {
-        AzDispatcher.fromClient(IDLE_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromClient(idleCommand).sendForEntity(drone);
     }
 
     public void clientRun() {
-        AzDispatcher.fromClient(RUN_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromClient(runCommand).sendForEntity(drone);
     }
 
     public void clientSwim() {
@@ -64,14 +68,14 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
     }
 
     public void clientWalk() {
-        AzDispatcher.fromClient(WALK_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromClient(walkCommand).sendForEntity(drone);
     }
 
     public void serverClawAttack() {
-        AzDispatcher.fromServer(ATTACK_CLAW_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromServer(attackClawCommand).sendForEntity(drone);
     }
 
     public void serverTailAttack() {
-        AzDispatcher.fromServer(ATTACK_TAIL_COMMAND).sendForEntity(drone);
+        AzDispatcher.fromServer(attackTailCommand).sendForEntity(drone);
     }
 }
