@@ -3,6 +3,7 @@ package mod.azure.azurelib.fabric.core2.example.entities.drone;
 import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
 
 public class DroneAnimationDispatcher extends AzAnimationDispatcher {
 
@@ -19,6 +20,7 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME);
 
     private static final AzDispatchCommand IDLE_COMMAND = AzDispatchCommand.builder()
+        .setEasingType(AzEasingTypes.EASE_IN_OUT_SINE)
         .setSpeed(1)
         .setTransitionInSpeed(3)
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME)
@@ -28,6 +30,7 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME);
 
     private static final AzDispatchCommand WALK_COMMAND = AzDispatchCommand.builder()
+        .setEasingType(AzEasingTypes.EASE_IN_OUT_QUAD)
         .setSpeed(2.5F)
         .setTransitionInSpeed(20)
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME)

@@ -6,12 +6,19 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRo
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetEasingTypeAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction;
+import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 
 public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDispatchRootCommandBuilder> {
 
     public AzDispatchRootCommandBuilder cancelAll() {
         actions.add(new AzRootCancelAllAction());
+        return self();
+    }
+
+    public AzDispatchRootCommandBuilder setEasingType(AzEasingType easingType) {
+        actions.add(new AzRootSetEasingTypeAction(easingType));
         return self();
     }
 

@@ -14,6 +14,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRo
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetEasingTypeAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction;
 
 /**
@@ -42,6 +43,7 @@ public class AzDispatchActionRegistry {
         register(AzRootCancelAction.RESOURCE_LOCATION, AzRootCancelAction.CODEC);
         register(AzRootCancelAllAction.RESOURCE_LOCATION, AzRootCancelAllAction.CODEC);
         register(AzRootSetAnimationSpeedAction.RESOURCE_LOCATION, AzRootSetAnimationSpeedAction.CODEC);
+        register(AzRootSetEasingTypeAction.RESOURCE_LOCATION, AzRootSetEasingTypeAction.CODEC);
         register(AzRootSetTransitionInSpeedAction.RESOURCE_LOCATION, AzRootSetTransitionInSpeedAction.CODEC);
         register(AzRootPlayAnimationAction.RESOURCE_LOCATION, AzRootPlayAnimationAction.CODEC);
 
