@@ -1,17 +1,15 @@
 package mod.azure.azurelib.animation.controller;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mod.azure.azurelib.animation.AzAnimationContext;
 import mod.azure.azurelib.animation.AzBoneAnimationUpdateUtil;
 import mod.azure.azurelib.animation.cache.AzBoneCache;
 import mod.azure.azurelib.animation.controller.keyframe.AzBoneAnimationQueue;
-import mod.azure.azurelib.core.animation.EasingType;
+import mod.azure.azurelib.animation.easing.AzEasingType;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.model.AzBoneSnapshot;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * The AzBoneAnimationQueueCache class is responsible for managing and updating animation queues for bones. It acts as a
@@ -30,10 +28,8 @@ public class AzBoneAnimationQueueCache<T> {
         this.boneCache = boneCache;
     }
 
-    public void update(AzAnimationContext<T> context, Function<T, EasingType> overridingEasingTypeFunction) {
-        T animatable = context.animatable();
+    public void update(AzEasingType easingType) {
         Map<String, AzBoneSnapshot> boneSnapshots = boneCache.getBoneSnapshotsByName();
-        EasingType easingType = overridingEasingTypeFunction.apply(animatable);
 
         for (AzBoneAnimationQueue boneAnimation : boneAnimationQueues.values()) {
             AzBone bone = boneAnimation.bone();

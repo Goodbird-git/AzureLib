@@ -3,8 +3,6 @@ package mod.azure.azurelib.animation.controller;
 import mod.azure.azurelib.animation.AzAnimationContext;
 import mod.azure.azurelib.animation.controller.state.machine.AzAnimationControllerStateMachine;
 
-import java.util.function.ToDoubleFunction;
-
 /**
  * A timer utility that integrates directly with an {@link AzAnimationController} to track and adjust tick values for
  * animation playback control, based on the controller's state and animation speed modifiers.
@@ -28,19 +26,17 @@ public class AzAnimationControllerTimer<T> {
      * Is used when starting a new animation, transitioning, and a few other key areas
      */
     public void update() {
-        ToDoubleFunction<T> modifier = animationController.getAnimationSpeedModifier();
-        AzAnimationControllerStateMachine<T> stateMachine = animationController.getStateMachine();
-        AzAnimationContext<T> animContext = stateMachine.getContext().getAnimationContext();
-        T animatable = animContext.animatable();
+        AzAnimationControllerStateMachine<T> stateMachine = animationController.stateMachine();
+        AzAnimationContext<T> animContext = stateMachine.getContext().animationContext();
+        double animationSpeed = animationController.animationProperties().animationSpeed();
         double tick = animContext.timer().getAnimTime();
 
-        double animationSpeed = modifier.applyAsDouble(animatable);
         adjustedTick = animationSpeed * Math.max(tick - tickOffset, 0);
     }
 
     public void reset() {
-        AzAnimationControllerStateMachine<T> stateMachine = animationController.getStateMachine();
-        AzAnimationContext<T> animContext = stateMachine.getContext().getAnimationContext();
+        AzAnimationControllerStateMachine<T> stateMachine = animationController.stateMachine();
+        AzAnimationContext<T> animContext = stateMachine.getContext().animationContext();
         double tick = animContext.timer().getAnimTime();
 
         if (!stateMachine.isStopped()) {

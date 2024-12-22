@@ -6,7 +6,7 @@ import mod.azure.azurelib.animation.cache.AzBakedAnimationCache;
 import mod.azure.azurelib.animation.cache.AzBoneCache;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
-import mod.azure.azurelib.animation.primitive.AzAnimation;
+import mod.azure.azurelib.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
@@ -111,14 +111,14 @@ public abstract class AzAnimator<T> {
             // should be re-instantiated. If the bone cache is re-instantiated, then so should the bone animation
             // queue caches.
             animationControllerContainer.getAll()
-                .forEach(controller -> controller.getBoneAnimationQueueCache().clear());
+                .forEach(controller -> controller.boneAnimationQueueCache().clear());
         }
     }
 
     /**
      * Get the baked animation object used for rendering from the given resource path
      */
-    public AzAnimation getAnimation(T animatable, String name) {
+    public AzBakedAnimation getAnimation(T animatable, String name) {
         ResourceLocation location = getAnimationLocation(animatable);
         AzBakedAnimations bakedAnimations = AzBakedAnimationCache.getInstance().getNullable(location);
 

@@ -14,15 +14,15 @@ public class Context<T> implements StateMachineContext {
 
     Context() {}
 
-    public AzAnimationContext<T> getAnimationContext() {
+    public AzAnimationContext<T> animationContext() {
         return animationContext;
     }
 
-    public AzAnimationController<T> getAnimationController() {
+    public AzAnimationController<T> animationController() {
         return animationController;
     }
 
-    public AzAnimationControllerStateMachine<T> getStateMachine() {
+    public AzAnimationControllerStateMachine<T> stateMachine() {
         return stateMachine;
     }
 }

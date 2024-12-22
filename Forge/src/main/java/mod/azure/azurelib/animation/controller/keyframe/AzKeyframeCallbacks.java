@@ -8,19 +8,19 @@ import mod.azure.azurelib.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.animation.event.AzSoundKeyframeEvent;
 
 /**
- * The AzKeyFrameCallbacks class manages callbacks for different types of keyframe events, enabling
+ * The AzKeyframeCallbacks class manages callbacks for different types of keyframe events, enabling
  * the handling of sound, particle, and custom-defined keyframe instructions during
  * an animation sequence.
  *
  * @param <T> The type of entity or object this keyframe callback interacts with.
  */
-public class AzKeyFrameCallbacks<T> {
+public class AzKeyframeCallbacks<T> {
 
-    private static final AzKeyFrameCallbacks<?> NO_OP = new AzKeyFrameCallbacks<>(null, null, null);
+    private static final AzKeyframeCallbacks<?> NO_OP = new AzKeyframeCallbacks<>(null, null, null);
 
     @SuppressWarnings("unchecked")
-    public static <T> AzKeyFrameCallbacks<T> noop() {
-        return (AzKeyFrameCallbacks<T>) NO_OP;
+    public static <T> AzKeyframeCallbacks<T> noop() {
+        return (AzKeyframeCallbacks<T>) NO_OP;
     }
 
     private final AzCustomKeyframeHandler<T> customKeyframeHandler;
@@ -29,7 +29,7 @@ public class AzKeyFrameCallbacks<T> {
 
     private final AzSoundKeyframeHandler<T> soundKeyframeHandler;
 
-    private AzKeyFrameCallbacks(
+    private AzKeyframeCallbacks(
         AzCustomKeyframeHandler<T> customKeyframeHandler,
         AzParticleKeyframeHandler<T> particleKeyframeHandler,
         AzSoundKeyframeHandler<T> soundKeyframeHandler
@@ -39,15 +39,15 @@ public class AzKeyFrameCallbacks<T> {
         this.soundKeyframeHandler = soundKeyframeHandler;
     }
 
-    public AzCustomKeyframeHandler<T> getCustomKeyframeHandler() {
+    public AzCustomKeyframeHandler<T> customKeyframeHandler() {
         return customKeyframeHandler;
     }
 
-    public AzParticleKeyframeHandler<T> getParticleKeyframeHandler() {
+    public AzParticleKeyframeHandler<T> particleKeyframeHandler() {
         return particleKeyframeHandler;
     }
 
-    public AzSoundKeyframeHandler<T> getSoundKeyframeHandler() {
+    public AzSoundKeyframeHandler<T> soundKeyframeHandler() {
         return soundKeyframeHandler;
     }
 
@@ -98,8 +98,8 @@ public class AzKeyFrameCallbacks<T> {
             return this;
         }
 
-        public AzKeyFrameCallbacks<T> build() {
-            return new AzKeyFrameCallbacks<>(customKeyframeHandler, particleKeyframeHandler, soundKeyframeHandler);
+        public AzKeyframeCallbacks<T> build() {
+            return new AzKeyframeCallbacks<>(customKeyframeHandler, particleKeyframeHandler, soundKeyframeHandler);
         }
     }
 }

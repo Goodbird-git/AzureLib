@@ -12,7 +12,7 @@ import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
  * @see AzParticleKeyframeEvent
  * @see AzSoundKeyframeEvent
  */
-public abstract class AzKeyFrameEvent<T, E extends KeyFrameData> {
+public abstract class AzKeyframeEvent<T, E extends KeyFrameData> {
 
     private final T animatable;
 
@@ -20,18 +20,18 @@ public abstract class AzKeyFrameEvent<T, E extends KeyFrameData> {
 
     private final AzAnimationController<T> controller;
 
-    private final E eventKeyFrame;
+    private final E eventKeyframe;
 
-    protected AzKeyFrameEvent(
+    protected AzKeyframeEvent(
         T animatable,
         double animationTick,
         AzAnimationController<T> controller,
-        E eventKeyFrame
+        E eventKeyframe
     ) {
         this.animatable = animatable;
         this.animationTick = animationTick;
         this.controller = controller;
-        this.eventKeyFrame = eventKeyFrame;
+        this.eventKeyframe = eventKeyframe;
     }
 
     /**
@@ -60,6 +60,6 @@ public abstract class AzKeyFrameEvent<T, E extends KeyFrameData> {
      * Returns the {@link KeyFrameData} relevant to the encountered {@link Keyframe}
      */
     public E getKeyframeData() {
-        return this.eventKeyFrame;
+        return this.eventKeyframe;
     }
 }

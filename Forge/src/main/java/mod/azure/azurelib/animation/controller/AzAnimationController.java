@@ -2,26 +2,23 @@ package mod.azure.azurelib.animation.controller;
 
 import mod.azure.azurelib.animation.AzAnimationContext;
 import mod.azure.azurelib.animation.AzAnimator;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameCallbacks;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameManager;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeCallbacks;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeManager;
 import mod.azure.azurelib.animation.controller.state.impl.AzAnimationPauseState;
 import mod.azure.azurelib.animation.controller.state.impl.AzAnimationPlayState;
 import mod.azure.azurelib.animation.controller.state.impl.AzAnimationStopState;
 import mod.azure.azurelib.animation.controller.state.impl.AzAnimationTransitionState;
 import mod.azure.azurelib.animation.controller.state.machine.AzAnimationControllerStateMachine;
 import mod.azure.azurelib.animation.controller.state.machine.StateHolder;
-import mod.azure.azurelib.animation.primitive.AzAnimation;
+import mod.azure.azurelib.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.animation.primitive.AzQueuedAnimation;
 import mod.azure.azurelib.animation.primitive.AzRawAnimation;
 import mod.azure.azurelib.animation.primitive.AzStage;
-import mod.azure.azurelib.core.animation.EasingType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +37,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     private final AzAnimationControllerTimer<T> controllerTimer;
 
-    private final ToDoubleFunction<T> animationSpeedModifier;
+    private final AzAnimationProperties animationProperties;
 
     private final AzAnimationQueue animationQueue;
 
@@ -52,51 +49,37 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     private final AzBoneSnapshotCache boneSnapshotCache;
 
-    private final AzKeyFrameManager<T> keyFrameManager;
-
-    private final Function<T, EasingType> overrideEasingTypeFunction;
-
-    private final double transitionLength;
+    private final AzKeyframeManager<T> keyframeManager;
 
     protected AzQueuedAnimation currentAnimation;
 
-    protected boolean needsAnimationReload = false;
-
     /**
      * Instantiates a new {@code AnimationController}.<br>
-     *
-     * @param name               The name of the controller - should represent what animations it handles
-     * @param transitionTickTime The amount of time (in <b>ticks</b>) that the controller should take to transition
-     *                           between animations. Lerping is automatically applied where possible
      */
     AzAnimationController(
         String name,
         AzAnimator<T> animator,
-        int transitionTickTime,
-        ToDoubleFunction<T> animationSpeedModifier,
-        AzKeyFrameCallbacks<T> keyFrameCallbacks,
-        Function<T, EasingType> overrideEasingTypeFunction,
+        AzAnimationProperties animationProperties,
+        AzKeyframeCallbacks<T> keyframeCallbacks,
         Map<String, AzRawAnimation> triggerableAnimations
     ) {
         super(name, triggerableAnimations);
 
         this.animator = animator;
         this.controllerTimer = new AzAnimationControllerTimer<>(this);
-        this.transitionLength = transitionTickTime;
-        this.animationSpeedModifier = animationSpeedModifier;
-        this.overrideEasingTypeFunction = overrideEasingTypeFunction;
+        this.animationProperties = animationProperties;
 
         this.animationQueue = new AzAnimationQueue();
         this.boneAnimationQueueCache = new AzBoneAnimationQueueCache<>(animator.context().boneCache());
         this.boneSnapshotCache = new AzBoneSnapshotCache();
-        this.keyFrameManager = new AzKeyFrameManager<>(
+        this.keyframeManager = new AzKeyframeManager<>(
             this,
             boneAnimationQueueCache,
             boneSnapshotCache,
-            keyFrameCallbacks
+                keyframeCallbacks
         );
 
-        StateHolder<T> stateHolder = new StateHolder<T>(
+        StateHolder<T> stateHolder = new StateHolder<>(
             new AzAnimationPlayState<>(),
             new AzAnimationPauseState<>(),
             new AzAnimationStopState<>(),
@@ -112,17 +95,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
     }
 
     /**
-     * Computes the current animation speed modifier.<br>
-     * This modifier defines the relative speed in which animations will be played based on the current state of the
-     * game.
-     *
-     * @return The computed current animation speed modifier
-     */
-    public double computeAnimationSpeed(T animatable) {
-        return animationSpeedModifier.applyAsDouble(animatable);
-    }
-
-    /**
      * Populates the animation queue with the given {@link AzRawAnimation}
      *
      * @param animatable   The animatable object being rendered
@@ -131,11 +103,11 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      */
     public List<AzQueuedAnimation> tryCreateAnimationQueue(T animatable, AzRawAnimation rawAnimation) {
         List<AzStage> stages = rawAnimation.getAnimationStages();
-        ArrayList<AzQueuedAnimation> animations = new ArrayList<AzQueuedAnimation>();
+        ArrayList<AzQueuedAnimation> animations = new ArrayList<>();
 
         for (AzStage stage : stages) {
-            AzAnimation animation = Objects.equals(stage.animationName(), AzStage.WAIT)
-                ? AzAnimation.generateWaitAnimation(stage.additionalTicks())
+            AzBakedAnimation animation = Objects.equals(stage.animationName(), AzStage.WAIT)
+                ? AzBakedAnimation.generateWaitAnimation(stage.additionalTicks())
                 : animator.getAnimation(animatable, stage.animationName());
 
             if (animation == null) {
@@ -158,16 +130,17 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      * This method may be safely called every render frame, as passing the same builder that is already loaded will do
      * nothing.<br>
      * Pass null to this method to tell the controller to stop.<br>
-     * If {@link AzAnimationController#forceAnimationReset()} has been called prior to this, the controller will reload
-     * the animation regardless of whether it matches the currently loaded one or not
+     *
+     * @deprecated
      */
+    @Deprecated()
     public void setAnimation(T animatable, AzRawAnimation rawAnimation) {
         if (rawAnimation == null || rawAnimation.getAnimationStages().isEmpty()) {
             stateMachine.stop();
             return;
         }
 
-        if (needsAnimationReload || !rawAnimation.equals(currentRawAnimation)) {
+        if (!rawAnimation.equals(currentRawAnimation)) {
             List<AzQueuedAnimation> animations = tryCreateAnimationQueue(animatable, rawAnimation);
 
             if (!animations.isEmpty()) {
@@ -175,7 +148,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
                 animationQueue.addAll(animations);
                 this.currentRawAnimation = rawAnimation;
                 stateMachine.transition();
-                this.needsAnimationReload = false;
                 return;
             }
 
@@ -210,7 +182,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
             }
 
             this.triggeredAnimation = null;
-            this.needsAnimationReload = true;
         }
     }
 
@@ -219,10 +190,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      * logic.
      */
     public void update(AzAnimationContext<T> context) {
-        if (animator.reloadAnimations) {
-            forceAnimationReset();
-        }
-
         T animatable = context.animatable();
 
         handleAnimationState(animatable);
@@ -232,67 +199,46 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         // Run state machine updates.
         stateMachine.update();
 
-        // TODO: Is this if-block necessary?
-        if (currentAnimation == null) {
-            if (animationQueue.isEmpty()) {
-                // If there is no animation to play, stop.
-                stateMachine.stop();
-                return;
-            }
-
-            this.needsAnimationReload = false;
-            controllerTimer.update();
-        }
-
-        boneAnimationQueueCache.update(context, overrideEasingTypeFunction);
+        boneAnimationQueueCache.update(animationProperties.easingType());
     }
 
     /**
      * Marks the controller as needing to reset its animation and state the next time
      * {@link AzAnimationController#setAnimation(T, AzRawAnimation)} is called.<br>
      * <br>
-     * Use this if you have a {@link AzRawAnimation} with multiple stages and you want it to start again from the first
+     * Use this if you have a {@link AzRawAnimation} with multiple stages, and you want it to start again from the first
      * stage, or if you want to reset the currently playing animation to the start
      */
-    private void forceAnimationReset() {
-        this.needsAnimationReload = true;
-        boneAnimationQueueCache.clear();
+    public AzAnimationProperties animationProperties() {
+        return animationProperties;
     }
 
-    public AzAnimationQueue getAnimationQueue() {
+    public AzAnimationQueue animationQueue() {
         return animationQueue;
     }
 
-    public ToDoubleFunction<T> getAnimationSpeedModifier() {
-        return animationSpeedModifier;
-    }
-
-    public AzBoneAnimationQueueCache<T> getBoneAnimationQueueCache() {
+    public AzBoneAnimationQueueCache<T> boneAnimationQueueCache() {
         return boneAnimationQueueCache;
     }
 
-    public AzBoneSnapshotCache getBoneSnapshotCache() {
+    public AzBoneSnapshotCache boneSnapshotCache() {
         return boneSnapshotCache;
     }
 
-    public AzAnimationControllerTimer<T> getControllerTimer() {
+    public AzAnimationControllerTimer<T> controllerTimer() {
         return controllerTimer;
     }
 
-    public AzQueuedAnimation getCurrentAnimation() {
+    public AzQueuedAnimation currentAnimation() {
         return currentAnimation;
     }
 
-    public AzKeyFrameManager<T> getKeyFrameManager() {
-        return keyFrameManager;
+    public AzKeyframeManager<T> keyframeManager() {
+        return keyframeManager;
     }
 
-    public AzAnimationControllerStateMachine<T> getStateMachine() {
+    public AzAnimationControllerStateMachine<T> stateMachine() {
         return stateMachine;
-    }
-
-    public double getTransitionLength() {
-        return transitionLength;
     }
 
     public void setCurrentAnimation(AzQueuedAnimation currentAnimation) {

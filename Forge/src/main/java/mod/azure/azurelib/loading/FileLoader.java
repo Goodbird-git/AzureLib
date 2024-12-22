@@ -9,10 +9,9 @@ package mod.azure.azurelib.loading;
 
 import com.google.gson.JsonObject;
 import mod.azure.azurelib.AzureLib;
-import mod.azure.azurelib.animation.primitive.AzAnimation;
+import mod.azure.azurelib.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.loading.json.raw.Model;
-import mod.azure.azurelib.loading.object.BakedAnimations;
 import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
 import net.minecraft.client.resources.IResourceManager;
@@ -29,7 +28,7 @@ import java.nio.charset.Charset;
 public final class FileLoader {
 
 	/**
-	 * Load up and deserialize an animation json file to its respective {@link AzAnimation} components
+	 * Load up and deserialize an animation json file to its respective {@link AzBakedAnimation} components
 	 *
 	 * @param location The resource path of the animations file
 	 * @param manager  The Minecraft {@code ResourceManager} responsible for maintaining in-memory resource access

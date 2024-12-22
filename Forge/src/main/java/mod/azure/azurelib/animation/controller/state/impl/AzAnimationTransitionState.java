@@ -5,7 +5,7 @@ import mod.azure.azurelib.animation.cache.AzBoneCache;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerTimer;
 import mod.azure.azurelib.animation.controller.AzBoneSnapshotCache;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameTransitioner;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeTransitioner;
 import mod.azure.azurelib.animation.controller.state.AzAnimationState;
 import mod.azure.azurelib.animation.controller.state.machine.AzAnimationControllerStateMachine;
 import mod.azure.azurelib.animation.controller.state.machine.Context;
@@ -30,36 +30,37 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
     @Override
     public void onEnter(Context<T> context) {
         super.onEnter(context);
-        AzAnimationController<T> controller = context.getAnimationController();
-        AzAnimationControllerTimer<T> controllerTimer = controller.getControllerTimer();
+        AzAnimationController<T> controller = context.animationController();
+        AzAnimationControllerTimer<T> controllerTimer = controller.controllerTimer();
         controllerTimer.reset();
     }
 
     @Override
     public void onUpdate(Context<T> context) {
-        AzAnimationController<T> controller = context.getAnimationController();
-        AzAnimationControllerTimer<T> controllerTimer = controller.getControllerTimer();
-        AzBoneSnapshotCache boneSnapshotCache = controller.getBoneSnapshotCache();
-        AzAnimationContext<T> animContext = context.getAnimationContext();
+        AzAnimationController<T> controller = context.animationController();
+        AzAnimationControllerTimer<T> controllerTimer = controller.controllerTimer();
+        AzBoneSnapshotCache boneSnapshotCache = controller.boneSnapshotCache();
+        AzAnimationContext<T> animContext = context.animationContext();
 
-        AzAnimationControllerStateMachine<T> stateMachine = context.getStateMachine();
+        AzAnimationControllerStateMachine<T> stateMachine = context.stateMachine();
         AzBoneCache boneCache = animContext.boneCache();
 
         if (controllerTimer.getAdjustedTick() == 0) {
-            controller.setCurrentAnimation(controller.getAnimationQueue().next());
+            controller.setCurrentAnimation(controller.animationQueue().next());
 
-            controller.getKeyFrameManager().keyFrameCallbackHandler().reset();
+            controller.keyframeManager().keyframeCallbackHandler().reset();
 
-            if (controller.getCurrentAnimation() == null) {
+            if (controller.currentAnimation() == null) {
                 return;
             }
 
             Map<String, AzBoneSnapshot> snapshots = boneCache.getBoneSnapshotsByName();
 
-            boneSnapshotCache.put(controller.getCurrentAnimation(), snapshots.values());
+            boneSnapshotCache.put(controller.currentAnimation(), snapshots.values());
         }
 
-        boolean hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.getTransitionLength();
+        boolean hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.animationProperties()
+                .transitionLength();
 
         if (hasFinishedTransitioning) {
             // If we've exceeded the amount of time we should be transitioning, then switch to play state.
@@ -67,12 +68,12 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
             return;
         }
 
-        if (controller.getCurrentAnimation() != null) {
+        if (controller.currentAnimation() != null) {
             Map<String, AzBone> bones = boneCache.getBakedModel().getBonesByName();
             boolean crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
-            AzKeyFrameTransitioner<T> keyFrameTransitioner = controller.getKeyFrameManager().getKeyFrameTransitioner();
+            AzKeyframeTransitioner<T> keyframeTransitioner = controller.keyframeManager().keyframeTransitioner();
 
-            keyFrameTransitioner.transition(bones, crashWhenCantFindBone, controllerTimer.getAdjustedTick());
+            keyframeTransitioner.transition(bones, crashWhenCantFindBone, controllerTimer.getAdjustedTick());
         }
     }
 }

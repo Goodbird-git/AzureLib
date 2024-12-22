@@ -4,9 +4,9 @@ import mod.azure.azurelib.animation.AzAnimationContext;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerTimer;
 import mod.azure.azurelib.animation.controller.AzAnimationQueue;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameCallbackHandler;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameExecutor;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameManager;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeCallbackHandler;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeExecutor;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeManager;
 import mod.azure.azurelib.animation.controller.state.AzAnimationState;
 import mod.azure.azurelib.animation.controller.state.machine.AzAnimationControllerStateMachine;
 import mod.azure.azurelib.animation.controller.state.machine.Context;
@@ -28,17 +28,17 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
     @Override
     public void onEnter(Context<T> context) {
         super.onEnter(context);
-        AzAnimationController<T> controller = context.getAnimationController();
-        AzAnimationControllerTimer<T> controllerTimer = controller.getControllerTimer();
+        AzAnimationController<T> controller = context.animationController();
+        AzAnimationControllerTimer<T> controllerTimer = controller.controllerTimer();
 
         controllerTimer.reset();
     }
 
     @Override
     public void onUpdate(Context<T> context) {
-        AzAnimationController<T> controller = context.getAnimationController();
-        AzAnimationControllerTimer<T> controllerTimer = controller.getControllerTimer();
-        AzQueuedAnimation currentAnimation = controller.getCurrentAnimation();
+        AzAnimationController<T> controller = context.animationController();
+        AzAnimationControllerTimer<T> controllerTimer = controller.controllerTimer();
+        AzQueuedAnimation currentAnimation = controller.currentAnimation();
 
         if (currentAnimation == null) {
             // If the current animation is null, we should try to play the next animation.
@@ -48,7 +48,7 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
         // At this point we have an animation currently playing. We need to query if that animation has finished.
 
-        AzAnimationContext<T> animContext = context.getAnimationContext();
+        AzAnimationContext<T> animContext = context.animationContext();
         T animatable = animContext.animatable();
         boolean hasAnimationFinished = controllerTimer.getAdjustedTick() >= currentAnimation.animation().length();
 
@@ -60,29 +60,29 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
                 playAgain(context);
             } else {
                 // Nothing more to do at this point since we can't play the animation again, so stop.
-                context.getStateMachine().stop();
+                context.stateMachine().stop();
                 return;
             }
         }
 
         // The animation is still running at this point, proceed with updating the bones according to keyframes.
 
-        AzKeyFrameManager<T> keyFrameManager = controller.getKeyFrameManager();
-        AzKeyFrameExecutor<T> keyFrameExecutor = keyFrameManager.getKeyFrameExecutor();
+        AzKeyframeManager<T> keyframeManager = controller.keyframeManager();
+        AzKeyframeExecutor<T> keyframeExecutor = keyframeManager.keyframeExecutor();
         boolean crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
 
-        keyFrameExecutor.execute(currentAnimation, animatable, crashWhenCantFindBone);
+        keyframeExecutor.execute(currentAnimation, animatable, crashWhenCantFindBone);
     }
 
     private void tryPlayNextOrStop(Context<T> context) {
-        AzAnimationController<T> controller = context.getAnimationController();
-        AzAnimationControllerStateMachine<T> stateMachine = context.getStateMachine();
-        AzKeyFrameManager<T> keyFrameManager = controller.getKeyFrameManager();
-        AzKeyFrameCallbackHandler<T> keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
+        AzAnimationController<T> controller = context.animationController();
+        AzAnimationControllerStateMachine<T> stateMachine = context.stateMachine();
+        AzKeyframeManager<T> keyframeManager = controller.keyframeManager();
+        AzKeyframeCallbackHandler<T> keyframeCallbackHandler = keyframeManager.keyframeCallbackHandler();
 
-        keyFrameCallbackHandler.reset();
+        keyframeCallbackHandler.reset();
 
-        AzAnimationQueue animationQueue = controller.getAnimationQueue();
+        AzAnimationQueue animationQueue = controller.animationQueue();
         AzQueuedAnimation nextAnimation = animationQueue.peek();
         boolean canPlayNextSuccessfully = nextAnimation != null;
 
@@ -102,8 +102,8 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
         Context<T> context,
         AzQueuedAnimation currentAnimation
     ) {
-        T animatable = context.getAnimationContext().animatable();
-        AzAnimationController<T> controller = context.getAnimationController();
+        T animatable = context.animationContext().animatable();
+        AzAnimationController<T> controller = context.animationController();
 
         // If it has, we then need to see if the animation should play again.
         return currentAnimation.loopType()
@@ -111,10 +111,10 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
     }
 
     protected void playAgain(Context<T> context) {
-        AzAnimationController<T> controller = context.getAnimationController();
-        AzAnimationControllerTimer<T> controllerTimer = controller.getControllerTimer();
-        AzKeyFrameManager<T> keyFrameManager = controller.getKeyFrameManager();
-        AzKeyFrameCallbackHandler<T> keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
+        AzAnimationController<T> controller = context.animationController();
+        AzAnimationControllerTimer<T> controllerTimer = controller.controllerTimer();
+        AzKeyframeManager<T> keyframeManager = controller.keyframeManager();
+        AzKeyframeCallbackHandler<T> keyFrameCallbackHandler = keyframeManager.keyframeCallbackHandler();
 
         controllerTimer.reset();
         keyFrameCallbackHandler.reset();

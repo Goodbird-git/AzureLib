@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * Represents a container for baked animations in the AzureLib framework. This record holds mappings for precompiled
- * animation instances ({@link AzAnimation}) and resource includes ({@link ResourceLocation}) for use in
+ * animation instances ({@link AzBakedAnimation}) and resource includes ({@link ResourceLocation}) for use in
  * animation-driven content.
  * <br>
  * The `AzBakedAnimations` structure provides functionality for retrieving animations by name and supporting external
@@ -16,15 +16,15 @@ import java.util.Map;
  */
 public class AzBakedAnimations {
 
-    public Map<String, AzAnimation> animations;
+    public Map<String, AzBakedAnimation> animations;
     public Map<String, ResourceLocation> includes;
 
-    public AzBakedAnimations(Map<String, AzAnimation> animations, Map<String, ResourceLocation> includes){
+    public AzBakedAnimations(Map<String, AzBakedAnimation> animations, Map<String, ResourceLocation> includes){
         this.animations = animations;
         this.includes = includes;
     }
 
-    public Map<String, AzAnimation> animations() {
+    public Map<String, AzBakedAnimation> animations() {
         return animations;
     }
 
@@ -33,9 +33,9 @@ public class AzBakedAnimations {
     }
 
     /**
-     * Gets an {@link AzAnimation} by its name, if present
+     * Gets an {@link AzBakedAnimation} by its name, if present
      */
-    public AzAnimation getAnimation(String name) {
+    public AzBakedAnimation getAnimation(String name) {
         return animations.get(name);
     }
 

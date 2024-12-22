@@ -2,10 +2,7 @@ package mod.azure.azurelib.animation.dispatch.command.action.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ShortArrayMap;
 import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction;
+import mod.azure.azurelib.animation.dispatch.command.action.impl.root.*;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
@@ -37,6 +34,8 @@ public class AzDispatchActionRegistry {
         // Root actions
         register(AzRootCancelAction.RESOURCE_LOCATION, AzRootCancelAction.CODEC);
         register(AzRootCancelAllAction.RESOURCE_LOCATION, AzRootCancelAllAction.CODEC);
+        register(AzRootSetAnimationSpeedAction.RESOURCE_LOCATION, AzRootSetAnimationSpeedAction.CODEC);
+        register(AzRootSetEasingTypeAction.RESOURCE_LOCATION, AzRootSetEasingTypeAction.CODEC);
         register(AzRootSetTransitionInSpeedAction.RESOURCE_LOCATION, AzRootSetTransitionInSpeedAction.CODEC);
         register(AzRootPlayAnimationAction.RESOURCE_LOCATION, AzRootPlayAnimationAction.CODEC);
 

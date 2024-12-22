@@ -5,10 +5,6 @@ import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerTimer;
 import mod.azure.azurelib.animation.controller.AzBoneAnimationQueueCache;
 import mod.azure.azurelib.animation.primitive.AzQueuedAnimation;
-import mod.azure.azurelib.core.keyframe.AnimationPoint;
-import mod.azure.azurelib.core.keyframe.BoneAnimation;
-import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.keyframe.KeyframeStack;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
@@ -17,7 +13,7 @@ import mod.azure.azurelib.core.object.Axis;
 import java.util.NoSuchElementException;
 
 /**
- * AzKeyFrameExecutor is a specialized implementation of {@link AzAbstractKeyFrameExecutor}, designed to handle
+ * AzKeyframeExecutor is a specialized implementation of {@link AzAbstractKeyframeExecutor}, designed to handle
  * keyframe-based animations for animatable objects. It delegates animation control to an
  * {@link AzAnimationController} and manages bone animation queues through an {@link AzBoneAnimationQueueCache}.
  * <br>
@@ -26,13 +22,13 @@ import java.util.NoSuchElementException;
  *
  * @param <T> The type of the animatable object to which the keyframe animations will be applied
  */
-public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
+public class AzKeyframeExecutor<T> extends AzAbstractKeyframeExecutor {
 
     private final AzAnimationController<T> animationController;
 
     private final AzBoneAnimationQueueCache<T> boneAnimationQueueCache;
 
-    public AzKeyFrameExecutor(
+    public AzKeyframeExecutor(
         AzAnimationController<T> animationController,
         AzBoneAnimationQueueCache<T> boneAnimationQueueCache
     ) {
@@ -47,15 +43,15 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
      *                              bone, or continue with the remaining bones
      */
     public void execute(@NotNull AzQueuedAnimation currentAnimation, T animatable, boolean crashWhenCantFindBone) {
-        AzKeyFrameCallbackHandler<T> keyFrameCallbackHandler = animationController.getKeyFrameManager().keyFrameCallbackHandler();
-        AzAnimationControllerTimer<T> controllerTimer = animationController.getControllerTimer();
-        double transitionLength = animationController.getTransitionLength();
+        AzKeyframeCallbackHandler<T> keyframeCallbackHandler = animationController.keyframeManager().keyframeCallbackHandler();
+        AzAnimationControllerTimer<T> controllerTimer = animationController.controllerTimer();
+        double transitionLength = animationController.animationProperties().transitionLength();
 
         final double finalAdjustedTick = controllerTimer.getAdjustedTick();
 
         MolangParser.INSTANCE.setMemoizedValue(MolangQueries.ANIM_TIME, () -> finalAdjustedTick / 20d);
 
-        for (BoneAnimation boneAnimation : currentAnimation.animation().boneAnimations()) {
+        for (AzBoneAnimation boneAnimation : currentAnimation.animation().boneAnimations()) {
             AzBoneAnimationQueue boneAnimationQueue = boneAnimationQueueCache.getOrNull(boneAnimation.boneName());
 
             if (boneAnimationQueue == null) {
@@ -66,9 +62,9 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
                 continue;
             }
 
-            KeyframeStack<Keyframe<IValue>> rotationKeyFrames = boneAnimation.rotationKeyFrames();
-            KeyframeStack<Keyframe<IValue>> positionKeyFrames = boneAnimation.positionKeyFrames();
-            KeyframeStack<Keyframe<IValue>> scaleKeyFrames = boneAnimation.scaleKeyFrames();
+            AzKeyframeStack<AzKeyframe<IValue>> rotationKeyFrames = boneAnimation.rotationKeyframes();
+            AzKeyframeStack<AzKeyframe<IValue>> positionKeyFrames = boneAnimation.positionKeyframes();
+            AzKeyframeStack<AzKeyframe<IValue>> scaleKeyFrames = boneAnimation.scaleKeyframes();
             double adjustedTick = controllerTimer.getAdjustedTick();
 
             updateRotation(rotationKeyFrames, boneAnimationQueue, adjustedTick);
@@ -79,11 +75,11 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
         // TODO: Is this correct???
         controllerTimer.addToAdjustedTick(transitionLength);
 
-        keyFrameCallbackHandler.handle(animatable, controllerTimer.getAdjustedTick());
+        keyframeCallbackHandler.handle(animatable, controllerTimer.getAdjustedTick());
     }
 
     private void updateRotation(
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double adjustedTick
     ) {
@@ -91,15 +87,15 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
             return;
         }
 
-        AnimationPoint x = getAnimationPointAtTick(keyFrames.xKeyframes(), adjustedTick, true, Axis.X);
-        AnimationPoint y = getAnimationPointAtTick(keyFrames.yKeyframes(), adjustedTick, true, Axis.Y);
-        AnimationPoint z = getAnimationPointAtTick(keyFrames.zKeyframes(), adjustedTick, true, Axis.Z);
+        AzAnimationPoint x = getAnimationPointAtTick(keyFrames.xKeyframes(), adjustedTick, true, Axis.X);
+        AzAnimationPoint y = getAnimationPointAtTick(keyFrames.yKeyframes(), adjustedTick, true, Axis.Y);
+        AzAnimationPoint z = getAnimationPointAtTick(keyFrames.zKeyframes(), adjustedTick, true, Axis.Z);
 
         queue.addRotations(x, y, z);
     }
 
     private void updatePosition(
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double adjustedTick
     ) {
@@ -107,15 +103,15 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
             return;
         }
 
-        AnimationPoint x = getAnimationPointAtTick(keyFrames.xKeyframes(), adjustedTick, false, Axis.X);
-        AnimationPoint y = getAnimationPointAtTick(keyFrames.yKeyframes(), adjustedTick, false, Axis.Y);
-        AnimationPoint z = getAnimationPointAtTick(keyFrames.zKeyframes(), adjustedTick, false, Axis.Z);
+        AzAnimationPoint x = getAnimationPointAtTick(keyFrames.xKeyframes(), adjustedTick, false, Axis.X);
+        AzAnimationPoint y = getAnimationPointAtTick(keyFrames.yKeyframes(), adjustedTick, false, Axis.Y);
+        AzAnimationPoint z = getAnimationPointAtTick(keyFrames.zKeyframes(), adjustedTick, false, Axis.Z);
 
         queue.addPositions(x, y, z);
     }
 
     private void updateScale(
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double adjustedTick
     ) {
@@ -123,9 +119,9 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
             return;
         }
 
-        AnimationPoint x = getAnimationPointAtTick(keyFrames.xKeyframes(), adjustedTick, false, Axis.X);
-        AnimationPoint y = getAnimationPointAtTick(keyFrames.yKeyframes(), adjustedTick, false, Axis.Y);
-        AnimationPoint z = getAnimationPointAtTick(keyFrames.zKeyframes(), adjustedTick, false, Axis.Z);
+        AzAnimationPoint x = getAnimationPointAtTick(keyFrames.xKeyframes(), adjustedTick, false, Axis.X);
+        AzAnimationPoint y = getAnimationPointAtTick(keyFrames.yKeyframes(), adjustedTick, false, Axis.Y);
+        AzAnimationPoint z = getAnimationPointAtTick(keyFrames.zKeyframes(), adjustedTick, false, Axis.Z);
 
         queue.addScales(x, y, z);
     }

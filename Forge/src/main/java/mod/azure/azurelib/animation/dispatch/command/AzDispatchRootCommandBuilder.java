@@ -1,26 +1,37 @@
 package mod.azure.azurelib.animation.dispatch.command;
 
-import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
-import mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction;
+import mod.azure.azurelib.animation.dispatch.command.action.impl.root.*;
+import mod.azure.azurelib.animation.easing.AzEasingType;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDispatchRootCommandBuilder> {
-
-    private final List<AzDispatchAction> actions;
-
-    AzDispatchRootCommandBuilder() {
-        this.actions = new ArrayList<>();
-    }
 
     public AzDispatchRootCommandBuilder cancelAll() {
         actions.add(new AzRootCancelAllAction());
         return self();
     }
+
+    public AzDispatchRootCommandBuilder setEasingType(AzEasingType easingType) {
+        actions.add(new AzRootSetEasingTypeAction(easingType));
+        return self();
+    }
+
+    public AzDispatchRootCommandBuilder setSpeed(float speed) {
+        actions.add(new AzRootSetAnimationSpeedAction(speed));
+        return self();
+    }
+
+    public AzDispatchRootCommandBuilder setTransitionInSpeed(float transitionSpeed) {
+        actions.add(new AzRootSetTransitionInSpeedAction(transitionSpeed));
+        return self();
+    }
+
+    // TODO:
+    // public AzDispatchRootCommandBuilder setTransitionOutSpeed(float transitionSpeed) {
+    // // TODO:
+    // return self();
+    // }
 
     public AzDispatchRootCommandBuilder cancel(String controllerName) {
         actions.add(new AzRootCancelAction(controllerName));
@@ -41,9 +52,5 @@ public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDis
     public AzDispatchRootCommandBuilder playAnimation(String controllerName, String animationName) {
         actions.add(new AzRootPlayAnimationAction(controllerName, animationName));
         return self();
-    }
-
-    public AzDispatchCommand build() {
-        return new AzDispatchCommand(actions);
     }
 }

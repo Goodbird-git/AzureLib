@@ -18,21 +18,6 @@ public class AzDispatchCommandBuilder<T extends AzDispatchCommandBuilder<T>> {
         return (T) this;
     }
 
-    public T setSpeed(float speed) {
-        // TODO:
-        return self();
-    }
-
-    public T setTransitionInSpeed(float transitionSpeed) {
-        // TODO:
-        return self();
-    }
-
-    public T setTransitionOutSpeed(float transitionSpeed) {
-        // TODO:
-        return self();
-    }
-
     public AzDispatchCommand build() {
         return new AzDispatchCommand(actions);
     }

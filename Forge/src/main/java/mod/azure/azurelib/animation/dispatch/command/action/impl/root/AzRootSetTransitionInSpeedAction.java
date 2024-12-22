@@ -15,6 +15,15 @@ import net.minecraft.util.ResourceLocation;
  */
 public class AzRootSetTransitionInSpeedAction implements AzDispatchAction {
 
+    public double transitionSpeed;
+
+    public AzRootSetTransitionInSpeedAction(double transitionSpeed) {
+        this.transitionSpeed = transitionSpeed;
+    }
+
+    public double transitionSpeed() {
+        return transitionSpeed;
+    }
     public static final StreamCodec<FriendlyByteBuf, AzRootSetTransitionInSpeedAction> CODEC = StreamCodec.unit(
         new AzRootSetTransitionInSpeedAction()
     );
@@ -23,7 +32,12 @@ public class AzRootSetTransitionInSpeedAction implements AzDispatchAction {
 
     @Override
     public void handle(AzAnimator<?> animator) {
-        // TODO: Modify animator transition length.
+        animator.getAnimationControllerContainer()
+                .getAll()
+                .forEach(
+                        controller -> controller.animationProperties()
+                                .setTransitionLength(transitionSpeed)
+                );
     }
 
     @Override

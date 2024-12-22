@@ -10,25 +10,25 @@ import mod.azure.azurelib.core.object.Axis;
 import java.util.List;
 
 /**
- * AzAbstractKeyFrameExecutor is a base class designed to handle animations and transitions between keyframes
+ * AzAbstractKeyframeExecutor is a base class designed to handle animations and transitions between keyframes
  * in a generic and reusable fashion. It provides the foundational logic for determining the current state
  * of an animation based on the tick time and computing the animation's required values.
  */
-public class AzAbstractKeyFrameExecutor {
+public class AzAbstractKeyframeExecutor {
 
-    protected AzAbstractKeyFrameExecutor() {}
+    protected AzAbstractKeyframeExecutor() {}
 
     /**
      * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
      */
-    protected AnimationPoint getAnimationPointAtTick(
-        List<Keyframe<IValue>> frames,
+    protected AzAnimationPoint getAnimationPointAtTick(
+        List<AzKeyframe<IValue>> frames,
         double tick,
         boolean isRotation,
         Axis axis
     ) {
-        KeyframeLocation<Keyframe<IValue>> location = getCurrentKeyFrameLocation(frames, tick);
-        Keyframe<IValue> currentFrame = location.keyframe();
+        AzKeyframeLocation<AzKeyframe<IValue>> location = getCurrentKeyframeLocation(frames, tick);
+        AzKeyframe<IValue> currentFrame = location.keyframe();
         double startValue = currentFrame.startValue().get();
         double endValue = currentFrame.endValue().get();
 
@@ -50,30 +50,30 @@ public class AzAbstractKeyFrameExecutor {
             }
         }
 
-        return new AnimationPoint(currentFrame, location.startTick(), currentFrame.length(), startValue, endValue);
+        return new AzAnimationPoint(currentFrame, location.startTick(), currentFrame.length(), startValue, endValue);
     }
 
     /**
      * Returns the {@link Keyframe} relevant to the current tick time
      *
-     * @param frames     The list of {@code KeyFrames} to filter through
+     * @param frames     The list of {@code AzKeyframe} to filter through
      * @param ageInTicks The current tick time
-     * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
+     * @return A new {@code AzKeyframeLocation} containing the current {@code AzKeyframe} and the tick time used to find it
      */
-    protected KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(
-        List<Keyframe<IValue>> frames,
+    protected AzKeyframeLocation<AzKeyframe<IValue>> getCurrentKeyframeLocation(
+        List<AzKeyframe<IValue>> frames,
         double ageInTicks
     ) {
         double totalFrameTime = 0.0;
 
-        for (Keyframe<IValue> frame : frames) {
+        for (AzKeyframe<IValue> frame : frames) {
             totalFrameTime += frame.length();
 
             if (totalFrameTime > ageInTicks) {
-                return new KeyframeLocation<>(frame, (ageInTicks - (totalFrameTime - frame.length())));
+                return new AzKeyframeLocation<>(frame, (ageInTicks - (totalFrameTime - frame.length())));
             }
         }
 
-        return new KeyframeLocation<>(frames.get(frames.size() - 1), ageInTicks);
+        return new AzKeyframeLocation<>(frames.get(frames.size() - 1), ageInTicks);
     }
 }

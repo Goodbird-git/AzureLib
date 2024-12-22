@@ -1,8 +1,9 @@
 package mod.azure.azurelib.animation;
 
+import mod.azure.azurelib.animation.controller.keyframe.AzAnimationPoint;
 import mod.azure.azurelib.animation.controller.keyframe.AzBoneAnimationQueue;
-import mod.azure.azurelib.core.animation.EasingType;
-import mod.azure.azurelib.core.keyframe.AnimationPoint;
+import mod.azure.azurelib.animation.easing.AzEasingType;
+import mod.azure.azurelib.animation.easing.AzEasingUtil;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.model.AzBoneSnapshot;
 
@@ -20,17 +21,17 @@ public class AzBoneAnimationUpdateUtil {
     public static void updatePositions(
         AzBoneAnimationQueue boneAnimation,
         AzBone bone,
-        EasingType easingType,
+        AzEasingType easingType,
         AzBoneSnapshot snapshot
     ) {
-        AnimationPoint posXPoint = boneAnimation.positionXQueue().poll();
-        AnimationPoint posYPoint = boneAnimation.positionYQueue().poll();
-        AnimationPoint posZPoint = boneAnimation.positionZQueue().poll();
+        AzAnimationPoint posXPoint = boneAnimation.positionXQueue().poll();
+        AzAnimationPoint posYPoint = boneAnimation.positionYQueue().poll();
+        AzAnimationPoint posZPoint = boneAnimation.positionZQueue().poll();
 
         if (posXPoint != null && posYPoint != null && posZPoint != null) {
-            bone.setPosX((float) EasingType.lerpWithOverride(posXPoint, easingType));
-            bone.setPosY((float) EasingType.lerpWithOverride(posYPoint, easingType));
-            bone.setPosZ((float) EasingType.lerpWithOverride(posZPoint, easingType));
+            bone.setPosX((float) AzEasingUtil.lerpWithOverride(posXPoint, easingType));
+            bone.setPosY((float) AzEasingUtil.lerpWithOverride(posYPoint, easingType));
+            bone.setPosZ((float) AzEasingUtil.lerpWithOverride(posZPoint, easingType));
             snapshot.updateOffset(bone.getPosX(), bone.getPosY(), bone.getPosZ());
             snapshot.startPosAnim();
             bone.markPositionAsChanged();
@@ -51,23 +52,23 @@ public class AzBoneAnimationUpdateUtil {
     public static void updateRotations(
         AzBoneAnimationQueue boneAnimation,
         AzBone bone,
-        EasingType easingType,
+        AzEasingType easingType,
         AzBoneSnapshot initialSnapshot,
         AzBoneSnapshot snapshot
     ) {
-        AnimationPoint rotXPoint = boneAnimation.rotationXQueue().poll();
-        AnimationPoint rotYPoint = boneAnimation.rotationYQueue().poll();
-        AnimationPoint rotZPoint = boneAnimation.rotationZQueue().poll();
+        AzAnimationPoint rotXPoint = boneAnimation.rotationXQueue().poll();
+        AzAnimationPoint rotYPoint = boneAnimation.rotationYQueue().poll();
+        AzAnimationPoint rotZPoint = boneAnimation.rotationZQueue().poll();
 
         if (rotXPoint != null && rotYPoint != null && rotZPoint != null) {
             bone.setRotX(
-                (float) EasingType.lerpWithOverride(rotXPoint, easingType) + initialSnapshot.getRotX()
+                (float) AzEasingUtil.lerpWithOverride(rotXPoint, easingType) + initialSnapshot.getRotX()
             );
             bone.setRotY(
-                (float) EasingType.lerpWithOverride(rotYPoint, easingType) + initialSnapshot.getRotY()
+                (float) AzEasingUtil.lerpWithOverride(rotYPoint, easingType) + initialSnapshot.getRotY()
             );
             bone.setRotZ(
-                (float) EasingType.lerpWithOverride(rotZPoint, easingType) + initialSnapshot.getRotZ()
+                (float) AzEasingUtil.lerpWithOverride(rotZPoint, easingType) + initialSnapshot.getRotZ()
             );
             snapshot.updateRotation(bone.getRotX(), bone.getRotY(), bone.getRotZ());
             snapshot.startRotAnim();
@@ -88,17 +89,17 @@ public class AzBoneAnimationUpdateUtil {
     public static void updateScale(
         AzBoneAnimationQueue boneAnimation,
         AzBone bone,
-        EasingType easingType,
+        AzEasingType easingType,
         AzBoneSnapshot snapshot
     ) {
-        AnimationPoint scaleXPoint = boneAnimation.scaleXQueue().poll();
-        AnimationPoint scaleYPoint = boneAnimation.scaleYQueue().poll();
-        AnimationPoint scaleZPoint = boneAnimation.scaleZQueue().poll();
+        AzAnimationPoint scaleXPoint = boneAnimation.scaleXQueue().poll();
+        AzAnimationPoint scaleYPoint = boneAnimation.scaleYQueue().poll();
+        AzAnimationPoint scaleZPoint = boneAnimation.scaleZQueue().poll();
 
         if (scaleXPoint != null && scaleYPoint != null && scaleZPoint != null) {
-            bone.setScaleX((float) EasingType.lerpWithOverride(scaleXPoint, easingType));
-            bone.setScaleY((float) EasingType.lerpWithOverride(scaleYPoint, easingType));
-            bone.setScaleZ((float) EasingType.lerpWithOverride(scaleZPoint, easingType));
+            bone.setScaleX((float) AzEasingUtil.lerpWithOverride(scaleXPoint, easingType));
+            bone.setScaleY((float) AzEasingUtil.lerpWithOverride(scaleYPoint, easingType));
+            bone.setScaleZ((float) AzEasingUtil.lerpWithOverride(scaleZPoint, easingType));
             snapshot.updateScale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
             snapshot.startScaleAnim();
             bone.markScaleAsChanged();

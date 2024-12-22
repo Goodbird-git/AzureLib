@@ -19,7 +19,10 @@ import java.util.Objects;
  * <pre>{@code
  * AzRawAnimation.begin().thenPlay("action.open_box").thenLoop("state.stay_open")
  * }</pre>
+ *
+ *  @deprecated
  */
+@Deprecated()
 public final class AzRawAnimation {
 
     private final List<AzStage> animationList;

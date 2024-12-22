@@ -6,14 +6,14 @@
 package mod.azure.azurelib.animation.event;
 
 import mod.azure.azurelib.animation.controller.AzAnimationController;
-import mod.azure.azurelib.animation.controller.keyframe.AzKeyFrameCallbacks;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframeCallbacks;
 import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
 
 /**
- * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#getParticleKeyframeHandler()}.<br>
+ * The {@link AzKeyframeEvent} specific to the {@link AzKeyframeCallbacks#particleKeyframeHandler()}.<br>
  * Called when a particle instruction keyframe is encountered
  */
-public class AzParticleKeyframeEvent<T> extends AzKeyFrameEvent<T, ParticleKeyframeData> {
+public class AzParticleKeyframeEvent<T> extends AzKeyframeEvent<T, ParticleKeyframeData> {
 
     public AzParticleKeyframeEvent(
         T animatable,

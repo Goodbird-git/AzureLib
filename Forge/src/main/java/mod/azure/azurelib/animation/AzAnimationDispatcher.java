@@ -3,6 +3,10 @@ package mod.azure.azurelib.animation;
 import mod.azure.azurelib.AzureLib;
 import net.minecraft.entity.Entity;
 
+/**
+ * @deprecated
+ */
+@Deprecated()
 public class AzAnimationDispatcher {
 
     private final Entity entity;
