@@ -13,6 +13,11 @@ import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
+/**
+ * Extends the {@link AzRendererPipeline} to provide a specific implementation for rendering {@link ItemStack} objects.
+ * This pipeline includes methods and configurations designed for item rendering and leverages additional utilities
+ * such as translation matrices and scaling functionalities for accurate rendering.
+ */
 public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
 
     private final AzItemRenderer itemRenderer;

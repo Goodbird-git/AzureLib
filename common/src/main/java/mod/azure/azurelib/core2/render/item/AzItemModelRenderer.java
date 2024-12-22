@@ -11,6 +11,10 @@ import mod.azure.azurelib.core2.render.AzModelRenderer;
 import mod.azure.azurelib.core2.render.AzPhasedRenderer;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
+/**
+ * AzItemModelRenderer is a specialized implementation of {@link AzModelRenderer} for rendering {@link ItemStack}
+ * objects. It provides customized rendering logic for rendering item models in a layered and recursive manner.
+ */
 public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
 
     private final AzItemRendererPipeline itemRendererPipeline;

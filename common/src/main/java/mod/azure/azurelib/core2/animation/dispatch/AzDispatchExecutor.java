@@ -1,13 +1,11 @@
 package mod.azure.azurelib.core2.animation.dispatch;
 
-import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
-import java.util.UUID;
 
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.network.packet.AzBlockEntityDispatchCommandPacket;
@@ -22,6 +20,13 @@ public record AzDispatchExecutor(
     AzDispatchSide origin
 ) {
 
+    /**
+     * Sends animation commands for the specified entity based on the configured dispatch origin. The method determines
+     * whether the command should proceed, logs a warning if it cannot, and dispatches the animation commands either
+     * from the client or the server side.
+     *
+     * @param entity the target {@link Entity} for which the animation commands are dispatched.
+     */
     public void sendForEntity(Entity entity) {
         if (!canNotProceed(entity)) {
             AzureLib.LOGGER.warn(
@@ -38,6 +43,13 @@ public record AzDispatchExecutor(
         }
     }
 
+    /**
+     * Sends animation commands for the specified block entity based on the configured dispatch origin. The method
+     * determines whether the command should proceed, logs a warning if it cannot, and dispatches the animation commands
+     * either from the client or the server side.
+     *
+     * @param entity the target {@link BlockEntity} for which the animation commands are dispatched.
+     */
     public void sendForBlockEntity(BlockEntity entity) {
         if (!canNotProceed(entity)) {
             AzureLib.LOGGER.warn(
@@ -54,6 +66,14 @@ public record AzDispatchExecutor(
         }
     }
 
+    /**
+     * Sends animation commands for the specified item based on the configured dispatch origin. The method determines
+     * whether the command can proceed, assigns a unique identifier to the item if required, and dispatches the
+     * animation commands either from the client or the server side.
+     *
+     * @param entity    the {@link Entity} associated with the {@link ItemStack}.
+     * @param itemStack the {@link ItemStack} on which the animation commands are dispatched.
+     */
     public void sendForItem(Entity entity, ItemStack itemStack) {
         if (!canNotProceed(entity)) {
             AzureLib.LOGGER.warn(
@@ -63,15 +83,6 @@ public record AzDispatchExecutor(
                 itemStack.getItem()
             );
             return;
-        }
-
-        // TODO: What if this isn't a PatchedDataComponentMap?
-        if (
-            itemStack.getComponents() instanceof PatchedDataComponentMap components && !components.has(
-                AzureLib.AZ_ID.get()
-            )
-        ) {
-            components.set(AzureLib.AZ_ID.get(), UUID.randomUUID());
         }
 
         switch (origin) {

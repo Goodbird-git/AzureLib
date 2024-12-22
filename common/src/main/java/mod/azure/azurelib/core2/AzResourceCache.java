@@ -12,6 +12,10 @@ import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+/**
+ * AzResourceCache is an abstract base class designed for managing and loading mod resources asynchronously. This class
+ * provides helper functions for loading and processing resource files of a specific type and storing them in a cache.
+ */
 public abstract class AzResourceCache {
 
     private static final Set<String> EXCLUDED_NAMESPACES = ObjectOpenHashSet.of(

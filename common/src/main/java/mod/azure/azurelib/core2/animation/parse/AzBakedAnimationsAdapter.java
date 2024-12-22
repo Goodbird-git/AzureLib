@@ -34,6 +34,19 @@ import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
  */
 public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimations> {
 
+    /**
+     * Processes a given JSON element and transforms it into a list of pairs, where each pair consists of a string key
+     * and a corresponding JSON element. Depending on the type of the input element, it handles primitive values,
+     * arrays, and objects differently, ensuring a uniform output structure. For JSON primitives, a synthetic triplet
+     * array is generated. For JSON arrays, the array is paired with the key "0". For JSON objects, individual entries
+     * are processed recursively, with special handling for nested objects without a "vector" key.
+     *
+     * @param element The JSON element to be processed. It can be a {@link JsonPrimitive}, {@link JsonObject}, or
+     *                {@link JsonArray}. If null, an empty list is returned.
+     * @return A list of {@link Pair} objects where each pair contains a string key and a corresponding
+     *         {@link JsonElement}. This list represents the processed structure of the input JSON element.
+     * @throws JsonParseException If the provided JSON element is of an unsupported type or is invalid.
+     */
     private static List<Pair<String, JsonElement>> getTripletObj(JsonElement element) {
         if (element == null)
             return List.of();
@@ -70,6 +83,20 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         throw new JsonParseException("Invalid object type provided to getTripletObj, got: " + element);
     }
 
+    /**
+     * Extracts and processes keyframe data from a given JSON object, returning a pair consisting of a timestamp and
+     * associated JSON element data. The method focuses on retrieving either the "pre" or "post" keyframe data from the
+     * input JSON object, applying specific handling for array or object-based representations.
+     *
+     * @param timestamp The string representation of the timestamp for the keyframe data. If the input value is not
+     *                  valid as a numeric string, it defaults to "0".
+     * @param keyframe  A {@link JsonObject} containing the keyframe data. Expected keys include "pre" or "post" with
+     *                  their associated values either as JSON arrays or nested objects containing a "vector" element.
+     * @return A {@link Pair} where the first element is the processed timestamp as a string, and the second element is
+     *         a {@link JsonArray} representing the keyframe values.
+     * @throws JsonParseException If the provided keyframe data is invalid or does not meet the expected structure, such
+     *                            as missing or incorrectly formatted "pre" or "post" keys.
+     */
     private static Pair<String, JsonElement> getTripletObjBedrock(String timestamp, JsonObject keyframe) {
         JsonArray keyframeValues = null;
 
@@ -91,6 +118,17 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         throw new JsonParseException("Invalid keyframe data - expected array, found " + keyframe);
     }
 
+    /**
+     * Calculates the overall length of the animation timeline across all provided bone animations. The calculation
+     * considers the maximum keyframe time for rotation, position, and scale transformations for each bone and
+     * determines the longest timeline among them.
+     *
+     * @param boneAnimations An array of {@link BoneAnimation} instances representing the animations for individual
+     *                       bones. Each bone animation includes keyframe stacks for rotation, position, and scale
+     *                       transformations.
+     * @return The maximum length of the animation timeline. If no keyframes are present, it defaults to
+     *         {@link Double#MAX_VALUE}.
+     */
     private static double calculateAnimationLength(BoneAnimation[] boneAnimations) {
         double length = 0;
 
@@ -103,6 +141,18 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         return length == 0 ? Double.MAX_VALUE : length;
     }
 
+    /**
+     * Deserializes JSON data into an instance of {@link AzBakedAnimations}.
+     *
+     * @param json    The JSON element to deserialize, expected to contain a valid structure for animations and optional
+     *                includes.
+     * @param type    The type of object to deserialize to; this is typically {@link AzBakedAnimations}.
+     * @param context A context for handling nested deserialization, such as for custom types embedded within the JSON
+     *                structure.
+     * @return A newly created {@link AzBakedAnimations} instance containing parsed animations and includes as specified
+     *         in the provided JSON data.
+     * @throws JsonParseException If the JSON structure is invalid or an error occurs during deserialization.
+     */
     @Override
     public AzBakedAnimations deserialize(
         JsonElement json,
@@ -152,6 +202,19 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         return new AzBakedAnimations(animations, includes);
     }
 
+    /**
+     * Processes the provided JSON data to create an instance of {@link AzAnimation}. This method interprets the
+     * animation JSON object, constructs the necessary data structures such as bone animations and keyframes, and
+     * applies logic to calculate the animation length if not explicitly defined.
+     *
+     * @param name         The name of the animation being created.
+     * @param animationObj The JSON object containing the animation definition. This object may include details such as
+     *                     animation length, loop type, bones, and keyframe data.
+     * @param context      The deserialization context used for nested data structures such as {@link AzKeyframes}.
+     * @return A constructed {@link AzAnimation} instance containing the parsed animation details.
+     * @throws MolangException If an error occurs while processing expressions or any other aspect of the Molang
+     *                         language during animation creation.
+     */
     private AzAnimation bakeAnimation(
         String name,
         JsonObject animationObj,
@@ -172,6 +235,15 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         return new AzAnimation(name, length, loopType, boneAnimations, keyframes);
     }
 
+    /**
+     * Processes a JSON object representing bone animations and constructs an array of {@link BoneAnimation} instances.
+     * Each bone's animation includes keyframe stacks for position, rotation, and scale transformations.
+     *
+     * @param bonesObj The JSON object containing bone animation data, where each key is the bone name and the value is
+     *                 an object with keyframe data for scale, position, and rotation.
+     * @return An array of {@link BoneAnimation} instances representing the deserialized animations for each bone.
+     * @throws MolangException If an error occurs during the processing of keyframes or Molang expressions.
+     */
     private BoneAnimation[] bakeBoneAnimations(JsonObject bonesObj) throws MolangException {
         BoneAnimation[] animations = new BoneAnimation[bonesObj.size()];
         int index = 0;
@@ -198,6 +270,22 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         return animations;
     }
 
+    /**
+     * Builds a {@link KeyframeStack} containing keyframes for X, Y, and Z-axis transformations based on the provided
+     * animation data. The method processes a list of paired time-stamped keyframe data, interprets the JSON structures,
+     * applies appropriate transformations for rotations (if specified), and generates keyframes with defined easing
+     * behaviors.
+     *
+     * @param entries       A list of {@link Pair} objects containing the timestamp as a {@link String} and associated
+     *                      {@link JsonElement} data describing the keyframe. Each entry represents a point in time
+     *                      within the animation timeline.
+     * @param isForRotation A boolean indicating whether the keyframe transformations should account for rotation. If
+     *                      true, the keyframe values undergo additional processing to convert angles to radians.
+     * @return A {@link KeyframeStack} containing three lists of keyframes for X, Y, and Z transformations,
+     *         respectively.
+     * @throws MolangException If an error occurs during the parsing or interpretation of Molang expressions in the
+     *                         keyframe data.
+     */
     private KeyframeStack<Keyframe<IValue>> buildKeyframeStack(
         List<Pair<String, JsonElement>> entries,
         boolean isForRotation

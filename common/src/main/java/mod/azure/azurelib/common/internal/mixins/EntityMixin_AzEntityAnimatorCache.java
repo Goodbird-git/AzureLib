@@ -8,6 +8,12 @@ import org.spongepowered.asm.mixin.Unique;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 
+/**
+ * A Mixin class designed to integrate an animation cache mechanism into the {@link Entity} class through the use of the
+ * {@link AzAnimatorAccessor} interface. This allows entities to store an instance of {@link AzAnimator} for managing
+ * animations. Implements methods to set and retrieve the {@link AzAnimator} instance, enabling animation control and
+ * association to the entity.
+ */
 @Mixin(Entity.class)
 public abstract class EntityMixin_AzEntityAnimatorCache implements AzAnimatorAccessor<Entity> {
 

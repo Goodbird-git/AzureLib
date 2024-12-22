@@ -19,6 +19,13 @@ import mod.azure.azurelib.core2.render.AzLayerRenderer;
 import mod.azure.azurelib.core2.render.AzModelRenderer;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
+/**
+ * The AzBlockEntityModelRenderer is a specialized model renderer class for rendering block entities
+ * in a 3D space. It extends the AzModelRenderer class and provides functionality specific to
+ * handling and rendering block entities based on their corresponding properties and transformations.
+ *
+ * @param <T> The type of BlockEntity that this renderer is responsible for
+ */
 public class AzBlockEntityModelRenderer<T extends BlockEntity> extends AzModelRenderer<T> {
 
     private final AzBlockEntityRendererPipeline<T> blockEntityRendererPipeline;

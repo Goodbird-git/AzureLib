@@ -12,6 +12,13 @@ import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
+/**
+ * Configures the rendering behavior for custom entities in the game.
+ * This extends {@link AzRendererConfig}, adding extra functionality
+ * specifically for handling entity death rotations.
+ *
+ * @param <T> the entity type this configuration applies to, extending {@link Entity}
+ */
 public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig<T> {
 
     private final Function<T, Float> deathMaxRotationProvider;

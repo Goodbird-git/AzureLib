@@ -19,6 +19,13 @@ public record AzAnimation(
     AzKeyframes keyFrames
 ) {
 
+    /**
+     * Generates an AzAnimation instance configured as a "WAIT" animation stage with a specified length. The animation
+     * will play once and has no bone animations or keyframe data.
+     *
+     * @param length The duration of the animation in seconds.
+     * @return An AzAnimation instance representing the wait animation with the specified duration.
+     */
     public static AzAnimation generateWaitAnimation(double length) {
         return new AzAnimation(
             AzStage.WAIT,

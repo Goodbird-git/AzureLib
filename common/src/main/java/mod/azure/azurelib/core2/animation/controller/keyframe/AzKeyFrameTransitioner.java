@@ -15,6 +15,14 @@ import mod.azure.azurelib.core2.animation.controller.AzBoneSnapshotCache;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
+/**
+ * AzKeyFrameTransitioner is a specialized class for executing smooth animations
+ * and transitions between keyframes for bones in an animation system. It utilizes
+ * animation controllers, bone animation queue caches, and bone snapshot caches
+ * to manage and apply transitions for rotation, position, and scale of bones.
+ *
+ * @param <T> The type of the animation data handled by the associated animation controller.
+ */
 public class AzKeyFrameTransitioner<T> extends AzAbstractKeyFrameExecutor {
 
     private final AzAnimationController<T> animationController;

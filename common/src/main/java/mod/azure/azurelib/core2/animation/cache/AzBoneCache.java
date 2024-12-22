@@ -11,6 +11,11 @@ import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
+/**
+ * The AzBoneCache class is responsible for managing the state and cache of bones in a baked model. It provides
+ * functionality for updating animation contexts, managing snapshots of bone states, and resetting transformation
+ * markers in preparation for rendering.
+ */
 public class AzBoneCache {
 
     private AzBakedModel bakedModel;

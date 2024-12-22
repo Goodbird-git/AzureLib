@@ -7,6 +7,20 @@ import org.jetbrains.annotations.NotNull;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.registry.AzDispatchActionRegistry;
 
+/**
+ * The AzDispatchActionCodec class serves as an implementation of the {@link StreamCodec} interface specifically
+ * designed for encoding and decoding {@link AzDispatchAction} objects. This codec encodes and decodes AzDispatchAction
+ * instances using their associated resource locations and registered codecs within the
+ * {@link AzDispatchActionRegistry}. </br>
+ * </br>
+ * This class provides the necessary functionality to serialize an AzDispatchAction to a {@link FriendlyByteBuf} and
+ * deserialize it back, ensuring proper handling of resource location and associated data. It relies on the
+ * AzDispatchActionRegistry to dynamically retrieve the appropriate codec and handle the serialization or
+ * deserialization process. </br>
+ * </br>
+ * Use this implementation in scenarios where AzDispatchAction objects need to be serialized or deserialized for
+ * efficient data transmission or storage.
+ */
 public class AzDispatchActionCodec implements StreamCodec<FriendlyByteBuf, AzDispatchAction> {
 
     @Override

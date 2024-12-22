@@ -15,6 +15,13 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContai
 import mod.azure.azurelib.core2.animation.primitive.AzAnimation;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 
+/**
+ * The {@code AzAnimator} class is an abstract base class for managing animations for various types of objects such as
+ * entities, blocks, or items. It provides a reusable structure for animating objects, allowing the integration of a
+ * variety of animation controllers and custom animations.
+ *
+ * @param <T> The type of object this animator will animate (e.g., an entity, block entity, or item stack).
+ */
 public abstract class AzAnimator<T> {
 
     private final AzAnimationContext<T> reusableContext;

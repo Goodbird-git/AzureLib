@@ -60,6 +60,12 @@ public class AzArmorLayer<T extends LivingEntity> implements AzRenderLayer<T> {
     @Nullable
     protected ItemStack bootsStack;
 
+    /**
+     * Prepares the necessary item stacks for rendering by accessing the relevant equipment slots
+     * of the animatable instance. If the animatable instance is not a LivingEntity, the method returns without action.
+     *
+     * @param context The rendering context containing the animatable instance and other necessary data for rendering.
+     */
     @Override
     public void preRender(AzRendererPipelineContext<T> context) {
         if (!(context.animatable() instanceof LivingEntity livingEntity)) {
@@ -77,6 +83,13 @@ public class AzArmorLayer<T extends LivingEntity> implements AzRenderLayer<T> {
     @Override
     public void render(AzRendererPipelineContext<T> context) {}
 
+    /**
+     * Renders the given armor or skull block for the specified bone using the provided rendering context.
+     * Depending on the type of item, it delegates rendering to appropriate methods.
+     *
+     * @param context The rendering context containing necessary parameters for rendering, like pose stack, light level, etc.
+     * @param bone The specific bone of the model where the armor or skull block will be rendered.
+     */
     @Override
     public void renderForBone(AzRendererPipelineContext<T> context, AzBone bone) {
         var poseStack = context.poseStack();
@@ -96,6 +109,16 @@ public class AzArmorLayer<T extends LivingEntity> implements AzRenderLayer<T> {
         }
     }
 
+    /**
+     * Renders armor items on a given bone within the render cycle of a model.
+     * This method determines the appropriate equipment slot, renderer, and model
+     * for the armor item and handles the rendering process accordingly.
+     *
+     * @param context   The rendering context containing the animatable instance and other data essential for rendering.
+     * @param bone      The specific bone of the model where the armor piece will be rendered.
+     * @param armorStack The ItemStack representing the armor item to render.
+     * @param poseStack The matrix stack used to apply transformations during rendering.
+     */
     private void renderArmor(
         AzRendererPipelineContext<T> context,
         AzBone bone,
@@ -239,6 +262,19 @@ public class AzArmorLayer<T extends LivingEntity> implements AzRenderLayer<T> {
             );
     }
 
+    /**
+     * Retrieves a {@link VertexConsumer} for rendering vanilla-styled armor. The method determines
+     * whether the armor should apply a glint effect or not and selects the appropriate render type accordingly.
+     *
+     * @param context The rendering context providing necessary data for rendering, including the animatable instance
+     *                and the buffer source.
+     * @param stack   The armor {@link ItemStack} being rendered.
+     * @param slot    The {@link EquipmentSlot} the armor piece occupies.
+     * @param bone    The model bone associated with the armor piece.
+     * @param layer   The optional {@link ArmorMaterial.Layer} providing texture resources for rendering the armor.
+     * @param forGlint A flag indicating whether the armor piece should render with a glint effect.
+     * @return The {@link VertexConsumer} used to render the designated armor piece with the appropriate style and effect.
+     */
     protected VertexConsumer getVanillaArmorBuffer(
         AzRendererPipelineContext<T> context,
         ItemStack stack,
@@ -255,6 +291,14 @@ public class AzArmorLayer<T extends LivingEntity> implements AzRenderLayer<T> {
             .getBuffer(RenderType.armorCutoutNoCull(layer.texture(slot == EquipmentSlot.LEGS)));
     }
 
+    /**
+     * Retrieves the appropriate {@link AzArmorRenderer} for the given {@link ItemStack}.
+     * This method uses the {@link AzArmorRendererRegistry} to fetch a renderer
+     * if one is registered for the specified item's class or instance.
+     *
+     * @param stack The {@link ItemStack} for which the renderer is to be obtained.
+     * @return The {@link AzArmorRenderer} associated with the item in the stack, or null if no renderer exists.
+     */
     protected @Nullable AzArmorRenderer getRendererForItem(ItemStack stack) {
         var item = stack.getItem();
         return AzArmorRendererRegistry.getOrNull(item);

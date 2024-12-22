@@ -12,6 +12,11 @@ import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
+/**
+ * Configuration class for rendering items using customized settings in an animation framework.
+ * Extends {@link AzRendererConfig} specifically for handling {@link ItemStack}.
+ * Provides additional settings specific to item rendering, such as GUI lighting and custom offsets.
+ */
 public class AzItemRendererConfig extends AzRendererConfig<ItemStack> {
 
     private final boolean useEntityGuiLighting;

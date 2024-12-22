@@ -4,6 +4,13 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
 import mod.azure.azurelib.core2.animation.controller.AzBoneSnapshotCache;
 
+/**
+ * AzKeyFrameManager is responsible for managing the keyframe-related operations in an animation system.
+ * It coordinates the execution, transition, and callback handling of animation keyframes through its
+ * associated components.
+ *
+ * @param <T> the type of the animatable object being handled
+ */
 public class AzKeyFrameManager<T> {
 
     private final AzKeyFrameCallbackHandler<T> keyFrameCallbackHandler;

@@ -126,6 +126,11 @@ public final class AzRawAnimation {
         return this;
     }
 
+    /**
+     * Retrieves the list of animation stages associated with this animation.
+     *
+     * @return A list of {@code AzStage} instances representing individual stages in the animation chain.
+     */
     public List<AzStage> getAnimationStages() {
         return this.animationList;
     }

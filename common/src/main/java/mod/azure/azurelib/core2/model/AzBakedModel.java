@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Represents a baked 3D model consisting of hierarchical bone structures.
+ * This class is immutable and provides read-only access to bones by name
+ * or as a list of top-level bones. Bones are uniquely identified by their names.
+ */
 public class AzBakedModel {
 
     public static final AzBakedModel EMPTY = new AzBakedModel(List.of());

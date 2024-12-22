@@ -6,6 +6,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * A container class for managing a collection of {@link AzAnimationController} instances. Provides methods to add,
+ * retrieve, and access animation controllers by their names.
+ *
+ * @param <T> the type of the animation data or state managed by {@link AzAnimationController}.
+ */
 public class AzAnimationControllerContainer<T> {
 
     private final Map<String, AzAnimationController<T>> animationControllersByName;

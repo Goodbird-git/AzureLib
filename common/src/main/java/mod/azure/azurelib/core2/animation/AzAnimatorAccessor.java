@@ -4,6 +4,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+/**
+ * The {@code AzAnimatorAccessor} interface provides a mechanism to associate and manage an {@link AzAnimator} instance
+ * with a target object. This enables retrieval and manipulation of animator instances that are specific to the target
+ * object.
+ *
+ * @param <T> The type of the target object that the animator applies to.
+ */
 public interface AzAnimatorAccessor<T> {
 
     @Nullable

@@ -16,6 +16,11 @@ import mod.azure.azurelib.core2.AzResourceCache;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.model.factory.registry.AzBakedModelFactoryRegistry;
 
+/**
+ * AzBakedModelCache is a singleton class that extends {@link AzResourceCache} and is designed to manage and cache
+ * baked models of type {@link AzBakedModel}. It provides functionality to asynchronously load and store models
+ * associated with specific resource locations.
+ */
 public class AzBakedModelCache extends AzResourceCache {
 
     private static final AzBakedModelCache INSTANCE = new AzBakedModelCache();

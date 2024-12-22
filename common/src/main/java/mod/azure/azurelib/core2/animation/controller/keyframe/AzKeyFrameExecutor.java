@@ -14,6 +14,17 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzBoneAnimationQueueCache;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
+/**
+ * AzKeyFrameExecutor is a specialized implementation of {@link AzAbstractKeyFrameExecutor}, designed to handle
+ * keyframe-based animations for animatable objects. It delegates animation control to an
+ * {@link AzAnimationController} and manages bone animation queues through an {@link AzBoneAnimationQueueCache}.
+ * </br>
+ * </br>
+ * This class processes and applies transformations such as rotation, position, and scale to bone animations,
+ * based on the current tick time and the keyframes associated with each bone animation.
+ *
+ * @param <T> The type of the animatable object to which the keyframe animations will be applied
+ */
 public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
 
     private final AzAnimationController<T> animationController;

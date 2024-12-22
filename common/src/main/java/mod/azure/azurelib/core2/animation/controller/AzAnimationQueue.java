@@ -9,6 +9,15 @@ import java.util.Queue;
 
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
+/**
+ * Represents a queue of animations to be processed in a sequential manner. This class manages a collection of
+ * {@link AzQueuedAnimation} objects, allowing animations to be queued, retrieved, and cleared efficiently. It ensures
+ * that animations are processed in the order they are added. <br/>
+ * <br/>
+ * The queue supports operations to inspect the next animation without removal, retrieve and remove the next animation,
+ * add individual or multiple animations, and clear the entire queue. Additionally, it provides a method to determine if
+ * the queue is empty.
+ */
 public class AzAnimationQueue {
 
     private final Queue<AzQueuedAnimation> animationQueue;

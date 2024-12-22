@@ -4,6 +4,15 @@ import mod.azure.azurelib.core2.animation.controller.state.AzAnimationState;
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
+/**
+ * Represents a "play" state in an animation state machine. This state is responsible for managing the playing of
+ * animations either by starting from the beginning or playing subsequent animations. It ensures that the animation
+ * progresses based on the controller's timer and handles transitions when animations complete. <br/>
+ * <br/>
+ * Inherits general animation state behavior such as lifecycle management from {@link AzAnimationState}.
+ *
+ * @param <T> the type of animation being managed
+ */
 public class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
     public AzAnimationPlayState() {}

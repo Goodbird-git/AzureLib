@@ -13,6 +13,13 @@ import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
+/**
+ * Represents a renderer pipeline specifically designed for rendering entities. This pipeline facilitates
+ * stages of rendering where contextual work like pre-translations, texture animations, and leash rendering
+ * are managed within a customizable structure.
+ *
+ * @param <T> The type of entity this renderer pipeline handles. Extends from the base {@link Entity}.
+ */
 public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeline<T> {
 
     private final AzEntityRenderer<T> entityRenderer;
@@ -76,6 +83,12 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     @Override
     public void postRender(AzRendererPipelineContext<T> context, boolean isReRender) {}
 
+    /**
+     * Renders the final frame of the entity, including handling special cases such as entities with leashes.
+     *
+     * @param context the rendering context that contains all required data for rendering, such as the entity, pose stack,
+     *                light information, and buffer source
+     */
     @Override
     public void renderFinal(AzRendererPipelineContext<T> context) {
         var bufferSource = context.multiBufferSource();

@@ -12,6 +12,13 @@ import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
+/**
+ * The {@code AzBlockEntityRendererConfig} class is a specialized configuration for rendering block entities. It
+ * extends the generic {@link AzRendererConfig} and provides additional methods to streamline the creation of
+ * configurations specifically for block entity renderers.
+ *
+ * @param <T> The type of block entity this configuration is tailored for.
+ */
 public class AzBlockEntityRendererConfig<T extends BlockEntity> extends AzRendererConfig<T> {
 
     private AzBlockEntityRendererConfig(

@@ -12,6 +12,13 @@ import java.util.function.Supplier;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
+/**
+ * The {@code AzRendererConfig} class is a configuration class used for defining rendering configurations
+ * for generic animatable objects. It allows customization of model and texture locations, animators, render
+ * layers, and scale factors.
+ *
+ * @param <T> The type of animatable object this configuration applies to.
+ */
 public class AzRendererConfig<T> {
 
     private final Supplier<@Nullable AzAnimator<T>> animatorProvider;
@@ -92,6 +99,14 @@ public class AzRendererConfig<T> {
             this.scaleWidth = 1;
         }
 
+        /**
+         * Sets the animator provider for the builder. The animator provider is responsible for supplying
+         * an instance of {@link AzAnimator} that defines the animation logic for the target object.
+         *
+         * @param animatorProvider a {@link Supplier} that provides a {@link AzAnimator} instance or null
+         *                         if no custom animation logic is required
+         * @return the updated {@code Builder} instance for chaining configuration methods
+         */
         public Builder<T> setAnimatorProvider(Supplier<@Nullable AzAnimator<T>> animatorProvider) {
             this.animatorProvider = animatorProvider;
             return this;
@@ -105,16 +120,36 @@ public class AzRendererConfig<T> {
             return this;
         }
 
+        /**
+         * Sets the scaling factor uniformly for both width and height dimensions.
+         *
+         * @param scale the uniform scaling factor to be applied to both width and height
+         * @return the {@code Builder} instance for method chaining
+         */
         public Builder<T> setScale(float scale) {
             return setScale(scale, scale);
         }
 
+        /**
+         * Sets the scaling factors for both width and height.
+         *
+         * @param scaleWidth the scaling factor for the width
+         * @param scaleHeight the scaling factor for the height
+         * @return the updated builder instance for chaining operations
+         */
         public Builder<T> setScale(float scaleWidth, float scaleHeight) {
             this.scaleHeight = scaleHeight;
             this.scaleWidth = scaleWidth;
             return this;
         }
 
+        /**
+         * Builds and returns a finalized {@link AzRendererConfig} instance with the current configuration
+         * settings provided through the builder.
+         *
+         * @return a new instance of {@link AzRendererConfig} configured with the specified animator provider,
+         *         model location provider, texture location provider, render layers, and scale factors.
+         */
         public AzRendererConfig<T> build() {
             return new AzRendererConfig<>(
                 animatorProvider,

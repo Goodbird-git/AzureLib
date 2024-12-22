@@ -3,6 +3,15 @@ package mod.azure.azurelib.core2.animation.controller.state.impl;
 import mod.azure.azurelib.core2.animation.controller.state.AzAnimationState;
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
 
+/**
+ * Represents a transition state in an animation state machine. This state is responsible for managing the transition
+ * between animations, including handling setup, updates, and transitioning to the appropriate play state when the
+ * transition is complete. The `AzAnimationTransitionState` extends the functionality of `AzAnimationState` to implement
+ * the behavior specific to transitioning between animations. It resets timers, initializes animations, and updates
+ * keyframes to create smooth transitions.
+ *
+ * @param <T> the type of the animation context associated with this state
+ */
 public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
 
     public AzAnimationTransitionState() {}

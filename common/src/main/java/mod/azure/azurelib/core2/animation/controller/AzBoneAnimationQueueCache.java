@@ -13,6 +13,12 @@ import mod.azure.azurelib.core2.animation.AzBoneAnimationUpdateUtil;
 import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
 
+/**
+ * The AzBoneAnimationQueueCache class is responsible for managing and updating animation queues for bones. It acts as a
+ * cache that maps bone names to their respective animation queues, enabling efficient updates and access.
+ *
+ * @param <T> the type of the animatable object used in the animation context
+ */
 public class AzBoneAnimationQueueCache<T> {
 
     private final Map<String, AzBoneAnimationQueue> boneAnimationQueues;

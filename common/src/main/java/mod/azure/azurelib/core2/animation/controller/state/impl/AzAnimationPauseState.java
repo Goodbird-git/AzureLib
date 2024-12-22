@@ -2,6 +2,12 @@ package mod.azure.azurelib.core2.animation.controller.state.impl;
 
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
 
+/**
+ * Represents the paused state in the animation state machine. This state ensures no updates are applied to the
+ * animation while it is paused, maintaining its current state until it is transitioned back to a play or stop state.
+ *
+ * @param <T> the type of animation managed by the state
+ */
 public final class AzAnimationPauseState<T> extends AzAnimationPlayState<T> {
 
     public AzAnimationPauseState() {}

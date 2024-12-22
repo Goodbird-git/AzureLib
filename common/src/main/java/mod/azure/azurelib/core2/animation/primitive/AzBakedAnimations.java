@@ -6,9 +6,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * Container object that holds a deserialized map of {@link AzAnimation Animations}.<br>
- * Kept as a unique object so that it can be registered as a {@link com.google.gson.JsonDeserializer deserializer} for
- * {@link com.google.gson.Gson Gson}
+ * Represents a container for baked animations in the AzureLib framework. This record holds mappings for precompiled
+ * animation instances ({@link AzAnimation}) and resource includes ({@link ResourceLocation}) for use in
+ * animation-driven content. </br>
+ * </br>
+ * The `AzBakedAnimations` structure provides functionality for retrieving animations by name and supporting external
+ * resource references via the includes mapping, enabling extensibility and reuse of animations across various contexts.
+ * </br>
+ * </br>
+ * Immutable and designed for efficient storage and retrieval of animation data.
  */
 public record AzBakedAnimations(
     Map<String, AzAnimation> animations,

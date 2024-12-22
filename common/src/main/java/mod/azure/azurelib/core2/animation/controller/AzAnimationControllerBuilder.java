@@ -13,6 +13,13 @@ import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
+/**
+ * A builder class to construct {@link AzAnimationController} instances for managing animations in {@link AzAnimator}.
+ * This provides a fluent API to configure properties such as animation speed, keyframe callbacks, easing type,
+ * transition length, and triggerable animations.
+ *
+ * @param <T> The type of object that the animation controller will operate on.
+ */
 public class AzAnimationControllerBuilder<T> {
 
     private final AzAnimator<T> animator;

@@ -15,6 +15,12 @@ import mod.azure.azurelib.core2.model.AzBoneMetadata;
 import mod.azure.azurelib.core2.model.factory.AzBakedModelFactory;
 import mod.azure.azurelib.core2.model.factory.primitive.VertexSet;
 
+/**
+ * A concrete implementation of the {@link AzBakedModelFactory} that constructs
+ * baked models, bones, and cubes from raw geometry data. It is tailored to
+ * create and configure the model and its associated components in a hierarchical
+ * manner, based on the provided structure and properties.
+ */
 public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
 
     @Override

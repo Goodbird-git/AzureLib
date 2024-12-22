@@ -15,6 +15,15 @@ public class AzAnimationDispatcher {
         this.entity = entity;
     }
 
+    /**
+     * Dispatches an animation from the client side to the specified animation controller and triggers the animation.
+     * Logs a warning if the method is called from the server side, as the action is intended for client-side execution
+     * only.
+     *
+     * @param controllerName The name of the animation controller to target. Can be null if no specific controller is
+     *                       required.
+     * @param animationName  The name of the animation to trigger. Must not be null.
+     */
     public void dispatchFromClient(@Nullable String controllerName, String animationName) {
         if (!entity.level().isClientSide) {
             AzureLib.LOGGER.warn(
@@ -31,6 +40,14 @@ public class AzAnimationDispatcher {
             .ifPresent(controller -> controller.tryTriggerAnimation(animationName));
     }
 
+    /**
+     * Dispatches an animation from the server to the specified animation controller and triggers the animation for the
+     * given entity. If called from the client side, will log a warning and take no action.
+     *
+     * @param controllerName The name of the animation controller to target. Can be null if no specific controller is
+     *                       required.
+     * @param animationName  The name of the animation to trigger. Must not be null.
+     */
     public void dispatchFromServer(@Nullable String controllerName, String animationName) {
         if (entity.level().isClientSide) {
             AzureLib.LOGGER.warn(

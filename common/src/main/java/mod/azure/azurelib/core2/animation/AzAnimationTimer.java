@@ -4,6 +4,14 @@ import net.minecraft.client.Minecraft;
 
 import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 
+/**
+ * AzAnimationTimer is responsible for managing animation progression based on game events and time deltas. It keeps
+ * track of the current animation time and ensures smooth transitions during various game states, such as pausing and
+ * resuming. </br>
+ * </br>
+ * The class relies on the provided {@link AzAnimatorConfig} for configurable behaviors, such as whether animations
+ * continue during game pauses or specific error handling preferences.
+ */
 public class AzAnimationTimer {
 
     private final AzAnimatorConfig config;
@@ -15,10 +23,34 @@ public class AzAnimationTimer {
 
     private boolean wasPausedLastFrame;
 
+    /**
+     * Constructs a new instance of AzAnimationTimer with the given configuration.
+     *
+     * @param config The configuration settings used to configure the animation timer. It includes parameters such as
+     *               bone reset time, behavior during game pause, and whether to crash if a bone is missing.
+     */
     public AzAnimationTimer(AzAnimatorConfig config) {
         this.config = config;
     }
 
+    /**
+     * Updates the animation timer by calculating the time delta since the last frame and applying it to the internal
+     * animation time. This method handles game pause states and adjusts the time calculations accordingly. </br>
+     * </br>
+     * Behavior: </br>
+     * <b>If the game is paused:<b/>
+     * <ul>
+     * <li>Sets an internal flag to indicate the paused state.</li>
+     * <li>Returns immediately if animations should not play while paused.</li>
+     * </ul>
+     * </br>
+     * <b>If transitioning from paused to unpaused:<b/>
+     * <ul>
+     * <li>Resets the frame delta to prevent large time skips in animations.</li>
+     * </ul>
+     * </br>
+     * Accumulates the computed time delta into the animation time tracker to control the progression of animations.
+     */
     public void tick() {
         var minecraft = Minecraft.getInstance();
         var currentRenderTick = RenderUtils.getCurrentTick();
@@ -53,6 +85,12 @@ public class AzAnimationTimer {
         this.lastGameTickTime = currentRenderTick;
     }
 
+    /**
+     * Retrieves the current animation time.
+     *
+     * @return The current animation time as a double value, representing the accumulated time used for the progression
+     *         of animations.
+     */
     public double getAnimTime() {
         return animTime;
     }

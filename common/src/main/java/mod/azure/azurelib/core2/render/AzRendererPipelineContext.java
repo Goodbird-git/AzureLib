@@ -14,6 +14,13 @@ import java.util.Objects;
 import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.core2.model.AzBakedModel;
 
+/**
+ * An abstract base class representing the rendering context for a custom rendering
+ * pipeline. This class provides generic rendering properties and behavior that can be
+ * extended to customize rendering for different types of animatable objects.
+ *
+ * @param <T> the type of the animatable object being rendered
+ */
 public abstract class AzRendererPipelineContext<T> {
 
     private final AzRendererPipeline<T> rendererPipeline;
@@ -42,6 +49,20 @@ public abstract class AzRendererPipelineContext<T> {
         this.rendererPipeline = rendererPipeline;
     }
 
+    /**
+     * Populates the rendering context with all necessary parameters required to render a specific animatable object.
+     * This method initializes the rendering pipeline with data such as the model, buffer source, lighting, and other
+     * associated properties for rendering the specified animatable object.
+     *
+     * @param animatable The animatable object that is being rendered.
+     * @param bakedModel The pre-baked 3D model associated with the animatable object.
+     * @param multiBufferSource The multibuffer source used for rendering vertex data.
+     * @param packedLight The packed light value for controlling light effects during rendering.
+     * @param partialTick The partial tick value for interpolating animations or movements.
+     * @param poseStack The pose stack used to manage rendering transformations.
+     * @param renderType The render type that determines how the object will be rendered, e.g., opaque, translucent, etc.
+     * @param vertexConsumer The vertex consumer used for buffering vertex attributes during rendering.
+     */
     public void populate(
         T animatable,
         AzBakedModel bakedModel,

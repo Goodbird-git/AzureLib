@@ -13,6 +13,25 @@ import org.jetbrains.annotations.Nullable;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.render.AzProvider;
 
+/**
+ * AzEntityRenderer is an abstract class responsible for rendering entities
+ * in the game. It extends the base functionality of {@link EntityRenderer}
+ * to provide additional rendering capabilities specific to animated and
+ * custom entities. This class is parameterized with a generic type {@code T},
+ * which must extend {@link Entity}.
+ *
+ * It integrates several abstractions such as animation management, model
+ * caching, and advanced rendering pipelines for handling complex rendering
+ * behavior. Users are expected to configure this renderer using an
+ * {@link AzEntityRendererConfig}.
+ *
+ * Key components:
+ *
+ * - {@link AzEntityRendererConfig}: Defines configuration options such as textures,
+ *   models, and animator providers.
+ * - {@link AzProvider}: Supplies baked models and animators for entities.
+ * - {@link AzEntityRendererPipeline}: Manages rendering logic through a custom pipeline.
+ */
 public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer<T> {
 
     private final AzEntityRendererConfig<T> config;

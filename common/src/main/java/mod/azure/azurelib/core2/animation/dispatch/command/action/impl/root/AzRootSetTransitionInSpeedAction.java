@@ -8,6 +8,14 @@ import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 
+/**
+ * The {@code AzRootSetTransitionInSpeedAction} class implements the {@link AzDispatchAction} interface and represents
+ * an action that modifies the transition in speed for an animator during an animation state. This action is intended
+ * for use within the animation system to adjust the transition timing of animations. This class provides a unique
+ * resource location identifier for this specific action and handles the logic required to apply the transition speed
+ * modification to the target {@link AzAnimator}. It utilizes {@link StreamCodec} for serialization and deserialization
+ * of this action.
+ */
 public class AzRootSetTransitionInSpeedAction implements AzDispatchAction {
 
     public static final StreamCodec<FriendlyByteBuf, AzRootSetTransitionInSpeedAction> CODEC = StreamCodec.unit(

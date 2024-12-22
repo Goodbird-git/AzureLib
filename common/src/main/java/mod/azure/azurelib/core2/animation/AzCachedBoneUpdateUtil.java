@@ -8,6 +8,15 @@ import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
 public class AzCachedBoneUpdateUtil {
 
+    /**
+     * Updates the cached position of a given bone by interpolating its offsets towards its initial snapshot. Stops
+     * ongoing position animations if necessary and updates the bone's position based on the reset percentage.
+     *
+     * @param bone            the bone whose position is to be updated
+     * @param boneSnapshots   a map containing snapshots of bones by their names
+     * @param animTime        the current animation time
+     * @param resetTickLength the duration over which the position reset occurs
+     */
     public static void updateCachedBonePosition(
         AzBone bone,
         Map<String, AzBoneSnapshot> boneSnapshots,
@@ -57,6 +66,15 @@ public class AzCachedBoneUpdateUtil {
         }
     }
 
+    /**
+     * Updates the cached rotation of a given bone by interpolating its rotation values towards its initial snapshot.
+     * Stops any ongoing rotation animations if necessary and updates the bone's rotation based on the reset percentage.
+     *
+     * @param bone            the bone whose rotation is to be updated
+     * @param boneSnapshots   a map containing snapshots of bones by their names
+     * @param animTime        the current animation time
+     * @param resetTickLength the duration over which the rotation reset occurs
+     */
     public static void updateCachedBoneRotation(
         AzBone bone,
         Map<String, AzBoneSnapshot> boneSnapshots,
@@ -94,6 +112,15 @@ public class AzCachedBoneUpdateUtil {
         }
     }
 
+    /**
+     * Updates the cached scale of a given bone by interpolating its scale values towards its initial snapshot. Stops
+     * any ongoing scale animations if necessary and updates the bone's scale based on the reset percentage.
+     *
+     * @param bone            the bone whose scale is to be updated
+     * @param boneSnapshots   a map containing snapshots of bones by their names
+     * @param animTime        the current animation time
+     * @param resetTickLength the duration over which the scale reset occurs
+     */
     public static void updateCachedBoneScale(
         AzBone bone,
         Map<String, AzBoneSnapshot> boneSnapshots,

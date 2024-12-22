@@ -1,5 +1,11 @@
 package mod.azure.azurelib.core2.animation.controller;
 
+/**
+ * A timer utility that integrates directly with an {@link AzAnimationController} to track and adjust tick values for
+ * animation playback control, based on the controller's state and animation speed modifiers.
+ *
+ * @param <T> The type of the animatable entity being controlled by the animation controller.
+ */
 public class AzAnimationControllerTimer<T> {
 
     private final AzAnimationController<T> animationController;

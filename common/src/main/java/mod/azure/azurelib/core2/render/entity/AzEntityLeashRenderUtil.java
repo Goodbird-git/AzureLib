@@ -13,6 +13,15 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
+/**
+ * Utility class for rendering entity leash visuals within the Minecraft rendering engine.
+ * This class provides static methods to handle leash rendering logic, enabling flexible re-use
+ * and separation from the default rendering behavior.
+ * </br>
+ * </br>
+ * This utility replicates the leash rendering logic from {@link net.minecraft.client.renderer.entity.MobRenderer}
+ * to provide enhanced customization for entity rendering purposes.
+ */
 public class AzEntityLeashRenderUtil {
 
     /**

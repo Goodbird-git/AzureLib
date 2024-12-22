@@ -13,6 +13,11 @@ import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.core2.util.WeakSelfReference;
 
+/**
+ * The AzIdentifiableItemStackAnimatorCache class is a singleton utility for managing a cache of {@link ItemStack}
+ * objects, each associated with a unique identifier (UUID). This class provides functionality to register and retrieve
+ * item animators that apply to specific {@link ItemStack}s using their respective UUIDs.
+ */
 public class AzIdentifiableItemStackAnimatorCache {
 
     private static final AzIdentifiableItemStackAnimatorCache INSTANCE = new AzIdentifiableItemStackAnimatorCache();

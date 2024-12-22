@@ -10,6 +10,13 @@ import mod.azure.azurelib.common.internal.common.cache.texture.AnimatableTexture
 import mod.azure.azurelib.core2.model.AzBakedModel;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
+/**
+ * Abstract base class for defining a rendering pipeline. The {@code AzRendererPipeline} provides a structured
+ * framework to handle complex rendering tasks by separating responsibilities into different components, such
+ * as layer rendering and model rendering.
+ *
+ * @param <T> The type of the object to be rendered.
+ */
 public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
 
     protected final AzRendererConfig<T> config;
@@ -27,10 +34,36 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         this.modelRenderer = createModelRenderer(layerRenderer);
     }
 
+    /**
+     * Creates a rendering pipeline context for the specified renderer pipeline.
+     * This method is intended to be implemented by subclasses to provide
+     * a specific implementation of the {@link AzRendererPipelineContext} for rendering.
+     *
+     * @param rendererPipeline the renderer pipeline for which the context is to be created
+     * @return a new instance of {@link AzRendererPipelineContext} specific to the given renderer pipeline
+     */
     protected abstract AzRendererPipelineContext<T> createContext(AzRendererPipeline<T> rendererPipeline);
 
+    /**
+     * Creates an instance of {@link AzModelRenderer} using the provided {@link AzLayerRenderer}.
+     * This method is part of the rendering pipeline and is responsible for generating
+     * a model renderer which can handle hierarchical structures and advanced rendering tasks.
+     *
+     * @param layerRenderer the {@link AzLayerRenderer} instance used to decorate and handle
+     *                      additional render layers within the model rendering process
+     * @return a new instance of {@link AzModelRenderer} configured with the provided layer renderer
+     */
     protected abstract AzModelRenderer<T> createModelRenderer(AzLayerRenderer<T> layerRenderer);
 
+    /**
+     * Creates an instance of {@link AzLayerRenderer} using the provided {@link AzRendererConfig}.
+     * This method is responsible for generating a layer renderer configured with the provided
+     * rendering configuration, allowing for the management and application of multiple render layers.
+     *
+     * @param config The configuration object of type {@link AzRendererConfig} that provides the necessary
+     *               settings and parameters for the layer renderer.
+     * @return A newly created {@link AzLayerRenderer} instance configured based on the specified {@link AzRendererConfig}.
+     */
     protected abstract AzLayerRenderer<T> createLayerRenderer(AzRendererConfig<T> config);
 
     /**
@@ -129,10 +162,24 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         }
     }
 
+    /**
+     * Provides access to the rendering configuration associated with this rendering pipeline.
+     *
+     * @return An instance of {@link AzRendererConfig} that contains the configuration details
+     *         for this rendering pipeline, including animator, model location, texture location,
+     *         render layers, and scaling parameters.
+     */
     public AzRendererConfig<T> config() {
         return config;
     }
 
+    /**
+     * Provides access to the rendering pipeline context associated with this rendering pipeline.
+     *
+     * @return An instance of {@link AzRendererPipelineContext} representing the context
+     *         for the current rendering pipeline, containing relevant rendering data
+     *         and configurations for processing animations and models.
+     */
     public AzRendererPipelineContext<T> context() {
         return context;
     }

@@ -10,6 +10,13 @@ import org.jetbrains.annotations.Nullable;
 import mod.azure.azurelib.core2.animation.impl.AzBlockAnimator;
 import mod.azure.azurelib.core2.render.AzProvider;
 
+/**
+ * The {@code AzBlockEntityRenderer} class is an abstract base class for rendering custom block entities.
+ * It leverages an animation and rendering pipeline mechanism to provide extended functionalities,
+ * such as dynamic animations and model customization.
+ *
+ * @param <T> The specific type of {@link BlockEntity} that this renderer processes.
+ */
 public abstract class AzBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
 
     private final AzProvider<T> provider;
