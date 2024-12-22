@@ -20,6 +20,7 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
 
     private static final AzDispatchCommand IDLE_COMMAND = AzDispatchCommand.builder()
         .setSpeed(1)
+        .setTransitionInSpeed(3)
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME)
         .build();
 
@@ -28,6 +29,7 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
 
     private static final AzDispatchCommand WALK_COMMAND = AzDispatchCommand.builder()
         .setSpeed(2.5F)
+        .setTransitionInSpeed(20)
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME)
         .build();
 
