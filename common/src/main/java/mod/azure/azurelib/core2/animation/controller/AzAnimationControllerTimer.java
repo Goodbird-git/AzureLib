@@ -23,13 +23,11 @@ public class AzAnimationControllerTimer<T> {
      * Is used when starting a new animation, transitioning, and a few other key areas
      */
     public void update() {
-        var modifier = animationController.getAnimationSpeedModifier();
         var stateMachine = animationController.getStateMachine();
         var animContext = stateMachine.getContext().getAnimationContext();
-        var animatable = animContext.animatable();
+        var animationSpeed = animationController.getAnimationProperties().animationSpeed();
         var tick = animContext.timer().getAnimTime();
 
-        var animationSpeed = modifier.applyAsDouble(animatable);
         adjustedTick = animationSpeed * Math.max(tick - tickOffset, 0);
     }
 

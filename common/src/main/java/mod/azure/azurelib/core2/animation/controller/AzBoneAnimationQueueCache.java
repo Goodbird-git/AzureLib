@@ -30,10 +30,8 @@ public class AzBoneAnimationQueueCache<T> {
         this.boneCache = boneCache;
     }
 
-    public void update(AzAnimationContext<T> context, Function<T, EasingType> overridingEasingTypeFunction) {
-        var animatable = context.animatable();
+    public void update(EasingType easingType) {
         var boneSnapshots = boneCache.getBoneSnapshotsByName();
-        var easingType = overridingEasingTypeFunction.apply(animatable);
 
         for (var boneAnimation : boneAnimationQueues.values()) {
             var bone = boneAnimation.bone();

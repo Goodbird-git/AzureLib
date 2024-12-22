@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
 
-import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
@@ -41,7 +38,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     private final AzAnimationControllerTimer<T> controllerTimer;
 
-    private final ToDoubleFunction<T> animationSpeedModifier;
+    private final AzAnimationProperties animationProperties;
 
     private final AzAnimationQueue animationQueue;
 
@@ -55,37 +52,22 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     private final AzKeyFrameManager<T> keyFrameManager;
 
-    private final Function<T, EasingType> overrideEasingTypeFunction;
-
-    private final double transitionLength;
-
     protected AzQueuedAnimation currentAnimation;
 
     protected boolean needsAnimationReload = false;
 
-    /**
-     * Instantiates a new {@code AnimationController}.<br>
-     *
-     * @param name               The name of the controller - should represent what animations it handles
-     * @param transitionTickTime The amount of time (in <b>ticks</b>) that the controller should take to transition
-     *                           between animations. Lerping is automatically applied where possible
-     */
     AzAnimationController(
         String name,
         AzAnimator<T> animator,
-        int transitionTickTime,
-        ToDoubleFunction<T> animationSpeedModifier,
+        AzAnimationProperties animationProperties,
         AzKeyFrameCallbacks<T> keyFrameCallbacks,
-        Function<T, EasingType> overrideEasingTypeFunction,
         Map<String, AzRawAnimation> triggerableAnimations
     ) {
         super(name, triggerableAnimations);
 
         this.animator = animator;
         this.controllerTimer = new AzAnimationControllerTimer<>(this);
-        this.transitionLength = transitionTickTime;
-        this.animationSpeedModifier = animationSpeedModifier;
-        this.overrideEasingTypeFunction = overrideEasingTypeFunction;
+        this.animationProperties = animationProperties;
 
         this.animationQueue = new AzAnimationQueue();
         this.boneAnimationQueueCache = new AzBoneAnimationQueueCache<>(animator.context().boneCache());
@@ -110,17 +92,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
     @Override
     public boolean hasAnimationFinished() {
         return super.hasAnimationFinished() && stateMachine.isStopped();
-    }
-
-    /**
-     * Computes the current animation speed modifier.<br>
-     * This modifier defines the relative speed in which animations will be played based on the current state of the
-     * game.
-     *
-     * @return The computed current animation speed modifier
-     */
-    public double computeAnimationSpeed(T animatable) {
-        return animationSpeedModifier.applyAsDouble(animatable);
     }
 
     /**
@@ -245,7 +216,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
             controllerTimer.update();
         }
 
-        boneAnimationQueueCache.update(context, overrideEasingTypeFunction);
+        boneAnimationQueueCache.update(animationProperties.easingType());
     }
 
     /**
@@ -260,12 +231,12 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         boneAnimationQueueCache.clear();
     }
 
-    public AzAnimationQueue getAnimationQueue() {
-        return animationQueue;
+    public AzAnimationProperties getAnimationProperties() {
+        return animationProperties;
     }
 
-    public ToDoubleFunction<T> getAnimationSpeedModifier() {
-        return animationSpeedModifier;
+    public AzAnimationQueue getAnimationQueue() {
+        return animationQueue;
     }
 
     public AzBoneAnimationQueueCache<T> getBoneAnimationQueueCache() {
@@ -290,10 +261,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     public AzAnimationControllerStateMachine<T> getStateMachine() {
         return stateMachine;
-    }
-
-    public double getTransitionLength() {
-        return transitionLength;
     }
 
     public void setCurrentAnimation(AzQueuedAnimation currentAnimation) {

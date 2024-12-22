@@ -24,34 +24,24 @@ public class AzAnimationControllerBuilder<T> {
 
     private final AzAnimator<T> animator;
 
+    private final AzAnimationProperties animationProperties;
+
     private final String name;
 
     private final Map<String, AzRawAnimation> triggerableAnimations;
 
-    private ToDoubleFunction<T> animationSpeedModifier;
-
     private AzKeyFrameCallbacks<T> keyFrameCallbacks;
-
-    private Function<T, EasingType> overrideEasingTypeFunction;
-
-    private int transitionLength;
 
     public AzAnimationControllerBuilder(AzAnimator<T> animator, String name) {
         this.animator = animator;
         this.name = name;
-        this.animationSpeedModifier = obj -> 1d;
+        this.animationProperties = new AzAnimationProperties();
         this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
-        this.overrideEasingTypeFunction = obj -> null;
-        this.transitionLength = 0;
         this.triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
     }
 
-    public AzAnimationControllerBuilder<T> setAnimationSpeed(double speed) {
-        return setAnimationSpeedHandler(obj -> speed);
-    }
-
-    public AzAnimationControllerBuilder<T> setAnimationSpeedHandler(ToDoubleFunction<T> speedModFunction) {
-        this.animationSpeedModifier = speedModFunction;
+    public AzAnimationControllerBuilder<T> setAnimationSpeed(double animationSpeed) {
+        animationProperties.setAnimationSpeed(animationSpeed);
         return this;
     }
 
@@ -61,17 +51,13 @@ public class AzAnimationControllerBuilder<T> {
         return this;
     }
 
-    public AzAnimationControllerBuilder<T> setOverrideEasingType(EasingType easingTypeFunction) {
-        return setOverrideEasingTypeFunction(obj -> easingTypeFunction);
-    }
-
-    public AzAnimationControllerBuilder<T> setOverrideEasingTypeFunction(Function<T, EasingType> easingType) {
-        this.overrideEasingTypeFunction = easingType;
+    public AzAnimationControllerBuilder<T> setOverrideEasingType(EasingType easingType) {
+        animationProperties.setEasingType(easingType);
         return this;
     }
 
     public AzAnimationControllerBuilder<T> setTransitionLength(int transitionLength) {
-        this.transitionLength = transitionLength;
+        animationProperties.setTransitionLength(transitionLength);
         return this;
     }
 
@@ -81,14 +67,6 @@ public class AzAnimationControllerBuilder<T> {
     }
 
     public AzAnimationController<T> build() {
-        return new AzAnimationController<>(
-            name,
-            animator,
-            transitionLength,
-            animationSpeedModifier,
-            keyFrameCallbacks,
-            overrideEasingTypeFunction,
-            triggerableAnimations
-        );
+        return new AzAnimationController<>(name, animator, animationProperties, keyFrameCallbacks, triggerableAnimations);
     }
 }
