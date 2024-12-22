@@ -13,8 +13,7 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 /**
  * A specialized subclass of {@link AzRendererPipelineContext} designed for rendering {@link ItemStack} objects.
  * Provides the default rendering context and pipeline for rendering item models within a custom rendering framework.
- * </br>
- * </br>
+ * <br>
  * This context delegates rendering operations to its associated {@link AzRendererPipeline} while providing
  * additional configuration and control over the rendering process of an {@link ItemStack}.
  */

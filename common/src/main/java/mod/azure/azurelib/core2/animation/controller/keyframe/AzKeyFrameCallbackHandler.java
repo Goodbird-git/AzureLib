@@ -18,8 +18,7 @@ import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
  * sound, particle, or custom events during a specific animation. It works in conjunction with
  * an animation controller and a set of keyframe callbacks, executing them as appropriate
  * based on the animation's progress.
- * </br>
- * </br>
+ * <br>
  * This class is generic and operates on a user-defined animatable type to handle various keyframe
  * events related to animations.
  *

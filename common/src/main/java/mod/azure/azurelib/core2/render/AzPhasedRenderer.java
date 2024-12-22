@@ -5,12 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 /**
  * Represents a phased renderer interface used as part of a rendering pipeline. Allows customization at specific
  * stages of the rendering process for animatable models.
- * </br>
- * </br>
+ * <br>
  * The interface provides two key methods, enabling actions to be taken before and after the core rendering
  * operations within the pipeline, specifically focusing on transforming and modifying render contexts.
- * </br>
- * </br>
+ * <br>
  * This is part of a flexible rendering system that enables complex rendering logic while maintaining separation
  * of concerns and modularity.
  *

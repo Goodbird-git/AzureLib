@@ -12,8 +12,7 @@ import mod.azure.azurelib.core2.model.factory.impl.AzBuiltinBakedModelFactory;
  * A registry for managing instances of {@link AzBakedModelFactory} that are used
  * to handle the creation of baked models for specific namespaces. This allows
  * custom behavior for different mods or namespaces when constructing models.
- * </br>
- * </br>
+ * <br>
  * This class provides functionality to register, retrieve, and manage baked model
  * factories. It ensures that a default factory is available for any namespace
  * that does not explicitly register a custom factory.

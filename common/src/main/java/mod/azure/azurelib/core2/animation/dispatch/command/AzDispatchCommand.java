@@ -9,8 +9,8 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.codec.AzDispat
 /**
  * Represents a command structure used to dispatch a sequence of actions in the animation system. This class primarily
  * serves as a container for a list of {@link AzDispatchAction} instances that define specific operations or behaviors
- * to be executed. </br>
- * </br>
+ * to be executed.
+ * <br>
  * The class provides support for building complex dispatch commands by leveraging the hierarchical builder system,
  * enabling customization of animation-related functionality.
  */

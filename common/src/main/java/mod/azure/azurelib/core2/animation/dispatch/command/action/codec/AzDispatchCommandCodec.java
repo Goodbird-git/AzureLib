@@ -11,15 +11,15 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchActi
 /**
  * The AzDispatchCommandCodec class provides a codec implementation for encoding and decoding {@link AzDispatchCommand}
  * objects, facilitating their transmission or storage in binary data formats. This codec is designed to work with the
- * {@link FriendlyByteBuf} stream provided by Minecraft's network API. </br>
- * </br>
+ * {@link FriendlyByteBuf} stream provided by Minecraft's network API.
+ * <br>
  * The AzDispatchCommandCodec class utilizes nested {@link AzDispatchAction} codecs to manage individual action encoding
- * and decoding, ensuring the integrity of the data structure during serialization and deserialization processes. </br>
- * </br>
+ * and decoding, ensuring the integrity of the data structure during serialization and deserialization processes.
+ * <br>
  * The encode method serializes an {@link AzDispatchCommand} instance, including all associated actions, into a data
  * stream. Conversely, the decode method reconstructs an {@link AzDispatchCommand} instance from a provided data stream,
- * identifying and deserializing its actions using the appropriate codecs. </br>
- * </br>
+ * identifying and deserializing its actions using the appropriate codecs.
+ * <br>
  * This implementation is integral for transferring or storing animation commands within an animation system, ensuring
  * compatibility and proper handling of command actions.
  */

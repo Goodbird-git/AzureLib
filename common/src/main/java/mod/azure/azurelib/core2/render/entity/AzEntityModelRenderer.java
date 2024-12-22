@@ -22,8 +22,7 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
  * AzEntityModelRenderer is a class responsible for rendering animated 3D entity models in a pipeline-based rendering
  * setup. Extends the {@link AzModelRenderer} class and utilizes the {@link AzEntityRendererPipeline} to handle
  * various rendering tasks, such as applying model transformations and managing animated states in the rendering lifecycle.
- * </br>
- * </br>
+ * <br>
  * @param <T> The type of entity that this renderer applies to, extends the {@link Entity} class.
  */
 public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> {
