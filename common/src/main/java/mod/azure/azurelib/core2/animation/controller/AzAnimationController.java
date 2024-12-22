@@ -54,8 +54,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     protected AzQueuedAnimation currentAnimation;
 
-    protected boolean needsAnimationReload = false;
-
     AzAnimationController(
         String name,
         AzAnimator<T> animator,
@@ -130,8 +128,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      * This method may be safely called every render frame, as passing the same builder that is already loaded will do
      * nothing.<br>
      * Pass null to this method to tell the controller to stop.<br>
-     * If {@link AzAnimationController#forceAnimationReset()} has been called prior to this, the controller will reload
-     * the animation regardless of whether it matches the currently loaded one or not
      */
     public void setAnimation(T animatable, AzRawAnimation rawAnimation) {
         if (rawAnimation == null || rawAnimation.getAnimationStages().isEmpty()) {
@@ -139,7 +135,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
             return;
         }
 
-        if (needsAnimationReload || !rawAnimation.equals(currentRawAnimation)) {
+        if (!rawAnimation.equals(currentRawAnimation)) {
             var animations = tryCreateAnimationQueue(animatable, rawAnimation);
 
             if (!animations.isEmpty()) {
@@ -147,7 +143,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
                 animationQueue.addAll(animations);
                 this.currentRawAnimation = rawAnimation;
                 stateMachine.transition();
-                this.needsAnimationReload = false;
                 return;
             }
 
@@ -182,7 +177,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
             }
 
             this.triggeredAnimation = null;
-            this.needsAnimationReload = true;
         }
     }
 
@@ -191,10 +185,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      * logic.
      */
     public void update(AzAnimationContext<T> context) {
-        if (animator.reloadAnimations) {
-            forceAnimationReset();
-        }
-
         var animatable = context.animatable();
 
         handleAnimationState(animatable);
@@ -204,31 +194,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         // Run state machine updates.
         stateMachine.update();
 
-        // TODO: Is this if-block necessary?
-        if (currentAnimation == null) {
-            if (animationQueue.isEmpty()) {
-                // If there is no animation to play, stop.
-                stateMachine.stop();
-                return;
-            }
-
-            this.needsAnimationReload = false;
-            controllerTimer.update();
-        }
-
         boneAnimationQueueCache.update(animationProperties.easingType());
-    }
-
-    /**
-     * Marks the controller as needing to reset its animation and state the next time
-     * {@link AzAnimationController#setAnimation(T, AzRawAnimation)} is called.<br>
-     * <br>
-     * Use this if you have a {@link AzRawAnimation} with multiple stages and you want it to start again from the first
-     * stage, or if you want to reset the currently playing animation to the start
-     */
-    private void forceAnimationReset() {
-        this.needsAnimationReload = true;
-        boneAnimationQueueCache.clear();
     }
 
     public AzAnimationProperties getAnimationProperties() {
