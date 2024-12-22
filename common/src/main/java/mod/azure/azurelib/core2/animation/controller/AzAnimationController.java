@@ -128,7 +128,10 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      * This method may be safely called every render frame, as passing the same builder that is already loaded will do
      * nothing.<br>
      * Pass null to this method to tell the controller to stop.<br>
+     *
+     * @deprecated
      */
+    @Deprecated(forRemoval = true)
     public void setAnimation(T animatable, AzRawAnimation rawAnimation) {
         if (rawAnimation == null || rawAnimation.getAnimationStages().isEmpty()) {
             stateMachine.stop();
