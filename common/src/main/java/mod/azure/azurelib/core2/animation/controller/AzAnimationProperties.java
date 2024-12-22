@@ -5,7 +5,9 @@ import mod.azure.azurelib.core.animation.EasingType;
 public class AzAnimationProperties {
 
     private double animationSpeed;
+
     private EasingType easingType;
+
     private double transitionLength;
 
     public AzAnimationProperties() {

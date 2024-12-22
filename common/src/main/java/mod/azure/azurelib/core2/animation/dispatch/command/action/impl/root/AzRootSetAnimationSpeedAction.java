@@ -1,12 +1,13 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root;
 
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+
+import mod.azure.azurelib.common.internal.common.AzureLib;
+import mod.azure.azurelib.core2.animation.AzAnimator;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 
 public record AzRootSetAnimationSpeedAction(
     double animationSpeed

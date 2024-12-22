@@ -48,7 +48,8 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
             boneSnapshotCache.put(controller.getCurrentAnimation(), snapshots.values());
         }
 
-        var hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.getAnimationProperties().transitionLength();
+        var hasFinishedTransitioning = controllerTimer.getAdjustedTick() >= controller.getAnimationProperties()
+            .transitionLength();
 
         if (hasFinishedTransitioning) {
             // If we've exceeded the amount of time we should be transitioning, then switch to play state.

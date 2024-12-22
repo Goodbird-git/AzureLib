@@ -5,8 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
 
 import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.AzAnimator;
@@ -67,6 +65,12 @@ public class AzAnimationControllerBuilder<T> {
     }
 
     public AzAnimationController<T> build() {
-        return new AzAnimationController<>(name, animator, animationProperties, keyFrameCallbacks, triggerableAnimations);
+        return new AzAnimationController<>(
+            name,
+            animator,
+            animationProperties,
+            keyFrameCallbacks,
+            triggerableAnimations
+        );
     }
 }

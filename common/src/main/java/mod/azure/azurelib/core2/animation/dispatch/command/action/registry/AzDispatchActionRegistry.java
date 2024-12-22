@@ -1,7 +1,6 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.action.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ShortArrayMap;
-import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +13,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchActi
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction;
 
 /**
