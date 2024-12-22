@@ -1,7 +1,8 @@
 package mod.azure.azurelib.core2.animation;
 
-import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
+import mod.azure.azurelib.core2.animation.easing.AzEasingType;
+import mod.azure.azurelib.core2.animation.easing.AzEasingUtil;
 import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.model.AzBoneSnapshot;
 
@@ -19,7 +20,7 @@ public class AzBoneAnimationUpdateUtil {
     public static void updatePositions(
         AzBoneAnimationQueue boneAnimation,
         AzBone bone,
-        EasingType easingType,
+        AzEasingType easingType,
         AzBoneSnapshot snapshot
     ) {
         var posXPoint = boneAnimation.positionXQueue().poll();
@@ -27,9 +28,9 @@ public class AzBoneAnimationUpdateUtil {
         var posZPoint = boneAnimation.positionZQueue().poll();
 
         if (posXPoint != null && posYPoint != null && posZPoint != null) {
-            bone.setPosX((float) EasingType.lerpWithOverride(posXPoint, easingType));
-            bone.setPosY((float) EasingType.lerpWithOverride(posYPoint, easingType));
-            bone.setPosZ((float) EasingType.lerpWithOverride(posZPoint, easingType));
+            bone.setPosX((float) AzEasingUtil.lerpWithOverride(posXPoint, easingType));
+            bone.setPosY((float) AzEasingUtil.lerpWithOverride(posYPoint, easingType));
+            bone.setPosZ((float) AzEasingUtil.lerpWithOverride(posZPoint, easingType));
             snapshot.updateOffset(bone.getPosX(), bone.getPosY(), bone.getPosZ());
             snapshot.startPosAnim();
             bone.markPositionAsChanged();
@@ -50,7 +51,7 @@ public class AzBoneAnimationUpdateUtil {
     public static void updateRotations(
         AzBoneAnimationQueue boneAnimation,
         AzBone bone,
-        EasingType easingType,
+        AzEasingType easingType,
         AzBoneSnapshot initialSnapshot,
         AzBoneSnapshot snapshot
     ) {
@@ -60,13 +61,13 @@ public class AzBoneAnimationUpdateUtil {
 
         if (rotXPoint != null && rotYPoint != null && rotZPoint != null) {
             bone.setRotX(
-                (float) EasingType.lerpWithOverride(rotXPoint, easingType) + initialSnapshot.getRotX()
+                (float) AzEasingUtil.lerpWithOverride(rotXPoint, easingType) + initialSnapshot.getRotX()
             );
             bone.setRotY(
-                (float) EasingType.lerpWithOverride(rotYPoint, easingType) + initialSnapshot.getRotY()
+                (float) AzEasingUtil.lerpWithOverride(rotYPoint, easingType) + initialSnapshot.getRotY()
             );
             bone.setRotZ(
-                (float) EasingType.lerpWithOverride(rotZPoint, easingType) + initialSnapshot.getRotZ()
+                (float) AzEasingUtil.lerpWithOverride(rotZPoint, easingType) + initialSnapshot.getRotZ()
             );
             snapshot.updateRotation(bone.getRotX(), bone.getRotY(), bone.getRotZ());
             snapshot.startRotAnim();
@@ -87,7 +88,7 @@ public class AzBoneAnimationUpdateUtil {
     public static void updateScale(
         AzBoneAnimationQueue boneAnimation,
         AzBone bone,
-        EasingType easingType,
+        AzEasingType easingType,
         AzBoneSnapshot snapshot
     ) {
         var scaleXPoint = boneAnimation.scaleXQueue().poll();
@@ -95,9 +96,9 @@ public class AzBoneAnimationUpdateUtil {
         var scaleZPoint = boneAnimation.scaleZQueue().poll();
 
         if (scaleXPoint != null && scaleYPoint != null && scaleZPoint != null) {
-            bone.setScaleX((float) EasingType.lerpWithOverride(scaleXPoint, easingType));
-            bone.setScaleY((float) EasingType.lerpWithOverride(scaleYPoint, easingType));
-            bone.setScaleZ((float) EasingType.lerpWithOverride(scaleZPoint, easingType));
+            bone.setScaleX((float) AzEasingUtil.lerpWithOverride(scaleXPoint, easingType));
+            bone.setScaleY((float) AzEasingUtil.lerpWithOverride(scaleYPoint, easingType));
+            bone.setScaleZ((float) AzEasingUtil.lerpWithOverride(scaleZPoint, easingType));
             snapshot.updateScale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
             snapshot.startScaleAnim();
             bone.markScaleAsChanged();

@@ -3,8 +3,6 @@ package mod.azure.azurelib.core2.animation.controller.keyframe;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.keyframe.KeyframeStack;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
@@ -71,7 +69,7 @@ public class AzKeyFrameTransitioner<T> extends AzAbstractKeyFrameExecutor {
 
     private void transitionRotation(
         double adjustedTick,
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double transitionLength,
         AzBoneSnapshot snapshot,
@@ -91,7 +89,7 @@ public class AzKeyFrameTransitioner<T> extends AzAbstractKeyFrameExecutor {
 
     private void transitionPosition(
         double adjustedTick,
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double transitionLength,
         AzBoneSnapshot snapshot
@@ -109,7 +107,7 @@ public class AzKeyFrameTransitioner<T> extends AzAbstractKeyFrameExecutor {
 
     private void transitionScale(
         double adjustedTick,
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double transitionLength,
         AzBoneSnapshot snapshot

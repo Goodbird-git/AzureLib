@@ -1,10 +1,10 @@
 package mod.azure.azurelib.core2.animation.primitive;
 
-import mod.azure.azurelib.core.keyframe.BoneAnimation;
 import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimation;
 
 /**
  * A compiled animation instance for use by the {@link AzAnimationController}<br>
@@ -15,7 +15,7 @@ public record AzAnimation(
     String name,
     double length,
     AzLoopType loopType,
-    BoneAnimation[] boneAnimations,
+    AzBoneAnimation[] boneAnimations,
     AzKeyframes keyFrames
 ) {
 
@@ -31,7 +31,7 @@ public record AzAnimation(
             AzStage.WAIT,
             length,
             AzLoopType.PLAY_ONCE,
-            new BoneAnimation[0],
+            new AzBoneAnimation[0],
             new AzKeyframes(
                 new SoundKeyframeData[0],
                 new ParticleKeyframeData[0],

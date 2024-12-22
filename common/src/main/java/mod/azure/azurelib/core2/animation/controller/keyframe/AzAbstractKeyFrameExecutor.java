@@ -21,8 +21,8 @@ public class AzAbstractKeyFrameExecutor {
     /**
      * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
      */
-    protected AnimationPoint getAnimationPointAtTick(
-        List<Keyframe<IValue>> frames,
+    protected AzAnimationPoint getAnimationPointAtTick(
+        List<AzKeyframe<IValue>> frames,
         double tick,
         boolean isRotation,
         Axis axis
@@ -50,7 +50,7 @@ public class AzAbstractKeyFrameExecutor {
             }
         }
 
-        return new AnimationPoint(currentFrame, location.startTick(), currentFrame.length(), startValue, endValue);
+        return new AzAnimationPoint(currentFrame, location.startTick(), currentFrame.length(), startValue, endValue);
     }
 
     /**
@@ -60,8 +60,8 @@ public class AzAbstractKeyFrameExecutor {
      * @param ageInTicks The current tick time
      * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
      */
-    protected KeyframeLocation<Keyframe<IValue>> getCurrentKeyFrameLocation(
-        List<Keyframe<IValue>> frames,
+    protected AzKeyframeLocation<AzKeyframe<IValue>> getCurrentKeyFrameLocation(
+        List<AzKeyframe<IValue>> frames,
         double ageInTicks
     ) {
         var totalFrameTime = 0.0;
@@ -70,10 +70,10 @@ public class AzAbstractKeyFrameExecutor {
             totalFrameTime += frame.length();
 
             if (totalFrameTime > ageInTicks) {
-                return new KeyframeLocation<>(frame, (ageInTicks - (totalFrameTime - frame.length())));
+                return new AzKeyframeLocation<>(frame, (ageInTicks - (totalFrameTime - frame.length())));
             }
         }
 
-        return new KeyframeLocation<>(frames.get(frames.size() - 1), ageInTicks);
+        return new AzKeyframeLocation<>(frames.get(frames.size() - 1), ageInTicks);
     }
 }

@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.NoSuchElementException;
 
-import mod.azure.azurelib.core.keyframe.Keyframe;
-import mod.azure.azurelib.core.keyframe.KeyframeStack;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.molang.MolangParser;
 import mod.azure.azurelib.core.molang.MolangQueries;
@@ -80,7 +78,7 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
     }
 
     private void updateRotation(
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double adjustedTick
     ) {
@@ -96,7 +94,7 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
     }
 
     private void updatePosition(
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double adjustedTick
     ) {
@@ -112,7 +110,7 @@ public class AzKeyFrameExecutor<T> extends AzAbstractKeyFrameExecutor {
     }
 
     private void updateScale(
-        KeyframeStack<Keyframe<IValue>> keyFrames,
+        AzKeyframeStack<AzKeyframe<IValue>> keyFrames,
         AzBoneAnimationQueue queue,
         double adjustedTick
     ) {

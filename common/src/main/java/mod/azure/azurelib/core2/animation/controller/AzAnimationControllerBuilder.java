@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Objects;
 
-import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
+import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
 /**
@@ -49,7 +49,7 @@ public class AzAnimationControllerBuilder<T> {
         return this;
     }
 
-    public AzAnimationControllerBuilder<T> setOverrideEasingType(EasingType easingType) {
+    public AzAnimationControllerBuilder<T> setEasingType(AzEasingType easingType) {
         animationProperties.setEasingType(easingType);
         return this;
     }

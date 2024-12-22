@@ -6,10 +6,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
-import mod.azure.azurelib.core.animation.EasingType;
 import mod.azure.azurelib.core2.animation.AzBoneAnimationUpdateUtil;
 import mod.azure.azurelib.core2.animation.cache.AzBoneCache;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzBoneAnimationQueue;
+import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 
 /**
  * The AzBoneAnimationQueueCache class is responsible for managing and updating animation queues for bones. It acts as a
@@ -28,7 +28,7 @@ public class AzBoneAnimationQueueCache<T> {
         this.boneCache = boneCache;
     }
 
-    public void update(EasingType easingType) {
+    public void update(AzEasingType easingType) {
         var boneSnapshots = boneCache.getBoneSnapshotsByName();
 
         for (var boneAnimation : boneAnimationQueues.values()) {

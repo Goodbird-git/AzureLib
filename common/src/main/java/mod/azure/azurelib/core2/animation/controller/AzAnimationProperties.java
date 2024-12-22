@@ -1,12 +1,12 @@
 package mod.azure.azurelib.core2.animation.controller;
 
-import mod.azure.azurelib.core.animation.EasingType;
+import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 
 public class AzAnimationProperties {
 
     private double animationSpeed;
 
-    private EasingType easingType;
+    private AzEasingType easingType;
 
     private double transitionLength;
 
@@ -24,11 +24,11 @@ public class AzAnimationProperties {
         this.animationSpeed = animationSpeed;
     }
 
-    public EasingType easingType() {
+    public AzEasingType easingType() {
         return easingType;
     }
 
-    public void setEasingType(EasingType easingType) {
+    public void setEasingType(AzEasingType easingType) {
         this.easingType = easingType;
     }
 
