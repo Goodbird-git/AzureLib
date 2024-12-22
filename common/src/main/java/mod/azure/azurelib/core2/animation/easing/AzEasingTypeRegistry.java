@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -46,5 +48,9 @@ public class AzEasingTypeRegistry {
 
     public static @Nullable AzEasingType getOrNull(String name) {
         return EASING_TYPES.get(name);
+    }
+
+    public static Collection<AzEasingType> getValues() {
+        return Collections.unmodifiableCollection(EASING_TYPES.values());
     }
 }

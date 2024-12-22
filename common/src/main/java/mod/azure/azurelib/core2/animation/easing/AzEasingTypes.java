@@ -168,4 +168,13 @@ public class AzEasingTypes {
         "catmullrom",
         value -> AzEasingUtil.easeInOut(AzEasingUtil::catmullRom)
     );
+
+    public static AzEasingType random() {
+        var collection = AzEasingTypeRegistry.getValues();
+
+        return collection.stream()
+            .skip((int) (collection.size() * Math.random()))
+            .findFirst()
+            .orElse(null);
+    }
 }
