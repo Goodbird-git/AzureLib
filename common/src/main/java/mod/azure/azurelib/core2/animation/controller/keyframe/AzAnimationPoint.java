@@ -7,10 +7,10 @@ package mod.azure.azurelib.core2.animation.controller.keyframe;
  * @param transitionLength    The length of time (in ticks) that the point should take to transition
  * @param animationStartValue The start value to provide to the animation handling system
  * @param animationEndValue   The end value to provide to the animation handling system
- * @param keyFrame            The {@code Nullable} Keyframe
+ * @param keyframe            The {@code Nullable} Keyframe
  */
 public record AzAnimationPoint(
-    AzKeyframe<?> keyFrame,
+    AzKeyframe<?> keyframe,
     double currentTick,
     double transitionLength,
     double animationStartValue,

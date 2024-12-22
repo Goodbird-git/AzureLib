@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeCallbacks;
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
@@ -28,13 +28,13 @@ public class AzAnimationControllerBuilder<T> {
 
     private final Map<String, AzRawAnimation> triggerableAnimations;
 
-    private AzKeyFrameCallbacks<T> keyFrameCallbacks;
+    private AzKeyframeCallbacks<T> keyframeCallbacks;
 
     public AzAnimationControllerBuilder(AzAnimator<T> animator, String name) {
         this.animator = animator;
         this.name = name;
         this.animationProperties = new AzAnimationProperties();
-        this.keyFrameCallbacks = AzKeyFrameCallbacks.noop();
+        this.keyframeCallbacks = AzKeyframeCallbacks.noop();
         this.triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
     }
 
@@ -43,9 +43,9 @@ public class AzAnimationControllerBuilder<T> {
         return this;
     }
 
-    public AzAnimationControllerBuilder<T> setKeyFrameCallbacks(@NotNull AzKeyFrameCallbacks<T> keyFrameCallbacks) {
-        Objects.requireNonNull(keyFrameCallbacks);
-        this.keyFrameCallbacks = keyFrameCallbacks;
+    public AzAnimationControllerBuilder<T> setKeyframeCallbacks(@NotNull AzKeyframeCallbacks<T> keyframeCallbacks) {
+        Objects.requireNonNull(keyframeCallbacks);
+        this.keyframeCallbacks = keyframeCallbacks;
         return this;
     }
 
@@ -69,7 +69,7 @@ public class AzAnimationControllerBuilder<T> {
             name,
             animator,
             animationProperties,
-            keyFrameCallbacks,
+            keyframeCallbacks,
             triggerableAnimations
         );
     }

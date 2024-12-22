@@ -11,8 +11,8 @@ import java.util.Objects;
 
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimator;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameManager;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeCallbacks;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeManager;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPauseState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
@@ -50,7 +50,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     private final AzBoneSnapshotCache boneSnapshotCache;
 
-    private final AzKeyFrameManager<T> keyFrameManager;
+    private final AzKeyframeManager<T> keyframeManager;
 
     protected AzQueuedAnimation currentAnimation;
 
@@ -58,7 +58,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         String name,
         AzAnimator<T> animator,
         AzAnimationProperties animationProperties,
-        AzKeyFrameCallbacks<T> keyFrameCallbacks,
+        AzKeyframeCallbacks<T> keyframeCallbacks,
         Map<String, AzRawAnimation> triggerableAnimations
     ) {
         super(name, triggerableAnimations);
@@ -70,11 +70,11 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         this.animationQueue = new AzAnimationQueue();
         this.boneAnimationQueueCache = new AzBoneAnimationQueueCache<>(animator.context().boneCache());
         this.boneSnapshotCache = new AzBoneSnapshotCache();
-        this.keyFrameManager = new AzKeyFrameManager<>(
+        this.keyframeManager = new AzKeyframeManager<>(
             this,
             boneAnimationQueueCache,
             boneSnapshotCache,
-            keyFrameCallbacks
+            keyframeCallbacks
         );
 
         var stateHolder = new AzAnimationControllerStateMachine.StateHolder<T>(
@@ -224,8 +224,8 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         return currentAnimation;
     }
 
-    public AzKeyFrameManager<T> keyFrameManager() {
-        return keyFrameManager;
+    public AzKeyframeManager<T> keyframeManager() {
+        return keyframeManager;
     }
 
     public AzAnimationControllerStateMachine<T> stateMachine() {

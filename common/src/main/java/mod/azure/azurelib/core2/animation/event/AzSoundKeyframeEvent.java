@@ -7,13 +7,13 @@ package mod.azure.azurelib.core2.animation.event;
 
 import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeCallbacks;
 
 /**
- * The {@link AzKeyFrameEvent} specific to the {@link AzKeyFrameCallbacks#soundKeyframeHandler()}.<br>
+ * The {@link AzKeyframeEvent} specific to the {@link AzKeyframeCallbacks#soundKeyframeHandler()}.<br>
  * Called when a sound instruction keyframe is encountered
  */
-public class AzSoundKeyframeEvent<T> extends AzKeyFrameEvent<T, SoundKeyframeData> {
+public class AzSoundKeyframeEvent<T> extends AzKeyframeEvent<T, SoundKeyframeData> {
 
     /**
      * This stores all the fields that are needed in the AnimationTestEvent
@@ -27,8 +27,8 @@ public class AzSoundKeyframeEvent<T> extends AzKeyFrameEvent<T, SoundKeyframeDat
         T entity,
         double animationTick,
         AzAnimationController<T> controller,
-        SoundKeyframeData keyFrameData
+        SoundKeyframeData keyframeData
     ) {
-        super(entity, animationTick, controller, keyFrameData);
+        super(entity, animationTick, controller, keyframeData);
     }
 }

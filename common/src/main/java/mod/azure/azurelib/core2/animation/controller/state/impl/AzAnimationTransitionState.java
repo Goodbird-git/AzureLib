@@ -37,7 +37,7 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
         if (controllerTimer.getAdjustedTick() == 0) {
             controller.setCurrentAnimation(controller.animationQueue().next());
 
-            controller.keyFrameManager().keyFrameCallbackHandler().reset();
+            controller.keyframeManager().keyframeCallbackHandler().reset();
 
             if (controller.currentAnimation() == null) {
                 return;
@@ -60,9 +60,9 @@ public final class AzAnimationTransitionState<T> extends AzAnimationState<T> {
         if (controller.currentAnimation() != null) {
             var bones = boneCache.getBakedModel().getBonesByName();
             var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
-            var keyFrameTransitioner = controller.keyFrameManager().getKeyFrameTransitioner();
+            var keyframeTransitioner = controller.keyframeManager().keyframeTransitioner();
 
-            keyFrameTransitioner.transition(bones, crashWhenCantFindBone, controllerTimer.getAdjustedTick());
+            keyframeTransitioner.transition(bones, crashWhenCantFindBone, controllerTimer.getAdjustedTick());
         }
     }
 }

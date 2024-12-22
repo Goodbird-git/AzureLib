@@ -59,20 +59,20 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
 
         // The animation is still running at this point, proceed with updating the bones according to keyframes.
 
-        var keyFrameManager = controller.keyFrameManager();
-        var keyFrameExecutor = keyFrameManager.getKeyFrameExecutor();
+        var keyframeManager = controller.keyframeManager();
+        var keyframeExecutor = keyframeManager.keyframeExecutor();
         var crashWhenCantFindBone = animContext.config().crashIfBoneMissing();
 
-        keyFrameExecutor.execute(currentAnimation, animatable, crashWhenCantFindBone);
+        keyframeExecutor.execute(currentAnimation, animatable, crashWhenCantFindBone);
     }
 
     private void tryPlayNextOrStop(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.animationController();
         var stateMachine = context.stateMachine();
-        var keyFrameManager = controller.keyFrameManager();
-        var keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
+        var keyframeManager = controller.keyframeManager();
+        var keyframeCallbackHandler = keyframeManager.keyframeCallbackHandler();
 
-        keyFrameCallbackHandler.reset();
+        keyframeCallbackHandler.reset();
 
         var animationQueue = controller.animationQueue();
         var nextAnimation = animationQueue.peek();
@@ -105,10 +105,10 @@ public class AzAnimationPlayState<T> extends AzAnimationState<T> {
     protected void playAgain(AzAnimationControllerStateMachine.Context<T> context) {
         var controller = context.animationController();
         var controllerTimer = controller.controllerTimer();
-        var keyFrameManager = controller.keyFrameManager();
-        var keyFrameCallbackHandler = keyFrameManager.keyFrameCallbackHandler();
+        var keyframeManager = controller.keyframeManager();
+        var keyframeCallbackHandler = keyframeManager.keyframeCallbackHandler();
 
         controllerTimer.reset();
-        keyFrameCallbackHandler.reset();
+        keyframeCallbackHandler.reset();
     }
 }

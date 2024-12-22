@@ -22,7 +22,7 @@ import mod.azure.azurelib.common.internal.common.loading.json.typeadapter.KeyFra
 import mod.azure.azurelib.common.internal.common.loading.object.BakedAnimations;
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core2.animation.parse.AzBakedAnimationsAdapter;
-import mod.azure.azurelib.core2.animation.parse.AzKeyFramesAdapter;
+import mod.azure.azurelib.core2.animation.parse.AzKeyframesAdapter;
 import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.core2.animation.primitive.AzKeyframes;
 
@@ -49,7 +49,7 @@ public record JsonUtil() {
         .registerTypeAdapter(Animation.Keyframes.class, new KeyFramesAdapter())
         // TODO: Remove
         .registerTypeAdapter(BakedAnimations.class, new BakedAnimationsAdapter())
-        .registerTypeAdapter(AzKeyframes.class, new AzKeyFramesAdapter())
+        .registerTypeAdapter(AzKeyframes.class, new AzKeyframesAdapter())
         .registerTypeAdapter(AzBakedAnimations.class, new AzBakedAnimationsAdapter())
         .create();
 

@@ -29,7 +29,7 @@ import mod.azure.azurelib.core2.animation.primitive.AzKeyframes;
  * {@link Gson} {@link JsonDeserializer} for {@link AzKeyframes}.<br>
  * Acts as the deserialization interface for {@code Keyframes}
  */
-public class AzKeyFramesAdapter implements JsonDeserializer<AzKeyframes> {
+public class AzKeyframesAdapter implements JsonDeserializer<AzKeyframes> {
 
     /**
      * Builds an array of {@link SoundKeyframeData} objects from a given JSON object. This method parses a JSON object

@@ -48,64 +48,64 @@ public record AzBoneAnimationQueue(
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#positionXQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addPosXPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.positionXQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.positionXQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#positionYQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addPosYPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.positionYQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.positionYQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#positionZQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addPosZPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.positionZQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.positionZQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new X, Y, and Z position {@link AzAnimationPoint} to their respective queues
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (base on the {@link AzAnimationController}
      * @param startSnapshot    The {@link AzBoneSnapshot} that serves as the starting positions relevant to the keyframe
@@ -118,7 +118,7 @@ public record AzBoneAnimationQueue(
      *                         new point
      */
     public void addNextPosition(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         AzBoneSnapshot startSnapshot,
@@ -127,21 +127,21 @@ public record AzBoneAnimationQueue(
         AzAnimationPoint nextZPoint
     ) {
         addPosXPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getOffsetX(),
             nextXPoint.animationStartValue()
         );
         addPosYPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getOffsetY(),
             nextYPoint.animationStartValue()
         );
         addPosZPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getOffsetZ(),
@@ -152,64 +152,64 @@ public record AzBoneAnimationQueue(
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#scaleXQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addScaleXPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.scaleXQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.scaleXQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#scaleYQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addScaleYPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.scaleYQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.scaleYQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#scaleZQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addScaleZPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.scaleZQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.scaleZQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new X, Y, and Z scale {@link AzAnimationPoint} to their respective queues
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (base on the {@link AzAnimationController}
      * @param startSnapshot    The {@link AzBoneSnapshot} that serves as the starting scales relevant to the keyframe
@@ -222,7 +222,7 @@ public record AzBoneAnimationQueue(
      *                         new point
      */
     public void addNextScale(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         AzBoneSnapshot startSnapshot,
@@ -231,21 +231,21 @@ public record AzBoneAnimationQueue(
         AzAnimationPoint nextZPoint
     ) {
         addScaleXPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getScaleX(),
             nextXPoint.animationStartValue()
         );
         addScaleYPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getScaleY(),
             nextYPoint.animationStartValue()
         );
         addScaleZPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getScaleZ(),
@@ -256,64 +256,64 @@ public record AzBoneAnimationQueue(
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#rotationXQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addRotationXPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.rotationXQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.rotationXQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#rotationYQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addRotationYPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.rotationYQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.rotationYQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new {@link AzAnimationPoint} to the {@link AzBoneAnimationQueue#rotationZQueue}
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (based on the {@link AzAnimationController})
      * @param startValue       The value of the point at the start of its transition
      * @param endValue         The value of the point at the end of its transition
      */
     public void addRotationZPoint(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         double startValue,
         double endValue
     ) {
-        this.rotationZQueue.add(new AzAnimationPoint(keyFrame, lerpedTick, transitionLength, startValue, endValue));
+        this.rotationZQueue.add(new AzAnimationPoint(keyframe, lerpedTick, transitionLength, startValue, endValue));
     }
 
     /**
      * Add a new X, Y, and Z scale {@link AzAnimationPoint} to their respective queues
      *
-     * @param keyFrame         The {@code Nullable} Keyframe relevant to the animation point
+     * @param keyframe         The {@code Nullable} Keyframe relevant to the animation point
      * @param lerpedTick       The lerped time (current tick + partial tick) that the point starts at
      * @param transitionLength The length of the transition (base on the {@link AzAnimationController}
      * @param startSnapshot    The {@link AzBoneSnapshot} that serves as the starting rotations relevant to the keyframe
@@ -327,7 +327,7 @@ public record AzBoneAnimationQueue(
      *                         new point
      */
     public void addNextRotation(
-        AzKeyframe<?> keyFrame,
+        AzKeyframe<?> keyframe,
         double lerpedTick,
         double transitionLength,
         AzBoneSnapshot startSnapshot,
@@ -337,21 +337,21 @@ public record AzBoneAnimationQueue(
         AzAnimationPoint nextZPoint
     ) {
         addRotationXPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getRotX() - initialSnapshot.getRotX(),
             nextXPoint.animationStartValue()
         );
         addRotationYPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getRotY() - initialSnapshot.getRotY(),
             nextYPoint.animationStartValue()
         );
         addRotationZPoint(
-            keyFrame,
+            keyframe,
             lerpedTick,
             transitionLength,
             startSnapshot.getRotZ() - initialSnapshot.getRotZ(),

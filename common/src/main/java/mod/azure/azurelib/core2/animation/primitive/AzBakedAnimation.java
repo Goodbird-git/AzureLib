@@ -16,7 +16,7 @@ public record AzBakedAnimation(
     double length,
     AzLoopType loopType,
     AzBoneAnimation[] boneAnimations,
-    AzKeyframes keyFrames
+    AzKeyframes keyframes
 ) {
 
     /**

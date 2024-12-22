@@ -9,6 +9,7 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.keyframe.Keyframe;
 import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
+import mod.azure.azurelib.core2.animation.event.AzKeyframeEvent;
 
 /**
  * The base class for {@link Keyframe} events.<br>
@@ -17,7 +18,7 @@ import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
  * @see CustomInstructionKeyframeEvent
  * @see ParticleKeyframeEvent
  * @see SoundKeyframeEvent
- * @deprecated Use {@link mod.azure.azurelib.core2.animation.event.AzKeyFrameEvent} instead.
+ * @deprecated Use {@link AzKeyframeEvent} instead.
  */
 @Deprecated(forRemoval = true)
 public abstract class KeyFrameEvent<T extends GeoAnimatable, E extends KeyFrameData> {

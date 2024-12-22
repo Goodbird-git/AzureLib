@@ -10,13 +10,13 @@ import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.object.Axis;
 
 /**
- * AzAbstractKeyFrameExecutor is a base class designed to handle animations and transitions between keyframes in a
+ * AzAbstractKeyframeExecutor is a base class designed to handle animations and transitions between keyframes in a
  * generic and reusable fashion. It provides the foundational logic for determining the current state of an animation
  * based on the tick time and computing the animation's required values.
  */
-public class AzAbstractKeyFrameExecutor {
+public class AzAbstractKeyframeExecutor {
 
-    protected AzAbstractKeyFrameExecutor() {}
+    protected AzAbstractKeyframeExecutor() {}
 
     /**
      * Convert a {@link KeyframeLocation} to an {@link AnimationPoint}
@@ -27,7 +27,7 @@ public class AzAbstractKeyFrameExecutor {
         boolean isRotation,
         Axis axis
     ) {
-        var location = getCurrentKeyFrameLocation(frames, tick);
+        var location = getCurrentKeyframeLocation(frames, tick);
         var currentFrame = location.keyframe();
         var startValue = currentFrame.startValue().get();
         var endValue = currentFrame.endValue().get();
@@ -56,11 +56,11 @@ public class AzAbstractKeyFrameExecutor {
     /**
      * Returns the {@link Keyframe} relevant to the current tick time
      *
-     * @param frames     The list of {@code KeyFrames} to filter through
+     * @param frames     The list of {@code Keyframes} to filter through
      * @param ageInTicks The current tick time
-     * @return A new {@code KeyFrameLocation} containing the current {@code KeyFrame} and the tick time used to find it
+     * @return A new {@code KeyframeLocation} containing the current {@code Keyframe} and the tick time used to find it
      */
-    protected AzKeyframeLocation<AzKeyframe<IValue>> getCurrentKeyFrameLocation(
+    protected AzKeyframeLocation<AzKeyframe<IValue>> getCurrentKeyframeLocation(
         List<AzKeyframe<IValue>> frames,
         double ageInTicks
     ) {

@@ -23,8 +23,8 @@ public interface AzEasingType {
     default double apply(AzAnimationPoint animationPoint) {
         Double easingVariable = null;
 
-        if (animationPoint.keyFrame() != null && animationPoint.keyFrame().easingArgs().size() > 0)
-            easingVariable = animationPoint.keyFrame().easingArgs().get(0).get();
+        if (animationPoint.keyframe() != null && animationPoint.keyframe().easingArgs().size() > 0)
+            easingVariable = animationPoint.keyframe().easingArgs().get(0).get();
 
         return apply(animationPoint, easingVariable, animationPoint.currentTick() / animationPoint.transitionLength());
     }

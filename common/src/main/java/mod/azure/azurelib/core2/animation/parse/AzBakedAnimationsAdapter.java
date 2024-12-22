@@ -137,9 +137,9 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         double length = 0;
 
         for (var animation : boneAnimations) {
-            length = Math.max(length, animation.rotationKeyFrames().getLastKeyframeTime());
-            length = Math.max(length, animation.positionKeyFrames().getLastKeyframeTime());
-            length = Math.max(length, animation.scaleKeyFrames().getLastKeyframeTime());
+            length = Math.max(length, animation.rotationKeyframes().getLastKeyframeTime());
+            length = Math.max(length, animation.positionKeyframes().getLastKeyframeTime());
+            length = Math.max(length, animation.scaleKeyframes().getLastKeyframeTime());
         }
 
         return length == 0 ? Double.MAX_VALUE : length;
@@ -317,12 +317,12 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
             double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(entry.getFirst()) : 0;
             double timeDelta = curTime - prevTime;
 
-            JsonArray keyFrameVector = element instanceof JsonArray array
+            JsonArray keyframeVector = element instanceof JsonArray array
                 ? array
                 : GsonHelper.getAsJsonArray(element.getAsJsonObject(), "vector");
-            MolangValue rawXValue = MolangParser.parseJson(keyFrameVector.get(0));
-            MolangValue rawYValue = MolangParser.parseJson(keyFrameVector.get(1));
-            MolangValue rawZValue = MolangParser.parseJson(keyFrameVector.get(2));
+            MolangValue rawXValue = MolangParser.parseJson(keyframeVector.get(0));
+            MolangValue rawYValue = MolangParser.parseJson(keyframeVector.get(1));
+            MolangValue rawZValue = MolangParser.parseJson(keyframeVector.get(2));
             IValue xValue = isForRotation && rawXValue.isConstant()
                 ? new Constant(Math.toRadians(-rawXValue.get()))
                 : rawXValue;

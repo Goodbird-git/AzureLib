@@ -8,13 +8,13 @@ import mod.azure.azurelib.core.math.IValue;
  * Responsible for holding the various {@link Keyframe Keyframes} for the bone's animation transformations
  *
  * @param boneName          The name of the bone as listed in the {@code animation.json}
- * @param rotationKeyFrames The deserialized rotation {@code Keyframe} stack
- * @param positionKeyFrames The deserialized position {@code Keyframe} stack
- * @param scaleKeyFrames    The deserialized scale {@code Keyframe} stack
+ * @param rotationKeyframes The deserialized rotation {@code Keyframe} stack
+ * @param positionKeyframes The deserialized position {@code Keyframe} stack
+ * @param scaleKeyframes    The deserialized scale {@code Keyframe} stack
  */
 public record AzBoneAnimation(
     String boneName,
-    AzKeyframeStack<AzKeyframe<IValue>> rotationKeyFrames,
-    AzKeyframeStack<AzKeyframe<IValue>> positionKeyFrames,
-    AzKeyframeStack<AzKeyframe<IValue>> scaleKeyFrames
+    AzKeyframeStack<AzKeyframe<IValue>> rotationKeyframes,
+    AzKeyframeStack<AzKeyframe<IValue>> positionKeyframes,
+    AzKeyframeStack<AzKeyframe<IValue>> scaleKeyframes
 ) {}

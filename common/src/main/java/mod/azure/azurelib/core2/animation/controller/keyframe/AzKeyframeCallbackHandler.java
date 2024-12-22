@@ -14,7 +14,7 @@ import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
 
 /**
- * AzKeyFrameCallbackHandler acts as a handler for managing animation keyframe events such as sound, particle, or custom
+ * AzKeyframeCallbackHandler acts as a handler for managing animation keyframe events such as sound, particle, or custom
  * events during a specific animation. It works in conjunction with an animation controller and a set of keyframe
  * callbacks, executing them as appropriate based on the animation's progress. <br>
  * This class is generic and operates on a user-defined animatable type to handle various keyframe events related to
@@ -23,23 +23,23 @@ import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
  * @param <T> the type of the animatable object being handled
  */
 // TODO: reduce the boilerplate of the specialized handle functions in this class.
-public class AzKeyFrameCallbackHandler<T> {
+public class AzKeyframeCallbackHandler<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AzKeyFrameCallbackHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AzKeyframeCallbackHandler.class);
 
     private final AzAnimationController<T> animationController;
 
-    private final Set<KeyFrameData> executedKeyFrames;
+    private final Set<KeyFrameData> executedKeyframes;
 
-    private final AzKeyFrameCallbacks<T> keyFrameCallbacks;
+    private final AzKeyframeCallbacks<T> keyframeCallbacks;
 
-    public AzKeyFrameCallbackHandler(
+    public AzKeyframeCallbackHandler(
         AzAnimationController<T> animationController,
-        AzKeyFrameCallbacks<T> keyFrameCallbacks
+        AzKeyframeCallbacks<T> keyframeCallbacks
     ) {
         this.animationController = animationController;
-        this.executedKeyFrames = new ObjectOpenHashSet<>();
-        this.keyFrameCallbacks = keyFrameCallbacks;
+        this.executedKeyframes = new ObjectOpenHashSet<>();
+        this.keyframeCallbacks = keyframeCallbacks;
     }
 
     public void handle(T animatable, double adjustedTick) {
@@ -49,11 +49,11 @@ public class AzKeyFrameCallbackHandler<T> {
     }
 
     private void handleCustomKeyframes(T animatable, double adjustedTick) {
-        var customKeyframeHandler = keyFrameCallbacks.customKeyframeHandler();
-        var customInstructions = currentAnimation().animation().keyFrames().customInstructions();
+        var customKeyframeHandler = keyframeCallbacks.customKeyframeHandler();
+        var customInstructions = currentAnimation().animation().keyframes().customInstructions();
 
         for (var keyframeData : customInstructions) {
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
+            if (adjustedTick >= keyframeData.getStartTick() && executedKeyframes.add(keyframeData)) {
                 if (customKeyframeHandler == null) {
                     LOGGER.warn(
                         "Custom Instruction Keyframe found for {} -> {}, but no keyframe handler registered",
@@ -71,11 +71,11 @@ public class AzKeyFrameCallbackHandler<T> {
     }
 
     private void handleParticleKeyframes(T animatable, double adjustedTick) {
-        var particleKeyframeHandler = keyFrameCallbacks.particleKeyframeHandler();
-        var particleInstructions = currentAnimation().animation().keyFrames().particles();
+        var particleKeyframeHandler = keyframeCallbacks.particleKeyframeHandler();
+        var particleInstructions = currentAnimation().animation().keyframes().particles();
 
         for (var keyframeData : particleInstructions) {
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
+            if (adjustedTick >= keyframeData.getStartTick() && executedKeyframes.add(keyframeData)) {
                 if (particleKeyframeHandler == null) {
                     LOGGER.warn(
                         "Particle Keyframe found for {} -> {}, but no keyframe handler registered",
@@ -93,11 +93,11 @@ public class AzKeyFrameCallbackHandler<T> {
     }
 
     private void handleSoundKeyframes(T animatable, double adjustedTick) {
-        var soundKeyframeHandler = keyFrameCallbacks.soundKeyframeHandler();
-        var soundInstructions = currentAnimation().animation().keyFrames().sounds();
+        var soundKeyframeHandler = keyframeCallbacks.soundKeyframeHandler();
+        var soundInstructions = currentAnimation().animation().keyframes().sounds();
 
         for (var keyframeData : soundInstructions) {
-            if (adjustedTick >= keyframeData.getStartTick() && executedKeyFrames.add(keyframeData)) {
+            if (adjustedTick >= keyframeData.getStartTick() && executedKeyframes.add(keyframeData)) {
                 if (soundKeyframeHandler == null) {
                     LOGGER.warn(
                         "Sound Keyframe found for {} -> {}, but no keyframe handler registered",
@@ -118,7 +118,7 @@ public class AzKeyFrameCallbackHandler<T> {
      * Clear the {@link KeyFrameData} cache in preparation for the next animation
      */
     public void reset() {
-        executedKeyFrames.clear();
+        executedKeyframes.clear();
     }
 
     private AzQueuedAnimation currentAnimation() {

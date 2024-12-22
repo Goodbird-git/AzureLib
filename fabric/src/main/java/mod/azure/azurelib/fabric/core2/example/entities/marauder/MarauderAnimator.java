@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
-import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyFrameCallbacks;
+import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeCallbacks;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
@@ -55,8 +55,8 @@ public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
         animationControllerContainer.add(
             AzAnimationController.builder(this, "base_controller")
                 .setTransitionLength(5)
-                .setKeyFrameCallbacks(
-                    AzKeyFrameCallbacks.<MarauderEntity>builder()
+                .setKeyframeCallbacks(
+                    AzKeyframeCallbacks.<MarauderEntity>builder()
                         .setSoundKeyframeHandler(
                             event -> {
                                 if (event.getKeyframeData().getSound().equals("walk")) {

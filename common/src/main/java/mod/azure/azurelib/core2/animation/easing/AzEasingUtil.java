@@ -240,9 +240,9 @@ public class AzEasingUtil {
         var easingType = override;
 
         if (override == null) {
-            easingType = animationPoint.keyFrame() == null
+            easingType = animationPoint.keyframe() == null
                 ? AzEasingTypes.LINEAR
-                : animationPoint.keyFrame().easingType();
+                : animationPoint.keyframe().easingType();
         }
 
         return easingType.apply(animationPoint);
