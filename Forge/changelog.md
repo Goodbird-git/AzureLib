@@ -7,10 +7,14 @@ TODO:
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAction
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAllAction
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction
+- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction
+- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetEasingTypeAction
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction
 - mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec
 - mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchCommandCodec
-- mod.azure.azurelib.animation.parse.AzBakedAnimationsAdapter
+- mod.azure.azurelib.animation.easing.AzEasingType
+- mod.azure.azurelib.animation.easing.AzEasingTypes
+- mod.azure.azurelib.animation.easing.AzEasingUtil
 - mod.azure.azurelib.animation.AzAnimationDispatcher
 - mod.azure.azurelib.cache.AzResourceCache
 - mod.azure.azurelib.client.texture.AnimatableTexture
