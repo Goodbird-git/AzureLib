@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
 
 public class AzDispatchCommandBuilder<T extends AzDispatchCommandBuilder<T>> {
 
@@ -19,7 +20,7 @@ public class AzDispatchCommandBuilder<T extends AzDispatchCommandBuilder<T>> {
     }
 
     public T setSpeed(float speed) {
-        // TODO:
+        actions.add(new AzRootSetAnimationSpeedAction(speed));
         return self();
     }
 

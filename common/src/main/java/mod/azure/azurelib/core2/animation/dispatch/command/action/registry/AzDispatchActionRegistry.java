@@ -1,6 +1,7 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.action.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ShortArrayMap;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +41,7 @@ public class AzDispatchActionRegistry {
         // Root actions
         register(AzRootCancelAction.RESOURCE_LOCATION, AzRootCancelAction.CODEC);
         register(AzRootCancelAllAction.RESOURCE_LOCATION, AzRootCancelAllAction.CODEC);
+        register(AzRootSetAnimationSpeedAction.RESOURCE_LOCATION, AzRootSetAnimationSpeedAction.CODEC);
         register(AzRootSetTransitionInSpeedAction.RESOURCE_LOCATION, AzRootSetTransitionInSpeedAction.CODEC);
         register(AzRootPlayAnimationAction.RESOURCE_LOCATION, AzRootPlayAnimationAction.CODEC);
 

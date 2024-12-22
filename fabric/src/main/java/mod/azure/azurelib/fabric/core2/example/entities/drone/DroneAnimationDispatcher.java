@@ -18,14 +18,18 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
     private static final AzDispatchCommand CRAWL_HOLD_COMMAND = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME);
 
-    private static final AzDispatchCommand IDLE_COMMAND = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME);
+    private static final AzDispatchCommand IDLE_COMMAND = AzDispatchCommand.builder()
+        .setSpeed(1)
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME)
+        .build();
 
     private static final AzDispatchCommand RUN_COMMAND = AzDispatchCommand
         .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME);
 
-    private static final AzDispatchCommand WALK_COMMAND = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME);
+    private static final AzDispatchCommand WALK_COMMAND = AzDispatchCommand.builder()
+        .setSpeed(2.5F)
+        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME)
+        .build();
 
     private final Drone drone;
 
