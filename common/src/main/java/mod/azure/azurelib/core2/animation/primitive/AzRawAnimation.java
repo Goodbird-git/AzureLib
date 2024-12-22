@@ -20,7 +20,10 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
  * <pre>{@code
  * AzRawAnimation.begin().thenPlay("action.open_box").thenLoop("state.stay_open")
  * }</pre>
+ *
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public final class AzRawAnimation {
 
     private final List<AzStage> animationList;

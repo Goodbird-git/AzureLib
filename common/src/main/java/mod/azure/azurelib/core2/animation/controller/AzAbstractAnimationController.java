@@ -30,6 +30,10 @@ public class AzAbstractAnimationController {
         return name;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true)
     public @Nullable AzRawAnimation getTriggerableAnimationOrNull(String animationName) {
         return triggerableAnimations.get(animationName);
     }
@@ -40,7 +44,9 @@ public class AzAbstractAnimationController {
      *
      * @param animName The name of the animation to trigger
      * @return Whether the controller triggered an animation or not
+     * @deprecated
      */
+    @Deprecated(forRemoval = true)
     public boolean tryTriggerAnimation(String animName) {
         var anim = getTriggerableAnimationOrNull(animName);
 

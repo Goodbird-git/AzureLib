@@ -26,6 +26,10 @@ public class AzAnimationControllerBuilder<T> {
 
     private final String name;
 
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true)
     private final Map<String, AzRawAnimation> triggerableAnimations;
 
     private AzKeyframeCallbacks<T> keyframeCallbacks;
@@ -59,6 +63,10 @@ public class AzAnimationControllerBuilder<T> {
         return this;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true)
     public AzAnimationControllerBuilder<T> triggerableAnim(String name, AzRawAnimation animation) {
         this.triggerableAnimations.put(name, animation);
         return this;
