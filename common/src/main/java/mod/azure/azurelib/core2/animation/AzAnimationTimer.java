@@ -7,8 +7,7 @@ import mod.azure.azurelib.common.internal.client.util.RenderUtils;
 /**
  * AzAnimationTimer is responsible for managing animation progression based on game events and time deltas. It keeps
  * track of the current animation time and ensures smooth transitions during various game states, such as pausing and
- * resuming.
- * <br>
+ * resuming. <br>
  * The class relies on the provided {@link AzAnimatorConfig} for configurable behaviors, such as whether animations
  * continue during game pauses or specific error handling preferences.
  */
@@ -35,17 +34,15 @@ public class AzAnimationTimer {
 
     /**
      * Updates the animation timer by calculating the time delta since the last frame and applying it to the internal
-     * animation time. This method handles game pause states and adjusts the time calculations accordingly.
-     * <br>
-     * Behavior:
-     * <b>If the game is paused:</b>
+     * animation time. This method handles game pause states and adjusts the time calculations accordingly. <br>
+     * Behavior: <b>If the game is paused:</b>
      * <ul>
-     *  <li>Sets an internal flag to indicate the paused state.</li>
-     *  <li>Returns immediately if animations should not play while paused.</li>
+     * <li>Sets an internal flag to indicate the paused state.</li>
+     * <li>Returns immediately if animations should not play while paused.</li>
      * </ul>
      * <b>If transitioning from paused to unpaused:</b>
      * <ul>
-     *  <li>Resets the frame delta to prevent large time skips in animations.</li>
+     * <li>Resets the frame delta to prevent large time skips in animations.</li>
      * </ul>
      * Accumulates the computed time delta into the animation time tracker to control the progression of animations.
      */

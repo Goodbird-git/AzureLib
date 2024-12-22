@@ -12,10 +12,9 @@ import mod.azure.azurelib.common.internal.common.cache.object.GeoVertex;
 import mod.azure.azurelib.core2.model.AzBone;
 
 /**
- * AzModelRenderer provides a generic and extensible base class for rendering models
- * by processing hierarchical bone structures recursively. It leverages a rendering
- * pipeline and a layer renderer to facilitate advanced rendering tasks, including
- * layer application and animated texture processing.
+ * AzModelRenderer provides a generic and extensible base class for rendering models by processing hierarchical bone
+ * structures recursively. It leverages a rendering pipeline and a layer renderer to facilitate advanced rendering
+ * tasks, including layer application and animated texture processing.
  *
  * @param <T> the type of animatable object this renderer supports
  */

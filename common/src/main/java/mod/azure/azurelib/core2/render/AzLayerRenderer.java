@@ -7,9 +7,9 @@ import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 /**
- * Provides a mechanism to manage and apply multiple render layers for a given animatable context.
- * This class acts as a wrapper for handling collections of render layers and delegates the rendering
- * responsibilities to the individual layers.
+ * Provides a mechanism to manage and apply multiple render layers for a given animatable context. This class acts as a
+ * wrapper for handling collections of render layers and delegates the rendering responsibilities to the individual
+ * layers.
  *
  * @param <T> The type of animatable entity or object the render layers apply to.
  */

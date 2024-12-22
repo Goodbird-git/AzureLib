@@ -8,10 +8,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * The AzItemRendererRegistry class manages the association between items and their renderers
- * in the context of the AzureLib framework. It provides functionality to register and retrieve
- * item renderers dynamically, ensuring that appropriate renderers can be applied to specific
- * item types or instances.
+ * The AzItemRendererRegistry class manages the association between items and their renderers in the context of the
+ * AzureLib framework. It provides functionality to register and retrieve item renderers dynamically, ensuring that
+ * appropriate renderers can be applied to specific item types or instances.
  */
 public class AzItemRendererRegistry {
 

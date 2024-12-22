@@ -13,9 +13,8 @@ import mod.azure.azurelib.core2.render.AzRendererConfig;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 /**
- * Configures the rendering behavior for custom entities in the game.
- * This extends {@link AzRendererConfig}, adding extra functionality
- * specifically for handling entity death rotations.
+ * Configures the rendering behavior for custom entities in the game. This extends {@link AzRendererConfig}, adding
+ * extra functionality specifically for handling entity death rotations.
  *
  * @param <T> the entity type this configuration applies to, extending {@link Entity}
  */

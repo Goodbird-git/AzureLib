@@ -10,8 +10,8 @@ import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 import mod.azure.azurelib.core2.render.layer.AzRenderLayer;
 
 /**
- * A renderer class responsible for rendering additional entity layers for a particular animatable entity type.
- * It extends functionality from {@link AzLayerRenderer} and enables conditional rendering based on entity states.
+ * A renderer class responsible for rendering additional entity layers for a particular animatable entity type. It
+ * extends functionality from {@link AzLayerRenderer} and enables conditional rendering based on entity states.
  *
  * @param <T> The type of animatable entity this renderer is applied to.
  */

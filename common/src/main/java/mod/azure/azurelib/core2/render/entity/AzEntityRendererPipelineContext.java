@@ -13,10 +13,9 @@ import mod.azure.azurelib.core2.render.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 /**
- * A context class specifically for rendering entities using a custom rendering pipeline.
- * This class extends {@code AzRendererPipelineContext} and provides implementations
- * for methods to customize entity rendering, such as determining default render types
- * and packed overlay settings.
+ * A context class specifically for rendering entities using a custom rendering pipeline. This class extends
+ * {@code AzRendererPipelineContext} and provides implementations for methods to customize entity rendering, such as
+ * determining default render types and packed overlay settings.
  *
  * @param <T> the type of entity being rendered, extending {@code Entity}
  */

@@ -10,9 +10,9 @@ import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.object.Axis;
 
 /**
- * AzAbstractKeyFrameExecutor is a base class designed to handle animations and transitions between keyframes
- * in a generic and reusable fashion. It provides the foundational logic for determining the current state
- * of an animation based on the tick time and computing the animation's required values.
+ * AzAbstractKeyFrameExecutor is a base class designed to handle animations and transitions between keyframes in a
+ * generic and reusable fashion. It provides the foundational logic for determining the current state of an animation
+ * based on the tick time and computing the animation's required values.
  */
 public class AzAbstractKeyFrameExecutor {
 

@@ -33,9 +33,9 @@ public record AzAnimatorConfig(
      * Returns a default {@link AzAnimatorConfig} instance with predefined settings. The default configuration typically
      * includes settings such as:
      * <ul>
-     *   <li>A bone reset time of 1 tick/second.</li>
-     *   <li>Disabling the feature to crash if a bone is missing.</li>
-     *   <li>Disabling animations while the game is paused.</li>
+     * <li>A bone reset time of 1 tick/second.</li>
+     * <li>Disabling the feature to crash if a bone is missing.</li>
+     * <li>Disabling animations while the game is paused.</li>
      * </ul>
      *
      * @return The default configuration instance of {@code AzAnimatorConfig}, built with default values.

@@ -17,11 +17,9 @@ import mod.azure.azurelib.core2.model.AzBone;
 import mod.azure.azurelib.core2.model.factory.primitive.VertexSet;
 
 /**
- * Abstract factory class for constructing baked models, bones, and cubes from
- * raw input data such as geometry trees or properties. This class provides
- * a structure for defining the creation of complex 3D models, including
- * managing hierarchical relationships between bones and their associated
- * components.
+ * Abstract factory class for constructing baked models, bones, and cubes from raw input data such as geometry trees or
+ * properties. This class provides a structure for defining the creation of complex 3D models, including managing
+ * hierarchical relationships between bones and their associated components.
  */
 public abstract class AzBakedModelFactory {
 

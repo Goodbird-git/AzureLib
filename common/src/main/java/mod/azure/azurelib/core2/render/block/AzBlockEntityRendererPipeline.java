@@ -14,9 +14,9 @@ import mod.azure.azurelib.core2.render.AzRendererPipeline;
 import mod.azure.azurelib.core2.render.AzRendererPipelineContext;
 
 /**
- * AzBlockEntityRendererPipeline is a specific implementation of the {@link AzRendererPipeline}
- * tailored for rendering block entities. It manages the rendering pipeline with customized configurations
- * and rendering behavior for block entities, while integrating with the parent pipeline logic.
+ * AzBlockEntityRendererPipeline is a specific implementation of the {@link AzRendererPipeline} tailored for rendering
+ * block entities. It manages the rendering pipeline with customized configurations and rendering behavior for block
+ * entities, while integrating with the parent pipeline logic.
  *
  * @param <T> The type of {@link BlockEntity} that this renderer pipeline is designed to render.
  */

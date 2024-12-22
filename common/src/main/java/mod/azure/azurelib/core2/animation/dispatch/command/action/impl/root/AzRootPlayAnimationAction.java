@@ -12,11 +12,9 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchActi
 /**
  * The AzRootPlayAnimationAction record represents a dispatchable action within the animation system that is used to
  * trigger a specific animation on an animation controller. It specifies the target animation controller by its name and
- * the animation to be played there.
- * <br>
+ * the animation to be played there. <br>
  * This action is implemented as part of the AzDispatchAction system, which provides methods to handle the action within
- * an animator context and retrieve its associated resource location.
- * <br>
+ * an animator context and retrieve its associated resource location. <br>
  * This record utilizes a predefined codec to allow serialization and deserialization of its attributes, enabling it to
  * be seamlessly used in networked environments or saved states.
  */

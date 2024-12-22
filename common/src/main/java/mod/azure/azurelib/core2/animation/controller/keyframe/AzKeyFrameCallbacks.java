@@ -10,9 +10,8 @@ import mod.azure.azurelib.core2.animation.event.AzParticleKeyframeEvent;
 import mod.azure.azurelib.core2.animation.event.AzSoundKeyframeEvent;
 
 /**
- * The AzKeyFrameCallbacks class manages callbacks for different types of keyframe events, enabling
- * the handling of sound, particle, and custom-defined keyframe instructions during
- * an animation sequence.
+ * The AzKeyFrameCallbacks class manages callbacks for different types of keyframe events, enabling the handling of
+ * sound, particle, and custom-defined keyframe instructions during an animation sequence.
  *
  * @param <T> The type of entity or object this keyframe callback interacts with.
  */
