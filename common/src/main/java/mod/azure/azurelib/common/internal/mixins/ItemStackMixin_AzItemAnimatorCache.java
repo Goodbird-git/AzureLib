@@ -3,41 +3,27 @@ package mod.azure.azurelib.common.internal.mixins;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 
-import java.lang.ref.WeakReference;
-
+import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.cache.AzIdentifiableItemStackAnimatorCache;
-import mod.azure.azurelib.core2.util.WeakSelfReference;
+import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin_AzItemAnimatorCache implements AzAnimatorAccessor<ItemStack>, WeakSelfReference<ItemStack> {
-
-    @Unique
-    @Nullable
-    private AzAnimator<ItemStack> animator;
-
-    @Unique
-    @SuppressWarnings("all")
-    private final WeakReference<ItemStack> ref = new WeakReference<>(((ItemStack) ((Object) this)));
+public abstract class ItemStackMixin_AzItemAnimatorCache implements AzAnimatorAccessor<ItemStack> {
 
     @Override
     public void setAnimator(@Nullable AzAnimator<ItemStack> animator) {
-        this.animator = animator;
+        var itemStack = AzureLibUtil.<ItemStack>self(this);
+        AzIdentifiableItemStackAnimatorCache.getInstance().add(itemStack, (AzItemAnimator) animator);
     }
 
     @Override
     public @Nullable AzAnimator<ItemStack> getAnimatorOrNull() {
         var self = AzureLibUtil.<ItemStack>self(this);
-        AzIdentifiableItemStackAnimatorCache.getInstance().add(self);
-        return animator;
-    }
-
-    @Override
-    public WeakReference<ItemStack> getOrCreateRef() {
-        return ref;
+        var uuid = self.getComponents().get(AzureLib.AZ_ID.get());
+        return AzIdentifiableItemStackAnimatorCache.getInstance().getOrNull(uuid);
     }
 }
