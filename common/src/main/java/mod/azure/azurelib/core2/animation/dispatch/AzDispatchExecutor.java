@@ -126,6 +126,16 @@ public record AzDispatchExecutor(
 
     private void handleServerDispatchForItem(Entity entity, ItemStack itemStack) {
         var uuid = itemStack.get(AzureLib.AZ_ID.get());
+
+        if (uuid == null) {
+            AzureLib.LOGGER.warn(
+                "Could not find item stack UUID during dispatch. Did you forget to register an identity for the item? Item: {}, Item Stack: {}",
+                itemStack.getItem(),
+                itemStack
+            );
+            return;
+        }
+
         commands.forEach(command -> {
             // TODO: Batch commands together.
             var packet = new AzItemStackDispatchCommandPacket(uuid, command);
