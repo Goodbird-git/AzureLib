@@ -4,7 +4,6 @@ import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * A context class specifically for rendering entities using a custom rendering pipeline. This class extends
@@ -19,15 +18,15 @@ public class AzEntityRendererPipelineContext<T extends Entity> extends AzRendere
         super(rendererPipeline);
     }
 
-    @Override
-    public RenderType getDefaultRenderType(
-        T animatable,
-        ResourceLocation texture,
-        MultiBufferSource bufferSource,
-        float partialTick
-    ) {
-        return RenderType.entityCutoutNoCull(texture);
-    }
+//    @Override
+//    public RenderType getDefaultRenderType(
+//        T animatable,
+//        ResourceLocation texture,
+//        MultiBufferSource bufferSource,
+//        float partialTick
+//    ) {
+//        return RenderType.entityCutoutNoCull(texture);
+//    }
 
     /**
      * Gets a packed overlay coordinate pair for rendering.<br>

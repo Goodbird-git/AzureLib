@@ -2,6 +2,7 @@ package mod.azure.azurelib.render.entity;
 
 import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.render.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.ResourceLocation;
@@ -59,11 +60,11 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     /**
      * Called before rendering the model to buffer. Allows for render modifications and preparatory work such as scaling
      * and translating.<br>
-     * {@link PoseStack} translations made here are kept until the end of the render process
+     * {@link GlStateManager} translations made here are kept until the end of the render process
      */
     @Override
     public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
         this.entityRenderTranslations.set(poseStack.last().pose());
 
         AzEntityRendererConfig<T> config = entityRenderer.config();
@@ -84,13 +85,12 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
      */
     @Override
     public void renderFinal(AzRendererPipelineContext<T> context) {
-        MultiBufferSource bufferSource = context.multiBufferSource();
         T entity = context.animatable();
         int packedLight = context.packedLight();
         float partialTick = context.partialTick();
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
-        entityRenderer.superRender(entity, 0, partialTick, poseStack, bufferSource, packedLight);
+        entityRenderer.superRender(entity, 0, partialTick, poseStack, packedLight);
 
         if (!(entity instanceof EntityMob)) {
             return;
@@ -102,7 +102,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             return;
         }
 
-        AzEntityLeashRenderUtil.renderLeash(entityRenderer, ((EntityMob) entity), partialTick, poseStack, bufferSource, leashHolder);
+        AzEntityLeashRenderUtil.renderLeash(entityRenderer, ((EntityMob) entity), partialTick, poseStack, leashHolder);
     }
 
     public AzEntityRenderer<T> getRenderer() {

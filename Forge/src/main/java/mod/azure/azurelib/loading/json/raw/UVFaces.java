@@ -10,6 +10,7 @@ package mod.azure.azurelib.loading.json.raw;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import mod.azure.azurelib.util.JSONUtils;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Container class for UV face information, only used in deserialization at startup
@@ -69,16 +70,16 @@ public class UVFaces {
 		};
 	}
 
-	public FaceUV fromDirection(Direction direction) {
-		if (direction == Direction.NORTH) {
+	public FaceUV fromDirection(EnumFacing direction) {
+		if (direction == EnumFacing.NORTH) {
 			return north;
-		} else if (direction == Direction.SOUTH) {
+		} else if (direction == EnumFacing.SOUTH) {
 			return south;
-		} else if (direction == Direction.EAST) {
+		} else if (direction == EnumFacing.EAST) {
 			return east;
-		} else if (direction == Direction.WEST) {
+		} else if (direction == EnumFacing.WEST) {
 			return west;
-		} else if (direction == Direction.UP) {
+		} else if (direction == EnumFacing.UP) {
 			return up;
 		} else {
 			return down;

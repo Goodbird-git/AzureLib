@@ -3,6 +3,7 @@ package mod.azure.azurelib.render;
 import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Abstract base class for defining a rendering pipeline. The {@code AzRendererPipeline} provides a structured framework
@@ -76,33 +77,25 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
      * consistent handling
      */
     public void render(
-        PoseStack poseStack,
+        GlStateManager glStateManager,
         AzBakedModel model,
         T animatable,
-        MultiBufferSource bufferSource,
-        RenderType renderType,
-        VertexConsumer buffer,
         float yaw,
         float partialTick,
         int packedLight
     ) {
-        context.populate(animatable, model, bufferSource, packedLight, partialTick, poseStack, renderType, buffer);
+        context.populate(animatable, model, packedLight, partialTick, glStateManager);
 
-        poseStack.pushPose();
+        glStateManager.pushMatrix();
 
         preRender(context, false);
 
-        // TODO:
-        // if (firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight)) {
         layerRenderer.preApplyRenderLayers(context);
         modelRenderer.render(context, false);
         layerRenderer.applyRenderLayers(context);
         postRender(context, false);
-        // TODO:
-        // firePostRenderEvent(poseStack, model, bufferSource, partialTick, packedLight);
-        // }
 
-        poseStack.popPose();
+        glStateManager.popMatrix();
 
         renderFinal(context);
         doPostRenderCleanup();
@@ -110,23 +103,21 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
 
     /**
      * Re-renders the provided {@link AzBakedModel}.<br>
-     * Usually you'd use this for rendering alternate {@link RenderType} layers or for sub-model rendering whilst inside
-     * a {@link AzRenderLayer} or similar
      */
     public void reRender(AzRendererPipelineContext<T> context) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
 
         preRender(context, true);
         modelRenderer.render(context, true);
         postRender(context, true);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     /**
-     * Call after all other rendering work has taken place, including reverting the {@link PoseStack}'s state. This
+     * Call after all other rendering work has taken place, including reverting the {@link GlStateManager}'s state. This
      * method is <u>not</u> called in {@link AzRendererPipeline#reRender re-render}
      */
     protected void renderFinal(AzRendererPipelineContext<T> context) {}
@@ -140,7 +131,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
     protected void doPostRenderCleanup() {}
 
     /**
-     * Scales the {@link PoseStack} in preparation for rendering the model, excluding when re-rendering the model as
+     * Scales the {@link GlStateManager} in preparation for rendering the model, excluding when re-rendering the model as
      * part of a {@link AzRenderLayer} or external render call.<br>
      * Override and call super with modified scale values as needed to further modify the scale of the model (E.G. child
      * entities)
@@ -152,7 +143,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         boolean isReRender
     ) {
         if (!isReRender && (widthScale != 1 || heightScale != 1)) {
-            PoseStack poseStack = context.poseStack();
+            GlStateManager poseStack = context.glStateManager();
             poseStack.scale(widthScale, heightScale, widthScale);
         }
     }

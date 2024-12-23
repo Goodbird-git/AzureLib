@@ -11,6 +11,7 @@ import mod.azure.azurelib.loading.object.GeometryTree;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.model.factory.primitive.VertexSet;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -63,12 +64,12 @@ public abstract class AzBakedModelFactory {
     ) {
         GeoQuad[] quads = new GeoQuad[6];
 
-        quads[0] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.WEST);
-        quads[1] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.EAST);
-        quads[2] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.NORTH);
-        quads[3] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.SOUTH);
-        quads[4] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.UP);
-        quads[5] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.DOWN);
+        quads[0] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.WEST);
+        quads[1] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.EAST);
+        quads[2] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.NORTH);
+        quads[3] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.SOUTH);
+        quads[4] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.UP);
+        quads[5] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.DOWN);
 
         return quads;
     }
@@ -83,7 +84,7 @@ public abstract class AzBakedModelFactory {
         float textureWidth,
         float textureHeight,
         boolean mirror,
-        Direction direction
+        EnumFacing direction
     ) {
         if (!uvUnion.isBoxUV()) {
             FaceUV faceUV = uvUnion.faceUV().fromDirection(direction);
@@ -106,32 +107,47 @@ public abstract class AzBakedModelFactory {
         double[] uv = cube.uv().boxUVCoords();
         double[] uvSize = cube.size();
         Vec3d uvSizeVec = new Vec3d(Math.floor(uvSize[0]), Math.floor(uvSize[1]), Math.floor(uvSize[2]));
-        double[][] uvData = switch (direction) {
-            case WEST -> new double[][] {
-                new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z },
-                new double[] { uvSizeVec.z, uvSizeVec.y }
-            };
-            case EAST -> new double[][] {
-                new double[] { uv[0], uv[1] + uvSizeVec.z },
-                new double[] { uvSizeVec.z, uvSizeVec.y }
-            };
-            case NORTH -> new double[][] {
-                new double[] { uv[0] + uvSizeVec.z, uv[1] + uvSizeVec.z },
-                new double[] { uvSizeVec.x, uvSizeVec.y }
-            };
-            case SOUTH -> new double[][] {
-                new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x + uvSizeVec.z, uv[1] + uvSizeVec.z },
-                new double[] { uvSizeVec.x, uvSizeVec.y }
-            };
-            case UP -> new double[][] {
-                new double[] { uv[0] + uvSizeVec.z, uv[1] },
-                new double[] { uvSizeVec.x, uvSizeVec.z }
-            };
-            case DOWN -> new double[][] {
-                new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z },
-                new double[] { uvSizeVec.x, -uvSizeVec.z }
-            };
-        };
+        double[][] uvData;
+        switch (direction) {
+            case WEST:
+                uvData = new double[][] {
+                        new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z },
+                        new double[] { uvSizeVec.z, uvSizeVec.y }
+                };
+                break;
+            case EAST:
+                uvData = new double[][] {
+                        new double[] { uv[0], uv[1] + uvSizeVec.z },
+                        new double[] { uvSizeVec.z, uvSizeVec.y }
+                };
+                break;
+            case NORTH:
+                uvData = new double[][] {
+                        new double[] { uv[0] + uvSizeVec.z, uv[1] + uvSizeVec.z },
+                        new double[] { uvSizeVec.x, uvSizeVec.y }
+                };
+                break;
+            case SOUTH:
+                uvData = new double[][] {
+                        new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x + uvSizeVec.z, uv[1] + uvSizeVec.z },
+                        new double[] { uvSizeVec.x, uvSizeVec.y }
+                };
+                break;
+            case UP:
+                uvData = new double[][] {
+                        new double[] { uv[0] + uvSizeVec.z, uv[1] },
+                        new double[] { uvSizeVec.x, uvSizeVec.z }
+                };
+                break;
+            case DOWN:
+                uvData = new double[][] {
+                        new double[] { uv[0] + uvSizeVec.z + uvSizeVec.x, uv[1] + uvSizeVec.z },
+                        new double[] { uvSizeVec.x, -uvSizeVec.z }
+                };
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected direction: " + direction);
+        }
 
         return GeoQuad.build(
             vertices.verticesForQuad(direction, true, mirror || cube.mirror() == Boolean.TRUE),

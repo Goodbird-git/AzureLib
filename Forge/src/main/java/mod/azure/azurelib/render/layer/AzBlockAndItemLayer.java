@@ -62,8 +62,8 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
         if (stack == null && blockState == null)
             return;
 
-        context.poseStack().pushPose();
-        RenderUtils.translateAndRotateMatrixForBone(context.poseStack(), bone);
+        context.glStateManager().pushMatrix();
+        RenderUtils.translateAndRotateMatrixForBone(context.glStateManager(), bone);
 
         if (stack != null)
             renderItemForBone(context, bone, stack);
@@ -71,7 +71,7 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
         if (blockState != null)
             renderBlockForBone(context, bone, blockState);
 
-        context.poseStack().popPose();
+        context.glStateManager().popMatrix();
     }
 
     /**
@@ -137,22 +137,20 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
      * @param blockState the {@link IBlockState} to render
      */
     protected void renderBlockForBone(AzRendererPipelineContext<T> context, AzBone bone, IBlockState blockState) {
-        context.poseStack().pushPose();
+        context.glStateManager().pushMatrix();
 
-        context.poseStack().translate(-0.25f, -0.25f, -0.25f);
-        context.poseStack().scale(0.5f, 0.5f, 0.5f);
+        context.glStateManager().translate(-0.25f, -0.25f, -0.25f);
+        context.glStateManager().scale(0.5f, 0.5f, 0.5f);
 
         Minecraft.getMinecraft()
             .getBlockRendererDispatcher()
             .renderBlock(
                 blockState,
-                context.poseStack(),
-                context.multiBufferSource(),
-                context.packedLight(),
-                OverlayTexture.NO_OVERLAY
+                context.glStateManager(),
+                context.multiBufferSource()
             );
 
-        context.poseStack().popPose();
+        context.glStateManager().popMatrix();
     }
 
 }

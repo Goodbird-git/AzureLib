@@ -3,6 +3,7 @@ package mod.azure.azurelib.render.entity;
 import mod.azure.azurelib.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.render.AzProvider;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -43,11 +44,10 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer 
         :T entity,
         float entityYaw,
         float partialTick,
-        PoseStack poseStack,
-        MultiBufferSource bufferSource,
+        GlStateManager glStateManager,
         int packedLight
     ) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.render(entity, entityYaw, partialTick, glStateManager, packedLight);
     }
 
     @Override
@@ -55,8 +55,7 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer 
         T entity,
         float entityYaw,
         float partialTick,
-        PoseStack poseStack,
-        MultiBufferSource bufferSource,
+        GlStateManager glStateManager,
         int packedLight
     ) {
         AzEntityAnimator<T> cachedEntityAnimator = (AzEntityAnimator<T>) provider.provideAnimator(entity);
@@ -71,12 +70,9 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer 
 
         // Execute the render pipeline.
         rendererPipeline.render(
-            poseStack,
+            glStateManager,
             azBakedModel,
             entity,
-            bufferSource,
-            null,
-            null,
             entityYaw,
             partialTick,
             packedLight
@@ -85,7 +81,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends EntityRenderer 
 
     /**
      * Whether the entity's nametag should be rendered or not.<br>
-     * Pretty much exclusively used in {@link EntityRenderer#renderNameTag}
      */
     @Override
     public boolean shouldShowName(T entity) {

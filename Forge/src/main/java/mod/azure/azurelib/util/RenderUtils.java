@@ -12,10 +12,12 @@ import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
@@ -33,58 +35,58 @@ public final class RenderUtils {
 		return p_265754_ % p_265543_ == 0;
 	}
 
-	public static void translateMatrixToBone(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
+	public static void translateMatrixToBone(GlStateManager glStateManager, CoreGeoBone bone) {
+		glStateManager.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
 	}
 
-	public static void rotateMatrixAroundBone(MatrixStack poseStack, CoreGeoBone bone) {
+	public static void rotateMatrixAroundBone(GlStateManager glStateManager, CoreGeoBone bone) {
 		if (bone.getRotZ() != 0)
-			poseStack.rotate(Vector3f.ZP.rotation(bone.getRotZ()));
+			glStateManager.rotate(Vector3f.ZP.rotation(bone.getRotZ()));
 
 		if (bone.getRotY() != 0)
-			poseStack.rotate(Vector3f.YP.rotation(bone.getRotY()));
+			glStateManager.rotate(Vector3f.YP.rotation(bone.getRotY()));
 
 		if (bone.getRotX() != 0)
-			poseStack.rotate(Vector3f.XP.rotation(bone.getRotX()));
+			glStateManager.rotate(Vector3f.XP.rotation(bone.getRotX()));
 	}
 
-	public static void rotateMatrixAroundCube(MatrixStack poseStack, GeoCube cube) {
+	public static void rotateMatrixAroundCube(GlStateManager glStateManager, GeoCube cube) {
 		Vec3d rotation = cube.rotation();
 
-		poseStack.rotate(new Quaternion(0, 0, (float) rotation.z, false));
-		poseStack.rotate(new Quaternion(0, (float) rotation.y, 0, false));
-		poseStack.rotate(new Quaternion((float) rotation.x, 0, 0, false));
+		glStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, false));
+		glStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, false));
+		glStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, false));
 	}
 
-	public static void scaleMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.scale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
+	public static void scaleMatrixForBone(GlStateManager glStateManager, CoreGeoBone bone) {
+		glStateManager.scale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
 	}
 
-	public static void translateToPivotPoint(MatrixStack poseStack, GeoCube cube) {
+	public static void translateToPivotPoint(GlStateManager glStateManager, GeoCube cube) {
 		Vec3d pivot = cube.pivot();
-		poseStack.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
+		glStateManager.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
 	}
 
-	public static void translateToPivotPoint(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.translate(bone.getPivotX() / 16f, bone.getPivotY() / 16f, bone.getPivotZ() / 16f);
+	public static void translateToPivotPoint(GlStateManager glStateManager, CoreGeoBone bone) {
+		glStateManager.translate(bone.getPivotX() / 16f, bone.getPivotY() / 16f, bone.getPivotZ() / 16f);
 	}
 
-	public static void translateAwayFromPivotPoint(MatrixStack poseStack, GeoCube cube) {
+	public static void translateAwayFromPivotPoint(GlStateManager glStateManager, GeoCube cube) {
 		Vec3d pivot = cube.pivot();
 
-		poseStack.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
+		glStateManager.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
 	}
 
-	public static void translateAwayFromPivotPoint(MatrixStack poseStack, CoreGeoBone bone) {
-		poseStack.translate(-bone.getPivotX() / 16f, -bone.getPivotY() / 16f, -bone.getPivotZ() / 16f);
+	public static void translateAwayFromPivotPoint(GlStateManager glStateManager, CoreGeoBone bone) {
+		glStateManager.translate(-bone.getPivotX() / 16f, -bone.getPivotY() / 16f, -bone.getPivotZ() / 16f);
 	}
 
-	public static void translateAndRotateMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
+	public static void translateAndRotateMatrixForBone(GlStateManager poseStack, CoreGeoBone bone) {
 		translateToPivotPoint(poseStack, bone);
 		rotateMatrixAroundBone(poseStack, bone);
 	}
 
-	public static void prepMatrixForBone(MatrixStack poseStack, CoreGeoBone bone) {
+	public static void prepMatrixForBone(GlStateManager poseStack, CoreGeoBone bone) {
 		translateMatrixToBone(poseStack, bone);
 		translateToPivotPoint(poseStack, bone);
 		rotateMatrixAroundBone(poseStack, bone);
@@ -102,12 +104,12 @@ public final class RenderUtils {
 	}
 
 	/**
-	 * Translates the provided {@link MatrixStack} to face towards the given {@link Entity}'s rotation.<br>
+	 * Translates the provided {@link GlStateManager} to face towards the given {@link Entity}'s rotation.<br>
 	 * Usually used for rotating projectiles towards their trajectory<br>
 	 */
-	public static void faceRotation(MatrixStack poseStack, Entity animatable, float partialTick) {
-		poseStack.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
-		poseStack.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
+	public static void faceRotation(GlStateManager glStateManager, Entity animatable, float partialTick) {
+		glStateManager.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
+		glStateManager.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
 	}
 
 	/**
@@ -201,14 +203,14 @@ public final class RenderUtils {
 	}
 
 	/**
-	 * Converts a {@link Direction} to a rotational float for rotation purposes
+	 * Converts a {@link EnumFacing} to a rotational float for rotation purposes
 	 */
-	public static float getDirectionAngle(Direction direction) {
-		if (direction.equals(Direction.NORTH))
+	public static float getDirectionAngle(EnumFacing direction) {
+		if (direction.equals(EnumFacing.NORTH))
 			return 270f;
-		else if (direction.equals(Direction.SOUTH))
+		else if (direction.equals(EnumFacing.SOUTH))
 			return 90f;
-		else if (direction.equals(Direction.EAST))
+		else if (direction.equals(EnumFacing.EAST))
 			return 180f;
 		else
 			return 0f;

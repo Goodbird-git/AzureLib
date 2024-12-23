@@ -1,7 +1,7 @@
 package mod.azure.azurelib.model.factory.primitive;
 
-
 import mod.azure.azurelib.cache.object.GeoVertex;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -142,14 +142,30 @@ public class VertexSet {
     }
 
     // Method to handle dynamic quad selection
-    public GeoVertex[] verticesForQuad(Direction direction, boolean boxUv, boolean mirror) {
-        return switch (direction) {
-            case WEST -> mirror ? quadEast() : quadWest();
-            case EAST -> mirror ? quadWest() : quadEast();
-            case NORTH -> quadNorth();
-            case SOUTH -> quadSouth();
-            case UP -> mirror && !boxUv ? quadDown() : quadUp();
-            case DOWN -> mirror && !boxUv ? quadUp() : quadDown();
-        };
+    public GeoVertex[] verticesForQuad(EnumFacing direction, boolean boxUv, boolean mirror) {
+        GeoVertex[] result;
+        switch (direction) {
+            case WEST:
+                result = mirror ? quadEast() : quadWest();
+                break;
+            case EAST:
+                result = mirror ? quadWest() : quadEast();
+                break;
+            case NORTH:
+                result = quadNorth();
+                break;
+            case SOUTH:
+                result = quadSouth();
+                break;
+            case UP:
+                result = mirror && !boxUv ? quadDown() : quadUp();
+                break;
+            case DOWN:
+                result = mirror && !boxUv ? quadUp() : quadDown();
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected direction: " + direction);
+        }
+        return result;
     }
 }

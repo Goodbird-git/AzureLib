@@ -4,6 +4,7 @@ import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.*;
 import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -65,7 +66,7 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
 
         ItemStack animatable = armorContext.animatable();
         AzBakedModel model = armorRenderer.provider().provideBakedModel(animatable);
-        PoseStack poseStack = armorContext.poseStack();
+        GlStateManager poseStack = armorContext.glStateManager();
 
         this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -92,7 +93,7 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
 
         var baseModel = context.baseModel();
         EntityEquipmentSlot currentSlot = context.currentSlot();
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
         if (currentSlot == EntityEquipmentSlot.HEAD) {
             if (baseModel.scaleHead) {

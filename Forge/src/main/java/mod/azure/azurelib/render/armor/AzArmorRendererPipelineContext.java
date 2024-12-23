@@ -32,15 +32,15 @@ public class AzArmorRendererPipelineContext extends AzRendererPipelineContext<It
         this.currentStack = null;
     }
 
-    @Override
-    public @NotNull RenderType getDefaultRenderType(
-        ItemStack animatable,
-        ResourceLocation texture,
-        MultiBufferSource bufferSource,
-        float partialTick
-    ) {
-        return RenderType.armorCutoutNoCull(texture);
-    }
+//    @Override
+//    public @NotNull RenderType getDefaultRenderType(
+//        ItemStack animatable,
+//        ResourceLocation texture,
+//        MultiBufferSource bufferSource,
+//        float partialTick
+//    ) {
+//        return RenderType.armorCutoutNoCull(texture);
+//    }
 
     public void prepare(
         Entity entity,
@@ -61,11 +61,12 @@ public class AzArmorRendererPipelineContext extends AzRendererPipelineContext<It
      */
     @Override
     public Color getRenderColor(ItemStack animatable, float partialTick, int packedLight) {
-        return this.currentStack.is(ItemTags.DYEABLE)
-            ? Color.ofOpaque(
-                DyedItemColor.getOrDefault(this.currentStack, -6265536)
-            )
-            : Color.WHITE;
+//        return this.currentStack.is(ItemTags.DYEABLE)
+//            ? Color.ofOpaque(
+//                DyedItemColor.getOrDefault(this.currentStack, -6265536)
+//            )
+//            : Color.WHITE;
+        return Color.WHITE;
     }
 
     public LayerArmorBase<?> baseModel() {

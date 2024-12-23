@@ -9,6 +9,7 @@ import mod.azure.azurelib.render.armor.AzArmorRendererRegistry;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -52,16 +53,16 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      */
     @Override
     public void preRender(AzRendererPipelineContext<T> context) {
-        if (!(context.animatable() instanceof EntityLiving EntityLiving)) {
+        if (!(context.animatable() instanceof EntityLiving)) {
             return;
         }
 
-        this.mainHandStack = EntityLiving.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-        this.offhandStack = EntityLiving.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
-        this.helmetStack = EntityLiving.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-        this.chestplateStack = EntityLiving.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-        this.leggingsStack = EntityLiving.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-        this.bootsStack = EntityLiving.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+        this.mainHandStack = context.animatable().getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+        this.offhandStack = context.animatable().getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+        this.helmetStack = context.animatable().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+        this.chestplateStack = context.animatable().getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+        this.leggingsStack = context.animatable().getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+        this.bootsStack = context.animatable().getItemStackFromSlot(EntityEquipmentSlot.FEET);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      */
     @Override
     public void renderForBone(AzRendererPipelineContext<T> context, AzBone bone) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
         ItemStack armorStack = getArmorItemForBone(context, bone);
 
         if (armorStack == null) {
@@ -108,16 +109,16 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         AzRendererPipelineContext<T> context,
         AzBone bone,
         ItemStack armorStack,
-        PoseStack poseStack
+        GlStateManager glStateManager
     ) {
         EntityEquipmentSlot slot = getEquipmentSlotForBone(context, bone, armorStack);
         AzArmorRenderer renderer = getRendererForItem(armorStack);
-        HumanoidModel<?> model = getModelForItem(armorStack, slot);
+        LayerArmorBase<?> model = getModelForItem(armorStack, slot);
         var modelPart = getModelPartForBone(context, model);
 
         if (!modelPart.cubes.isEmpty()) {
-            poseStack.pushPose();
-            poseStack.scale(-1, -1, 1);
+            glStateManager.pushMatrix();
+            glStateManager.scale(-1, -1, 1);
 
             if (renderer != null && context.animatable() instanceof Entity entity) {
                 var boneContext = renderer.rendererPipeline().context().boneContext();
@@ -145,7 +146,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
                 );
             }
 
-            poseStack.popPose();
+            glStateManager.popMatrix();
         }
     }
 
@@ -317,7 +318,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
             .get(type);
         var renderType = SkullBlockRenderer.getRenderType(type, stack.get(DataComponents.PROFILE));
 
-        context.poseStack().pushPose();
+        context.poseStack().pushMatrix();
         RenderUtils.translateAndRotateMatrixForBone(context.poseStack(), bone);
         context.poseStack().scale(1.1875f, 1.1875f, 1.1875f);
         context.poseStack().translate(-0.5f, 0, -0.5f);
@@ -331,7 +332,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
             model,
             renderType
         );
-        context.poseStack().popPose();
+        context.poseStack().popMatrix();
     }
 
     /**

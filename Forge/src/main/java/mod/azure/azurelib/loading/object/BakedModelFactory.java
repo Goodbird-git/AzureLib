@@ -14,7 +14,7 @@ import mod.azure.azurelib.loading.json.raw.*;
 import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.Vector3d;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
@@ -57,12 +57,12 @@ public interface BakedModelFactory {
 	default GeoQuad[] buildQuads(UVUnion uvUnion, VertexSet vertices, Cube cube, float textureWidth, float textureHeight, boolean mirror) {
 		GeoQuad[] quads = new GeoQuad[6];
 
-		quads[0] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.WEST);
-		quads[1] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.EAST);
-		quads[2] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.NORTH);
-		quads[3] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.SOUTH);
-		quads[4] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.UP);
-		quads[5] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, Direction.DOWN);
+		quads[0] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.WEST);
+		quads[1] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.EAST);
+		quads[2] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.NORTH);
+		quads[3] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.SOUTH);
+		quads[4] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.UP);
+		quads[5] = buildQuad(vertices, cube, uvUnion, textureWidth, textureHeight, mirror, EnumFacing.DOWN);
 
 		return quads;
 	}
@@ -70,7 +70,7 @@ public interface BakedModelFactory {
 	/**
 	 * Build an individual quad
 	 */
-	default GeoQuad buildQuad(VertexSet vertices, Cube cube, UVUnion uvUnion, float textureWidth, float textureHeight, boolean mirror, Direction direction) {
+	default GeoQuad buildQuad(VertexSet vertices, Cube cube, UVUnion uvUnion, float textureWidth, float textureHeight, boolean mirror, EnumFacing direction) {
 		if (!uvUnion.isBoxUV()) {
 			FaceUV faceUV = uvUnion.faceUV().fromDirection(direction);
 
@@ -278,7 +278,7 @@ public interface BakedModelFactory {
 		/**
 		 * Return the vertex array relevant to the quad being built, taking into account mirroring and quad type
 		 */
-		public GeoVertex[] verticesForQuad(Direction direction, boolean boxUv, boolean mirror) {
+		public GeoVertex[] verticesForQuad(EnumFacing direction, boolean boxUv, boolean mirror) {
 			switch (direction) {
 				case WEST:
 					return mirror ? quadEast() : quadWest();

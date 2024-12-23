@@ -6,6 +6,7 @@ import mod.azure.azurelib.cache.object.GeoVertex;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -48,9 +49,9 @@ public class AzModelRenderer<T> {
      * Renders the provided {@link AzBone} and its associated child bones
      */
     protected void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
         RenderUtils.prepMatrixForBone(poseStack, bone);
         renderCubesOfBone(context, bone);
 
@@ -59,7 +60,7 @@ public class AzModelRenderer<T> {
         }
 
         renderChildBones(context, bone, isReRender);
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     /**
@@ -70,14 +71,14 @@ public class AzModelRenderer<T> {
             return;
         }
 
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
         for (GeoCube cube : bone.getCubes()) {
-            poseStack.pushPose();
+            poseStack.pushMatrix();
 
             renderCube(context, cube);
 
-            poseStack.popPose();
+            poseStack.popMatrix();
         }
     }
 
@@ -100,7 +101,7 @@ public class AzModelRenderer<T> {
      * This tends to be called recursively from something like {@link AzModelRenderer#renderCubesOfBone}
      */
     protected void renderCube(AzRendererPipelineContext<T> context, GeoCube cube) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
         RenderUtils.translateToPivotPoint(poseStack, cube);
         RenderUtils.rotateMatrixAroundCube(poseStack, cube);
@@ -139,8 +140,8 @@ public class AzModelRenderer<T> {
         int packedOverlay = context.packedOverlay();
         int packedLight = context.packedLight();
 
-        for (var vertex : quad.vertices()) {
-            var position = vertex.position();
+        for (GeoVertex vertex : quad.getVertices()) {
+            Vector3f position = vertex.position();
             poseStateTransformCache.set(position.x(), position.y(), position.z(), 1.0f);
             var vector4f = poseState.transform(poseStateTransformCache);
 

@@ -6,7 +6,7 @@ import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzModelRenderer;
 import mod.azure.azurelib.render.AzPhasedRenderer;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
-import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
@@ -39,7 +39,7 @@ public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
             }
         }
 
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
         itemRendererPipeline.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
@@ -51,22 +51,22 @@ public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
      */
     @Override
     public void renderRecursively(AzRendererPipelineContext<ItemStack> context, AzBone bone, boolean isReRender) {
-        if (bone.isTrackingMatrices()) {
-            ItemStack animatable = context.animatable();
-            PoseStack poseStack = context.poseStack();
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
-            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(
-                poseState,
-                itemRendererPipeline.itemRenderTranslations
-            );
-
-            bone.setModelSpaceMatrix(
-                RenderUtils.invertAndMultiplyMatrices(poseState, itemRendererPipeline.modelRenderTranslations)
-            );
-            bone.setLocalSpaceMatrix(
-                RenderUtils.translateMatrix(localMatrix, getRenderOffset(animatable, 1).toVector3f())
-            );
-        }
+//        if (bone.isTrackingMatrices()) {
+//            ItemStack animatable = context.animatable();
+//            GlStateManager poseStack = context.glStateManager();
+//            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+//            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(
+//                poseState,
+//                itemRendererPipeline.itemRenderTranslations
+//            );
+//
+//            bone.setModelSpaceMatrix(
+//                RenderUtils.invertAndMultiplyMatrices(poseState, itemRendererPipeline.modelRenderTranslations)
+//            );
+//            bone.setLocalSpaceMatrix(
+//                RenderUtils.translateMatrix(localMatrix, getRenderOffset(animatable, 1).toVector3f())
+//            );
+//        }
 
         super.renderRecursively(context, bone, isReRender);
     }

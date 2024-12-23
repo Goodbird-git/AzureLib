@@ -7,6 +7,7 @@ import mod.azure.azurelib.render.AzModelRenderer;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -37,7 +38,7 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
     @Override
     public void render(AzRendererPipelineContext<T> context, boolean isReRender) {
         T entity = context.animatable();
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
         if (!isReRender) {
             rotateBlock(getFacing(entity), poseStack);
@@ -62,13 +63,10 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
      */
     @Override
     public void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
-        VertexConsumer buffer = context.vertexConsumer();
-        MultiBufferSource bufferSource = context.multiBufferSource();
         T entity = context.animatable();
-        PoseStack poseStack = context.poseStack();
-        RenderType renderType = context.renderType();
+        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
         RenderUtils.translateMatrixToBone(poseStack, bone);
         RenderUtils.translateToPivotPoint(poseStack, bone);
         RenderUtils.rotateMatrixAroundBone(poseStack, bone);
@@ -113,7 +111,7 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
 
         renderChildBones(context, bone, isReRender);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     /**
@@ -132,16 +130,16 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
     }
 
     /**
-     * Rotate the {@link PoseStack} based on the determined {@link Direction} the block is facing
+     * Rotate the {@link GlStateManager} based on the determined {@link Direction} the block is facing
      */
-    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+    protected void rotateBlock(Direction facing, GlStateManager glStateManager) {
         switch (facing) {
-            case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(180));
-            case WEST -> poseStack.mulPose(Axis.YP.rotationDegrees(90));
-            case NORTH -> poseStack.mulPose(Axis.YP.rotationDegrees(0));
-            case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(270));
-            case UP -> poseStack.mulPose(Axis.XP.rotationDegrees(90));
-            case DOWN -> poseStack.mulPose(Axis.XN.rotationDegrees(90));
+            case SOUTH -> glStateManager.mulPose(Axis.YP.rotationDegrees(180));
+            case WEST -> glStateManager.mulPose(Axis.YP.rotationDegrees(90));
+            case NORTH -> glStateManager.mulPose(Axis.YP.rotationDegrees(0));
+            case EAST -> glStateManager.mulPose(Axis.YP.rotationDegrees(270));
+            case UP -> glStateManager.mulPose(Axis.XP.rotationDegrees(90));
+            case DOWN -> glStateManager.mulPose(Axis.XN.rotationDegrees(90));
         }
     }
 }

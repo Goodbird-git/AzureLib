@@ -1,10 +1,8 @@
 package mod.azure.azurelib.render.block;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Represents a specialized rendering context for handling {@link TileEntity} rendering in a pipeline-based rendering
@@ -19,13 +17,13 @@ public class AzBlockEntityRendererPipelineContext<T extends TileEntity> extends 
         super(rendererPipeline);
     }
 
-    @Override
-    public @NotNull RenderType getDefaultRenderType(
-        T animatable,
-        ResourceLocation texture,
-        @Nullable MultiBufferSource bufferSource,
-        float partialTick
-    ) {
-        return RenderType.entityCutoutNoCull(texture);
-    }
+//    @Override
+//    public @NotNull RenderType getDefaultRenderType(
+//        T animatable,
+//        ResourceLocation texture,
+//        @Nullable MultiBufferSource bufferSource,
+//        float partialTick
+//    ) {
+//        return RenderType.entityCutoutNoCull(texture);
+//    }
 }

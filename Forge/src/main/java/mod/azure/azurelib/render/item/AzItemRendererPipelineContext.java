@@ -1,10 +1,8 @@
 package mod.azure.azurelib.render.item;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * A specialized subclass of {@link AzRendererPipelineContext} designed for rendering {@link ItemStack} objects.
@@ -20,13 +18,13 @@ public class AzItemRendererPipelineContext extends AzRendererPipelineContext<Ite
     }
 
     // TODO: This is what Geckolib does, but it feels wrong to have this render type getter for an ITEM...
-    @Override
-    public @NotNull RenderType getDefaultRenderType(
-        ItemStack animatable,
-        ResourceLocation texture,
-        @Nullable MultiBufferSource bufferSource,
-        float partialTick
-    ) {
-        return RenderType.entityCutoutNoCull(texture);
-    }
+//    @Override
+//    public @NotNull RenderType getDefaultRenderType(
+//        ItemStack animatable,
+//        ResourceLocation texture,
+//        @Nullable MultiBufferSource bufferSource,
+//        float partialTick
+//    ) {
+//        return RenderType.entityCutoutNoCull(texture);
+//    }
 }

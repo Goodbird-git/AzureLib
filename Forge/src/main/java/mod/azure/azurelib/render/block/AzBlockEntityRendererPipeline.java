@@ -3,6 +3,7 @@ package mod.azure.azurelib.render.block;
 import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.render.*;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -63,11 +64,11 @@ public class AzBlockEntityRendererPipeline<T extends TileEntity> extends AzRende
     /**
      * Called before rendering the model to buffer. Allows for render modifications and preparatory work such as scaling
      * and translating.<br>
-     * {@link PoseStack} translations made here are kept until the end of the render process
+     * {@link GlStateManager} translations made here are kept until the end of the render process
      */
     @Override
     public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
         this.entityRenderTranslations.set(poseStack.last().pose());
 
         float scaleWidth = config.scaleWidth();

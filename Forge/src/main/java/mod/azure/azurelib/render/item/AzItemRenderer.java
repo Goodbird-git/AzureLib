@@ -4,7 +4,7 @@ import mod.azure.azurelib.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.AzProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -36,35 +36,33 @@ public abstract class AzItemRenderer {
 
     public void renderByGui(
         ItemStack stack,
-        PoseStack poseStack,
-        MultiBufferSource source,
+        GlStateManager glStateManager,
         int packedLight
     ) {
         AzBakedModel model = provider.provideBakedModel(stack);
 
         prepareAnimator(stack, model);
 
-        AzItemGuiRenderUtil.renderInGui(config, rendererPipeline, stack, model, stack, poseStack, source, packedLight);
+        AzItemGuiRenderUtil.renderInGui(config, rendererPipeline, stack, model, stack, glStateManager, packedLight);
     }
 
     public void renderByItem(
         ItemStack stack,
-        PoseStack poseStack,
-        MultiBufferSource source,
+        GlStateManager glStateManager,
         int packedLight
     ) {
         AzBakedModel model = provider.provideBakedModel(stack);
         var partialTick = Minecraft.getMinecraft().getTimer().getGameTimeDeltaTicks();
         ResourceLocation textureLocation = config.textureLocation(stack);
-        RenderType renderType = rendererPipeline.context()
-            .getDefaultRenderType(stack, textureLocation, source, partialTick);
+//        RenderType renderType = rendererPipeline.context()
+//            .getDefaultRenderType(stack, textureLocation, source, partialTick);
         // TODO: Why the null check here?
         boolean withGlint = stack != null && stack.isItemEnchanted();
-        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, false, withGlint);
+//        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, false, withGlint);
 
         prepareAnimator(stack, model);
 
-        rendererPipeline.render(poseStack, model, stack, source, renderType, buffer, 0, partialTick, packedLight);
+        rendererPipeline.render(glStateManager, model, stack, 0, partialTick, packedLight);
     }
 
     private void prepareAnimator(ItemStack stack, AzBakedModel model) {

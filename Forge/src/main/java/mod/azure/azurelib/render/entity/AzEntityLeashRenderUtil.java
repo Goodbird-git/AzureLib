@@ -1,5 +1,6 @@
 package mod.azure.azurelib.render.entity;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.math.BlockPos;
@@ -7,23 +8,17 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Utility class for rendering entity leash visuals within the Minecraft rendering engine. This class provides static
  * methods to handle leash rendering logic, enabling flexible re-use and separation from the default rendering behavior.
- * <br>
- * This utility replicates the leash rendering logic from {@link net.minecraft.client.renderer.entity.MobRenderer} to
- * provide enhanced customization for entity rendering purposes.
  */
 public class AzEntityLeashRenderUtil {
 
     /**
      * Static rendering code for rendering a leash segment.<br>
-     * It's a like-for-like from {@link net.minecraft.client.renderer.entity.MobRenderer#renderLeash} that had to be
-     * duplicated here for flexible usage
      */
     public static <T extends Entity, E extends Entity, M extends EntityMob> void renderLeash(
         AzEntityRenderer<T> azEntityRenderer,
         M mob,
         float partialTick,
-        PoseStack poseStack,
-        MultiBufferSource bufferSource,
+        GlStateManager glStateManager,
         E leashHolder
     ) {
         double lerpBodyAngle = (Mth.lerp(partialTick, mob.yBodyRotO, mob.yBodyRot) * Mth.DEG_TO_RAD) + Mth.HALF_PI;
@@ -54,15 +49,13 @@ public class AzEntityLeashRenderUtil {
         int entitySkyLight = mob.level().getBrightness(LightLayer.SKY, entityEyePos);
         int holderSkyLight = mob.level().getBrightness(LightLayer.SKY, holderEyePos);
 
-        poseStack.pushPose();
-        poseStack.translate(xAngleOffset, leashOffset.y, zAngleOffset);
+        glStateManager.pushMatrix();
+        glStateManager.translate(xAngleOffset, leashOffset.y, zAngleOffset);
 
-        Matrix4f posMatrix = new Matrix4f(poseStack.last().pose());
+        Matrix4f posMatrix = new Matrix4f(glStateManager.last().pose());
 
         for (int segment = 0; segment <= 24; ++segment) {
             renderLeashPiece(
-                vertexConsumer,
-                posMatrix,
                 xDif,
                 yDif,
                 zDif,
@@ -81,8 +74,6 @@ public class AzEntityLeashRenderUtil {
 
         for (int segment = 24; segment >= 0; --segment) {
             renderLeashPiece(
-                vertexConsumer,
-                posMatrix,
                 xDif,
                 yDif,
                 zDif,
@@ -99,17 +90,13 @@ public class AzEntityLeashRenderUtil {
             );
         }
 
-        poseStack.popPose();
+        glStateManager.popMatrix();
     }
 
     /**
-     * Static rendering code for rendering a leash segment.<br>
-     * It's a like-for-like from {@link net.minecraft.client.renderer.entity.MobRenderer#addVertexPair} that had to be
-     * duplicated here for flexible usage
+     * Static rendering code for rendering a leash segment.
      */
     private static void renderLeashPiece(
-        VertexConsumer buffer,
-        Matrix4f positionMatrix,
         float xDif,
         float yDif,
         float zDif,

@@ -6,6 +6,7 @@ import mod.azure.azurelib.render.AzRendererConfig;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -46,11 +47,11 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
     /**
      * Called before rendering the model to buffer. Allows for render modifications and preparatory work such as scaling
      * and translating.<br>
-     * {@link PoseStack} translations made here are kept until the end of the render process
+     * {@link GlStateManager} translations made here are kept until the end of the render process
      */
     @Override
     public void preRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
         this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         AzItemRendererConfig config = itemRenderer.config();

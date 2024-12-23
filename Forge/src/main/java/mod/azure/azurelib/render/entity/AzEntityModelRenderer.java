@@ -8,6 +8,7 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 
@@ -36,9 +37,9 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
     public void render(AzRendererPipelineContext<T> context, boolean isReRender) {
         T animatable = context.animatable();
         float partialTick = context.partialTick();
-        PoseStack poseStack = context.poseStack();
+        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
 
         EntityLiving livingEntity = animatable instanceof EntityLiving entity ? entity : null;
 
@@ -124,7 +125,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
             super.render(context, isReRender);
         }
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     /**
@@ -132,13 +133,10 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
      */
     @Override
     public void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
-        VertexConsumer buffer = context.vertexConsumer();
-        MultiBufferSource bufferSource = context.multiBufferSource();
         T entity = context.animatable();
-        PoseStack poseStack = context.poseStack();
-        RenderType renderType = context.renderType();
+        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
         RenderUtils.translateMatrixToBone(poseStack, bone);
         RenderUtils.translateToPivotPoint(poseStack, bone);
         RenderUtils.rotateMatrixAroundBone(poseStack, bone);
@@ -179,7 +177,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
 
         renderChildBones(context, bone, isReRender);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     /**
@@ -188,7 +186,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
      */
     protected void applyRotations(
         T animatable,
-        PoseStack poseStack,
+        GlStateManager poseStack,
         float ageInTicks,
         float rotationYaw,
         float partialTick
@@ -202,7 +200,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
      */
     protected void applyRotations(
         T animatable,
-        PoseStack poseStack,
+        GlStateManager poseStack,
         float ageInTicks,
         float rotationYaw,
         float partialTick,

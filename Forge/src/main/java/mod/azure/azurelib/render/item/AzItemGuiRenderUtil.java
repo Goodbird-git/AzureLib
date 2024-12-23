@@ -2,8 +2,10 @@ package mod.azure.azurelib.render.item;
 
 import mod.azure.azurelib.model.AzBakedModel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class AzItemGuiRenderUtil {
 
@@ -18,8 +20,7 @@ public class AzItemGuiRenderUtil {
         ItemStack stack,
         AzBakedModel model,
         ItemStack currentItemStack,
-        PoseStack poseStack,
-        MultiBufferSource source,
+        GlStateManager glStateManager,
         int packedLight
     ) {
         if (config.useEntityGuiLighting()) {
@@ -29,24 +30,20 @@ public class AzItemGuiRenderUtil {
         }
 
         var partialTick = Minecraft.getMinecraft().getTimer().getGameTimeDeltaTicks();
-        var bSource =
-            source instanceof MultiBufferSource.BufferSource bufferSource
-                ? bufferSource
-                : Minecraft.getMinecraft().levelRenderer.renderBuffers.bufferSource();
-        net.minecraft.util.ResourceLocation textureLocation = config.textureLocation(stack);
-        var renderType = rendererPipeline.context()
-            .getDefaultRenderType(stack, textureLocation, bSource, partialTick);
-        var withGlint = currentItemStack != null && currentItemStack.hasFoil();
-        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, true, withGlint);
+//        ResourceLocation textureLocation = config.textureLocation(stack);
+//        var renderType = rendererPipeline.context()
+//            .getDefaultRenderType(stack, textureLocation, bSource, partialTick);
+//        var withGlint = currentItemStack != null && currentItemStack.hasFoil();
+//        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, true, withGlint);
 
-        poseStack.pushPose();
+        glStateManager.pushMatrix();
 
-        rendererPipeline.render(poseStack, model, stack, bSource, renderType, buffer, 0, partialTick, packedLight);
+        rendererPipeline.render(glStateManager, model, stack, 0, partialTick, packedLight);
 
         bSource.endBatch();
         RenderSystem.enableDepthTest();
         Lighting.setupFor3DItems();
 
-        poseStack.popPose();
+        glStateManager.popMatrix();
     }
 }

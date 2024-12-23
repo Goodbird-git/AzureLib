@@ -1,11 +1,8 @@
 package mod.azure.azurelib.render;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.AzBakedModel;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.Objects;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * An abstract base class representing the rendering context for a custom rendering pipeline. This class provides
@@ -22,21 +19,15 @@ public abstract class AzRendererPipelineContext<T> {
 
     private AzBakedModel bakedModel;
 
-    private MultiBufferSource multiBufferSource;
-
     private int packedLight;
 
     private int packedOverlay;
 
     private float partialTick;
 
-    private PoseStack poseStack;
+    private GlStateManager glStateManager;
 
     private int renderColor;
-
-    private RenderType renderType;
-
-    private VertexConsumer vertexConsumer;
 
     protected AzRendererPipelineContext(AzRendererPipeline<T> rendererPipeline) {
         this.rendererPipeline = rendererPipeline;
@@ -49,58 +40,47 @@ public abstract class AzRendererPipelineContext<T> {
      *
      * @param animatable        The animatable object that is being rendered.
      * @param bakedModel        The pre-baked 3D model associated with the animatable object.
-     * @param multiBufferSource The multibuffer source used for rendering vertex data.
      * @param packedLight       The packed light value for controlling light effects during rendering.
      * @param partialTick       The partial tick value for interpolating animations or movements.
-     * @param poseStack         The pose stack used to manage rendering transformations.
-     * @param renderType        The render type that determines how the object will be rendered, e.g., opaque,
-     *                          translucent, etc.
-     * @param vertexConsumer    The vertex consumer used for buffering vertex attributes during rendering.
+     * @param glStateManager         The pose stack used to manage rendering transformations.
      */
     public void populate(
         T animatable,
         AzBakedModel bakedModel,
-        MultiBufferSource multiBufferSource,
         int packedLight,
         float partialTick,
-        PoseStack poseStack,
-        RenderType renderType,
-        VertexConsumer vertexConsumer
+        GlStateManager glStateManager
     ) {
         this.animatable = animatable;
         this.bakedModel = bakedModel;
-        this.multiBufferSource = multiBufferSource;
         this.packedLight = packedLight;
         this.packedOverlay = getPackedOverlay(animatable, 0, partialTick);
         this.partialTick = partialTick;
-        this.poseStack = poseStack;
-        this.renderType = renderType;
-        this.vertexConsumer = vertexConsumer;
         this.renderColor = getRenderColor(animatable, partialTick, packedLight).getColor();
 
-        if (renderType == null) {
-            ResourceLocation textureLocation = rendererPipeline.config().textureLocation(animatable);
-            this.renderType = getDefaultRenderType(animatable, textureLocation, multiBufferSource, partialTick);
-        }
+//        if (renderType == null) {
+//            ResourceLocation textureLocation = rendererPipeline.config().textureLocation(animatable);
+//            this.renderType = getDefaultRenderType(animatable, textureLocation, partialTick);
+//        }
 
-        Objects.requireNonNull(this.renderType);
-
-        if (vertexConsumer == null) {
-            this.vertexConsumer = multiBufferSource.getBuffer(this.renderType);
-        }
+//        Objects.requireNonNull(this.renderType);
+//
+//        if (vertexConsumer == null) {
+//            this.vertexConsumer = multiBufferSource.getBuffer(this.renderType);
+//        }
     }
 
-    /**
-     * Gets the {@link RenderType} to render the given animatable with.<br>
-     * Uses the {@link RenderType#entityCutoutNoCull} {@code RenderType} by default.<br>
-     * Override this to change the way a model will render (such as translucent models, etc)
-     */
-    public abstract @NotNull RenderType getDefaultRenderType(
-        T animatable,
-        ResourceLocation texture,
-        MultiBufferSource bufferSource,
-        float partialTick
-    );
+//    /**
+//     * Gets the {@link RenderType} to render the given animatable with.<br>
+//     * Uses the {@link RenderType#entityCutoutNoCull} {@code RenderType} by default.<br>
+//     * Override this to change the way a model will render (such as translucent models, etc)
+//     */
+//    public abstract @NotNull RenderType getDefaultRenderType(
+//        T animatable,
+//        ResourceLocation texture,
+//        MultiBufferSource bufferSource,
+//        float partialTick
+//    );
 
     /**
      * Gets a tint-applying color to render the given animatable with.<br>
@@ -131,10 +111,6 @@ public abstract class AzRendererPipelineContext<T> {
         return bakedModel;
     }
 
-    public MultiBufferSource multiBufferSource() {
-        return multiBufferSource;
-    }
-
     public int packedLight() {
         return packedLight;
     }
@@ -151,27 +127,11 @@ public abstract class AzRendererPipelineContext<T> {
         return partialTick;
     }
 
-    public PoseStack poseStack() {
-        return poseStack;
+    public GlStateManager glStateManager() {
+        return glStateManager;
     }
 
     public int renderColor() {
         return renderColor;
-    }
-
-    public RenderType renderType() {
-        return renderType;
-    }
-
-    public void setRenderType(RenderType renderType) {
-        this.renderType = renderType;
-    }
-
-    public VertexConsumer vertexConsumer() {
-        return vertexConsumer;
-    }
-
-    public void setVertexConsumer(VertexConsumer vertexConsumer) {
-        this.vertexConsumer = vertexConsumer;
     }
 }

@@ -8,7 +8,7 @@
 package mod.azure.azurelib.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.world.World;
 
 /**
@@ -18,7 +18,7 @@ public final class ClientUtils {
 	/**
 	 * Get the player on the client
 	 */
-	public static EntityPlayer getClientPlayer() {
+	public static EntityPlayerSP getClientPlayer() {
 		return Minecraft.getMinecraft().player;
 	}
 

@@ -3,6 +3,7 @@ package mod.azure.azurelib.render.block;
 import mod.azure.azurelib.animation.impl.AzBlockAnimator;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.AzProvider;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -29,8 +30,7 @@ public abstract class AzBlockEntityRenderer<T extends TileEntity> implements Til
     public void render(
         T entity,
         float partialTick,
-        PoseStack poseStack,
-        MultiBufferSource source,
+        GlStateManager glStateManager,
         int packedLight,
         int packedOverlay
     ) {
@@ -45,7 +45,7 @@ public abstract class AzBlockEntityRenderer<T extends TileEntity> implements Til
         reusedAzBlockAnimator = cachedEntityAnimator;
 
         // Execute the render pipeline.
-        rendererPipeline.render(poseStack, model, entity, source, null, null, 0, partialTick, packedLight);
+        rendererPipeline.render(glStateManager, model, entity, 0, partialTick, packedLight);
     }
 
     public AzBlockAnimator<T> getAnimator() {
