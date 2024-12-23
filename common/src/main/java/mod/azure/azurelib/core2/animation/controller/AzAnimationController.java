@@ -137,7 +137,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
      */
     private void handleAnimationState(T animatable) {
         if (triggeredSequence != null) {
-            if (currentSequence != triggeredSequence) {
+            if (currentSequence == null || !currentSequence.equals(triggeredSequence)) {
                 this.currentAnimation = null;
             }
 
@@ -164,6 +164,16 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         controllerTimer.update();
         // Run state machine updates.
         stateMachine.update();
+
+        if (currentAnimation == null) {
+            if (animationQueue.isEmpty()) {
+                // If there is no animation to play, stop.
+                stateMachine.stop();
+                return;
+            }
+
+            controllerTimer.update();
+        }
 
         boneAnimationQueueCache.update(animationProperties.easingType());
     }
@@ -224,6 +234,7 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         this.currentAnimation = currentAnimation;
 
         if (currentAnimation == null) {
+            this.currentSequence = null;
             this.currentSequenceOrigin = null;
         }
     }
