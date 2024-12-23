@@ -27,15 +27,10 @@ public class AzDoomArmor extends ArmorItem {
         InteractionHand hand
     ) {
         var result = super.swapWithEquipmentSlot(item, level, player, hand);
-        var itemStack = result.getObject();
 
         if (!level.isClientSide) {
-            // TODO: This dispatch does not work.
-            // The reason it doesn't work is because this function finishes before the armor even starts to render.
-            // The armor stack recreated on equip, which means the animator associated with it is also destroyed
-            // and recreated on equip. To fix this, we need the animators to remain stable even as item stacks change.
-            // Item stack references are transient, but their data components are not. So we can map animators
-            // by the UUID of the item stack.
+            var slot = getEquipmentSlot();
+            var itemStack = player.getItemBySlot(slot);
             dispatcher.serverEquipHelmet(player, itemStack);
         }
 
