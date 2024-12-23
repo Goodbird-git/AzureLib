@@ -1,11 +1,12 @@
 package mod.azure.azurelib.core2.animation.property.codec;
 
-import mod.azure.azurelib.core2.animation.easing.AzEasingTypeRegistry;
-import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
-import mod.azure.azurelib.core2.animation.property.AzAnimationProperties;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
+
+import mod.azure.azurelib.core2.animation.easing.AzEasingTypeRegistry;
+import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
+import mod.azure.azurelib.core2.animation.property.AzAnimationProperties;
 
 public class AzAnimationPropertiesCodec implements StreamCodec<FriendlyByteBuf, AzAnimationProperties> {
 

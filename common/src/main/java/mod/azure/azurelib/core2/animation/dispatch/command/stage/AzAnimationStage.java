@@ -1,9 +1,10 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.stage;
 
-import mod.azure.azurelib.core2.animation.property.AzAnimationStageProperties;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+
+import mod.azure.azurelib.core2.animation.property.AzAnimationStageProperties;
 
 public record AzAnimationStage(
     String name,

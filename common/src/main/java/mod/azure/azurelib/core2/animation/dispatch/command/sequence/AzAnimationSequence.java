@@ -1,11 +1,12 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.sequence;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.stage.AzAnimationStage;
-import mod.azure.azurelib.core2.util.codec.AzListStreamCodec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
+
+import mod.azure.azurelib.core2.animation.dispatch.command.stage.AzAnimationStage;
+import mod.azure.azurelib.core2.util.codec.AzListStreamCodec;
 
 public record AzAnimationSequence(
     List<AzAnimationStage> stages

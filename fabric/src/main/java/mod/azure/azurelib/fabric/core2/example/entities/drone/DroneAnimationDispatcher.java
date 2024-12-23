@@ -12,15 +12,35 @@ public class DroneAnimationDispatcher {
     private final AzDispatchCommand attackTailCommand = AzDispatchCommand
         .create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME);
 
-    private final AzDispatchCommand crawlCommand = AzDispatchCommand.create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_ANIMATION_NAME, AzLoopType.LOOP);
+    private final AzDispatchCommand crawlCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.CRAWL_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
-    private final AzDispatchCommand crawlHoldCommand = AzDispatchCommand.create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_ANIMATION_NAME, AzLoopType.HOLD_ON_LAST_FRAME);
+    private final AzDispatchCommand crawlHoldCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.CRAWL_ANIMATION_NAME,
+        AzLoopType.HOLD_ON_LAST_FRAME
+    );
 
-    private final AzDispatchCommand idleCommand = AzDispatchCommand.create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME, AzLoopType.LOOP);
+    private final AzDispatchCommand idleCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.IDLE_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
-    private final AzDispatchCommand runCommand = AzDispatchCommand.create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME, AzLoopType.LOOP);
+    private final AzDispatchCommand runCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.RUN_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
-    private final AzDispatchCommand walkCommand = AzDispatchCommand.create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME, AzLoopType.LOOP);
+    private final AzDispatchCommand walkCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.WALK_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
     private final Drone drone;
 
@@ -46,7 +66,7 @@ public class DroneAnimationDispatcher {
 
     public void clientSwim() {
         // TODO:
-//        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.SWIM_ANIMATION_NAME);
+        // dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.SWIM_ANIMATION_NAME);
     }
 
     public void clientWalk() {

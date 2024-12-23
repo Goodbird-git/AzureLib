@@ -1,11 +1,11 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.sequence;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.stage.AzAnimationStage;
-import mod.azure.azurelib.core2.animation.property.AzAnimationStageProperties;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
+
+import mod.azure.azurelib.core2.animation.dispatch.command.stage.AzAnimationStage;
+import mod.azure.azurelib.core2.animation.property.AzAnimationStageProperties;
 
 public class AzAnimationSequenceBuilder {
 
@@ -20,7 +20,10 @@ public class AzAnimationSequenceBuilder {
         return this;
     }
 
-    public AzAnimationSequenceBuilder queue(String animationName, UnaryOperator<AzAnimationStageProperties> builderUnaryOperator) {
+    public AzAnimationSequenceBuilder queue(
+        String animationName,
+        UnaryOperator<AzAnimationStageProperties> builderUnaryOperator
+    ) {
         var properties = builderUnaryOperator.apply(AzAnimationStageProperties.EMPTY);
         stages.add(new AzAnimationStage(animationName, properties));
         return this;

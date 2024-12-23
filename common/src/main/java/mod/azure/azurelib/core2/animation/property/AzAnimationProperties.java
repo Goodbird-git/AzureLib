@@ -1,10 +1,11 @@
 package mod.azure.azurelib.core2.animation.property;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
 import mod.azure.azurelib.core2.animation.property.codec.AzAnimationPropertiesCodec;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class AzAnimationProperties {
 
@@ -15,7 +16,9 @@ public class AzAnimationProperties {
     public static final AzAnimationProperties EMPTY = new AzAnimationProperties(null, null, null);
 
     protected final @Nullable Double animationSpeed;
+
     protected final @Nullable AzEasingType easingType;
+
     protected final @Nullable Float transitionLength;
 
     public AzAnimationProperties(

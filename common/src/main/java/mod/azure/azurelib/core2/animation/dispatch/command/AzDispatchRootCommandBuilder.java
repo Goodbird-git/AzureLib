@@ -46,7 +46,10 @@ public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDis
         return self();
     }
 
-    public AzDispatchRootCommandBuilder playSequence(String controllerName, UnaryOperator<AzAnimationSequenceBuilder> builderUnaryOperator) {
+    public AzDispatchRootCommandBuilder playSequence(
+        String controllerName,
+        UnaryOperator<AzAnimationSequenceBuilder> builderUnaryOperator
+    ) {
         var builder = new AzAnimationSequenceBuilder();
         builderUnaryOperator.apply(builder);
         var sequence = builder.build();

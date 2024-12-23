@@ -1,8 +1,5 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
-import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -63,7 +60,9 @@ public class MarauderEntity extends Monster {
             } else if (this.tickCount < 300) {
                 animationRunner = animationDispatcher::clientSpawn;
             } else if (isMovingOnGround) {
-                animationRunner = this.isAggressive() ? animationDispatcher::clientRun : animationDispatcher::clientWalk;
+                animationRunner = this.isAggressive()
+                    ? animationDispatcher::clientRun
+                    : animationDispatcher::clientWalk;
             } else {
                 animationRunner = animationDispatcher::clientIdle;
             }

@@ -1,17 +1,23 @@
 package mod.azure.azurelib.core2.animation.property;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 import mod.azure.azurelib.core2.animation.property.codec.AzAnimationStagePropertiesCodec;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class AzAnimationStageProperties extends AzAnimationProperties {
 
     public static final AzAnimationStagePropertiesCodec CODEC = new AzAnimationStagePropertiesCodec();
 
-    public static final AzAnimationStageProperties DEFAULT = new AzAnimationStageProperties(1D, AzEasingTypes.NONE, AzLoopType.PLAY_ONCE, 0F);
+    public static final AzAnimationStageProperties DEFAULT = new AzAnimationStageProperties(
+        1D,
+        AzEasingTypes.NONE,
+        AzLoopType.PLAY_ONCE,
+        0F
+    );
 
     public static final AzAnimationStageProperties EMPTY = new AzAnimationStageProperties(null, null, null, null);
 

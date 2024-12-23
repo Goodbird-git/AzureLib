@@ -1,12 +1,12 @@
 package mod.azure.azurelib.core2.animation.primitive;
 
 import com.google.gson.JsonElement;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
-import org.apache.commons.lang3.function.TriFunction;
 
 /**
  * Loop type functional interface to define post-play handling for a given animation. <br>
@@ -34,6 +34,7 @@ public interface AzLoopType {
     Map<String, AzLoopType> LOOP_TYPES = new ConcurrentHashMap<>(5);
 
     AzLoopType FALSE = register("false", (animatable, controller, currentAnimation) -> false);
+
     AzLoopType TRUE = register("true", (animatable, controller, currentAnimation) -> true);
 
     /**
@@ -120,15 +121,23 @@ public interface AzLoopType {
      * @param shouldPlayAgainFunction The loop type to register
      * @return The registered {@code AzLoopType}
      */
-    static AzLoopType register(String name, TriFunction<Object, AzAnimationController<?>, AzBakedAnimation, Boolean> shouldPlayAgainFunction) {
+    static AzLoopType register(
+        String name,
+        TriFunction<Object, AzAnimationController<?>, AzBakedAnimation, Boolean> shouldPlayAgainFunction
+    ) {
         var loopType = new AzLoopType() {
+
             @Override
             public String name() {
                 return name;
             }
 
             @Override
-            public boolean shouldPlayAgain(Object animatable, AzAnimationController<?> controller, AzBakedAnimation currentAnimation) {
+            public boolean shouldPlayAgain(
+                Object animatable,
+                AzAnimationController<?> controller,
+                AzBakedAnimation currentAnimation
+            ) {
                 return shouldPlayAgainFunction.apply(animatable, controller, currentAnimation);
             }
         };

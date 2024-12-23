@@ -1,8 +1,5 @@
 package mod.azure.azurelib.core2.animation.controller;
 
-import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.core2.animation.dispatch.command.sequence.AzAnimationSequence;
-import mod.azure.azurelib.core2.animation.property.AzAnimationProperties;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,10 @@ import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayS
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationTransitionState;
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
+import mod.azure.azurelib.core2.animation.dispatch.command.sequence.AzAnimationSequence;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
+import mod.azure.azurelib.core2.animation.property.AzAnimationProperties;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
