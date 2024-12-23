@@ -3,6 +3,8 @@ package mod.azure.azurelib.core2.animation.property;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
@@ -58,5 +60,29 @@ public class AzAnimationStageProperties extends AzAnimationProperties {
 
     public AzLoopType loopType() {
         return loopType == null ? DEFAULT.loopType() : loopType;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(object)) {
+            return false;
+        }
+
+        AzAnimationStageProperties that = (AzAnimationStageProperties) object;
+
+        return Objects.equals(loopType, that.loopType) && super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), loopType);
     }
 }
