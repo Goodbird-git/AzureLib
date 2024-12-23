@@ -64,10 +64,6 @@ public final class ClientListener implements ClientModInitializer {
         );
         ClientPlayNetworking.registerGlobalReceiver(EntityAnimTriggerPacket.TYPE, (packet, context) -> packet.handle());
         ClientPlayNetworking.registerGlobalReceiver(
-            AzEntityAnimTriggerPacket.TYPE,
-            (packet, context) -> packet.handle()
-        );
-        ClientPlayNetworking.registerGlobalReceiver(
             AzEntityDispatchCommandPacket.TYPE,
             (packet, context) -> packet.handle()
         );

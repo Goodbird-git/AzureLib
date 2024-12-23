@@ -24,7 +24,7 @@ import java.util.Objects;
  * RawAnimation.begin().thenPlay("action.open_box").thenLoop("state.stay_open")
  * }</pre>
  *
- * @deprecated Use {@link mod.azure.azurelib.core2.animation.primitive.AzRawAnimation} instead.
+ * @deprecated
  */
 @Deprecated(forRemoval = true)
 public final class RawAnimation {

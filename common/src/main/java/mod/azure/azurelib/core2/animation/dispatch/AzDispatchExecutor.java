@@ -100,7 +100,7 @@ public record AzDispatchExecutor(
         var animator = AzAnimatorAccessor.getOrNull(animatable);
 
         if (animator != null) {
-            commands.forEach(command -> command.getActions().forEach(action -> action.handle(animator)));
+            commands.forEach(command -> command.actions().forEach(action -> action.handle(origin, animator)));
         }
     }
 
@@ -109,7 +109,7 @@ public record AzDispatchExecutor(
 
         commands.forEach(command -> {
             // TODO: Buffer commands together.
-            var packet = new AzEntityDispatchCommandPacket(entityId, command, origin);
+            var packet = new AzEntityDispatchCommandPacket(entityId, command);
             Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         });
     }
@@ -119,7 +119,7 @@ public record AzDispatchExecutor(
 
         commands.forEach(command -> {
             // TODO: Batch commands together.
-            var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, command, origin);
+            var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, command);
             Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
         });
     }
@@ -128,7 +128,7 @@ public record AzDispatchExecutor(
         var uuid = itemStack.get(AzureLib.AZ_ID.get());
         commands.forEach(command -> {
             // TODO: Batch commands together.
-            var packet = new AzItemStackDispatchCommandPacket(uuid, command, origin);
+            var packet = new AzItemStackDispatchCommandPacket(uuid, command);
             Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         });
     }

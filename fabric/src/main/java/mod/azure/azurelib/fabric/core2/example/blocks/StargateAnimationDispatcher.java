@@ -10,7 +10,7 @@ public class StargateAnimationDispatcher {
     private static final String SPIN_ANIMATION_NAME = "spinning";
 
     private static final AzDispatchCommand SPINNING_COMMAND = AzDispatchCommand.builder()
-        .playAnimation("base_controller", SPIN_ANIMATION_NAME)
+        .play("base_controller", SPIN_ANIMATION_NAME)
         .build();
 
     public void serverSpin(BlockEntity entity) {

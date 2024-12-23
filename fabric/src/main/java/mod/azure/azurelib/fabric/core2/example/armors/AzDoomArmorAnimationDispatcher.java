@@ -9,7 +9,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
 public class AzDoomArmorAnimationDispatcher {
 
     private static final AzDispatchCommand EQUIP = AzDispatchCommand.builder()
-        .playAnimation("base_controller", "equipping")
+        .play("base_controller", "equipping")
         .build();
 
     public void serverEquipHelmet(Entity entity, ItemStack itemStack) {

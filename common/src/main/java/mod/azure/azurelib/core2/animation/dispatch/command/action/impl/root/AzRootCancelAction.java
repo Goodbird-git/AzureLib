@@ -1,5 +1,6 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root;
 
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -58,7 +59,7 @@ public record AzRootCancelAction(
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/cancel");
 
     @Override
-    public void handle(AzAnimator<?> animator) {
+    public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
         var controller = animator.getAnimationControllerContainer().getOrNull(controllerName);
 
         if (controller != null) {

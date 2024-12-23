@@ -1,5 +1,6 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root;
 
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -22,12 +23,13 @@ public record AzRootSetEasingTypeAction(
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/set_easing_type");
 
     @Override
-    public void handle(AzAnimator<?> animator) {
+    public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
         animator.getAnimationControllerContainer()
             .getAll()
             .forEach(
-                controller -> controller.animationProperties()
-                    .setEasingType(easingType)
+                controller -> controller.setAnimationProperties(
+                    controller.animationProperties().withEasingType(easingType)
+                )
             );
     }
 

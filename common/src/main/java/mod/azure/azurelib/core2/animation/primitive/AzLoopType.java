@@ -6,27 +6,35 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
+import org.apache.commons.lang3.function.TriFunction;
 
 /**
  * Loop type functional interface to define post-play handling for a given animation. <br>
  * Custom loop types are supported by extending this class and providing the extended class instance as the loop type
  * for the animation
  */
-@FunctionalInterface
 public interface AzLoopType {
 
-    Map<String, AzLoopType> LOOP_TYPES = new ConcurrentHashMap<>(4);
+    String name();
 
     /**
-     * Represents the default looping behavior for animations. This implementation dynamically evaluates whether an
-     * animation should repeat or stop based on the current animation's loop type. The default behavior is determined by
-     * delegating to the loop type of the current animation. It invokes the {@code shouldPlayAgain} method of the
-     * current animation's loop type, passing the animatable object, the animation controller, and the current animation
-     * as arguments. This variable is used as the standard looping mechanism unless explicitly overridden by a custom
-     * loop type.
+     * Override in a custom instance to dynamically decide whether an animation should repeat or stop
+     *
+     * @param animatable       The animating object relevant to this method call
+     * @param controller       The {@link AzAnimationController} playing the current animation
+     * @param currentAnimation The current animation that just played
+     * @return Whether the animation should play again, or stop
      */
-    AzLoopType DEFAULT = (animatable, controller, currentAnimation) -> currentAnimation.loopType()
-        .shouldPlayAgain(animatable, controller, currentAnimation);
+    boolean shouldPlayAgain(
+        Object animatable,
+        AzAnimationController<?> controller,
+        AzBakedAnimation currentAnimation
+    );
+
+    Map<String, AzLoopType> LOOP_TYPES = new ConcurrentHashMap<>(5);
+
+    AzLoopType FALSE = register("false", (animatable, controller, currentAnimation) -> false);
+    AzLoopType TRUE = register("true", (animatable, controller, currentAnimation) -> true);
 
     /**
      * A predefined {@code AzLoopType} that indicates an animation should play only once without repeating. This loop
@@ -34,10 +42,7 @@ public interface AzLoopType {
      * looping or holding on the last frame. The associated logic for this type always returns {@code false} for the
      * repeat condition, preventing the animation from replaying once it has finished.
      */
-    AzLoopType PLAY_ONCE = register(
-        "play_once",
-        register("false", (animatable, controller, currentAnimation) -> false)
-    );
+    AzLoopType PLAY_ONCE = register("play_once", FALSE);
 
     /**
      * A pre-defined AzLoopType representing the behavior of holding on the last frame of an animation after it
@@ -63,7 +68,7 @@ public interface AzLoopType {
      * method. When used, it applies a behavior where the animation will indefinitely loop, regardless of any dynamic
      * runtime evaluations about the animatable object or animation state.
      */
-    AzLoopType LOOP = register("loop", register("true", (animatable, controller, currentAnimation) -> true));
+    AzLoopType LOOP = register("loop", TRUE);
 
     /**
      * Retrieve a AzLoopType instance based on a {@link JsonElement}. Returns either {@link AzLoopType#PLAY_ONCE} or
@@ -102,32 +107,34 @@ public interface AzLoopType {
         return LOOP_TYPES.getOrDefault(name, PLAY_ONCE);
     }
 
+    static AzLoopType register(String name, AzLoopType loopType) {
+        return register(name, (a, b, c) -> loopType.shouldPlayAgain(a, b, c));
+    }
+
     /**
      * Register a AzLoopType with AzureLib for handling loop functionality of animations..<br>
      * <b><u>MUST be called during mod construct</u></b><br>
      * It is recommended you don't call this directly, and instead call it via {@code AzureLibUtil#addCustomLoopType}
      *
-     * @param name     The name of the loop type
-     * @param loopType The loop type to register
+     * @param name                    The name of the loop type
+     * @param shouldPlayAgainFunction The loop type to register
      * @return The registered {@code AzLoopType}
      */
-    static AzLoopType register(String name, AzLoopType loopType) {
+    static AzLoopType register(String name, TriFunction<Object, AzAnimationController<?>, AzBakedAnimation, Boolean> shouldPlayAgainFunction) {
+        var loopType = new AzLoopType() {
+            @Override
+            public String name() {
+                return name;
+            }
+
+            @Override
+            public boolean shouldPlayAgain(Object animatable, AzAnimationController<?> controller, AzBakedAnimation currentAnimation) {
+                return shouldPlayAgainFunction.apply(animatable, controller, currentAnimation);
+            }
+        };
+
         LOOP_TYPES.put(name, loopType);
 
         return loopType;
     }
-
-    /**
-     * Override in a custom instance to dynamically decide whether an animation should repeat or stop
-     *
-     * @param animatable       The animating object relevant to this method call
-     * @param controller       The {@link AzAnimationController} playing the current animation
-     * @param currentAnimation The current animation that just played
-     * @return Whether the animation should play again, or stop
-     */
-    boolean shouldPlayAgain(
-        Object animatable,
-        AzAnimationController<?> controller,
-        AzBakedAnimation currentAnimation
-    );
 }

@@ -47,7 +47,7 @@ public class ExampleEntityTypes {
     );;
 
     public static void initialize() {
-        FabricDefaultAttributeRegistry.register(DRONE, Drone.createMonsterAttributes());
+        FabricDefaultAttributeRegistry.register(DRONE, Drone.createDroneAttributes());
         FabricDefaultAttributeRegistry.register(DOOMHUNTER, DoomHunter.createMonsterAttributes());
         FabricDefaultAttributeRegistry.register(MARAUDER, MarauderEntity.createMonsterAttributes());
     }

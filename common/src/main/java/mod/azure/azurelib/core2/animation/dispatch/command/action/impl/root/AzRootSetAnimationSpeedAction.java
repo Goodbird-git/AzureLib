@@ -1,5 +1,6 @@
 package mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root;
 
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,12 +23,13 @@ public record AzRootSetAnimationSpeedAction(
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/set_animation_speed");
 
     @Override
-    public void handle(AzAnimator<?> animator) {
+    public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
         animator.getAnimationControllerContainer()
             .getAll()
             .forEach(
-                controller -> controller.animationProperties()
-                    .setAnimationSpeed(animationSpeed)
+                controller -> controller.setAnimationProperties(
+                    controller.animationProperties().withAnimationSpeed(animationSpeed)
+                )
             );
     }
 

@@ -5,11 +5,11 @@ import java.util.List;
 
 import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 
-public class AzDispatchCommandBuilder<T extends AzDispatchCommandBuilder<T>> {
+public abstract class AzDispatchCommandBuilder<T extends AzDispatchCommandBuilder<T>> {
 
     protected final List<AzDispatchAction> actions;
 
-    AzDispatchCommandBuilder() {
+    protected AzDispatchCommandBuilder() {
         this.actions = new ArrayList<>();
     }
 

@@ -1,15 +1,12 @@
 package mod.azure.azurelib.core2.animation.controller;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.Objects;
-
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeCallbacks;
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
+import mod.azure.azurelib.core2.animation.property.AzAnimationProperties;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * A builder class to construct {@link AzAnimationController} instances for managing animations in {@link AzAnimator}.
@@ -22,28 +19,21 @@ public class AzAnimationControllerBuilder<T> {
 
     private final AzAnimator<T> animator;
 
-    private final AzAnimationProperties animationProperties;
-
     private final String name;
 
-    /**
-     * @deprecated
-     */
-    @Deprecated(forRemoval = true)
-    private final Map<String, AzRawAnimation> triggerableAnimations;
+    private AzAnimationProperties animationProperties;
 
     private AzKeyframeCallbacks<T> keyframeCallbacks;
 
     public AzAnimationControllerBuilder(AzAnimator<T> animator, String name) {
         this.animator = animator;
         this.name = name;
-        this.animationProperties = new AzAnimationProperties();
+        this.animationProperties = AzAnimationProperties.DEFAULT;
         this.keyframeCallbacks = AzKeyframeCallbacks.noop();
-        this.triggerableAnimations = new Object2ObjectOpenHashMap<>(0);
     }
 
     public AzAnimationControllerBuilder<T> setAnimationSpeed(double animationSpeed) {
-        animationProperties.setAnimationSpeed(animationSpeed);
+        animationProperties = animationProperties.withAnimationSpeed(animationSpeed);
         return this;
     }
 
@@ -54,21 +44,12 @@ public class AzAnimationControllerBuilder<T> {
     }
 
     public AzAnimationControllerBuilder<T> setEasingType(AzEasingType easingType) {
-        animationProperties.setEasingType(easingType);
+        animationProperties = animationProperties.withEasingType(easingType);
         return this;
     }
 
     public AzAnimationControllerBuilder<T> setTransitionLength(int transitionLength) {
-        animationProperties.setTransitionLength(transitionLength);
-        return this;
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated(forRemoval = true)
-    public AzAnimationControllerBuilder<T> triggerableAnim(String name, AzRawAnimation animation) {
-        this.triggerableAnimations.put(name, animation);
+        animationProperties = animationProperties.withTransitionLength(transitionLength);
         return this;
     }
 
@@ -77,8 +58,7 @@ public class AzAnimationControllerBuilder<T> {
             name,
             animator,
             animationProperties,
-            keyframeCallbacks,
-            triggerableAnimations
+            keyframeCallbacks
         );
     }
 }

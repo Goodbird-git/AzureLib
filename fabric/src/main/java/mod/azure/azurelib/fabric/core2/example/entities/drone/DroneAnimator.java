@@ -21,20 +21,6 @@ public class DroneAnimator extends AzEntityAnimator<Drone> {
         animationControllerContainer.add(
             AzAnimationController.builder(this, DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME)
                 .setTransitionLength(5)
-                .triggerableAnim(
-                    DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME,
-                    DroneAnimationRefs.ATTACK_CLAW_ANIMATION
-                )
-                .triggerableAnim(
-                    DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME,
-                    DroneAnimationRefs.ATTACK_TAIL_ANIMATION
-                )
-                .triggerableAnim(DroneAnimationRefs.CRAWL_ANIMATION_NAME, DroneAnimationRefs.CRAWL_ANIMATION)
-                .triggerableAnim(DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION)
-                .triggerableAnim(DroneAnimationRefs.IDLE_ANIMATION_NAME, DroneAnimationRefs.IDLE_ANIMATION)
-                .triggerableAnim(DroneAnimationRefs.RUN_ANIMATION_NAME, DroneAnimationRefs.RUN_ANIMATION)
-                .triggerableAnim(DroneAnimationRefs.SWIM_ANIMATION_NAME, DroneAnimationRefs.SWIM_ANIMATION)
-                .triggerableAnim(DroneAnimationRefs.WALK_ANIMATION_NAME, DroneAnimationRefs.WALK_ANIMATION)
                 .build()
         );
     }
