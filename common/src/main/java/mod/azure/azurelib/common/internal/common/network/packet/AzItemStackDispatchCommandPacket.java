@@ -16,8 +16,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
 
 public record AzItemStackDispatchCommandPacket(
     UUID itemStackId,
-    AzDispatchCommand dispatchCommand,
-    AzDispatchSide origin
+    AzDispatchCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final Type<AzItemStackDispatchCommandPacket> TYPE = new Type<>(
@@ -29,8 +28,6 @@ public record AzItemStackDispatchCommandPacket(
         AzItemStackDispatchCommandPacket::itemStackId,
         AzDispatchCommand.CODEC,
         AzItemStackDispatchCommandPacket::dispatchCommand,
-        AzDispatchSide.CODEC,
-        AzItemStackDispatchCommandPacket::origin,
         AzItemStackDispatchCommandPacket::new
     );
 
@@ -38,9 +35,7 @@ public record AzItemStackDispatchCommandPacket(
         var animator = AzIdentifiableItemStackAnimatorCache.getInstance().getOrNull(itemStackId);
 
         if (animator != null) {
-            dispatchCommand.getActions().forEach(action -> action.handle(animator));
-        } else {
-            // TODO: queue command.
+            dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
     }
 

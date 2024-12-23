@@ -1,50 +1,51 @@
 package mod.azure.azurelib.fabric.core2.example.entities.drone;
 
-import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
+import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 
-public class DroneAnimationDispatcher extends AzAnimationDispatcher {
+public class DroneAnimationDispatcher {
 
     private final AzDispatchCommand attackClawCommand = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME);
+        .create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_CLAW_ANIMATION_NAME);
 
     private final AzDispatchCommand attackTailCommand = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME);
+        .create(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.ATTACK_TAIL_ANIMATION_NAME);
 
-    private final AzDispatchCommand crawlCommand = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_ANIMATION_NAME);
+    private final AzDispatchCommand crawlCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.CRAWL_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
-    private final AzDispatchCommand crawlHoldCommand = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.CRAWL_HOLD_ANIMATION_NAME);
+    private final AzDispatchCommand crawlHoldCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.CRAWL_ANIMATION_NAME,
+        AzLoopType.HOLD_ON_LAST_FRAME
+    );
 
-    private final AzDispatchCommand idleCommand;
+    private final AzDispatchCommand idleCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.IDLE_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
-    private final AzDispatchCommand runCommand = AzDispatchCommand
-        .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.RUN_ANIMATION_NAME);
+    private final AzDispatchCommand runCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.RUN_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
-    private final AzDispatchCommand walkCommand;
+    private final AzDispatchCommand walkCommand = AzDispatchCommand.create(
+        DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME,
+        DroneAnimationRefs.WALK_ANIMATION_NAME,
+        AzLoopType.LOOP
+    );
 
     private final Drone drone;
 
     public DroneAnimationDispatcher(Drone drone) {
-        super(drone);
         this.drone = drone;
-
-        this.idleCommand = AzDispatchCommand.builder()
-            .setEasingType(AzEasingTypes.random())
-            .setSpeed(1 + (0.5F * drone.getRandom().nextFloat()))
-            .setTransitionInSpeed(drone.getRandom().nextInt(7) + 3)
-            .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.IDLE_ANIMATION_NAME)
-            .build();
-
-        this.walkCommand = AzDispatchCommand.builder()
-            .setEasingType(AzEasingTypes.random())
-            .setSpeed(2.5F)
-            .setTransitionInSpeed(drone.getRandom().nextInt(7) + 3)
-            .playAnimation(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.WALK_ANIMATION_NAME)
-            .build();
     }
 
     public void clientCrawl() {
@@ -64,7 +65,8 @@ public class DroneAnimationDispatcher extends AzAnimationDispatcher {
     }
 
     public void clientSwim() {
-        dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.SWIM_ANIMATION_NAME);
+        // TODO:
+        // dispatchFromClient(DroneAnimationRefs.FULL_BODY_CONTROLLER_NAME, DroneAnimationRefs.SWIM_ANIMATION_NAME);
     }
 
     public void clientWalk() {

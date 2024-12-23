@@ -1,62 +1,25 @@
 package mod.azure.azurelib.core2.animation.controller;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
-
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
+import mod.azure.azurelib.core2.animation.dispatch.command.sequence.AzAnimationSequence;
 
 // TODO: This will eventually be usable in common-side code once animations are moved from assets to data.
 public class AzAbstractAnimationController {
 
     private final String name;
 
-    private final Map<String, AzRawAnimation> triggerableAnimations;
+    protected AzAnimationSequence currentSequence;
 
-    protected AzRawAnimation currentRawAnimation;
+    protected AzDispatchSide currentSequenceOrigin;
 
-    protected AzRawAnimation triggeredAnimation;
+    protected AzAnimationSequence triggeredSequence;
 
-    protected AzAbstractAnimationController(
-        String name,
-        Map<String, AzRawAnimation> triggerableAnimations
-    ) {
+    protected AzAbstractAnimationController(String name) {
         this.name = name;
-        this.triggerableAnimations = triggerableAnimations;
-        this.triggeredAnimation = null;
     }
 
     public String name() {
         return name;
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated(forRemoval = true)
-    public @Nullable AzRawAnimation getTriggerableAnimationOrNull(String animationName) {
-        return triggerableAnimations.get(animationName);
-    }
-
-    /**
-     * Attempt to trigger an animation from the list of {@link AzAbstractAnimationController#triggerableAnimations
-     * triggerable animations} this controller contains.
-     *
-     * @param animName The name of the animation to trigger
-     * @return Whether the controller triggered an animation or not
-     * @deprecated
-     */
-    @Deprecated(forRemoval = true)
-    public boolean tryTriggerAnimation(String animName) {
-        var anim = getTriggerableAnimationOrNull(animName);
-
-        if (anim == null) {
-            return false;
-        }
-
-        this.triggeredAnimation = anim;
-
-        return true;
     }
 
     /**
@@ -67,6 +30,6 @@ public class AzAbstractAnimationController {
      * @return Whether the previous animation finished or not
      */
     public boolean hasAnimationFinished() {
-        return currentRawAnimation != null;
+        return currentSequence != null;
     }
 }

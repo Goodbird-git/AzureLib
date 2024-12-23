@@ -54,7 +54,6 @@ public final class FabricAzureLibMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(EntityAnimTriggerPacket.TYPE, EntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C()
             .register(AzBlockEntityDispatchCommandPacket.TYPE, AzBlockEntityDispatchCommandPacket.CODEC);
-        PayloadTypeRegistry.playS2C().register(AzEntityAnimTriggerPacket.TYPE, AzEntityAnimTriggerPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(AzEntityDispatchCommandPacket.TYPE, AzEntityDispatchCommandPacket.CODEC);
         PayloadTypeRegistry.playS2C()
             .register(AzItemStackDispatchCommandPacket.TYPE, AzItemStackDispatchCommandPacket.CODEC);

@@ -14,15 +14,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import mod.azure.azurelib.common.api.common.ai.pathing.AzureNavigation;
-import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 
 public class DoomHunter extends Monster {
 
-    private final AzAnimationDispatcher animationDispatcher;
+    private final DoomHunterAnimationDispatcher animationDispatcher;
 
     public DoomHunter(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.animationDispatcher = new AzAnimationDispatcher(this);
+        this.animationDispatcher = new DoomHunterAnimationDispatcher(this);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class DoomHunter extends Monster {
         super.tick();
 
         if (this.level().isClientSide && !this.isAggressive()) {
-            animationDispatcher.dispatchFromClient("base_controller", "chainsaw");
+            animationDispatcher.clientChainsaw();
         }
     }
 

@@ -12,10 +12,10 @@ import java.util.Map;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
-import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootPlayAnimationSequenceAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetEasingTypeAction;
-import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetTransitionSpeedAction;
 
 /**
  * The AzDispatchActionRegistry class serves as a centralized registry for mapping {@link AzDispatchAction}
@@ -42,10 +42,10 @@ public class AzDispatchActionRegistry {
         // Root actions
         register(AzRootCancelAction.RESOURCE_LOCATION, AzRootCancelAction.CODEC);
         register(AzRootCancelAllAction.RESOURCE_LOCATION, AzRootCancelAllAction.CODEC);
+        register(AzRootPlayAnimationSequenceAction.RESOURCE_LOCATION, AzRootPlayAnimationSequenceAction.CODEC);
         register(AzRootSetAnimationSpeedAction.RESOURCE_LOCATION, AzRootSetAnimationSpeedAction.CODEC);
         register(AzRootSetEasingTypeAction.RESOURCE_LOCATION, AzRootSetEasingTypeAction.CODEC);
-        register(AzRootSetTransitionInSpeedAction.RESOURCE_LOCATION, AzRootSetTransitionInSpeedAction.CODEC);
-        register(AzRootPlayAnimationAction.RESOURCE_LOCATION, AzRootPlayAnimationAction.CODEC);
+        register(AzRootSetTransitionSpeedAction.RESOURCE_LOCATION, AzRootSetTransitionSpeedAction.CODEC);
 
         // Controller actions
         // TODO:

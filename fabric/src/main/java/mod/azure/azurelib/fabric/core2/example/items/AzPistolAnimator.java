@@ -9,17 +9,10 @@ import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.impl.AzItemAnimator;
-import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
 public class AzPistolAnimator extends AzItemAnimator {
 
     private static final ResourceLocation ANIMATIONS = AzureLib.modResource("animations/item/pistol.animation.json");
-
-    private static final String FIRING_ANIMATION_NAME = "firing";
-
-    private static final AzRawAnimation FIRING_ANIMATION = AzRawAnimation.begin()
-        .then(FIRING_ANIMATION_NAME, AzLoopType.PLAY_ONCE);
 
     public AzPistolAnimator() {
         super(AzAnimatorConfig.defaultConfig());
@@ -29,7 +22,6 @@ public class AzPistolAnimator extends AzItemAnimator {
     public void registerControllers(AzAnimationControllerContainer<ItemStack> animationControllerContainer) {
         animationControllerContainer.add(
             AzAnimationController.builder(this, "base_controller")
-                .triggerableAnim(FIRING_ANIMATION_NAME, FIRING_ANIMATION)
                 .build()
         );
     }

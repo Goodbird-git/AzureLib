@@ -13,18 +13,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import mod.azure.azurelib.common.api.common.ai.pathing.AzureNavigation;
-import mod.azure.azurelib.core2.animation.AzAnimationDispatcher;
 import mod.azure.azurelib.fabric.core2.example.MoveAnalysis;
 
 public class MarauderEntity extends Monster {
 
-    private final AzAnimationDispatcher animationDispatcher;
+    private final MarauderAnimationDispatcher animationDispatcher;
 
     private final MoveAnalysis moveAnalysis;
 
     public MarauderEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.animationDispatcher = new AzAnimationDispatcher(this);
+        this.animationDispatcher = new MarauderAnimationDispatcher(this);
         this.moveAnalysis = new MoveAnalysis(this);
     }
 
@@ -54,17 +53,21 @@ public class MarauderEntity extends Monster {
 
         if (this.level().isClientSide) {
             var isMovingOnGround = moveAnalysis.isMovingHorizontally() && onGround();
-            String animName;
+            Runnable animationRunner;
+
             if (!this.isAlive()) {
-                animName = "death";
+                animationRunner = animationDispatcher::clientDeath;
             } else if (this.tickCount < 300) {
-                animName = "spawn";
+                animationRunner = animationDispatcher::clientSpawn;
             } else if (isMovingOnGround) {
-                animName = this.isAggressive() ? "run" : "walk";
+                animationRunner = this.isAggressive()
+                    ? animationDispatcher::clientRun
+                    : animationDispatcher::clientWalk;
             } else {
-                animName = "idle";
+                animationRunner = animationDispatcher::clientIdle;
             }
-            animationDispatcher.dispatchFromClient("base_controller", animName);
+
+            animationRunner.run();
         } else {
             if (this.tickCount < 300 && this.isAlive()) {
                 if (this.getNavigation() instanceof AzureNavigation azureNavigation) {

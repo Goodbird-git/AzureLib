@@ -59,11 +59,6 @@ public final class NeoForgeAzureLibMod {
             (msg, ctx) -> msg.handle()
         );
         registrar.playBidirectional(
-            AzEntityAnimTriggerPacket.TYPE,
-            AzEntityAnimTriggerPacket.CODEC,
-            (msg, ctx) -> msg.handle()
-        );
-        registrar.playBidirectional(
             AzEntityDispatchCommandPacket.TYPE,
             AzEntityDispatchCommandPacket.CODEC,
             (msg, ctx) -> msg.handle()

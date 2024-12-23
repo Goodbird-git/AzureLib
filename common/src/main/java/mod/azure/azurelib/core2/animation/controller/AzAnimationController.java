@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import mod.azure.azurelib.core2.animation.AzAnimationContext;
 import mod.azure.azurelib.core2.animation.AzAnimator;
@@ -18,10 +16,10 @@ import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationPlayS
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationStopState;
 import mod.azure.azurelib.core2.animation.controller.state.impl.AzAnimationTransitionState;
 import mod.azure.azurelib.core2.animation.controller.state.machine.AzAnimationControllerStateMachine;
-import mod.azure.azurelib.core2.animation.primitive.AzBakedAnimation;
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
+import mod.azure.azurelib.core2.animation.dispatch.command.sequence.AzAnimationSequence;
 import mod.azure.azurelib.core2.animation.primitive.AzQueuedAnimation;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
-import mod.azure.azurelib.core2.animation.primitive.AzStage;
+import mod.azure.azurelib.core2.animation.property.AzAnimationProperties;
 
 /**
  * The actual controller that handles the playing and usage of animations, including their various keyframes and
@@ -38,8 +36,6 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     private final AzAnimationControllerTimer<T> controllerTimer;
 
-    private final AzAnimationProperties animationProperties;
-
     private final AzAnimationQueue animationQueue;
 
     private final AzAnimationControllerStateMachine<T> stateMachine;
@@ -54,14 +50,15 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     protected AzQueuedAnimation currentAnimation;
 
+    private AzAnimationProperties animationProperties;
+
     AzAnimationController(
         String name,
         AzAnimator<T> animator,
         AzAnimationProperties animationProperties,
-        AzKeyframeCallbacks<T> keyframeCallbacks,
-        Map<String, AzRawAnimation> triggerableAnimations
+        AzKeyframeCallbacks<T> keyframeCallbacks
     ) {
-        super(name, triggerableAnimations);
+        super(name);
 
         this.animator = animator;
         this.controllerTimer = new AzAnimationControllerTimer<>(this);
@@ -92,59 +89,41 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         return super.hasAnimationFinished() && stateMachine.isStopped();
     }
 
-    /**
-     * Populates the animation queue with the given {@link AzRawAnimation}
-     *
-     * @param animatable   The animatable object being rendered
-     * @param rawAnimation The raw animation to be compiled
-     * @return Whether the animations were loaded into the queue.
-     */
-    public List<AzQueuedAnimation> tryCreateAnimationQueue(T animatable, AzRawAnimation rawAnimation) {
-        var stages = rawAnimation.getAnimationStages();
+    public List<AzQueuedAnimation> tryCreateAnimationQueue(T animatable, AzAnimationSequence sequence) {
+        var stages = sequence.stages();
         var animations = new ArrayList<AzQueuedAnimation>();
 
         for (var stage : stages) {
-            var animation = Objects.equals(stage.animationName(), AzStage.WAIT)
-                ? AzBakedAnimation.generateWaitAnimation(stage.additionalTicks())
-                : animator.getAnimation(animatable, stage.animationName());
+            var animation = animator.getAnimation(animatable, stage.name());
 
             if (animation == null) {
                 LOGGER.warn(
                     "Unable to find animation: {} for {}",
-                    stage.animationName(),
+                    stage.name(),
                     animatable.getClass().getSimpleName()
                 );
                 return List.of();
             } else {
-                animations.add(new AzQueuedAnimation(animation, stage.loopType()));
+                animations.add(new AzQueuedAnimation(animation, stage.properties().loopType()));
             }
         }
 
         return animations;
     }
 
-    /**
-     * Sets the currently loaded animation to the one provided.<br>
-     * This method may be safely called every render frame, as passing the same builder that is already loaded will do
-     * nothing.<br>
-     * Pass null to this method to tell the controller to stop.<br>
-     *
-     * @deprecated
-     */
-    @Deprecated(forRemoval = true)
-    public void setAnimation(T animatable, AzRawAnimation rawAnimation) {
-        if (rawAnimation == null || rawAnimation.getAnimationStages().isEmpty()) {
+    public void setAnimation(T animatable, AzAnimationSequence sequence) {
+        if (sequence == null || sequence.stages().isEmpty()) {
             stateMachine.stop();
             return;
         }
 
-        if (!rawAnimation.equals(currentRawAnimation)) {
-            var animations = tryCreateAnimationQueue(animatable, rawAnimation);
+        if (!sequence.equals(currentSequence)) {
+            var animations = tryCreateAnimationQueue(animatable, sequence);
 
             if (!animations.isEmpty()) {
                 animationQueue.clear();
                 animationQueue.addAll(animations);
-                this.currentRawAnimation = rawAnimation;
+                this.currentSequence = sequence;
                 stateMachine.transition();
                 return;
             }
@@ -153,33 +132,22 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         }
     }
 
-    @Override
-    public boolean tryTriggerAnimation(String animName) {
-        var triggeredSuccessfully = super.tryTriggerAnimation(animName);
-
-        if (triggeredSuccessfully && stateMachine.isStopped()) {
-            stateMachine.transition();
-        }
-
-        return triggeredSuccessfully;
-    }
-
     /**
      * Handle a given AnimationState, alongside the current triggered animation if applicable
      */
     private void handleAnimationState(T animatable) {
-        if (triggeredAnimation != null) {
-            if (currentRawAnimation != triggeredAnimation) {
+        if (triggeredSequence != null) {
+            if (currentSequence == null || !currentSequence.equals(triggeredSequence)) {
                 this.currentAnimation = null;
             }
 
-            setAnimation(animatable, triggeredAnimation);
+            setAnimation(animatable, triggeredSequence);
 
             if (!hasAnimationFinished()) {
                 return;
             }
 
-            this.triggeredAnimation = null;
+            this.triggeredSequence = null;
         }
     }
 
@@ -197,11 +165,41 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
         // Run state machine updates.
         stateMachine.update();
 
+        if (currentAnimation == null) {
+            if (animationQueue.isEmpty()) {
+                // If there is no animation to play, stop.
+                stateMachine.stop();
+                return;
+            }
+
+            controllerTimer.update();
+        }
+
         boneAnimationQueueCache.update(animationProperties.easingType());
+    }
+
+    public void run(AzDispatchSide originSide, AzAnimationSequence sequence) {
+        if (currentSequenceOrigin == AzDispatchSide.SERVER && originSide == AzDispatchSide.CLIENT) {
+            if (!hasAnimationFinished()) {
+                // If we're playing a server-side sequence, ignore client-side sequences.
+                return;
+            }
+        }
+
+        this.currentSequenceOrigin = originSide;
+        this.triggeredSequence = sequence;
+
+        if (stateMachine.isStopped()) {
+            stateMachine.transition();
+        }
     }
 
     public AzAnimationProperties animationProperties() {
         return animationProperties;
+    }
+
+    public void setAnimationProperties(AzAnimationProperties animationProperties) {
+        this.animationProperties = animationProperties;
     }
 
     public AzAnimationQueue animationQueue() {
@@ -234,5 +232,10 @@ public class AzAnimationController<T> extends AzAbstractAnimationController {
 
     public void setCurrentAnimation(AzQueuedAnimation currentAnimation) {
         this.currentAnimation = currentAnimation;
+
+        if (currentAnimation == null) {
+            this.currentSequence = null;
+            this.currentSequenceOrigin = null;
+        }
     }
 }

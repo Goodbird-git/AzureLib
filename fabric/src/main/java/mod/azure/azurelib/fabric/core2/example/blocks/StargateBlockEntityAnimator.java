@@ -8,17 +8,12 @@ import mod.azure.azurelib.core2.animation.AzAnimatorConfig;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.impl.AzBlockAnimator;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
 public class StargateBlockEntityAnimator extends AzBlockAnimator<StargateBlockEntity> {
 
     private static final ResourceLocation ANIMATIONS = AzureLib.modResource(
         "animations/block/stargate.animation.json"
     );
-
-    private static final String SPIN_ANIMATION_NAME = "spinning";
-
-    private static final AzRawAnimation SPIN_ANIMATION = AzRawAnimation.begin().thenLoop(SPIN_ANIMATION_NAME);
 
     protected StargateBlockEntityAnimator() {
         super(AzAnimatorConfig.defaultConfig());
@@ -28,7 +23,6 @@ public class StargateBlockEntityAnimator extends AzBlockAnimator<StargateBlockEn
     public void registerControllers(AzAnimationControllerContainer<StargateBlockEntity> animationControllerContainer) {
         animationControllerContainer.add(
             AzAnimationController.builder(this, "base_controller")
-                .triggerableAnim(SPIN_ANIMATION_NAME, SPIN_ANIMATION)
                 .build()
         );
     }

@@ -14,8 +14,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
 
 public record AzBlockEntityDispatchCommandPacket(
     BlockPos blockPos,
-    AzDispatchCommand dispatchCommand,
-    AzDispatchSide origin
+    AzDispatchCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final CustomPacketPayload.Type<AzBlockEntityDispatchCommandPacket> TYPE = new Type<>(
@@ -27,8 +26,6 @@ public record AzBlockEntityDispatchCommandPacket(
         AzBlockEntityDispatchCommandPacket::blockPos,
         AzDispatchCommand.CODEC,
         AzBlockEntityDispatchCommandPacket::dispatchCommand,
-        AzDispatchSide.CODEC,
-        AzBlockEntityDispatchCommandPacket::origin,
         AzBlockEntityDispatchCommandPacket::new
     );
 
@@ -43,7 +40,7 @@ public record AzBlockEntityDispatchCommandPacket(
         var animator = AzAnimatorAccessor.getOrNull(blockEntity);
 
         if (animator != null) {
-            dispatchCommand.getActions().forEach(action -> action.handle(animator));
+            dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
     }
 

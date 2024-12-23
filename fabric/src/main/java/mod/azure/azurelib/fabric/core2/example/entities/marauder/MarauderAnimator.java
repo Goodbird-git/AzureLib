@@ -10,41 +10,12 @@ import mod.azure.azurelib.core2.animation.controller.AzAnimationController;
 import mod.azure.azurelib.core2.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.core2.animation.controller.keyframe.AzKeyframeCallbacks;
 import mod.azure.azurelib.core2.animation.impl.AzEntityAnimator;
-import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
-import mod.azure.azurelib.core2.animation.primitive.AzRawAnimation;
 
 public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
 
     private static final ResourceLocation ANIMATIONS = AzureLib.modResource(
         "animations/entity/marauder.animation.json"
     );
-
-    private static final String IDLE_ANIMATION_NAME = "idle";
-
-    private static final String WALK_ANIMATION_NAME = "walk";
-
-    private static final String SPAWN_ANIMATION_NAME = "spawn";
-
-    private static final String DEATH_ANIMATION_NAME = "death";
-
-    private static final String RUN_ANIMATION_NAME = "run";
-
-    private static final String MELEE_ANIMATION_NAME = "axe_attack";
-
-    private static final AzRawAnimation IDLE_ANIMATION = AzRawAnimation.begin().thenLoop(IDLE_ANIMATION_NAME);
-
-    private static final AzRawAnimation WALK_ANIMATION = AzRawAnimation.begin().thenLoop(WALK_ANIMATION_NAME);
-
-    private static final AzRawAnimation SPAWN_ANIMATION = AzRawAnimation.begin()
-        .then(SPAWN_ANIMATION_NAME, AzLoopType.PLAY_ONCE);
-
-    private static final AzRawAnimation DEATH_ANIMATION = AzRawAnimation.begin()
-        .then(DEATH_ANIMATION_NAME, AzLoopType.HOLD_ON_LAST_FRAME);
-
-    private static final AzRawAnimation RUN_ANIMATION = AzRawAnimation.begin().thenLoop(RUN_ANIMATION_NAME);
-
-    private static final AzRawAnimation MELEE_ANIMATION = AzRawAnimation.begin()
-        .then(MELEE_ANIMATION_NAME, AzLoopType.PLAY_ONCE);
 
     public MarauderAnimator() {
         super();
@@ -119,12 +90,6 @@ public class MarauderAnimator extends AzEntityAnimator<MarauderEntity> {
                         )
                         .build()
                 )
-                .triggerableAnim(IDLE_ANIMATION_NAME, IDLE_ANIMATION)
-                .triggerableAnim(WALK_ANIMATION_NAME, WALK_ANIMATION)
-                .triggerableAnim(RUN_ANIMATION_NAME, RUN_ANIMATION)
-                .triggerableAnim(MELEE_ANIMATION_NAME, MELEE_ANIMATION)
-                .triggerableAnim(DEATH_ANIMATION_NAME, DEATH_ANIMATION)
-                .triggerableAnim(SPAWN_ANIMATION_NAME, SPAWN_ANIMATION)
                 .build()
         );
     }
