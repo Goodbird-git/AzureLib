@@ -3,6 +3,8 @@ package mod.azure.azurelib.core2.animation.property;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 import mod.azure.azurelib.core2.animation.easing.AzEasingTypes;
 import mod.azure.azurelib.core2.animation.property.codec.AzAnimationPropertiesCodec;
@@ -65,5 +67,26 @@ public class AzAnimationProperties {
 
     public float transitionLength() {
         return transitionLength == null ? DEFAULT.transitionLength() : transitionLength;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+
+        AzAnimationProperties that = (AzAnimationProperties) object;
+
+        return Objects.equals(animationSpeed, that.animationSpeed) && Objects.equals(easingType, that.easingType)
+            && Objects.equals(transitionLength, that.transitionLength);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(animationSpeed, easingType, transitionLength);
     }
 }
