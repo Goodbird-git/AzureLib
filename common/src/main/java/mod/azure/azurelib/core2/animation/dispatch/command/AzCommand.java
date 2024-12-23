@@ -95,10 +95,12 @@ public record AzCommand(List<AzAction> actions) {
      * @param entity the target {@link Entity} for which the animation commands are dispatched.
      */
     public void sendForEntity(Entity entity) {
-        if (isClientSide(entity)) {
+        if (entity.level().isClientSide()) {
             dispatchFromClient(entity);
         } else {
-            handleServerDispatchForEntity(entity);
+            var entityId = entity.getId();
+            var packet = new AzEntityDispatchCommandPacket(entityId, this);
+            Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         }
     }
 
@@ -110,10 +112,12 @@ public record AzCommand(List<AzAction> actions) {
      * @param entity the target {@link BlockEntity} for which the animation commands are dispatched.
      */
     public void sendForBlockEntity(BlockEntity entity) {
-        if (isClientSide(entity)) {
+        if (entity.getLevel().isClientSide()) {
             dispatchFromClient(entity);
         } else {
-            handleServerDispatchForBlockEntity(entity);
+            var entityBlockPos = entity.getBlockPos();
+            var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, this);
+            Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
         }
     }
 
@@ -126,10 +130,22 @@ public record AzCommand(List<AzAction> actions) {
      * @param itemStack the {@link ItemStack} on which the animation commands are dispatched.
      */
     public void sendForItem(Entity entity, ItemStack itemStack) {
-        if (isClientSide(entity)) {
+        if (entity.level().isClientSide()) {
             dispatchFromClient(entity);
         } else {
-            handleServerDispatchForItem(entity, itemStack);
+            var uuid = itemStack.get(AzureLib.AZ_ID.get());
+
+            if (uuid == null) {
+                AzureLib.LOGGER.warn(
+                    "Could not find item stack UUID during dispatch. Did you forget to register an identity for the item? Item: {}, Item Stack: {}",
+                    itemStack.getItem(),
+                    itemStack
+                );
+                return;
+            }
+
+            var packet = new AzItemStackDispatchCommandPacket(uuid, this);
+            Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         }
     }
 
@@ -139,45 +155,5 @@ public record AzCommand(List<AzAction> actions) {
         if (animator != null) {
             actions.forEach(action -> action.handle(AzDispatchSide.CLIENT, animator));
         }
-    }
-
-    private void handleServerDispatchForEntity(Entity entity) {
-        var entityId = entity.getId();
-        var packet = new AzEntityDispatchCommandPacket(entityId, this);
-        Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
-    }
-
-    private void handleServerDispatchForBlockEntity(BlockEntity entity) {
-        var entityBlockPos = entity.getBlockPos();
-        var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, this);
-        Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
-    }
-
-    private void handleServerDispatchForItem(Entity entity, ItemStack itemStack) {
-        var uuid = itemStack.get(AzureLib.AZ_ID.get());
-
-        if (uuid == null) {
-            AzureLib.LOGGER.warn(
-                "Could not find item stack UUID during dispatch. Did you forget to register an identity for the item? Item: {}, Item Stack: {}",
-                itemStack.getItem(),
-                itemStack
-            );
-            return;
-        }
-
-        var packet = new AzItemStackDispatchCommandPacket(uuid, this);
-        Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
-    }
-
-    private <T> boolean isClientSide(T levelHolder) {
-        if (levelHolder instanceof Entity entity) {
-            return entity.level().isClientSide();
-        }
-
-        if (levelHolder instanceof BlockEntity entity) {
-            return entity.getLevel().isClientSide();
-        }
-
-        throw new IllegalArgumentException("Unhandled animatable type: " + levelHolder);
     }
 }
