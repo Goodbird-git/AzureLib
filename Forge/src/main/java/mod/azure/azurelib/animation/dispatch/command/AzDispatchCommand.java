@@ -1,7 +1,8 @@
 package mod.azure.azurelib.animation.dispatch.command;
 
 import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
-import mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchCommandCodec;
+import mod.azure.azurelib.animation.primitive.AzLoopType;
+import mod.azure.azurelib.animation.property.codec.AzListStreamCodec;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,9 +17,13 @@ import java.util.List;
  */
 public class AzDispatchCommand {
 
-    public static final AzDispatchCommandCodec CODEC = new AzDispatchCommandCodec();
+    public List<AzDispatchAction> actions;
 
-    private final List<AzDispatchAction> actions;
+    public static final StreamCodec<FriendlyByteBuf, AzDispatchCommand> CODEC = StreamCodec.composite(
+            new AzListStreamCodec<>(AzDispatchAction.CODEC),
+            AzDispatchCommand::actions,
+            AzDispatchCommand::new
+    );
 
     public AzDispatchCommand(List<AzDispatchAction> actions) {
         this.actions = actions;
@@ -28,16 +33,24 @@ public class AzDispatchCommand {
         return new AzDispatchRootCommandBuilder();
     }
 
+    public static AzDispatchCommand create(String controllerName, String animationName) {
+        return create(controllerName, animationName, AzLoopType.PLAY_ONCE);
+    }
+
     /**
      * Creates a dispatch command to play a specified animation on a given controller.
      *
      * @param controllerName the name of the animation controller on which the animation should be played
      * @param animationName  the name of the animation to be played on the specified controller
+     * @param loopType the loop type for the animation to use
      * @return an instance of {@code AzDispatchCommand} representing the command to play the desired animation
      */
-    public static AzDispatchCommand playAnimation(String controllerName, String animationName) {
+    public static AzDispatchCommand create(String controllerName, String animationName, AzLoopType loopType) {
         return builder()
-            .playAnimation(controllerName, animationName)
+            .playSequence(
+                        controllerName,
+                        sequenceBuilder -> sequenceBuilder.queue(animationName, props -> props.withLoopType(loopType))
+                )
             .build();
     }
 
@@ -49,7 +62,7 @@ public class AzDispatchCommand {
      * @return a collection of {@link AzDispatchAction} instances representing the actions associated with this dispatch
      *         command
      */
-    public Collection<? extends AzDispatchAction> getActions() {
+    public Collection<? extends AzDispatchAction> actions() {
         return actions;
     }
 }

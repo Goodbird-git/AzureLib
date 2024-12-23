@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
+import java.util.UUID;
 
 public class AzDispatchExecutor {
     List<AzDispatchCommand> commands;
@@ -108,7 +109,7 @@ public class AzDispatchExecutor {
         AzAnimator<T> animator = AzAnimatorAccessor.getOrNull(animatable);
 
         if (animator != null) {
-            commands.forEach(command -> command.getActions().forEach(action -> action.handle(animator)));
+            commands.forEach(command -> command.actions().forEach(action -> action.handle(origin, animator)));
         }
     }
 
@@ -117,7 +118,7 @@ public class AzDispatchExecutor {
 
         commands.forEach(command -> {
             // TODO: Buffer commands together.
-            var packet = new AzEntityDispatchCommandPacket(entityId, command, origin);
+            AzEntityDispatchCommandPacket packet = new AzEntityDispatchCommandPacket(entityId, command);
             Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         });
     }
@@ -127,16 +128,26 @@ public class AzDispatchExecutor {
 
         commands.forEach(command -> {
             // TODO: Batch commands together.
-            var packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, command, origin);
+            AzBlockEntityDispatchCommandPacket packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, command);
             Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
         });
     }
 
     private void handleServerDispatchForItem(Entity entity, ItemStack itemStack) {
-        java.util.UUID uuid = itemStack.serializeNBT().getUniqueId("az_id");
+        UUID uuid = itemStack.serializeNBT().getUniqueId("az_id");
+
+        if (uuid == null) {
+            AzureLib.LOGGER.warn(
+                    "Could not find item stack UUID during dispatch. Did you forget to register an identity for the item? Item: {}, Item Stack: {}",
+                    itemStack.getItem(),
+                    itemStack
+            );
+            return;
+        }
+
         commands.forEach(command -> {
             // TODO: Batch commands together.
-            var packet = new AzItemStackDispatchCommandPacket(uuid, command, origin);
+            AzItemStackDispatchCommandPacket packet = new AzItemStackDispatchCommandPacket(uuid, command);
             Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
         });
     }

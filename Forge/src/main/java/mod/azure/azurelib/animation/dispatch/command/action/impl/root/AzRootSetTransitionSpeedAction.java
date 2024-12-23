@@ -4,27 +4,26 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
-import mod.azure.azurelib.animation.easing.AzEasingType;
 import net.minecraft.util.ResourceLocation;
 
-public class AzRootSetEasingTypeAction implements AzDispatchAction {
-    public AzEasingType easingType;
+public class AzRootSetTransitionSpeedAction implements AzDispatchAction {
+    public float transitionSpeed;
 
-    public static final StreamCodec<FriendlyByteBuf, AzRootSetEasingTypeAction> CODEC = StreamCodec.composite(
-            AzEasingType.STREAM_CODEC,
-            AzRootSetEasingTypeAction::easingType,
-            AzRootSetEasingTypeAction::new
+    public static final StreamCodec<FriendlyByteBuf, AzRootSetTransitionSpeedAction> CODEC = StreamCodec.composite(
+            ByteBufCodecs.FLOAT,
+            AzRootSetTransitionSpeedAction::transitionSpeed,
+            AzRootSetTransitionSpeedAction::new
     );
 
-    public AzRootSetEasingTypeAction(AzEasingType easingType) {
-        this.easingType = easingType;
+    public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/set_transition_speed");
+
+    public AzRootSetTransitionSpeedAction(float transitionSpeed) {
+        this.transitionSpeed = transitionSpeed;
     }
 
-    public AzEasingType easingType() {
-        return easingType;
+    public float transitionSpeed() {
+        return transitionSpeed;
     }
-
-    public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/set_easing_type");
 
     @Override
     public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
@@ -32,7 +31,7 @@ public class AzRootSetEasingTypeAction implements AzDispatchAction {
                 .getAll()
                 .forEach(
                         controller -> controller.setAnimationProperties(
-                                controller.animationProperties().withEasingType(easingType)
+                                controller.animationProperties().withTransitionLength(transitionSpeed)
                         )
                 );
     }

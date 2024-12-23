@@ -2,6 +2,7 @@ package mod.azure.azurelib.animation.dispatch.command.action.impl.root;
 
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
+import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,12 +27,13 @@ public class AzRootSetAnimationSpeedAction implements AzDispatchAction {
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/set_animation_speed");
 
     @Override
-    public void handle(AzAnimator<?> animator) {
+    public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
         animator.getAnimationControllerContainer()
                 .getAll()
                 .forEach(
-                        controller -> controller.animationProperties()
-                                .setAnimationSpeed(animationSpeed)
+                        controller -> controller.setAnimationProperties(
+                                controller.animationProperties().withAnimationSpeed(animationSpeed)
+                        )
                 );
     }
 

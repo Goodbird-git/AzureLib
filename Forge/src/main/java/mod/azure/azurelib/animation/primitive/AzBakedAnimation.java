@@ -2,9 +2,6 @@ package mod.azure.azurelib.animation.primitive;
 
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.keyframe.AzBoneAnimation;
-import mod.azure.azurelib.core.keyframe.event.data.CustomInstructionKeyframeData;
-import mod.azure.azurelib.core.keyframe.event.data.ParticleKeyframeData;
-import mod.azure.azurelib.core.keyframe.event.data.SoundKeyframeData;
 
 /**
  * A compiled animation instance for use by the {@link AzAnimationController}<br>
@@ -44,26 +41,5 @@ public class AzBakedAnimation {
 
     public AzKeyframes keyframes() {
         return keyframes;
-    }
-
-    /**
-     * Generates an AzBakedAnimation instance configured as a "WAIT" animation stage with a specified length. The animation
-     * will play once and has no bone animations or keyframe data.
-     *
-     * @param length The duration of the animation in seconds.
-     * @return An AzBakedAnimation instance representing the wait animation with the specified duration.
-     */
-    public static AzBakedAnimation generateWaitAnimation(double length) {
-        return new AzBakedAnimation(
-            AzStage.WAIT,
-            length,
-            AzLoopType.PLAY_ONCE,
-            new AzBoneAnimation[0],
-            new AzKeyframes(
-                new SoundKeyframeData[0],
-                new ParticleKeyframeData[0],
-                new CustomInstructionKeyframeData[0]
-            )
-        );
     }
 }

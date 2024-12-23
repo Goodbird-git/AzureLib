@@ -1,21 +1,15 @@
 package mod.azure.azurelib.common.internal.common.network.packet;
 
-import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
-import mod.azure.azurelib.core2.animation.cache.AzIdentifiableItemStackAnimatorCache;
-import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.internal.NotNull;
+import mod.azure.azurelib.animation.cache.AzIdentifiableItemStackAnimatorCache;
+import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
+import mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand;
 
 import java.util.UUID;
 
 public record AzItemStackDispatchCommandPacket(
     UUID itemStackId,
-    AzDispatchCommand dispatchCommand,
-    AzDispatchSide origin
+    AzDispatchCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final Type<AzItemStackDispatchCommandPacket> TYPE = new Type<>(
@@ -27,8 +21,6 @@ public record AzItemStackDispatchCommandPacket(
         AzItemStackDispatchCommandPacket::itemStackId,
         AzDispatchCommand.CODEC,
         AzItemStackDispatchCommandPacket::dispatchCommand,
-        AzDispatchSide.CODEC,
-        AzItemStackDispatchCommandPacket::origin,
         AzItemStackDispatchCommandPacket::new
     );
 
@@ -36,9 +28,7 @@ public record AzItemStackDispatchCommandPacket(
         var animator = AzIdentifiableItemStackAnimatorCache.getInstance().getOrNull(itemStackId);
 
         if (animator != null) {
-            dispatchCommand.getActions().forEach(action -> action.handle(animator));
-        } else {
-            // TODO: queue command.
+            dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
     }
 

@@ -3,19 +3,22 @@ v3.0.0
 TODO: 
 - mod.azure.azurelib.animation.dispatch.AzDispatchSide
 - mod.azure.azurelib.animation.dispatch.AzDispatchExecutor
+- mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand
+- mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand
+- mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec
 - mod.azure.azurelib.animation.dispatch.command.action.registry.AzDispatchActionRegistry
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAction
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAllAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootPlayAnimationAction
+- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootPlayAnimationSequenceAction
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetEasingTypeAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetTransitionInSpeedAction
+- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetTransitionSpeedAction
 - mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec
 - mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchCommandCodec
+- mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequence
 - mod.azure.azurelib.animation.easing.AzEasingType
 - mod.azure.azurelib.animation.easing.AzEasingTypes
 - mod.azure.azurelib.animation.easing.AzEasingUtil
-- mod.azure.azurelib.animation.AzAnimationDispatcher
 - mod.azure.azurelib.cache.AzResourceCache
 - mod.azure.azurelib.render.textures.AnimatableTexture
 - mod.azure.azurelib.render.textures.AzAutoGlowingTexture
@@ -26,7 +29,6 @@ TODO:
 - mod.azure.azurelib.model.AzBone
 - mod.azure.azurelib.model.AzBoneSnapshot
 - mod.azure.azurelib.network.AzBlockEntityDispatchCommandPacket
-- mod.azure.azurelib.network.AzEntityAnimTriggerPacket
 - mod.azure.azurelib.network.AzEntityDispatchCommandPacket
 - mod.azure.azurelib.network.AzItemStackDispatchCommandPacket
 - mod.azure.azurelib.network.AzureLibNetwork
@@ -55,5 +57,4 @@ TODO:
 - mod.azure.azurelib.render.layer.AzBlockAndItemLayer
 - mod.azure.azurelib.render.layer.AzAutoGlowingLayer
 - mod.azure.azurelib.render.AzModelRenderer
-- mod.azure.azurelib.render.AzRendererPipeline
 - mod.azure.azurelib.render.AzRendererPipelineContext

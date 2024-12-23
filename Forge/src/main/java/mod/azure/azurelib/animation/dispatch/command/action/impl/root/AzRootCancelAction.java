@@ -3,6 +3,7 @@ package mod.azure.azurelib.animation.dispatch.command.action.impl.root;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
 import net.minecraft.util.ResourceLocation;
 
@@ -61,7 +62,7 @@ public class AzRootCancelAction implements AzDispatchAction {
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/cancel");
 
     @Override
-    public void handle(AzAnimator<?> animator) {
+    public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
         AzAnimationController controller = animator.getAnimationControllerContainer().getOrNull(controllerName);
 
         if (controller != null) {

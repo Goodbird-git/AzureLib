@@ -1,19 +1,15 @@
 package mod.azure.azurelib.common.internal.common.network.packet;
 
-import mod.azure.azurelib.common.api.client.helper.ClientUtils;
-import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
-import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
-import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
+import mod.azure.azurelib.animation.AzAnimatorAccessor;
+import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
+import mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.util.ClientUtils;
+import net.minecraft.util.math.BlockPos;
 
 public record AzBlockEntityDispatchCommandPacket(
     BlockPos blockPos,
-    AzDispatchCommand dispatchCommand,
-    AzDispatchSide origin
+    AzDispatchCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final CustomPacketPayload.Type<AzBlockEntityDispatchCommandPacket> TYPE = new Type<>(
@@ -25,8 +21,6 @@ public record AzBlockEntityDispatchCommandPacket(
         AzBlockEntityDispatchCommandPacket::blockPos,
         AzDispatchCommand.CODEC,
         AzBlockEntityDispatchCommandPacket::dispatchCommand,
-        AzDispatchSide.CODEC,
-        AzBlockEntityDispatchCommandPacket::origin,
         AzBlockEntityDispatchCommandPacket::new
     );
 
@@ -41,7 +35,7 @@ public record AzBlockEntityDispatchCommandPacket(
         var animator = AzAnimatorAccessor.getOrNull(blockEntity);
 
         if (animator != null) {
-            dispatchCommand.getActions().forEach(action -> action.handle(animator));
+            dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
     }
 

@@ -1,6 +1,8 @@
 package mod.azure.azurelib.animation.dispatch.command;
 
 import mod.azure.azurelib.animation.dispatch.command.action.impl.root.*;
+import mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequence;
+import mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequenceBuilder;
 import mod.azure.azurelib.animation.easing.AzEasingType;
 
 import java.util.function.UnaryOperator;
@@ -22,35 +24,26 @@ public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDis
         return self();
     }
 
-    public AzDispatchRootCommandBuilder setTransitionInSpeed(float transitionSpeed) {
-        actions.add(new AzRootSetTransitionInSpeedAction(transitionSpeed));
+    public AzDispatchRootCommandBuilder setTransitionSpeed(float transitionSpeed) {
+        actions.add(new AzRootSetTransitionSpeedAction(transitionSpeed));
         return self();
     }
-
-    // TODO:
-    // public AzDispatchRootCommandBuilder setTransitionOutSpeed(float transitionSpeed) {
-    // // TODO:
-    // return self();
-    // }
 
     public AzDispatchRootCommandBuilder cancel(String controllerName) {
         actions.add(new AzRootCancelAction(controllerName));
         return self();
     }
 
-    public AzDispatchRootCommandBuilder forController(
-        String controllerName,
-        UnaryOperator<AzDispatchControllerCommandBuilder> builderUnaryOperator
-    ) {
-        AzDispatchControllerCommandBuilder builder = new AzDispatchControllerCommandBuilder();
-        builderUnaryOperator.apply(builder);
-        AzDispatchCommand command = builder.build();
-        actions.addAll(command.getActions());
-        return self();
+    public AzDispatchRootCommandBuilder play(String controllerName, String animationName) {
+        return playSequence(controllerName, builder -> builder.queue(animationName));
     }
 
-    public AzDispatchRootCommandBuilder playAnimation(String controllerName, String animationName) {
-        actions.add(new AzRootPlayAnimationAction(controllerName, animationName));
+    public AzDispatchRootCommandBuilder playSequence(
+            String controllerName,
+            UnaryOperator<AzAnimationSequenceBuilder> builderUnaryOperator
+    ) {
+        AzAnimationSequence sequence = builderUnaryOperator.apply(new AzAnimationSequenceBuilder()).build();
+        actions.add(new AzRootPlayAnimationSequenceAction(controllerName, sequence));
         return self();
     }
 }

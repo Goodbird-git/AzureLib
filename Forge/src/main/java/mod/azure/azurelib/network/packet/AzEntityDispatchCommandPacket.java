@@ -1,20 +1,14 @@
 package mod.azure.azurelib.common.internal.common.network.packet;
 
-import mod.azure.azurelib.common.api.client.helper.ClientUtils;
-import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
-import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
-import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.internal.NotNull;
+import mod.azure.azurelib.animation.AzAnimatorAccessor;
+import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
+import mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.util.ClientUtils;
 
 public record AzEntityDispatchCommandPacket(
     int entityId,
-    AzDispatchCommand dispatchCommand,
-    AzDispatchSide origin
+    AzDispatchCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final Type<AzEntityDispatchCommandPacket> TYPE = new Type<>(
@@ -26,8 +20,6 @@ public record AzEntityDispatchCommandPacket(
         AzEntityDispatchCommandPacket::entityId,
         AzDispatchCommand.CODEC,
         AzEntityDispatchCommandPacket::dispatchCommand,
-        AzDispatchSide.CODEC,
-        AzEntityDispatchCommandPacket::origin,
         AzEntityDispatchCommandPacket::new
     );
 
@@ -41,7 +33,7 @@ public record AzEntityDispatchCommandPacket(
         var animator = AzAnimatorAccessor.getOrNull(entity);
 
         if (animator != null) {
-            dispatchCommand.getActions().forEach(action -> action.handle(animator));
+            dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
     }
 

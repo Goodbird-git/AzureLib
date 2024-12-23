@@ -4,6 +4,7 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
+import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,13 +27,11 @@ public class AzRootCancelAllAction implements AzDispatchAction {
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/cancel_all");
 
     @Override
-    public void handle(AzAnimator<?> animator) {
+    public void handle(AzDispatchSide originSide, AzAnimator<?> animator) {
         AzAnimationControllerContainer controllerContainer = animator.getAnimationControllerContainer();
         Collection<AzAnimationController> controllers = controllerContainer.getAll();
 
-        controllers.forEach(controller -> {
-            controller.setCurrentAnimation(null);
-        });
+        controllers.forEach(controller -> controller.setCurrentAnimation(null));
     }
 
     @Override
