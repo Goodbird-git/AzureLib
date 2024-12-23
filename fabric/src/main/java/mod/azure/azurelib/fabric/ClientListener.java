@@ -22,7 +22,6 @@ import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmor;
 import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmorRenderer;
 import mod.azure.azurelib.fabric.core2.example.blocks.StargateRender;
 import mod.azure.azurelib.fabric.core2.example.entities.doomhunter.DoomHunterRenderer;
-import mod.azure.azurelib.fabric.core2.example.entities.drone.DroneRenderer;
 import mod.azure.azurelib.fabric.core2.example.entities.marauder.MarauderRenderer;
 import mod.azure.azurelib.fabric.core2.example.items.AzPistol;
 import mod.azure.azurelib.fabric.core2.example.items.AzPistolRenderer;
@@ -85,7 +84,6 @@ public final class ClientListener implements ClientModInitializer {
 
         AzItemRendererRegistry.register(AzPistol.class, AzPistolRenderer::new);
         AzArmorRendererRegistry.register(AzDoomArmor.class, AzDoomArmorRenderer::new);
-        EntityRendererRegistry.register(ExampleEntityTypes.DRONE, DroneRenderer::new);
         EntityRendererRegistry.register(ExampleEntityTypes.DOOMHUNTER, DoomHunterRenderer::new);
         EntityRendererRegistry.register(ExampleEntityTypes.MARAUDER, MarauderRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(FabricAzureLibMod.STARGATE, RenderType.translucent());
