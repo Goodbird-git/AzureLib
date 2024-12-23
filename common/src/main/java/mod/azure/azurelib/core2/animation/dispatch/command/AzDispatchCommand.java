@@ -45,7 +45,7 @@ public record AzDispatchCommand(List<AzDispatchAction> actions) {
             .play(controllerName, animationName)
             .playSequence(
                 controllerName,
-                sequenceBuilder -> sequenceBuilder.queue(animationName, props -> props.setLoopType(loopType))
+                sequenceBuilder -> sequenceBuilder.queue(animationName, props -> props.withLoopType(loopType))
             )
             .build();
     }
