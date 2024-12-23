@@ -16,17 +16,23 @@ public class AzItemRendererRegistry {
 
     private static final Map<Item, AzItemRenderer> ITEM_TO_RENDERER = new HashMap<>();
 
-    private static final Map<Class<? extends Item>, Supplier<AzItemRenderer>> ITEM_CLASS_TO_RENDERER_SUPPLIER =
-        new HashMap<>();
+    private static final Map<Item, Supplier<AzItemRenderer>> ITEM_TO_RENDERER_SUPPLIER = new HashMap<>();
 
-    public static void register(Class<? extends Item> itemClass, Supplier<AzItemRenderer> itemRendererSupplier) {
-        ITEM_CLASS_TO_RENDERER_SUPPLIER.put(itemClass, itemRendererSupplier);
+    public static void register(Item item, Supplier<AzItemRenderer> itemRendererSupplier) {
+        ITEM_TO_RENDERER_SUPPLIER.put(item, itemRendererSupplier);
+    }
+
+    public static void register(Supplier<AzItemRenderer> itemRendererSupplier, Item item, Item... items) {
+        register(item, itemRendererSupplier);
+
+        for (var otherItem : items) {
+            register(otherItem, itemRendererSupplier);
+        }
     }
 
     public static @Nullable AzItemRenderer getOrNull(Item item) {
         return ITEM_TO_RENDERER.computeIfAbsent(item, ($) -> {
-            var itemClass = item.getClass();
-            var rendererSupplier = ITEM_CLASS_TO_RENDERER_SUPPLIER.get(itemClass);
+            var rendererSupplier = ITEM_TO_RENDERER_SUPPLIER.get(item);
             return rendererSupplier == null ? null : rendererSupplier.get();
         });
     }
