@@ -13,6 +13,11 @@ import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 
 public class AzRootCommandBuilder extends AzCommandBuilder<AzRootCommandBuilder> {
 
+    public AzRootCommandBuilder append(AzCommand command) {
+        actions.addAll(command.actions());
+        return this;
+    }
+
     public AzRootCommandBuilder cancelAll() {
         actions.add(new AzRootCancelAllAction());
         return self();
