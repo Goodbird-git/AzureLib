@@ -11,11 +11,11 @@ import mod.azure.azurelib.common.internal.common.network.AbstractPacket;
 import mod.azure.azurelib.common.platform.services.AzureLibNetwork;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.core2.animation.dispatch.command.AzCommand;
 
 public record AzEntityDispatchCommandPacket(
     int entityId,
-    AzDispatchCommand dispatchCommand
+    AzCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final Type<AzEntityDispatchCommandPacket> TYPE = new Type<>(
@@ -25,7 +25,7 @@ public record AzEntityDispatchCommandPacket(
     public static final StreamCodec<FriendlyByteBuf, AzEntityDispatchCommandPacket> CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT,
         AzEntityDispatchCommandPacket::entityId,
-        AzDispatchCommand.CODEC,
+        AzCommand.CODEC,
         AzEntityDispatchCommandPacket::dispatchCommand,
         AzEntityDispatchCommandPacket::new
     );

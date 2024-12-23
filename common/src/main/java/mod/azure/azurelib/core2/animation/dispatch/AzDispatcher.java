@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.core2.animation.dispatch.command.AzCommand;
 
 public class AzDispatcher {
 
@@ -25,11 +25,11 @@ public class AzDispatcher {
      * <li><b>Items:</b> Use {@code sendForItem(Entity, ItemStack)} to dispatch the command from an item.</li>
      * </ul>
      *
-     * @param command            the primary {@link AzDispatchCommand} to be executed.
-     * @param additionalCommands additional {@link AzDispatchCommand}s to be executed, if any.
+     * @param command            the primary {@link AzCommand} to be executed.
+     * @param additionalCommands additional {@link AzCommand}s to be executed, if any.
      * @return an {@link AzDispatchExecutor} configured for client-side execution.
      */
-    public static AzDispatchExecutor fromClient(AzDispatchCommand command, AzDispatchCommand... additionalCommands) {
+    public static AzDispatchExecutor fromClient(AzCommand command, AzCommand... additionalCommands) {
         var commands = unifyCommands(command, additionalCommands);
         return new AzDispatchExecutor(commands, AzDispatchSide.CLIENT);
     }
@@ -48,27 +48,27 @@ public class AzDispatcher {
      * <li><b>Items:</b> Use {@code sendForItem(Entity, ItemStack)} to dispatch the command from an item.</li>
      * </ul>
      *
-     * @param command            the primary {@link AzDispatchCommand} to be executed.
-     * @param additionalCommands additional {@link AzDispatchCommand}s to be executed, if any.
+     * @param command            the primary {@link AzCommand} to be executed.
+     * @param additionalCommands additional {@link AzCommand}s to be executed, if any.
      * @return an {@link AzDispatchExecutor} configured for server-side execution.
      */
-    public static AzDispatchExecutor fromServer(AzDispatchCommand command, AzDispatchCommand... additionalCommands) {
+    public static AzDispatchExecutor fromServer(AzCommand command, AzCommand... additionalCommands) {
         var commands = unifyCommands(command, additionalCommands);
         return new AzDispatchExecutor(commands, AzDispatchSide.SERVER);
     }
 
     /**
-     * Combines a primary {@link AzDispatchCommand} with additional commands into a unified list.
+     * Combines a primary {@link AzCommand} with additional commands into a unified list.
      *
-     * @param command            the primary {@link AzDispatchCommand} to be included in the unified list.
-     * @param additionalCommands an array of additional {@link AzDispatchCommand}s to be added to the list.
+     * @param command            the primary {@link AzCommand} to be included in the unified list.
+     * @param additionalCommands an array of additional {@link AzCommand}s to be added to the list.
      * @return a list containing the primary command followed by all additional commands.
      */
-    private static @NotNull ArrayList<AzDispatchCommand> unifyCommands(
-        AzDispatchCommand command,
-        AzDispatchCommand[] additionalCommands
+    private static @NotNull ArrayList<AzCommand> unifyCommands(
+        AzCommand command,
+        AzCommand[] additionalCommands
     ) {
-        var commands = new ArrayList<AzDispatchCommand>();
+        var commands = new ArrayList<AzCommand>();
         commands.add(command);
         commands.addAll(List.of(additionalCommands));
         return commands;

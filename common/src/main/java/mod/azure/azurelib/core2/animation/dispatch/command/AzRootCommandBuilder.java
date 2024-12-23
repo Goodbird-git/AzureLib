@@ -11,38 +11,38 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRo
 import mod.azure.azurelib.core2.animation.dispatch.command.sequence.AzAnimationSequenceBuilder;
 import mod.azure.azurelib.core2.animation.easing.AzEasingType;
 
-public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDispatchRootCommandBuilder> {
+public class AzRootCommandBuilder extends AzCommandBuilder<AzRootCommandBuilder> {
 
-    public AzDispatchRootCommandBuilder cancelAll() {
+    public AzRootCommandBuilder cancelAll() {
         actions.add(new AzRootCancelAllAction());
         return self();
     }
 
-    public AzDispatchRootCommandBuilder setEasingType(AzEasingType easingType) {
+    public AzRootCommandBuilder setEasingType(AzEasingType easingType) {
         actions.add(new AzRootSetEasingTypeAction(easingType));
         return self();
     }
 
-    public AzDispatchRootCommandBuilder setSpeed(float speed) {
+    public AzRootCommandBuilder setSpeed(float speed) {
         actions.add(new AzRootSetAnimationSpeedAction(speed));
         return self();
     }
 
-    public AzDispatchRootCommandBuilder setTransitionSpeed(float transitionSpeed) {
+    public AzRootCommandBuilder setTransitionSpeed(float transitionSpeed) {
         actions.add(new AzRootSetTransitionSpeedAction(transitionSpeed));
         return self();
     }
 
-    public AzDispatchRootCommandBuilder cancel(String controllerName) {
+    public AzRootCommandBuilder cancel(String controllerName) {
         actions.add(new AzRootCancelAction(controllerName));
         return self();
     }
 
-    public AzDispatchRootCommandBuilder play(String controllerName, String animationName) {
+    public AzRootCommandBuilder play(String controllerName, String animationName) {
         return playSequence(controllerName, builder -> builder.queue(animationName));
     }
 
-    public AzDispatchRootCommandBuilder playSequence(
+    public AzRootCommandBuilder playSequence(
         String controllerName,
         UnaryOperator<AzAnimationSequenceBuilder> builderUnaryOperator
     ) {

@@ -1,28 +1,28 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
 import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.core2.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 
 public class MarauderAnimationDispatcher {
 
-    private final AzDispatchCommand deathCommand = AzDispatchCommand.create(
+    private final AzCommand deathCommand = AzCommand.create(
         "base_controller",
         "death",
         AzLoopType.HOLD_ON_LAST_FRAME
     );
 
-    private final AzDispatchCommand idleCommand = AzDispatchCommand.create("base_controller", "idle", AzLoopType.LOOP);
+    private final AzCommand idleCommand = AzCommand.create("base_controller", "idle", AzLoopType.LOOP);
 
-    private final AzDispatchCommand runCommand = AzDispatchCommand.create("base_controller", "run", AzLoopType.LOOP);
+    private final AzCommand runCommand = AzCommand.create("base_controller", "run", AzLoopType.LOOP);
 
-    private final AzDispatchCommand spawnCommand = AzDispatchCommand.create(
+    private final AzCommand spawnCommand = AzCommand.create(
         "base_controller",
         "spawn",
         AzLoopType.PLAY_ONCE
     );
 
-    private final AzDispatchCommand walkCommand = AzDispatchCommand.create("base_controller", "walk", AzLoopType.LOOP);
+    private final AzCommand walkCommand = AzCommand.create("base_controller", "walk", AzLoopType.LOOP);
 
     private final MarauderEntity marauder;
 

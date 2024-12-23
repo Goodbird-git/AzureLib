@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.AzAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootCancelAllAction;
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootPlayAnimationSequenceAction;
@@ -18,22 +18,22 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRo
 import mod.azure.azurelib.core2.animation.dispatch.command.action.impl.root.AzRootSetTransitionSpeedAction;
 
 /**
- * The AzDispatchActionRegistry class serves as a centralized registry for mapping {@link AzDispatchAction}
- * implementations to their associated {@link ResourceLocation} identifiers and codecs. This registry enables efficient
- * encoding, decoding, and dispatching of animation-related actions within the animation system. <br>
+ * The AzActionRegistry class serves as a centralized registry for mapping {@link AzAction} implementations to their
+ * associated {@link ResourceLocation} identifiers and codecs. This registry enables efficient encoding, decoding, and
+ * dispatching of animation-related actions within the animation system. <br>
  * Key Responsibilities:
  * <ul>
  * <li>Maintain a bidirectional mapping between {@link ResourceLocation} identifiers and short integer IDs for efficient
  * serialization/deserialization.</li>
- * <li>Register {@link AzDispatchAction} implementations and their corresponding {@link StreamCodec} instances.</li>
+ * <li>Register {@link AzAction} implementations and their corresponding {@link StreamCodec} instances.</li>
  * <li>Provide methods for retrieving codecs and IDs based on resource locations or integer IDs.
  * </ul>
  */
-public class AzDispatchActionRegistry {
+public class AzActionRegistry {
 
     private static final Map<ResourceLocation, Short> RESOURCE_LOCATION_TO_ID = new Object2ShortArrayMap<>();
 
-    private static final Map<Short, StreamCodec<FriendlyByteBuf, ? extends AzDispatchAction>> CODEC_BY_ID =
+    private static final Map<Short, StreamCodec<FriendlyByteBuf, ? extends AzAction>> CODEC_BY_ID =
         new HashMap<>();
 
     private static short NEXT_FREE_ID = 0;
@@ -73,7 +73,7 @@ public class AzDispatchActionRegistry {
         return RESOURCE_LOCATION_TO_ID.get(resourceLocation);
     }
 
-    private static <A extends AzDispatchAction> void register(
+    private static <A extends AzAction> void register(
         ResourceLocation resourceLocation,
         StreamCodec<FriendlyByteBuf, A> codec
     ) {

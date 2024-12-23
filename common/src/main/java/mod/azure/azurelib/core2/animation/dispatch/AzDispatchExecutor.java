@@ -13,10 +13,10 @@ import mod.azure.azurelib.common.internal.common.network.packet.AzEntityDispatch
 import mod.azure.azurelib.common.internal.common.network.packet.AzItemStackDispatchCommandPacket;
 import mod.azure.azurelib.common.platform.Services;
 import mod.azure.azurelib.core2.animation.AzAnimatorAccessor;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.core2.animation.dispatch.command.AzCommand;
 
 public record AzDispatchExecutor(
-    List<AzDispatchCommand> commands,
+    List<AzCommand> commands,
     AzDispatchSide origin
 ) {
 
