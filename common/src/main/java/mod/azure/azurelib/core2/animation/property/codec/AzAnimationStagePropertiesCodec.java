@@ -42,6 +42,7 @@ public class AzAnimationStagePropertiesCodec implements StreamCodec<FriendlyByte
         propertyLength += properties.hasAnimationSpeed() ? 1 : 0;
         propertyLength += properties.hasTransitionLength() ? 1 : 0;
         propertyLength += properties.hasEasingType() ? 1 : 0;
+        propertyLength += properties.hasLoopType() ? 1 : 0;
 
         buf.writeByte(propertyLength);
 
