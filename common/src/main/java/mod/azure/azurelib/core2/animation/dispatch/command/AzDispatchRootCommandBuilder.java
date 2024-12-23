@@ -39,20 +39,14 @@ public class AzDispatchRootCommandBuilder extends AzDispatchCommandBuilder<AzDis
     }
 
     public AzDispatchRootCommandBuilder play(String controllerName, String animationName) {
-        var builder = new AzAnimationSequenceBuilder()
-            .queue(animationName);
-        var sequence = builder.build();
-        actions.add(new AzRootPlayAnimationSequenceAction(controllerName, sequence));
-        return self();
+        return playSequence(controllerName, builder -> builder.queue(animationName));
     }
 
     public AzDispatchRootCommandBuilder playSequence(
         String controllerName,
         UnaryOperator<AzAnimationSequenceBuilder> builderUnaryOperator
     ) {
-        var builder = new AzAnimationSequenceBuilder();
-        builderUnaryOperator.apply(builder);
-        var sequence = builder.build();
+        var sequence = builderUnaryOperator.apply(new AzAnimationSequenceBuilder()).build();
         actions.add(new AzRootPlayAnimationSequenceAction(controllerName, sequence));
         return self();
     }
