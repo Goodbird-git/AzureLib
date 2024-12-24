@@ -1,9 +1,12 @@
 package mod.azure.azurelib.animation.dispatch;
 
 import com.sun.istack.internal.NotNull;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This enum represents the dispatch side for animation commands, which can either be client-side or server-side. It is
@@ -13,7 +16,7 @@ import java.util.Map;
  * Each enum constant has an associated unique identifier for easy lookup and transmission across the network. This
  * mapping is also used within codecs for serialization and deserialization purposes.
  */
-public enum AzDispatchSide implements StringRepresentable {
+public enum AzDispatchSide  {
 
     CLIENT(0),
     SERVER(1);
@@ -33,12 +36,14 @@ public enum AzDispatchSide implements StringRepresentable {
         this.id = id;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, AzDispatchSide> CODEC = StreamCodec.of(
-        (buf, val) -> buf.writeByte(val.id),
-        buf -> ID_TO_ENUM_MAP.get((int) buf.readByte())
-    );
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeVarInt(buf, id, Integer.MAX_VALUE);
+    }
 
-    @Override
+    static AzDispatchSide fromBytes(ByteBuf buf) {
+        return Objects.requireNonNull(ID_TO_ENUM_MAP.get((int) buf.readByte()));
+    }
+
     public @NotNull String getSerializedName() {
         return name();
     }
