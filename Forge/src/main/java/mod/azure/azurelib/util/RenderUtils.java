@@ -53,9 +53,9 @@ public final class RenderUtils {
 	public static void rotateMatrixAroundCube(GlStateManager glStateManager, GeoCube cube) {
 		Vec3d rotation = cube.rotation();
 
-		glStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, false));
-		glStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, false));
-		glStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, false));
+		glStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, 0));
+		glStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, 0));
+		glStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, 0));
 	}
 
 	public static void scaleMatrixForBone(GlStateManager glStateManager, CoreGeoBone bone) {
