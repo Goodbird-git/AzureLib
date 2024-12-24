@@ -1,5 +1,6 @@
 package mod.azure.azurelib.animation.dispatch.command.action.impl.root;
 
+import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
@@ -10,11 +11,9 @@ import net.minecraft.util.ResourceLocation;
 public class AzRootSetEasingTypeAction implements AzAction {
     public AzEasingType easingType;
 
-    public static final StreamCodec<FriendlyByteBuf, AzRootSetEasingTypeAction> CODEC = StreamCodec.composite(
-            AzEasingType.STREAM_CODEC,
-            AzRootSetEasingTypeAction::easingType,
-            AzRootSetEasingTypeAction::new
-    );
+    public AzRootSetEasingTypeAction(){
+
+    }
 
     public AzRootSetEasingTypeAction(AzEasingType easingType) {
         this.easingType = easingType;
@@ -40,5 +39,15 @@ public class AzRootSetEasingTypeAction implements AzAction {
     @Override
     public ResourceLocation getResourceLocation() {
         return RESOURCE_LOCATION;
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        easingType.toBytes(buf);
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        easingType = AzEasingType.fromBytes(buf);
     }
 }

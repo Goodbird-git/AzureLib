@@ -1,5 +1,6 @@
 package mod.azure.azurelib.animation.dispatch.command.action.impl.root;
 
+import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
@@ -20,10 +21,6 @@ import java.util.Collection;
  */
 public class AzRootCancelAllAction implements AzAction {
 
-    public static final StreamCodec<FriendlyByteBuf, AzRootCancelAllAction> CODEC = StreamCodec.unit(
-        new AzRootCancelAllAction()
-    );
-
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/cancel_all");
 
     @Override
@@ -37,5 +34,15 @@ public class AzRootCancelAllAction implements AzAction {
     @Override
     public ResourceLocation getResourceLocation() {
         return RESOURCE_LOCATION;
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+
     }
 }

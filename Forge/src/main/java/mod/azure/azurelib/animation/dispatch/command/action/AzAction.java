@@ -1,8 +1,8 @@
 package mod.azure.azurelib.animation.dispatch.command.action;
 
+import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -13,9 +13,11 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface AzAction {
 
-    AzActionCodec CODEC = new AzDispatchActionCodec();
-
     void handle(AzDispatchSide originSide, AzAnimator<?> animator);
 
     ResourceLocation getResourceLocation();
+
+    void toBytes(ByteBuf buf);
+
+    void fromBytes(ByteBuf buf);
 }

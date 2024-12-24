@@ -1,21 +1,24 @@
 package mod.azure.azurelib.animation.dispatch.command;
 
+import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
+import mod.azure.azurelib.animation.dispatch.command.action.registry.AzActionRegistry;
 import mod.azure.azurelib.animation.primitive.AzLoopType;
-import mod.azure.azurelib.animation.property.codec.AzListStreamCodec;
+import mod.azure.azurelib.network.AzureLibNetwork;
+import mod.azure.azurelib.network.packet.AzBlockEntityDispatchCommandPacket;
+import mod.azure.azurelib.network.packet.AzEntityDispatchCommandPacket;
+import mod.azure.azurelib.network.packet.AzItemStackDispatchCommandPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents a command structure used to dispatch a sequence of actions in the animation system. This class primarily
@@ -35,12 +38,6 @@ public class AzCommand {
         return actions;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, AzCommand> CODEC = StreamCodec.composite(
-        new AzListStreamCodec<>(AzAction.CODEC),
-        AzCommand::actions,
-        AzCommand::new
-    );
-
     public static AzRootCommandBuilder builder() {
         return new AzRootCommandBuilder();
     }
@@ -55,7 +52,7 @@ public class AzCommand {
         return new AzCommand(
             commands.stream()
                 .flatMap(command -> command.actions().stream())
-                .toList()
+                    .collect(Collectors.toList())
         );
     }
 
@@ -103,7 +100,7 @@ public class AzCommand {
         } else {
             int entityId = entity.getEntityId();
             AzEntityDispatchCommandPacket packet = new AzEntityDispatchCommandPacket(entityId, this);
-            Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
+            AzureLibNetwork.sendToAllTracking(packet, entity);
         }
     }
 
@@ -120,7 +117,7 @@ public class AzCommand {
         } else {
             BlockPos entityBlockPos = entity.getPos();
             AzBlockEntityDispatchCommandPacket packet = new AzBlockEntityDispatchCommandPacket(entityBlockPos, this);
-            Services.NETWORK.sendToEntitiesTrackingChunk(packet, (ServerLevel) entity.getLevel(), entityBlockPos);
+            AzureLibNetwork.sendToAllTracking(packet, entity.getWorld(), entityBlockPos);
         }
     }
 
@@ -136,7 +133,7 @@ public class AzCommand {
         if (entity.world.isRemote) {
             dispatchFromClient(entity);
         } else {
-            var uuid = itemStack.get(AzureLib.AZ_ID.get());
+            UUID uuid = itemStack.get(AzureLib.AZ_ID.get());
 
             if (uuid == null) {
                 AzureLib.LOGGER.warn(
@@ -148,7 +145,7 @@ public class AzCommand {
             }
 
             AzItemStackDispatchCommandPacket packet = new AzItemStackDispatchCommandPacket(uuid, this);
-            Services.NETWORK.sendToTrackingEntityAndSelf(packet, entity);
+            AzureLibNetwork.sendToAllTracking(packet, entity);
         }
     }
 
@@ -158,5 +155,32 @@ public class AzCommand {
         if (animator != null) {
             actions.forEach(action -> action.handle(AzDispatchSide.CLIENT, animator));
         }
+    }
+
+    public void toBytes(ByteBuf buf) {
+        buf.writeByte(actions.size());
+        for(AzAction action : actions){
+            short id = AzActionRegistry.getIdOrNull(action.getResourceLocation());
+            buf.writeShort(id);
+            action.toBytes(buf);
+        }
+        actions.forEach(element -> element.toBytes(buf));
+    }
+
+    public static AzCommand fromBytes(ByteBuf buf) {
+        byte size = buf.readByte();
+        List<AzAction> actions = new ArrayList<>(size);
+
+        for (int i = 0; i < size; i++) {
+            short id = buf.readShort();
+            try {
+                AzAction action = AzActionRegistry.getClassOrNull(id).newInstance();
+                action.fromBytes(buf);
+                actions.add(action);
+            }catch (Exception e){ //TODO error logging
+
+            }
+        }
+        return new AzCommand(actions);
     }
 }

@@ -2,11 +2,16 @@ package mod.azure.azurelib.network;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mod.azure.azurelib.AzureLib;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.network.packet.*;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -17,19 +22,15 @@ import java.util.Map;
  */
 public final class AzureLibNetwork {
 	private static final String VER = "1";
-	private static final SimpleChannel PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(AzureLib.modResource("main"), () -> VER, VER::equals, VER::equals);
+	private static final SimpleNetworkWrapper PACKET_CHANNEL = new SimpleNetworkWrapper(AzureLib.MOD_ID);
 
 	private static final Map<String, GeoAnimatable> SYNCED_ANIMATABLES = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
 		int id = 0;
-
-		PACKET_CHANNEL.registerMessage(id++, AnimDataSyncPacket.class, AnimDataSyncPacket::encode, AnimDataSyncPacket::decode, AnimDataSyncPacket::receivePacket);
-		PACKET_CHANNEL.registerMessage(id++, AnimTriggerPacket.class, AnimTriggerPacket::encode, AnimTriggerPacket::decode, AnimTriggerPacket::receivePacket);
-		PACKET_CHANNEL.registerMessage(id++, EntityAnimDataSyncPacket.class, EntityAnimDataSyncPacket::encode, EntityAnimDataSyncPacket::decode, EntityAnimDataSyncPacket::receivePacket);
-		PACKET_CHANNEL.registerMessage(id++, EntityAnimTriggerPacket.class, EntityAnimTriggerPacket::encode, EntityAnimTriggerPacket::decode, EntityAnimTriggerPacket::receivePacket);
-		PACKET_CHANNEL.registerMessage(id++, BlockEntityAnimDataSyncPacket.class, BlockEntityAnimDataSyncPacket::encode, BlockEntityAnimDataSyncPacket::decode, BlockEntityAnimDataSyncPacket::receivePacket);
-		PACKET_CHANNEL.registerMessage(id++, BlockEntityAnimTriggerPacket.class, BlockEntityAnimTriggerPacket::encode, BlockEntityAnimTriggerPacket::decode, BlockEntityAnimTriggerPacket::receivePacket);
+		PACKET_CHANNEL.registerMessage(AzBlockEntityDispatchCommandPacket.class, AzBlockEntityDispatchCommandPacket.class, id++, Side.);
+		PACKET_CHANNEL.registerMessage(AzEntityDispatchCommandPacket.class, AzEntityDispatchCommandPacket.class, id++, Side.);
+		PACKET_CHANNEL.registerMessage(AzItemStackDispatchCommandPacket.class, AzItemStackDispatchCommandPacket.class, id++, Side.);
 	}
 
 	/**
@@ -61,7 +62,24 @@ public final class AzureLibNetwork {
 	/**
 	 * Send a packet using AzureLib's packet channel
 	 */
-	public static <M> void send(M packet, PacketDistributor.PacketTarget distributor) {
-		PACKET_CHANNEL.send(distributor, packet);
+
+	public static void sendToPlayer(IMessage message, EntityPlayer player) {
+		PACKET_CHANNEL.sendTo(message, (EntityPlayerMP) player);
+	}
+
+	public static void sendToAll(IMessage message) {
+		PACKET_CHANNEL.sendToAll(message);
+	}
+
+	public static void sendToServer(IMessage message) {
+		PACKET_CHANNEL.sendToServer(message);
+	}
+
+	public static void sendToAllTracking(IMessage message, Entity entity) {
+		PACKET_CHANNEL.sendToAllTracking(message, entity);
+	}
+
+	public static void sendToAllTracking(IMessage message, World world, BlockPos blockPos) {
+		PACKET_CHANNEL.sendToAllTracking(message, new NetworkRegistry.TargetPoint(world.provider.getDimension(), blockPos.getX(), blockPos.getY(), blockPos.getZ(), 128));
 	}
 }

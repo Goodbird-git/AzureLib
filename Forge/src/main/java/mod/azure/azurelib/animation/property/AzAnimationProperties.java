@@ -3,13 +3,10 @@ package mod.azure.azurelib.animation.property;
 import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.animation.easing.AzEasingType;
 import mod.azure.azurelib.animation.easing.AzEasingTypes;
-import mod.azure.azurelib.animation.property.codec.AzAnimationPropertiesCodec;
 
 import java.util.Objects;
 
 public class AzAnimationProperties {
-
-    public static final AzAnimationPropertiesCodec CODEC = new AzAnimationPropertiesCodec();
 
     public static final AzAnimationProperties DEFAULT = new AzAnimationProperties(1D, AzEasingTypes.NONE, 0F);
 
