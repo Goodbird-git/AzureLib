@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public interface BakedModelFactory {
 	 * @param properties The loaded properties for the model
 	 * @param parent The parent bone for this bone, or null if a top-level bone
 	 */
-	GeoBone constructBone(BoneStructure boneStructure, ModelProperties properties, @Nullable GeoBone parent);
+	GeoBone constructBone(BoneStructure boneStructure, ModelProperties properties, GeoBone parent);
 
 	/**
 	 * Construct a {@link GeoCube} from the relevant raw input data
@@ -78,7 +77,7 @@ public interface BakedModelFactory {
 				return null;
 
 			return GeoQuad.build(vertices.verticesForQuad(direction, false, mirror || cube.mirror() == Boolean.TRUE), faceUV.uv(), faceUV.uvSize(),
-					textureWidth, textureHeight, mirror, direction);
+					faceUV.getUvRotation(), textureWidth, textureHeight, mirror, direction);
 		}
 
 		double[] uv = cube.uv().boxUVCoords();
@@ -124,7 +123,7 @@ public interface BakedModelFactory {
 				break;
 		};
 
-		return GeoQuad.build(vertices.verticesForQuad(direction, true, mirror || cube.mirror() == Boolean.TRUE), uvData[0], uvData[1], textureWidth, textureHeight, mirror, direction);
+		return GeoQuad.build(vertices.verticesForQuad(direction, true, mirror || cube.mirror() == Boolean.TRUE), uvData[0], uvData[1], FaceUV.Rotation.NONE, textureWidth, textureHeight, mirror, direction);
 	}
 
 	static BakedModelFactory getForNamespace(String namespace) {
