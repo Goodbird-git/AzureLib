@@ -9,17 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The AzActionRegistry class serves as a centralized registry for mapping {@link AzAction}
- * implementations to their associated {@link ResourceLocation} identifiers and codecs. This registry enables efficient
- * encoding, decoding, and dispatching of animation-related actions within the animation system.
- * <br>
- * Key Responsibilities:
- * <ul>
- * <li>Maintain a bidirectional mapping between {@link ResourceLocation} identifiers and short integer IDs for efficient
- * serialization/deserialization.</li>
- * <li>Register {@link AzAction} implementations and their corresponding {@link StreamCodec} instances.</li>
- * <li>Provide methods for retrieving codecs and IDs based on resource locations or integer IDs.
- * </ul>
+ * The AzActionRegistry class is responsible for managing the registration and resolution of actions
+ * (implementations of {@link AzAction}) within an animation system. It serves as a centralized registry
+ * where each action is associated with a unique {@link ResourceLocation} and an internally generated
+ * identifier for efficient lookup.
  */
 public class AzActionRegistry {
 
