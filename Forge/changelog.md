@@ -1,37 +1,12 @@
 v3.0.0
 
 TODO: 
-- mod.azure.azurelib.animation.dispatch.AzDispatchSide
-- mod.azure.azurelib.animation.dispatch.AzDispatchExecutor
-- mod.azure.azurelib.animation.dispatch.command.AzCommand
-- mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec
-- mod.azure.azurelib.animation.dispatch.command.action.registry.AzDispatchActionRegistry
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAllAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootPlayAnimationSequenceAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetAnimationSpeedAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetEasingTypeAction
-- mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootSetTransitionSpeedAction
-- mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec
-- mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchCommandCodec
-- mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequence
-- mod.azure.azurelib.animation.easing.AzEasingType
 - mod.azure.azurelib.animation.easing.AzEasingTypes
 - mod.azure.azurelib.animation.easing.AzEasingUtil
 - mod.azure.azurelib.cache.AzResourceCache
-- mod.azure.azurelib.render.textures.AnimatableTexture
-- mod.azure.azurelib.render.textures.AzAutoGlowingTexture
-- mod.azure.azurelib.render.textures.AzAbstractTexture
-- mod.azure.azurelib.loading.object.BakedAnimations
 - mod.azure.azurelib.loading.object.BakedModelFactory
-- mod.azure.azurelib.model.factory.impl.AzBuiltinBakedModelFactory
 - mod.azure.azurelib.model.AzBone
 - mod.azure.azurelib.model.AzBoneSnapshot
-- mod.azure.azurelib.network.AzBlockEntityDispatchCommandPacket
-- mod.azure.azurelib.network.AzEntityDispatchCommandPacket
-- mod.azure.azurelib.network.AzItemStackDispatchCommandPacket
-- mod.azure.azurelib.network.AzureLibNetwork
-- mod.azure.azurelib.util.RenderUtils
 - mod.azure.azurelib.render.armor.bone.AzArmorBoneContext
 - mod.azure.azurelib.render.armor.AzArmorModel
 - mod.azure.azurelib.render.armor.AzArmorModelRenderer
@@ -55,5 +30,9 @@ TODO:
 - mod.azure.azurelib.render.layer.AzArmorLayer
 - mod.azure.azurelib.render.layer.AzBlockAndItemLayer
 - mod.azure.azurelib.render.layer.AzAutoGlowingLayer
+- mod.azure.azurelib.render.textures.AnimatableTexture
+- mod.azure.azurelib.render.textures.AzAutoGlowingTexture
+- mod.azure.azurelib.render.textures.AzAbstractTexture
 - mod.azure.azurelib.render.AzModelRenderer
 - mod.azure.azurelib.render.AzRendererPipelineContext
+- mod.azure.azurelib.util.RenderUtils
