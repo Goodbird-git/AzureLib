@@ -35,7 +35,7 @@ public class AzItemModelRenderer extends AzModelRenderer<ItemStack> {
             AzItemAnimator animator = itemRendererPipeline.getRenderer().getAnimator();
 
             if (animator != null) {
-                animator.animate(animatable);
+                animator.animate(animatable, context.partialTick());
             }
         }
 

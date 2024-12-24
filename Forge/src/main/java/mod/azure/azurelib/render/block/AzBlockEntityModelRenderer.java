@@ -47,7 +47,7 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
             AzBlockAnimator<T> animator = blockEntityRendererPipeline.getRenderer().getAnimator();
 
             if (animator != null) {
-                animator.animate(entity);
+                animator.animate(entity, context.partialTick());
             }
         }
 

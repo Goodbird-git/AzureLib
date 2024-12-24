@@ -50,7 +50,7 @@ public abstract class AzAnimator<T> {
 
     public abstract @NotNull ResourceLocation getAnimationLocation(T animatable);
 
-    public void animate(T animatable) {
+    public void animate(T animatable, float partialTicks) {
         reusableContext.animatable = animatable;
 
         AzBoneCache boneCache = reusableContext.boneCache();
@@ -71,7 +71,7 @@ public abstract class AzAnimator<T> {
             boneCache.update(reusableContext);
         }
 
-        setCustomAnimations(animatable);
+        setCustomAnimations(animatable, partialTicks);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class AzAnimator<T> {
      *
      * @param animatable The {@code GeoAnimatable} instance currently being rendered
      */
-    public void setCustomAnimations(T animatable) {}
+    public void setCustomAnimations(T animatable, float partialTicks) {}
 
     public void setActiveModel(AzBakedModel model) {
         boolean modelChanged = reusableContext.boneCache().setActiveModel(model);

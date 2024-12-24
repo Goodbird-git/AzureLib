@@ -39,7 +39,7 @@ public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
             AzItemAnimator animator = armorRendererPipeline.renderer().animator();
 
             if (animator != null) {
-                animator.animate(animatable);
+                animator.animate(animatable, context.partialTick());
             }
         }
 

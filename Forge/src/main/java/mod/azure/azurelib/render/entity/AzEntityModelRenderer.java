@@ -115,7 +115,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
             AzEntityAnimator<T> animator = entityRendererPipeline.getRenderer().getAnimator();
 
             if (animator != null) {
-                animator.animate(animatable);
+                animator.animate(animatable, context.partialTick());
             }
         }
 
