@@ -1,39 +1,49 @@
-package mod.azure.azurelib.common.internal.common.network.packet;
+package mod.azure.azurelib.network.packet;
 
 import com.sun.istack.internal.NotNull;
+import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.animation.cache.AzIdentifiableItemStackAnimatorCache;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.UUID;
 
-public record AzItemStackDispatchCommandPacket(
-    UUID itemStackId,
-    AzCommand dispatchCommand
-) implements AbstractPacket {
+public class AzItemStackDispatchCommandPacket implements IMessage, IMessageHandler<AzItemStackDispatchCommandPacket, IMessage> {
+    public UUID itemStackId;
+    public AzCommand dispatchCommand;
 
-    public static final Type<AzItemStackDispatchCommandPacket> TYPE = new Type<>(
-        AzureLibNetwork.AZ_ITEM_STACK_DISPATCH_COMMAND_SYNC_PACKET_ID
-    );
+    public AzItemStackDispatchCommandPacket(){
 
-    public static final StreamCodec<FriendlyByteBuf, AzItemStackDispatchCommandPacket> CODEC = StreamCodec.composite(
-        UUIDUtil.STREAM_CODEC,
-        AzItemStackDispatchCommandPacket::itemStackId,
-        AzCommand.CODEC,
-        AzItemStackDispatchCommandPacket::dispatchCommand,
-        AzItemStackDispatchCommandPacket::new
-    );
+    }
 
-    public void handle() {
-        var animator = AzIdentifiableItemStackAnimatorCache.getInstance().getOrNull(itemStackId);
+    public AzItemStackDispatchCommandPacket(UUID itemStackId, AzCommand dispatchCommand){
+        this.itemStackId = itemStackId;
+        this.dispatchCommand = dispatchCommand;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        ByteBufUtils.writeUTF8String(buf, itemStackId.toString());
+        dispatchCommand.toBytes(buf);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        itemStackId = UUID.fromString(ByteBufUtils.readUTF8String(buf));
+        dispatchCommand = AzCommand.fromBytes(buf);
+    }
+
+    @Override
+    public IMessage onMessage(AzItemStackDispatchCommandPacket message, MessageContext ctx) {
+        mod.azure.azurelib.animation.impl.AzItemAnimator animator = AzIdentifiableItemStackAnimatorCache.getInstance().getOrNull(itemStackId);
 
         if (animator != null) {
             dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
-    }
-
-    @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        return null;
     }
 }

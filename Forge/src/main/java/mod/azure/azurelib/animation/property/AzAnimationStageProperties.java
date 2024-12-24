@@ -1,16 +1,17 @@
 package mod.azure.azurelib.animation.property;
 
 import com.sun.istack.internal.NotNull;
+import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.animation.easing.AzEasingType;
+import mod.azure.azurelib.animation.easing.AzEasingTypeRegistry;
 import mod.azure.azurelib.animation.easing.AzEasingTypes;
 import mod.azure.azurelib.animation.primitive.AzLoopType;
-import mod.azure.azurelib.animation.property.codec.AzAnimationStagePropertiesCodec;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.Objects;
 
 public class AzAnimationStageProperties extends AzAnimationProperties {
 
-    public static final AzAnimationStagePropertiesCodec CODEC = new AzAnimationStagePropertiesCodec();
 
     public static final AzAnimationStageProperties DEFAULT = new AzAnimationStageProperties(
             1D,
@@ -82,5 +83,57 @@ public class AzAnimationStageProperties extends AzAnimationProperties {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), loopType);
+    }
+
+    public void toBytes(ByteBuf buf) {
+        byte propertyLength = 0;
+        propertyLength += (byte) (hasAnimationSpeed() ? 1 : 0);
+        propertyLength += (byte) (hasTransitionLength() ? 1 : 0);
+        propertyLength += (byte) (hasEasingType() ? 1 : 0);
+        propertyLength += (byte) (hasLoopType() ? 1 : 0);
+
+        buf.writeByte(propertyLength);
+
+        if (hasAnimationSpeed()) {
+            buf.writeByte(0);
+            buf.writeDouble(animationSpeed());
+        }
+
+        if (hasTransitionLength()) {
+            buf.writeByte(1);
+            buf.writeFloat(transitionLength());
+        }
+
+        if (hasEasingType()) {
+            buf.writeByte(2);
+            ByteBufUtils.writeUTF8String(buf, easingType().name());
+        }
+
+        if (hasLoopType()) {
+            buf.writeByte(3);
+            ByteBufUtils.writeUTF8String(buf, loopType().name());
+        }
+    }
+
+    public static AzAnimationStageProperties fromBytes(ByteBuf buf) {
+        byte propertyLength = buf.readByte();
+        AzAnimationStageProperties properties = AzAnimationStageProperties.EMPTY;
+
+        for (int i = 0; i < propertyLength; i++) {
+            byte code = buf.readByte();
+
+            if(code==0){
+                properties = properties.withAnimationSpeed(buf.readDouble());
+            }else if(code==1){
+                properties = properties.withTransitionLength(buf.readFloat());
+            }else if(code==2){
+                AzEasingType easingType = AzEasingTypeRegistry.getOrDefault(ByteBufUtils.readUTF8String(buf), AzEasingTypes.NONE);
+                properties = properties.withEasingType(easingType);
+            }else if(code==3){
+                AzLoopType loopType = AzLoopType.fromString(ByteBufUtils.readUTF8String(buf));
+                properties = properties.withLoopType(loopType);
+            }
+        }
+        return properties;
     }
 }

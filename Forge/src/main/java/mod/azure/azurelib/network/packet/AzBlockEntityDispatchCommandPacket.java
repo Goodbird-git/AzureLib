@@ -1,46 +1,56 @@
-package mod.azure.azurelib.common.internal.common.network.packet;
+package mod.azure.azurelib.network.packet;
 
 
+import io.netty.buffer.ByteBuf;
+import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.util.ClientUtils;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public record AzBlockEntityDispatchCommandPacket(
-    BlockPos blockPos,
-    AzCommand dispatchCommand
-) implements AbstractPacket {
+public class AzBlockEntityDispatchCommandPacket implements IMessage, IMessageHandler<AzBlockEntityDispatchCommandPacket, IMessage> {
+    public BlockPos blockPos;
+    public AzCommand dispatchCommand;
 
-    public static final CustomPacketPayload.Type<AzBlockEntityDispatchCommandPacket> TYPE = new Type<>(
-        AzureLibNetwork.AZ_BLOCKENTITY_DISPATCH_COMMAND_SYNC_PACKET_ID
-    );
+    public AzBlockEntityDispatchCommandPacket(){
 
-    public static final StreamCodec<FriendlyByteBuf, AzBlockEntityDispatchCommandPacket> CODEC = StreamCodec.composite(
-        BlockPos.STREAM_CODEC,
-        AzBlockEntityDispatchCommandPacket::blockPos,
-        AzCommand.CODEC,
-        AzBlockEntityDispatchCommandPacket::dispatchCommand,
-        AzBlockEntityDispatchCommandPacket::new
-    );
+    }
+
+    public AzBlockEntityDispatchCommandPacket(BlockPos blockPos, AzCommand dispatchCommand){
+        this.blockPos = blockPos;
+        this.dispatchCommand = dispatchCommand;
+    }
 
     @Override
-    public void handle() {
-        var blockEntity = ClientUtils.getLevel().getBlockEntity(blockPos);
+    public void fromBytes(ByteBuf buf) {
+        buf.writeLong(blockPos.toLong());
+        dispatchCommand.toBytes(buf);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        blockPos = BlockPos.fromLong(buf.readLong());
+        dispatchCommand = AzCommand.fromBytes(buf);
+    }
+
+    @Override
+    public IMessage onMessage(AzBlockEntityDispatchCommandPacket message, MessageContext ctx) {
+        TileEntity blockEntity = ClientUtils.getLevel().getTileEntity(message.blockPos);
 
         if (blockEntity == null) {
-            return;
+            return null;
         }
 
-        var animator = AzAnimatorAccessor.getOrNull(blockEntity);
+        AzAnimator<TileEntity> animator = AzAnimatorAccessor.getOrNull(blockEntity);
 
         if (animator != null) {
             dispatchCommand.actions().forEach(action -> action.handle(AzDispatchSide.SERVER, animator));
         }
-    }
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        return null;
     }
 }

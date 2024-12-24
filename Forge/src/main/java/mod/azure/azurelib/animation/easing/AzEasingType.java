@@ -1,9 +1,15 @@
 package mod.azure.azurelib.animation.easing;
 
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import mod.azure.azurelib.animation.controller.keyframe.AzAnimationPoint;
+import mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequence;
+import mod.azure.azurelib.animation.dispatch.command.stage.AzAnimationStage;
 import mod.azure.azurelib.core.utils.Interpolations;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public interface AzEasingType {
@@ -12,10 +18,6 @@ public interface AzEasingType {
 
     Double2DoubleFunction buildTransformer(Double value);
 
-    StreamCodec<FriendlyByteBuf, AzEasingType> STREAM_CODEC = StreamCodec.of(
-            (buf, val) -> buf.writeUtf(val.name()),
-            buf -> Objects.requireNonNull(AzEasingTypeRegistry.getOrNull(buf.readUtf()))
-    );
 
     default double apply(AzAnimationPoint animationPoint) {
         Double easingVariable = null;
@@ -33,7 +35,15 @@ public interface AzEasingType {
         return Interpolations.lerp(
                 animationPoint.animationStartValue(),
                 animationPoint.animationEndValue(),
-                buildTransformer(easingValue).apply(lerpValue)
+                buildTransformer(easingValue).get(lerpValue)
         );
+    }
+
+    default void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeUTF8String(buf, name());
+    }
+
+    static AzEasingType fromBytes(ByteBuf buf) {
+        return Objects.requireNonNull(AzEasingTypeRegistry.getOrNull(ByteBufUtils.readUTF8String(buf)));
     }
 }

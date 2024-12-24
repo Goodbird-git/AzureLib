@@ -1,11 +1,14 @@
 package mod.azure.azurelib.animation.dispatch.command.action.impl.root;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
 import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Represents an action that cancels the current animation of a specified animation controller in the animation system.
@@ -46,6 +49,10 @@ import net.minecraft.util.ResourceLocation;
 public class AzRootCancelAction implements AzAction {
     public String controllerName;
 
+    public AzRootCancelAction(){
+
+    }
+
     public AzRootCancelAction(String controllerName) {
         this.controllerName = controllerName;
     }
@@ -53,11 +60,6 @@ public class AzRootCancelAction implements AzAction {
     public String controllerName() {
         return controllerName;
     }
-    public static final StreamCodec<FriendlyByteBuf, AzRootCancelAction> CODEC = StreamCodec.composite(
-        ByteBufCodecs.STRING_UTF8,
-        AzRootCancelAction::controllerName,
-        AzRootCancelAction::new
-    );
 
     public static final ResourceLocation RESOURCE_LOCATION = AzureLib.modResource("root/cancel");
 
@@ -73,5 +75,15 @@ public class AzRootCancelAction implements AzAction {
     @Override
     public ResourceLocation getResourceLocation() {
         return RESOURCE_LOCATION;
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeUTF8String(buf, controllerName);
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        controllerName = ByteBufUtils.readUTF8String(buf);
     }
 }
