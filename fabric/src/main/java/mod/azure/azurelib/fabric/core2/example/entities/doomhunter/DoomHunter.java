@@ -39,7 +39,7 @@ public class DoomHunter extends Monster {
         super.tick();
 
         if (this.level().isClientSide && !this.isAggressive()) {
-            animationDispatcher.clientChainsaw();
+            animationDispatcher.chainsaw();
         }
     }
 

@@ -56,15 +56,15 @@ public class MarauderEntity extends Monster {
             Runnable animationRunner;
 
             if (!this.isAlive()) {
-                animationRunner = animationDispatcher::clientDeath;
+                animationRunner = animationDispatcher::death;
             } else if (this.tickCount < 300) {
-                animationRunner = animationDispatcher::clientSpawn;
+                animationRunner = animationDispatcher::spawn;
             } else if (isMovingOnGround) {
                 animationRunner = this.isAggressive()
-                    ? animationDispatcher::clientRun
-                    : animationDispatcher::clientWalk;
+                    ? animationDispatcher::run
+                    : animationDispatcher::walk;
             } else {
-                animationRunner = animationDispatcher::clientIdle;
+                animationRunner = animationDispatcher::idle;
             }
 
             animationRunner.run();

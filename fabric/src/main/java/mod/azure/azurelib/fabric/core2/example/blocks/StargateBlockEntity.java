@@ -18,7 +18,7 @@ public class StargateBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, StargateBlockEntity blockEntity) {
         if (blockEntity.level != null && level.isClientSide()) {
-            blockEntity.animationDispatcher.serverSpin(blockEntity);
+            blockEntity.animationDispatcher.spin(blockEntity);
         }
     }
 }

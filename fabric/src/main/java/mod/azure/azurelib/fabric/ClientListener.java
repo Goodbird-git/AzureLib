@@ -18,12 +18,10 @@ import mod.azure.azurelib.common.internal.common.network.packet.*;
 import mod.azure.azurelib.core2.render.armor.AzArmorRendererRegistry;
 import mod.azure.azurelib.core2.render.item.AzItemRendererRegistry;
 import mod.azure.azurelib.fabric.core2.example.ExampleEntityTypes;
-import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmor;
 import mod.azure.azurelib.fabric.core2.example.armors.AzDoomArmorRenderer;
 import mod.azure.azurelib.fabric.core2.example.blocks.StargateRender;
 import mod.azure.azurelib.fabric.core2.example.entities.doomhunter.DoomHunterRenderer;
 import mod.azure.azurelib.fabric.core2.example.entities.marauder.MarauderRenderer;
-import mod.azure.azurelib.fabric.core2.example.items.AzPistol;
 import mod.azure.azurelib.fabric.core2.example.items.AzPistolRenderer;
 
 public final class ClientListener implements ClientModInitializer {
@@ -82,8 +80,14 @@ public final class ClientListener implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(AnimDataSyncPacket.TYPE, (packet, context) -> packet.handle());
         ClientPlayNetworking.registerGlobalReceiver(SendConfigDataPacket.TYPE, (packet, context) -> packet.handle());
 
-        AzItemRendererRegistry.register(AzPistol.class, AzPistolRenderer::new);
-        AzArmorRendererRegistry.register(AzDoomArmor.class, AzDoomArmorRenderer::new);
+        AzItemRendererRegistry.register(FabricAzureLibMod.AZ_PISTOL, AzPistolRenderer::new);
+        AzArmorRendererRegistry.register(
+            AzDoomArmorRenderer::new,
+            FabricAzureLibMod.AZ_DOOM_HELMET,
+            FabricAzureLibMod.AZ_DOOM_CHESTPLATE,
+            FabricAzureLibMod.AZ_DOOM_LEGGINGS,
+            FabricAzureLibMod.AZ_DOOM_BOOTS
+        );
         EntityRendererRegistry.register(ExampleEntityTypes.DOOMHUNTER, DoomHunterRenderer::new);
         EntityRendererRegistry.register(ExampleEntityTypes.MARAUDER, MarauderRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(FabricAzureLibMod.STARGATE, RenderType.translucent());

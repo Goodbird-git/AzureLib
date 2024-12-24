@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.core2.animation.AzAnimator;
 import mod.azure.azurelib.core2.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.core2.animation.dispatch.command.action.AzAction;
 
 /**
  * Represents an action that cancels the current animation of a specified animation controller in the animation system.
@@ -24,7 +24,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchActi
  * This class is primarily used within the {@code AzAnimator} context where each animation controller is part of the
  * animator's controller container. <br/>
  * <br/>
- * Implements: - {@link AzDispatchAction}: Allows the action to be dispatched within the animation system. <br/>
+ * Implements: - {@link AzAction}: Allows the action to be dispatched within the animation system. <br/>
  * <br/>
  * Fields:
  * <ul>
@@ -48,7 +48,7 @@ import mod.azure.azurelib.core2.animation.dispatch.command.action.AzDispatchActi
  */
 public record AzRootCancelAction(
     String controllerName
-) implements AzDispatchAction {
+) implements AzAction {
 
     public static final StreamCodec<FriendlyByteBuf, AzRootCancelAction> CODEC = StreamCodec.composite(
         ByteBufCodecs.STRING_UTF8,

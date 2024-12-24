@@ -31,7 +31,7 @@ public class AzDoomArmor extends ArmorItem {
         if (!level.isClientSide) {
             var slot = getEquipmentSlot();
             var itemStack = player.getItemBySlot(slot);
-            dispatcher.serverEquipHelmet(player, itemStack);
+            dispatcher.equip(player, itemStack);
         }
 
         return result;

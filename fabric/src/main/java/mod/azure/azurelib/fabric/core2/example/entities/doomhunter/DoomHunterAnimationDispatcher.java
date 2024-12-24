@@ -1,12 +1,11 @@
 package mod.azure.azurelib.fabric.core2.example.entities.doomhunter;
 
-import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
-import mod.azure.azurelib.core2.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.core2.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 
 public class DoomHunterAnimationDispatcher {
 
-    private final AzDispatchCommand chainsawCommand = AzDispatchCommand
+    private static final AzCommand CHAINSAW = AzCommand
         .create("base_controller", "chainsaw", AzLoopType.LOOP);
 
     private final DoomHunter doomHunter;
@@ -15,7 +14,7 @@ public class DoomHunterAnimationDispatcher {
         this.doomHunter = doomHunter;
     }
 
-    public void clientChainsaw() {
-        AzDispatcher.fromClient(chainsawCommand).sendForEntity(doomHunter);
+    public void chainsaw() {
+        CHAINSAW.sendForEntity(doomHunter);
     }
 }
