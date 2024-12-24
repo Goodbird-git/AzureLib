@@ -1,5 +1,6 @@
 package mod.azure.azurelib;
 
+import mod.azure.azurelib.network.AzureLibNetwork;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,5 +17,10 @@ public class AzureLibMod {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         AzureLib.initialize();
+        if (event.getSide().isClient()) {
+            AzureLibNetwork.initClient();
+        } else {
+            AzureLibNetwork.initServer();
+        }
     }
 }
