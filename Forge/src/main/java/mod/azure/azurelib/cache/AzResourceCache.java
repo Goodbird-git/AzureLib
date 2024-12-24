@@ -32,12 +32,9 @@ public class AzResourceCache implements IResourceManagerReloadListener {
     public static void registerReloadListener() {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (!(mc.getResourceManager() instanceof IReloadableResourceManager))
+        if (!(mc.getResourceManager() instanceof IReloadableResourceManager)) {
             throw new RuntimeException("AzureLib was initialized too early!");
-
-        IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getMinecraft()
-                .getResourceManager();
-        reloadable.registerReloadListener(AzResourceCache.getInstance());
+        }
     }
 
     private static final List<String> EXCLUDED_NAMESPACES = Arrays.asList(

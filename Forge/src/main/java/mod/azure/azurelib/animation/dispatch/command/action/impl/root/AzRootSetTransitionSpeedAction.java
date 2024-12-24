@@ -3,10 +3,10 @@ package mod.azure.azurelib.animation.dispatch.command.action.impl.root;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
 import net.minecraft.util.ResourceLocation;
 
-public class AzRootSetTransitionSpeedAction implements AzDispatchAction {
+public class AzRootSetTransitionSpeedAction implements AzAction {
     public float transitionSpeed;
 
     public static final StreamCodec<FriendlyByteBuf, AzRootSetTransitionSpeedAction> CODEC = StreamCodec.composite(

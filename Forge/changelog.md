@@ -3,8 +3,7 @@ v3.0.0
 TODO: 
 - mod.azure.azurelib.animation.dispatch.AzDispatchSide
 - mod.azure.azurelib.animation.dispatch.AzDispatchExecutor
-- mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand
-- mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand
+- mod.azure.azurelib.animation.dispatch.command.AzCommand
 - mod.azure.azurelib.animation.dispatch.command.action.codec.AzDispatchActionCodec
 - mod.azure.azurelib.animation.dispatch.command.action.registry.AzDispatchActionRegistry
 - mod.azure.azurelib.animation.dispatch.command.action.impl.root.AzRootCancelAction

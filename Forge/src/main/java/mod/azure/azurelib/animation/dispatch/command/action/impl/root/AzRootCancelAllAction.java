@@ -5,7 +5,7 @@ import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Collection;
@@ -18,7 +18,7 @@ import java.util.Collection;
  * this action is handled, all animation controllers associated with a specific animator will have their current
  * animations cleared.
  */
-public class AzRootCancelAllAction implements AzDispatchAction {
+public class AzRootCancelAllAction implements AzAction {
 
     public static final StreamCodec<FriendlyByteBuf, AzRootCancelAllAction> CODEC = StreamCodec.unit(
         new AzRootCancelAllAction()

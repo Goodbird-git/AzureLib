@@ -4,7 +4,7 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
  * This class is primarily used within the {@code AzAnimator} context where each animation controller is part of the
  * animator's controller container. <br/>
  * <br/>
- * Implements: - {@link AzDispatchAction}: Allows the action to be dispatched within the animation system. <br/>
+ * Implements: - {@link AzAction}: Allows the action to be dispatched within the animation system. <br/>
  * <br/>
  * Fields:
  * <ul>
@@ -43,7 +43,7 @@ import net.minecraft.util.ResourceLocation;
  * <li>{@code getResourceLocation()}: Returns the unique resource location associated with this action.</li>
  * </ul>
  */
-public class AzRootCancelAction implements AzDispatchAction {
+public class AzRootCancelAction implements AzAction {
     public String controllerName;
 
     public AzRootCancelAction(String controllerName) {

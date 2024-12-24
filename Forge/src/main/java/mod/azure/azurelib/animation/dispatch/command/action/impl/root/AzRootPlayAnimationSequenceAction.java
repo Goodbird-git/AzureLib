@@ -4,11 +4,11 @@ import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.animation.dispatch.command.action.AzDispatchAction;
+import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
 import mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequence;
 import net.minecraft.util.ResourceLocation;
 
-public class AzRootPlayAnimationSequenceAction implements AzDispatchAction {
+public class AzRootPlayAnimationSequenceAction implements AzAction {
     public String controllerName;
     public AzAnimationSequence sequence;
 

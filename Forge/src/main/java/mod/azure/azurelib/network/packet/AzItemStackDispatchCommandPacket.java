@@ -3,13 +3,13 @@ package mod.azure.azurelib.common.internal.common.network.packet;
 import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.animation.cache.AzIdentifiableItemStackAnimatorCache;
 import mod.azure.azurelib.animation.dispatch.AzDispatchSide;
-import mod.azure.azurelib.animation.dispatch.command.AzDispatchCommand;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 
 import java.util.UUID;
 
 public record AzItemStackDispatchCommandPacket(
     UUID itemStackId,
-    AzDispatchCommand dispatchCommand
+    AzCommand dispatchCommand
 ) implements AbstractPacket {
 
     public static final Type<AzItemStackDispatchCommandPacket> TYPE = new Type<>(
@@ -19,7 +19,7 @@ public record AzItemStackDispatchCommandPacket(
     public static final StreamCodec<FriendlyByteBuf, AzItemStackDispatchCommandPacket> CODEC = StreamCodec.composite(
         UUIDUtil.STREAM_CODEC,
         AzItemStackDispatchCommandPacket::itemStackId,
-        AzDispatchCommand.CODEC,
+        AzCommand.CODEC,
         AzItemStackDispatchCommandPacket::dispatchCommand,
         AzItemStackDispatchCommandPacket::new
     );
