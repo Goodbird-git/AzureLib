@@ -1,8 +1,8 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
+import mod.azure.azurelib.fabric.core2.example.entities.marauder.ai.DelayedMeleeAttackGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -17,7 +17,7 @@ import mod.azure.azurelib.fabric.core2.example.MoveAnalysis;
 
 public class MarauderEntity extends Monster {
 
-    private final MarauderAnimationDispatcher animationDispatcher;
+    public final MarauderAnimationDispatcher animationDispatcher;
 
     private final MoveAnalysis moveAnalysis;
 
@@ -57,8 +57,8 @@ public class MarauderEntity extends Monster {
 
             if (!this.isAlive()) {
                 animationRunner = animationDispatcher::death;
-            } else if (this.tickCount < 300) {
-                animationRunner = animationDispatcher::spawn;
+//            } else if (this.tickCount < 300) {
+//                animationRunner = animationDispatcher::spawn;
             } else if (isMovingOnGround) {
                 animationRunner = this.isAggressive()
                     ? animationDispatcher::run
@@ -69,17 +69,17 @@ public class MarauderEntity extends Monster {
 
             animationRunner.run();
         } else {
-            if (this.tickCount < 300 && this.isAlive()) {
-                if (this.getNavigation() instanceof AzureNavigation azureNavigation) {
-                    azureNavigation.hardStop();
-                    azureNavigation.stop();
-                }
-                this.setYBodyRot(0);
-                this.setYHeadRot(0);
-                this.getEyePosition(90);
-                this.setXRot(0);
-                this.setYRot(0);
-            }
+//            if (this.tickCount < 300 && this.isAlive()) {
+//                if (this.getNavigation() instanceof AzureNavigation azureNavigation) {
+//                    azureNavigation.hardStop();
+//                    azureNavigation.stop();
+//                }
+//                this.setYBodyRot(0);
+//                this.setYHeadRot(0);
+//                this.getEyePosition(90);
+//                this.setXRot(0);
+//                this.setYRot(0);
+//            }
         }
     }
 
@@ -89,7 +89,7 @@ public class MarauderEntity extends Monster {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.3F));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.6F, true));
+        this.goalSelector.addGoal(2, new DelayedMeleeAttackGoal(this, 0.6F, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
     }
 

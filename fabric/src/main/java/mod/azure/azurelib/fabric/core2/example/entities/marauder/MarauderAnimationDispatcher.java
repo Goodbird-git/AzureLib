@@ -1,5 +1,6 @@
 package mod.azure.azurelib.fabric.core2.example.entities.marauder;
 
+import mod.azure.azurelib.core2.animation.dispatch.AzDispatcher;
 import mod.azure.azurelib.core2.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.core2.animation.primitive.AzLoopType;
 
@@ -19,6 +20,12 @@ public class MarauderAnimationDispatcher {
         "base_controller",
         "spawn",
         AzLoopType.PLAY_ONCE
+    );
+
+    private static final AzCommand AXE_ATTACK = AzCommand.create(
+            "base_controller",
+            "axe_attack",
+            AzLoopType.PLAY_ONCE
     );
 
     private static final AzCommand WALK = AzCommand.create("base_controller", "walk", AzLoopType.LOOP);
@@ -47,5 +54,9 @@ public class MarauderAnimationDispatcher {
 
     public void walk() {
         WALK.sendForEntity(marauder);
+    }
+
+    public void serverMelee() {
+        AXE_ATTACK.sendForEntity(marauder);
     }
 }
