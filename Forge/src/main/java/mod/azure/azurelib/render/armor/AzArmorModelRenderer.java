@@ -5,11 +5,8 @@ import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzModelRenderer;
 import mod.azure.azurelib.render.AzPhasedRenderer;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
-import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-
-import javax.vecmath.Matrix4f;
 
 public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
 
@@ -42,8 +39,6 @@ public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
                 animator.animate(animatable, context.partialTick());
             }
         }
-
-        armorRendererPipeline.modelRenderTranslations = new Matrix4f(RenderUtils.getCurrentMatrix());
 
         super.render(context, isReRender);
         GlStateManager.popMatrix();
