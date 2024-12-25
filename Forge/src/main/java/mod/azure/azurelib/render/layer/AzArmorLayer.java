@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
@@ -30,11 +31,11 @@ import net.minecraft.item.ItemStack;
  */
 public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
 
-    protected static final LayerArmorBase<EntityLiving> INNER_ARMOR_MODEL = new LayerArmorBase<>(
+    protected static final ModelBiped INNER_ARMOR_MODEL = new ModelBiped(
         Minecraft.getMinecraft().getEntityModels().bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)
     );
 
-    protected static final LayerArmorBase<EntityLiving> OUTER_ARMOR_MODEL = new LayerArmorBase<>(
+    protected static final ModelBiped OUTER_ARMOR_MODEL = new ModelBiped(
         Minecraft.getMinecraft().getEntityModels().bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)
     );
 
@@ -128,7 +129,10 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
                 prepModelPartForRender(context, bone, modelPart);
                 renderer.prepForRender(context.animatable(), armorStack, slot, model);
                 boneContext.applyBoneVisibilityByPart(slot, modelPart, model);
-                model.renderToBuffer(
+                /**
+                 * TODO
+                 */
+                model.render(
                     poseStack,
                     null,
                     context.packedLight(),
@@ -218,20 +222,6 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
             modelPart.render(context.poseStack(), buffer, context.packedLight(), context.packedOverlay());
         }
 
-        var trim = armorStack.get(DataComponents.TRIM);
-
-        if (trim != null) {
-            var spriteLocation = slot == EntityEquipmentSlot.LEGS ? trim.innerTexture(material) : trim.outerTexture(material);
-            var consumer = context.multiBufferSource()
-                .getBuffer(Sheets.armorTrimsSheet(trim.pattern().value().decal()));
-            var sprite = Minecraft.getInstance()
-                .getModelManager()
-                .getAtlas(Sheets.ARMOR_TRIMS_SHEET)
-                .getSprite(spriteLocation);
-            var buffer = sprite.wrap(consumer);
-            modelPart.render(context.poseStack(), buffer, context.packedLight(), context.packedOverlay());
-        }
-
         if (armorStack.hasFoil())
             modelPart.render(
                 getVanillaArmorBuffer(
@@ -249,7 +239,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
     }
 
     /**
-     * Retrieves a {@link VertexConsumer} for rendering vanilla-styled armor. The method determines whether the armor
+     * Retrieves a {@link BufferBuilder} for rendering vanilla-styled armor. The method determines whether the armor
      * should apply a glint effect or not and selects the appropriate render type accordingly.
      *
      * @param context  The rendering context providing necessary data for rendering, including the animatable instance
@@ -257,17 +247,17 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      * @param stack    The armor {@link ItemStack} being rendered.
      * @param slot     The {@link EntityEquipmentSlot} the armor piece occupies.
      * @param bone     The model bone associated with the armor piece.
-     * @param layer    The optional {@link ArmorMaterial.Layer} providing texture resources for rendering the armor.
+     * @param layer    The optional {@link ItemArmor.ArmorMaterial} providing texture resources for rendering the armor.
      * @param forGlint A flag indicating whether the armor piece should render with a glint effect.
-     * @return The {@link VertexConsumer} used to render the designated armor piece with the appropriate style and
+     * @return The {@link BufferBuilder} used to render the designated armor piece with the appropriate style and
      *         effect.
      */
-    protected VertexConsumer getVanillaArmorBuffer(
+    protected BufferBuilder getVanillaArmorBuffer(
         AzRendererPipelineContext<T> context,
         ItemStack stack,
         EntityEquipmentSlot slot,
         AzBone bone,
-        ArmorMaterial.Layer layer,
+        ItemArmor.ArmorMaterial layer,
         boolean forGlint
     ) {
         if (forGlint) {
@@ -306,7 +296,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
     }
 
     /**
-     * Render a given {@link AbstractSkullBlock} as a worn armor piece in relation to a given {@link AzBone}
+     * Render a given {@link BlockSkull} as a worn armor piece in relation to a given {@link AzBone}
      */
     protected void renderSkullAsArmor(
         AzRendererPipelineContext<T> context,
