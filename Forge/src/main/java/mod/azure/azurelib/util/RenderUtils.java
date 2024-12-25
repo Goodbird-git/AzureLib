@@ -18,6 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Quaternion;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 /**
  * Helper class for various methods and functions useful while rendering
@@ -27,6 +28,8 @@ public final class RenderUtils {
 	public static boolean isMultipleOf(int p_265754_, int p_265543_) {
 		return p_265754_ % p_265543_ == 0;
 	}
+
+	private static final long START_TIME = System.nanoTime();
 
 	public static void translateMatrixToBone(CoreGeoBone bone) {
 		GlStateManager.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
@@ -109,15 +112,15 @@ public final class RenderUtils {
 		return start + pct * (end - start);
 	}
 
-	public static double getCurrentSystemTick() {
-		return System.nanoTime() / 1E6 / 50d;
+	public static double getTime() {
+		return (System.nanoTime() - START_TIME) / 1_000_000_000.0;
 	}
 
 	/**
 	 * Returns the current time (in ticks) that the instance has been running. This is effectively a permanent timer that counts up since the game was launched.
 	 */
 	public static double getCurrentTick() {
-		return NativeUtil.getTime() * 20d;
+		return getTime() * 20d;
 	}
 
 	/**
@@ -151,15 +154,18 @@ public final class RenderUtils {
 	 * If a {@link GeoCube} is a 2d plane the {@link mod.azure.azurelib.cache.object.GeoQuad Quad's} normal is inverted in an intersecting plane,it can cause issues with shaders and other lighting tasks.<br>
 	 * This performs a pseudo-ABS function to help resolve some of those issues.
 	 */
-	public static void fixInvertedFlatCube(GeoCube cube, Vec3d normal) {
-		if (normal.x < 0 && (cube.size().y == 0 || cube.size().z == 0))
-			mul(normal, -1, 1, 1);
+	public static void fixInvertedFlatCube(GeoCube cube, Vector3f normal) {
+		if (normal.x < 0 && (cube.size().y == 0 || cube.size().z == 0)) {
+			normal.x *= -1;
+		}
 
-		if (normal.y < 0 && (cube.size().x == 0 || cube.size().z == 0))
-			mul(normal, 1, -1, 1);
+		if (normal.y < 0 && (cube.size().x == 0 || cube.size().z == 0)) {
+			normal.y *= -1;
+		}
 
-		if (normal.z < 0 && (cube.size().x == 0 || cube.size().y == 0))
-			mul(normal, 1, 1, -1);
+		if (normal.z < 0 && (cube.size().x == 0 || cube.size().y == 0)) {
+			normal.z *= -1;
+		}
 	}
 
 	public static Matrix4f getCurrentMatrix() {
@@ -167,6 +173,7 @@ public final class RenderUtils {
 		MatrixUtils.captureMatrix();
 		return MatrixUtils.matrix;
 	}
+
 	public static void mul(Vec3d normal, float x, float y, float z) {
 		normal = new Vec3d(normal.x * x, normal.y * y, normal.z * z);
 	}

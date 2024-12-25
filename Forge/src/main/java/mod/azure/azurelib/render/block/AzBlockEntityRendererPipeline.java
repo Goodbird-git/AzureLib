@@ -22,8 +22,6 @@ public class AzBlockEntityRendererPipeline<T extends TileEntity> extends AzRende
 
     protected Matrix4f entityRenderTranslations = new Matrix4f();
 
-    protected Matrix4f modelRenderTranslations = new Matrix4f();
-
     public AzBlockEntityRendererPipeline(
         AzBlockEntityRendererConfig<T> config,
         AzBlockEntityRenderer<T> blockEntityRenderer

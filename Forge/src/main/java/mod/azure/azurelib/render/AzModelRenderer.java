@@ -3,12 +3,13 @@ package mod.azure.azurelib.render;
 import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.cache.object.GeoQuad;
 import mod.azure.azurelib.cache.object.GeoVertex;
+import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
+import mod.azure.azurelib.util.MatrixUtils;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.math.Vec3d;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -25,7 +26,7 @@ public class AzModelRenderer<T> {
 
     private final Matrix4f poseStateCache = new Matrix4f();
 
-    private final Vec3d normalCache = new Vec3d(0,0,0);
+    private final Vector3f normalCache = new Vector3f();
 
     private final AzRendererPipeline<T> rendererPipeline;
 
@@ -111,8 +112,9 @@ public class AzModelRenderer<T> {
             if (quad == null) {
                 continue;
             }
-            Vec3d normal = new Vec3d(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
+            Vector3f normal = new Vector3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
 
+            normalCache.set(quad.getNormal());
             GlStateManager.glNormal3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
             RenderUtils.fixInvertedFlatCube(cube, normal);
             createVerticesOfQuad(context, quad, normal);
@@ -122,21 +124,23 @@ public class AzModelRenderer<T> {
     protected void createVerticesOfQuad(
         AzRendererPipelineContext<T> context,
         GeoQuad quad,
-        Vec3d normal
+        Vector3f normal
     ) {
         BufferBuilder buffer = context.vertexConsumer();
-        int color = context.renderColor();
         int packedOverlay = context.packedOverlay();
         int packedLight = context.packedLight();
+        Color color = context.getRenderColor(context.animatable(), context.partialTick(), context.packedLight());
 
         for (GeoVertex vertex : quad.getVertices()) {
-            Vector3f position = vertex.position();
-            poseStateTransformCache.set(position.x(), position.y(), position.z(), 1.0f);
-            Vector4f vector4f = poseState.transform(poseStateTransformCache);
+            Vector4f vector4f = new Vector4f(vertex.position().getX(), vertex.position().getY(), vertex.position().getZ(),
+                    1.0F);
 
-            buffer.pos(vector4f.x(), vector4f.y(), vector4f.z())
-                    .tex(vertex.texU(), vertex.texV()).color()
-                    .normal(normal.x(), normal.y(), normal.z()).endVertex();
+            MatrixUtils.getCameraMatrix().transform(vector4f);
+
+            buffer.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
+                    .tex(vertex.texU(), vertex.texV())
+                    .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                    .normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
         }
     }
 }

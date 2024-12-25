@@ -5,7 +5,6 @@ import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
 public class AzArmorBoneContext {

@@ -9,8 +9,8 @@ package mod.azure.azurelib.cache.object;
 
 import mod.azure.azurelib.loading.json.raw.FaceUV;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+
+import javax.vecmath.Vector3f;
 
 /**
  * Quad data holder
@@ -18,10 +18,10 @@ import net.minecraft.util.math.Vec3i;
 public class GeoQuad {
 
 	private GeoVertex[] vertices;
-	private Vec3i normal;
+	private Vector3f normal;
 	private EnumFacing direction;
 
-	public GeoQuad(GeoVertex[] vertices, Vec3i normal, EnumFacing direction) {
+	public GeoQuad(GeoVertex[] vertices, Vector3f normal, EnumFacing direction) {
 		this.vertices = vertices;
 		this.normal = normal;
 		this.direction = direction;
@@ -31,7 +31,7 @@ public class GeoQuad {
 		return vertices;
 	}
 
-	public Vec3i getNormal() {
+	public Vector3f getNormal() {
 		return normal;
 	}
 
@@ -79,14 +79,14 @@ public class GeoQuad {
 		float vHeight = (v + vSize) / texHeight;
 		u /= texWidth;
 		v /= texHeight;
-		Vec3d normal = direction.toVector3f();
+		Vector3f normal = new Vector3f(direction.getFrontOffsetX(), direction.getFrontOffsetY(), direction.getFrontOffsetZ());;
 
 		if (!mirror) {
 			float tempWidth = uWidth;
 			uWidth = u;
 			u = tempWidth;
 		} else {
-			normal.mul(-1, 1, 1);
+			normal.x *= -1;
 		}
 
 		float[] uvs = uvRotation.rotateUvs(u, v, uWidth, vHeight);

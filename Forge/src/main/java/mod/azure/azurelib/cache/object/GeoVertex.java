@@ -8,6 +8,8 @@
 package mod.azure.azurelib.cache.object;
 
 
+import javax.vecmath.Vector3f;
+
 public class GeoVertex {
     private final Vector3f position;
     private final float texU;

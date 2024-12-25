@@ -29,7 +29,7 @@ public class AzArmorModel extends ModelBiped {
         ItemStack animatable = context.animatable();
 
         AzBakedModel model = rendererPipeline.renderer().provider().provideBakedModel(animatable);
-        rendererPipeline.render(model, animatable, 0, mc.getRenderPartialTicks(), packedLight);
+        rendererPipeline.render(model, animatable, 0, mc.getRenderPartialTicks(), context.packedLight());
     }
 
     /**

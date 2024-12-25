@@ -43,7 +43,6 @@ public abstract class AzRendererPipelineContext<T> {
      * @param bakedModel        The pre-baked 3D model associated with the animatable object.
      * @param packedLight       The packed light value for controlling light effects during rendering.
      * @param partialTick       The partial tick value for interpolating animations or movements.
-     * @param glStateManager         The pose stack used to manage rendering transformations.
      */
     public void populate(
         T animatable,
@@ -59,29 +58,7 @@ public abstract class AzRendererPipelineContext<T> {
         this.partialTick = partialTick;
         this.renderColor = getRenderColor(animatable, partialTick, packedLight).getColor();
         this.vertexConsumer = vertexConsumer;
-//        if (renderType == null) {
-//            ResourceLocation textureLocation = rendererPipeline.config().textureLocation(animatable);
-//            this.renderType = getDefaultRenderType(animatable, textureLocation, partialTick);
-//        }
-
-//        Objects.requireNonNull(this.renderType);
-//
-//        if (vertexConsumer == null) {
-//            this.vertexConsumer = multiBufferSource.getBuffer(this.renderType);
-//        }
     }
-
-//    /**
-//     * Gets the {@link RenderType} to render the given animatable with.<br>
-//     * Uses the {@link RenderType#entityCutoutNoCull} {@code RenderType} by default.<br>
-//     * Override this to change the way a model will render (such as translucent models, etc)
-//     */
-//    public abstract @NotNull RenderType getDefaultRenderType(
-//        T animatable,
-//        ResourceLocation texture,
-//        MultiBufferSource bufferSource,
-//        float partialTick
-//    );
 
     /**
      * Gets a tint-applying color to render the given animatable with.<br>

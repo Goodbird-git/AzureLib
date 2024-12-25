@@ -6,10 +6,12 @@ import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.render.armor.AzArmorRendererRegistry;
+import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
@@ -105,7 +107,6 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      *                   rendering.
      * @param bone       The specific bone of the model where the armor piece will be rendered.
      * @param armorStack The ItemStack representing the armor item to render.
-     * @param poseStack  The matrix stack used to apply transformations during rendering.
      */
     private void renderArmor(
         AzRendererPipelineContext<T> context,
@@ -117,15 +118,15 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         ModelBiped model = getModelForItem(armorStack, slot);
         ModelRenderer modelPart = getModelPartForBone(context, model);
 
-        if (!modelPart.cubes.isEmpty()) {
+        if (!modelPart.childModels.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(-1, -1, 1);
 
-            if (renderer != null && context.animatable() instanceof Entity entity) {
-                var boneContext = renderer.rendererPipeline().context().boneContext();
+            if (renderer != null && context.animatable() instanceof Entity) {
+                AzArmorBoneContext boneContext = renderer.rendererPipeline().context().boneContext();
 
                 prepModelPartForRender(context, bone, modelPart);
-                renderer.prepForRender(entity, armorStack, slot, model);
+                renderer.prepForRender(context.animatable(), armorStack, slot, model);
                 boneContext.applyBoneVisibilityByPart(slot, modelPart, model);
                 model.renderToBuffer(
                     poseStack,
@@ -136,7 +137,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
                         ItemTags.DYEABLE
                     ) ? FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(armorStack, -6265536)) : -1
                 );
-            } else if (armorStack.getItem() instanceof ArmorItem) {
+            } else if (armorStack.getItem() instanceof ItemArmor) {
                 prepModelPartForRender(context, bone, modelPart);
                 renderVanillaArmorPiece(
                     context,
@@ -336,16 +337,16 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
     }
 
     /**
-     * Prepares the given {@link ModelPart} for render by setting its translation, position, and rotation values based
+     * Prepares the given {@link ModelRenderer} for render by setting its translation, position, and rotation values based
      * on the provided {@link AzBone}
      *
      * @param context
      * @param bone       The AzBone to base the translations on
      * @param sourcePart The ModelPart to translate
      */
-    protected void prepModelPartForRender(AzRendererPipelineContext<T> context, AzBone bone, ModelPart sourcePart) {
+    protected void prepModelPartForRender(AzRendererPipelineContext<T> context, AzBone bone, ModelRenderer sourcePart) {
         GeoCube firstCube = bone.getCubes().get(0);
-        var armorCube = sourcePart.cubes.get(0);
+        ModelRenderer armorCube = sourcePart.childModels.get(0);
         double armorBoneSizeX = firstCube.size().x;
         double armorBoneSizeY = firstCube.size().y;
         double armorBoneSizeZ = firstCube.size().z;
@@ -366,6 +367,6 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         sourcePart.yRot = -bone.getRotY();
         sourcePart.zRot = bone.getRotZ();
 
-        context.poseStack().scale(scaleX, scaleY, scaleZ);
+        GlStateManager.scale(scaleX, scaleY, scaleZ);
     }
 }

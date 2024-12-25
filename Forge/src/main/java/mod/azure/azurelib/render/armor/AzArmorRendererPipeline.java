@@ -85,16 +85,12 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
     @Override
     public void postRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {}
 
-    /**
-     * Apply custom scaling to account for {@link AgeableListModel AgeableListModel} baby
-     * models
-     */
     public void scaleModelForBaby(AzArmorRendererPipelineContext context, boolean isReRender) {
         if (!armorModel.isChild || isReRender) {
             return;
         }
 
-        var baseModel = context.baseModel();
+        ModelBiped baseModel = context.baseModel();
         EntityEquipmentSlot currentSlot = context.currentSlot();
 
         if (currentSlot == EntityEquipmentSlot.HEAD) {
@@ -113,7 +109,7 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
         }
     }
 
-    public AzArmorModel<?> armorModel() {
+    public AzArmorModel armorModel() {
         return armorModel;
     }
 

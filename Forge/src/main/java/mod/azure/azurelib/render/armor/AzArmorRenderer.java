@@ -4,7 +4,7 @@ import mod.azure.azurelib.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.AzProvider;
 import mod.azure.azurelib.render.AzRendererConfig;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -22,7 +22,7 @@ public class AzArmorRenderer {
         this.rendererPipeline = createPipeline(config);
     }
 
-    protected AzArmorRendererPipeline createPipeline(AzRendererConfig config) {
+    protected AzArmorRendererPipeline createPipeline(AzRendererConfig<ItemStack> config) {
         return new AzArmorRendererPipeline(config, this);
     }
 
@@ -41,7 +41,7 @@ public class AzArmorRenderer {
         Entity entity,
         ItemStack stack,
         EntityEquipmentSlot slot,
-        LayerArmorBase<?> baseModel
+        ModelBiped baseModel
     ) {
         if (entity == null || slot == null || baseModel == null) {
             return;

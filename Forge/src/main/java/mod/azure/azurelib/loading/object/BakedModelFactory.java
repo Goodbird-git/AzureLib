@@ -25,8 +25,8 @@ import java.util.Map;
  * Handled by default by AzureLib, but custom implementations may be added by other mods for special needs
  */
 public interface BakedModelFactory {
-	final Map<String, BakedModelFactory> FACTORIES = new Object2ObjectOpenHashMap<>(1);
-	final BakedModelFactory DEFAULT_FACTORY = new Builtin();
+	Map<String, BakedModelFactory> FACTORIES = new Object2ObjectOpenHashMap<>(1);
+	BakedModelFactory DEFAULT_FACTORY = new Builtin();
 
 	/**
 	 * Construct the output model from the given {@link GeometryTree}.<br>
@@ -124,7 +124,7 @@ public interface BakedModelFactory {
 					new double[] {uvSizeVec.x, -uvSizeVec.z}
 				};
 				break;
-		};
+		}
 
 		return GeoQuad.build(vertices.verticesForQuad(direction, true, mirror || cube.mirror() == Boolean.TRUE), uvData[0], uvData[1], FaceUV.Rotation.NONE, textureWidth, textureHeight, mirror, direction);
 	}

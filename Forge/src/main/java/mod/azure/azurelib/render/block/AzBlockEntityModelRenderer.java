@@ -6,16 +6,14 @@ import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzModelRenderer;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 /**
  * The AzBlockEntityModelRenderer is a specialized model renderer class for rendering block entities in a 3D space. It
@@ -56,8 +54,6 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
             }
         }
 
-        blockEntityRendererPipeline.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
-
         ResourceLocation textureLocation = blockEntityRendererPipeline.config().textureLocation(entity);
         Minecraft.getMinecraft().getTextureManager().bindTexture(textureLocation);
         super.render(context, isReRender);
@@ -68,44 +64,14 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
      */
     @Override
     public void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
-        T entity = context.animatable();
-
         GlStateManager.pushMatrix();
+
         RenderUtils.translateMatrixToBone(bone);
         RenderUtils.translateToPivotPoint(bone);
         RenderUtils.rotateMatrixAroundBone(bone);
         RenderUtils.scaleMatrixForBone(bone);
 
-        if (bone.isTrackingMatrices()) {
-            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
-            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(
-                poseState,
-                blockEntityRendererPipeline.entityRenderTranslations
-            );
-
-            bone.setModelSpaceMatrix(
-                RenderUtils.invertAndMultiplyMatrices(poseState, blockEntityRendererPipeline.modelRenderTranslations)
-            );
-            bone.setLocalSpaceMatrix(
-                RenderUtils.translateMatrix(localMatrix, Vec3.ZERO.toVector3f())
-            );
-            bone.setWorldSpaceMatrix(
-                RenderUtils.translateMatrix(
-                    new Matrix4f(localMatrix),
-                    new Vector3f(
-                        entity.getBlockPos().getX(),
-                        entity.getBlockPos().getY(),
-                        entity.getBlockPos().getZ()
-                    )
-                )
-            );
-        }
-
         RenderUtils.translateAwayFromPivotPoint(bone);
-
-        if (!isReRender && buffer instanceof BufferBuilder builder && !builder.building) {
-            context.setVertexConsumer(bufferSource.getBuffer(renderType));
-        }
 
         renderCubesOfBone(context, bone);
 
@@ -115,21 +81,22 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
 
         renderChildBones(context, bone, isReRender);
 
-        poseStack.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
      * Attempt to extract a direction from the block so that the model can be oriented correctly
      */
     protected EnumFacing getFacing(T block) {
-        IBlockState blockState = block.getBlockState();
+        IBlockState blockState = block.getWorld().getBlockState(block.getPos());
 
-        if (blockState.hasProperty(HorizontalDirectionalBlock.FACING))
-            return blockState.getValue(HorizontalDirectionalBlock.FACING);
+        if (blockState.getPropertyKeys().contains(BlockHorizontal.FACING)) {
+            return blockState.getValue(BlockHorizontal.FACING);
+        }
 
-        if (blockState.hasProperty(DirectionalBlock.FACING))
-            return blockState.getValue(DirectionalBlock.FACING);
-
+        if (blockState.getPropertyKeys().contains(BlockDirectional.FACING)) {
+            return blockState.getValue(BlockDirectional.FACING);
+        }
         return EnumFacing.NORTH;
     }
 
@@ -140,16 +107,22 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
         switch (facing) {
             case SOUTH:
                 GlStateManager.rotate(180, 0, 1, 0);
+                break;
             case WEST:
                 GlStateManager.rotate(90, 0, 1, 0);
+                break;
             case NORTH:
                 GlStateManager.rotate(0, 0, 1, 0);
+                break;
             case EAST:
                 GlStateManager.rotate(270, 0, 1, 0);
+                break;
             case UP:
                 GlStateManager.rotate(90, 1,0,0);
+                break;
             case DOWN:
                 GlStateManager.rotate(90, -1, 0, 0);
+                break;
         }
     }
 }

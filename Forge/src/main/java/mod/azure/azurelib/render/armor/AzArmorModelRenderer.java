@@ -1,7 +1,6 @@
 package mod.azure.azurelib.render.armor;
 
 import mod.azure.azurelib.animation.impl.AzItemAnimator;
-import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzModelRenderer;
 import mod.azure.azurelib.render.AzPhasedRenderer;
@@ -48,32 +47,5 @@ public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
 
         super.render(context, isReRender);
         GlStateManager.popMatrix();
-    }
-
-    /**
-     * Renders the provided {@link AzBone} and its associated child bones
-     */
-    @Override
-    public void renderRecursively(AzRendererPipelineContext<ItemStack> context, AzBone bone, boolean isReRender) {
-        // TODO: This is dangerous.
-        AzArmorRendererPipelineContext ctx = armorRendererPipeline.context();
-
-//        if (bone.isTrackingMatrices()) {
-//            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
-//            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(
-//                poseState,
-//                armorRendererPipeline.entityRenderTranslations
-//            );
-//
-//            bone.setModelSpaceMatrix(
-//                RenderUtils.invertAndMultiplyMatrices(poseState, armorRendererPipeline.modelRenderTranslations)
-//            );
-//            bone.setLocalSpaceMatrix(RenderUtils.translateMatrix(localMatrix, new Vector3f()));
-//            bone.setWorldSpaceMatrix(
-//                RenderUtils.translateMatrix(new Matrix4f(localMatrix), ctx.currentEntity().position().toVector3f())
-//            );
-//        }
-
-        super.renderRecursively(context, bone, isReRender);
     }
 }

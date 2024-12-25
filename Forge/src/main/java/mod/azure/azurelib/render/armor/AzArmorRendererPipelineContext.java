@@ -4,7 +4,7 @@ import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -13,7 +13,7 @@ public class AzArmorRendererPipelineContext extends AzRendererPipelineContext<It
 
     private final AzArmorBoneContext boneContext;
 
-    private LayerArmorBase<?> baseModel;
+    private ModelBiped baseModel;
 
     private Entity currentEntity;
 
@@ -30,21 +30,11 @@ public class AzArmorRendererPipelineContext extends AzRendererPipelineContext<It
         this.currentStack = null;
     }
 
-//    @Override
-//    public @NotNull RenderType getDefaultRenderType(
-//        ItemStack animatable,
-//        ResourceLocation texture,
-//        MultiBufferSource bufferSource,
-//        float partialTick
-//    ) {
-//        return RenderType.armorCutoutNoCull(texture);
-//    }
-
     public void prepare(
         Entity entity,
         ItemStack stack,
         EntityEquipmentSlot slot,
-        LayerArmorBase<?> baseModel
+        ModelBiped baseModel
     ) {
         this.baseModel = baseModel;
         this.currentEntity = entity;
@@ -59,15 +49,10 @@ public class AzArmorRendererPipelineContext extends AzRendererPipelineContext<It
      */
     @Override
     public Color getRenderColor(ItemStack animatable, float partialTick, int packedLight) {
-//        return this.currentStack.is(ItemTags.DYEABLE)
-//            ? Color.ofOpaque(
-//                DyedItemColor.getOrDefault(this.currentStack, -6265536)
-//            )
-//            : Color.WHITE;
         return Color.WHITE;
     }
 
-    public LayerArmorBase<?> baseModel() {
+    public ModelBiped baseModel() {
         return baseModel;
     }
 

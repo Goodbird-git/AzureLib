@@ -25,7 +25,7 @@ public class MatrixUtils
     /**
      * Float array for transferring data from FloatBuffer to the matrix
      */
-    public static final float[] floats = new float[16];
+    protected static final float[] floats = new float[16];
 
     /**
      * Model view matrix captured here

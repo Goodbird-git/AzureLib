@@ -16,14 +16,4 @@ public class AzBlockEntityRendererPipelineContext<T extends TileEntity> extends 
     public AzBlockEntityRendererPipelineContext(AzRendererPipeline<T> rendererPipeline) {
         super(rendererPipeline);
     }
-
-//    @Override
-//    public @NotNull RenderType getDefaultRenderType(
-//        T animatable,
-//        ResourceLocation texture,
-//        @Nullable MultiBufferSource bufferSource,
-//        float partialTick
-//    ) {
-//        return RenderType.entityCutoutNoCull(texture);
-//    }
 }
