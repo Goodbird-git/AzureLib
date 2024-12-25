@@ -23,11 +23,22 @@ minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
+        configureEach {
+            workingDirectory project.file('run')
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
         client {
             workingDirectory project.file('run')
         }
 
         server {
+            workingDirectory project.file('runServer')
+            args '--nogui'
         }
     }
 }
