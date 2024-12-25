@@ -23,8 +23,6 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
 
     protected Matrix4f entityRenderTranslations = new Matrix4f();
 
-    protected Matrix4f modelRenderTranslations = new Matrix4f();
-
     public AzEntityRendererPipeline(AzEntityRendererConfig<T> config, AzEntityRenderer<T> entityRenderer) {
         super(config);
         this.entityRenderer = entityRenderer;
@@ -100,7 +98,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             return;
         }
 
-        AzEntityLeashRenderUtil.renderLeash(entityRenderer, ((EntityMob) entity), partialTick, leashHolder);
+        AzEntityLeashRenderUtil.renderLeash(context, partialTick, leashHolder);
     }
 
     public AzEntityRenderer<T> getRenderer() {
