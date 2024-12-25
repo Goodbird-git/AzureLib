@@ -38,9 +38,8 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
     public void render(AzRendererPipelineContext<T> context, boolean isReRender) {
         T animatable = context.animatable();
         float partialTick = context.partialTick();
-        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushMatrix();
+        GlStateManager.pushMatrix();
 
         EntityLiving livingEntity = animatable instanceof EntityLiving ? (EntityLiving) animatable : null;
 
@@ -78,7 +77,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
         float limbSwingAmount = 0;
         float limbSwing = 0;
 
-        poseStack.scale(nativeScale, nativeScale, nativeScale);
+        GlStateManager.scale(nativeScale, nativeScale, nativeScale);
 
         if (!shouldSit && animatable.isEntityAlive() && livingEntity != null) {
             limbSwingAmount = Interpolations.lerp(
@@ -109,7 +108,7 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
             super.render(context, isReRender);
         }
 
-        poseStack.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -118,15 +117,14 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
     @Override
     public void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
         T entity = context.animatable();
-        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushMatrix();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
+        GlStateManager.pushMatrix();
+        RenderUtils.translateMatrixToBone(bone);
+        RenderUtils.translateToPivotPoint(bone);
+        RenderUtils.rotateMatrixAroundBone(bone);
+        RenderUtils.scaleMatrixForBone(bone);
 
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+        RenderUtils.translateAwayFromPivotPoint(bone);
 
         renderCubesOfBone(context, bone);
 
@@ -136,6 +134,6 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
 
         renderChildBones(context, bone, isReRender);
 
-        poseStack.popMatrix();
+        GlStateManager.popMatrix();
     }
 }

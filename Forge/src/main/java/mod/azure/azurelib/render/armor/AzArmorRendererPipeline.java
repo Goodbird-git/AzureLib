@@ -4,6 +4,8 @@ import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.*;
 import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
+import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
@@ -11,9 +13,11 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.vecmath.Matrix4f;
+
 public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
 
-    private final AzArmorModel<?> armorModel;
+    private final AzArmorModel armorModel;
 
     private final AzArmorRenderer armorRenderer;
 
@@ -23,7 +27,7 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
 
     public AzArmorRendererPipeline(AzRendererConfig<ItemStack> config, AzArmorRenderer armorRenderer) {
         super(config);
-        this.armorModel = new AzArmorModel<>(this);
+        this.armorModel = new AzArmorModel(this);
         this.armorRenderer = armorRenderer;
     }
 
@@ -57,7 +61,7 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
     @Override
     public void preRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
         AzArmorRendererPipelineContext armorContext = (AzArmorRendererPipelineContext) context;
-        LayerArmorBase baseModel = armorContext.baseModel();
+        ModelBiped baseModel = armorContext.baseModel();
         AzArmorBoneContext boneContext = armorContext.boneContext();
         AzArmorRendererConfig config = config();
         EntityEquipmentSlot currentSlot = armorContext.currentSlot();
@@ -66,9 +70,8 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
 
         ItemStack animatable = armorContext.animatable();
         AzBakedModel model = armorRenderer.provider().provideBakedModel(animatable);
-        GlStateManager poseStack = armorContext.glStateManager();
 
-        this.entityRenderTranslations = new Matrix4f(poseStack.last().pose());
+        this.entityRenderTranslations = new Matrix4f(RenderUtils.getCurrentMatrix());
 
         armorModel.applyBaseModel(baseModel);
         boneContext.grabRelevantBones(model, config.boneProvider());
@@ -87,27 +90,26 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
      * models
      */
     public void scaleModelForBaby(AzArmorRendererPipelineContext context, boolean isReRender) {
-        if (!armorModel.young || isReRender) {
+        if (!armorModel.isChild || isReRender) {
             return;
         }
 
         var baseModel = context.baseModel();
         EntityEquipmentSlot currentSlot = context.currentSlot();
-        GlStateManager poseStack = context.glStateManager();
 
         if (currentSlot == EntityEquipmentSlot.HEAD) {
             if (baseModel.scaleHead) {
                 float headScale = 1.5f / baseModel.babyHeadScale;
 
-                poseStack.scale(headScale, headScale, headScale);
+                GlStateManager.scale(headScale, headScale, headScale);
             }
 
-            poseStack.translate(0, baseModel.babyYHeadOffset / 16f, baseModel.babyZHeadOffset / 16f);
+            GlStateManager.translate(0, baseModel.babyYHeadOffset / 16f, baseModel.babyZHeadOffset / 16f);
         } else {
             float bodyScale = 1 / baseModel.babyBodyScale;
 
-            poseStack.scale(bodyScale, bodyScale, bodyScale);
-            poseStack.translate(0, baseModel.bodyYOffset / 16f, 0);
+            GlStateManager.scale(bodyScale, bodyScale, bodyScale);
+            GlStateManager.translate(0, baseModel.bodyYOffset / 16f, 0);
         }
     }
 

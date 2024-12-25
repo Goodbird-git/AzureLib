@@ -47,7 +47,6 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
      */
     @Override
     public void preRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
-        GlStateManager poseStack = context.glStateManager();
 
         AzItemRendererConfig config = itemRenderer.config();
         float scaleWidth = config.scaleWidth();
@@ -56,7 +55,7 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
 
         if (!isReRender) {
             boolean useNewOffset = config.useNewOffset();
-            poseStack.translate(0.5f, useNewOffset ? 0.0f : 0.51f, 0.5f);
+            GlStateManager.translate(0.5f, useNewOffset ? 0.0f : 0.51f, 0.5f);
         }
     }
 

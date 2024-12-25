@@ -6,10 +6,16 @@ import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzModelRenderer;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 /**
  * The AzBlockEntityModelRenderer is a specialized model renderer class for rendering block entities in a 3D space. It
@@ -38,12 +44,11 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
     @Override
     public void render(AzRendererPipelineContext<T> context, boolean isReRender) {
         T entity = context.animatable();
-        GlStateManager poseStack = context.glStateManager();
 
         if (!isReRender) {
-            rotateBlock(getFacing(entity), poseStack);
+            rotateBlock(getFacing(entity));
 
-            poseStack.translate(0.5, 0, 0.5);
+            GlStateManager.translate(0.5, 0, 0.5);
             AzBlockAnimator<T> animator = blockEntityRendererPipeline.getRenderer().getAnimator();
 
             if (animator != null) {
@@ -54,7 +59,7 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
         blockEntityRendererPipeline.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         ResourceLocation textureLocation = blockEntityRendererPipeline.config().textureLocation(entity);
-        RenderSystem.setShaderTexture(0, textureLocation);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(textureLocation);
         super.render(context, isReRender);
     }
 
@@ -64,13 +69,12 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
     @Override
     public void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
         T entity = context.animatable();
-        GlStateManager poseStack = context.glStateManager();
 
-        poseStack.pushMatrix();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
+        GlStateManager.pushMatrix();
+        RenderUtils.translateMatrixToBone(bone);
+        RenderUtils.translateToPivotPoint(bone);
+        RenderUtils.rotateMatrixAroundBone(bone);
+        RenderUtils.scaleMatrixForBone(bone);
 
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -97,7 +101,7 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
             );
         }
 
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+        RenderUtils.translateAwayFromPivotPoint(bone);
 
         if (!isReRender && buffer instanceof BufferBuilder builder && !builder.building) {
             context.setVertexConsumer(bufferSource.getBuffer(renderType));
@@ -117,8 +121,8 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
     /**
      * Attempt to extract a direction from the block so that the model can be oriented correctly
      */
-    protected Direction getFacing(T block) {
-        BlockState blockState = block.getBlockState();
+    protected EnumFacing getFacing(T block) {
+        IBlockState blockState = block.getBlockState();
 
         if (blockState.hasProperty(HorizontalDirectionalBlock.FACING))
             return blockState.getValue(HorizontalDirectionalBlock.FACING);
@@ -126,20 +130,26 @@ public class AzBlockEntityModelRenderer<T extends TileEntity> extends AzModelRen
         if (blockState.hasProperty(DirectionalBlock.FACING))
             return blockState.getValue(DirectionalBlock.FACING);
 
-        return Direction.NORTH;
+        return EnumFacing.NORTH;
     }
 
     /**
-     * Rotate the {@link GlStateManager} based on the determined {@link Direction} the block is facing
+     * Rotate the {@link GlStateManager} based on the determined {@link EnumFacing} the block is facing
      */
-    protected void rotateBlock(Direction facing, GlStateManager glStateManager) {
+    protected void rotateBlock(EnumFacing facing) {
         switch (facing) {
-            case SOUTH -> glStateManager.mulPose(Axis.YP.rotationDegrees(180));
-            case WEST -> glStateManager.mulPose(Axis.YP.rotationDegrees(90));
-            case NORTH -> glStateManager.mulPose(Axis.YP.rotationDegrees(0));
-            case EAST -> glStateManager.mulPose(Axis.YP.rotationDegrees(270));
-            case UP -> glStateManager.mulPose(Axis.XP.rotationDegrees(90));
-            case DOWN -> glStateManager.mulPose(Axis.XN.rotationDegrees(90));
+            case SOUTH:
+                GlStateManager.rotate(180, 0, 1, 0);
+            case WEST:
+                GlStateManager.rotate(90, 0, 1, 0);
+            case NORTH:
+                GlStateManager.rotate(0, 0, 1, 0);
+            case EAST:
+                GlStateManager.rotate(270, 0, 1, 0);
+            case UP:
+                GlStateManager.rotate(90, 1,0,0);
+            case DOWN:
+                GlStateManager.rotate(90, -1, 0, 0);
         }
     }
 }

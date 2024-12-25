@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
+import javax.vecmath.Matrix4f;
+
 /**
  * AzBlockEntityRendererPipeline is a specific implementation of the {@link AzRendererPipeline} tailored for rendering
  * block entities. It manages the rendering pipeline with customized configurations and rendering behavior for block
@@ -68,8 +70,7 @@ public class AzBlockEntityRendererPipeline<T extends TileEntity> extends AzRende
      */
     @Override
     public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
-        GlStateManager poseStack = context.glStateManager();
-        this.entityRenderTranslations.set(poseStack.last().pose());
+        this.entityRenderTranslations.set(RenderUtils.getCurrentMatrix());
 
         float scaleWidth = config.scaleWidth();
         float scaleHeight = config.scaleHeight();

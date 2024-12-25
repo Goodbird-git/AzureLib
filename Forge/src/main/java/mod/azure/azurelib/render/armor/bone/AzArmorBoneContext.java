@@ -3,6 +3,8 @@ package mod.azure.azurelib.render.armor.bone;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
@@ -70,84 +72,84 @@ public class AzArmorBoneContext {
     /**
      * Transform the currently rendering {@link AzBakedModel} to match the positions and rotations of the base model
      */
-    public void applyBaseTransformations(LayerArmorBase<?> baseModel) {
+    public void applyBaseTransformations(ModelBiped baseModel) {
         if (this.head != null) {
-            ModelPart headPart = baseModel.head;
+            ModelRenderer headPart = baseModel.bipedHead;
 
             RenderUtils.matchModelPartRot(headPart, this.head);
-            this.head.updatePosition(headPart.x, -headPart.y, headPart.z);
+            this.head.updatePosition(headPart.offsetX, -headPart.offsetY, headPart.offsetZ);
         }
 
         if (this.body != null) {
-            ModelPart bodyPart = baseModel.body;
+            ModelRenderer bodyPart = baseModel.bipedBody;
 
             RenderUtils.matchModelPartRot(bodyPart, this.body);
-            this.body.updatePosition(bodyPart.x, -bodyPart.y, bodyPart.z);
+            this.body.updatePosition(bodyPart.offsetX, -bodyPart.offsetY, bodyPart.offsetZ);
         }
 
         if (this.rightArm != null) {
-            ModelPart rightArmPart = baseModel.rightArm;
+            ModelRenderer rightArmPart = baseModel.bipedRightArm;
 
             RenderUtils.matchModelPartRot(rightArmPart, this.rightArm);
-            this.rightArm.updatePosition(rightArmPart.x + 5, 2 - rightArmPart.y, rightArmPart.z);
+            this.rightArm.updatePosition(rightArmPart.offsetX + 5, 2 - rightArmPart.offsetY, rightArmPart.offsetZ);
         }
 
         if (this.leftArm != null) {
-            ModelPart leftArmPart = baseModel.leftArm;
+            ModelRenderer leftArmPart = baseModel.bipedLeftArm;
 
             RenderUtils.matchModelPartRot(leftArmPart, this.leftArm);
-            this.leftArm.updatePosition(leftArmPart.x - 5f, 2f - leftArmPart.y, leftArmPart.z);
+            this.leftArm.updatePosition(leftArmPart.offsetX - 5f, 2f - leftArmPart.offsetY, leftArmPart.offsetZ);
         }
 
         if (this.rightLeg != null) {
-            ModelPart rightLegPart = baseModel.rightLeg;
+            ModelRenderer rightLegPart = baseModel.bipedRightLeg;
 
             RenderUtils.matchModelPartRot(rightLegPart, this.rightLeg);
-            this.rightLeg.updatePosition(rightLegPart.x + 2, 12 - rightLegPart.y, rightLegPart.z);
+            this.rightLeg.updatePosition(rightLegPart.offsetX + 2, 12 - rightLegPart.offsetY, rightLegPart.offsetZ);
 
             if (this.rightBoot != null) {
                 RenderUtils.matchModelPartRot(rightLegPart, this.rightBoot);
-                this.rightBoot.updatePosition(rightLegPart.x + 2, 12 - rightLegPart.y, rightLegPart.z);
+                this.rightBoot.updatePosition(rightLegPart.offsetX + 2, 12 - rightLegPart.offsetY, rightLegPart.offsetZ);
             }
         }
 
         if (this.leftLeg != null) {
-            ModelPart leftLegPart = baseModel.leftLeg;
+            ModelRenderer leftLegPart = baseModel.bipedLeftLeg;
 
             RenderUtils.matchModelPartRot(leftLegPart, this.leftLeg);
-            this.leftLeg.updatePosition(leftLegPart.x - 2, 12 - leftLegPart.y, leftLegPart.z);
+            this.leftLeg.updatePosition(leftLegPart.offsetX - 2, 12 - leftLegPart.offsetY, leftLegPart.offsetZ);
 
             if (this.leftBoot != null) {
                 RenderUtils.matchModelPartRot(leftLegPart, this.leftBoot);
-                this.leftBoot.updatePosition(leftLegPart.x - 2, 12 - leftLegPart.y, leftLegPart.z);
+                this.leftBoot.updatePosition(leftLegPart.offsetX - 2, 12 - leftLegPart.offsetY, leftLegPart.offsetZ);
             }
         }
     }
 
     /**
-     * Resets the bone visibility for the model based on the current {@link ModelPart} and {@link EntityEquipmentSlot}, and
+     * Resets the bone visibility for the model based on the current {@link ModelRenderer} and {@link EntityEquipmentSlot}, and
      * then sets the bones relevant to the current part as visible for rendering.<br>
      * <br>
      * If you are rendering a geo entity with armor, you should probably be calling this prior to rendering
      */
-    public void applyBoneVisibilityByPart(EntityEquipmentSlot currentSlot, ModelPart currentPart, LayerArmorBase<?> model) {
+    public void applyBoneVisibilityByPart(EntityEquipmentSlot currentSlot, ModelRenderer currentPart, ModelBiped model) {
         setAllVisible(false);
 
-        currentPart.visible = true;
+        currentPart.isHidden = false;
         AzBone bone = null;
 
-        if (currentPart == model.hat || currentPart == model.head) {
+        if (currentPart == model.bipedHeadwear || currentPart == model.bipedHead) {
             bone = this.head;
-        } else if (currentPart == model.body) {
+        } else if (currentPart == model.bipedBody) {
             bone = this.body;
-        } else if (currentPart == model.leftArm) {
+        } else if (currentPart == model.bipedLeftArm) {
             bone = this.leftArm;
-        } else if (currentPart == model.rightArm) {
+        } else if (currentPart == model.bipedRightArm) {
             bone = this.rightArm;
-        } else if (currentPart == model.leftLeg) {
-            bone = currentSlot == EquipmentSlot.FEET ? this.leftBoot : this.leftLeg;
-        } else if (currentPart == model.rightLeg) {
-            bone = currentSlot == EquipmentSlot.FEET ? this.rightBoot : this.rightLeg;
+        } else if (currentPart == model.bipedLeftLeg) {
+            bone = currentSlot == EntityEquipmentSlot.FEET ? this.leftBoot : this.leftLeg;
+        } else if (currentPart == model.bipedRightLeg) {
+            bone = currentSlot == EntityEquipmentSlot.FEET ? this.rightBoot : this.rightLeg;
         }
 
         if (bone != null) {

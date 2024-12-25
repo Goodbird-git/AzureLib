@@ -26,8 +26,6 @@ public abstract class AzRendererPipelineContext<T> {
 
     private float partialTick;
 
-    private GlStateManager glStateManager;
-
     private BufferBuilder vertexConsumer;
 
     private int renderColor;
@@ -52,7 +50,6 @@ public abstract class AzRendererPipelineContext<T> {
         AzBakedModel bakedModel,
         int packedLight,
         float partialTick,
-        GlStateManager glStateManager,
         BufferBuilder vertexConsumer
     ) {
         this.animatable = animatable;
@@ -61,7 +58,6 @@ public abstract class AzRendererPipelineContext<T> {
         this.packedOverlay = getPackedOverlay(animatable, 0, partialTick);
         this.partialTick = partialTick;
         this.renderColor = getRenderColor(animatable, partialTick, packedLight).getColor();
-        this.glStateManager = glStateManager;
         this.vertexConsumer = vertexConsumer;
 //        if (renderType == null) {
 //            ResourceLocation textureLocation = rendererPipeline.config().textureLocation(animatable);
@@ -138,10 +134,6 @@ public abstract class AzRendererPipelineContext<T> {
 
     public float partialTick() {
         return partialTick;
-    }
-
-    public GlStateManager glStateManager() {
-        return glStateManager;
     }
 
     public int renderColor() {

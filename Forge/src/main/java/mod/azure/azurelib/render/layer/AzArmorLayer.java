@@ -9,8 +9,11 @@ import mod.azure.azurelib.render.armor.AzArmorRendererRegistry;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -78,7 +81,6 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      */
     @Override
     public void renderForBone(AzRendererPipelineContext<T> context, AzBone bone) {
-        GlStateManager poseStack = context.glStateManager();
         ItemStack armorStack = getArmorItemForBone(context, bone);
 
         if (armorStack == null) {
@@ -91,7 +93,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         ) {
             renderSkullAsArmor(context, bone, armorStack, ((BlockSkull) ((ItemBlock) armorStack.getItem()).getBlock()));
         } else {
-            renderArmor(context, bone, armorStack, poseStack);
+            renderArmor(context, bone, armorStack);
         }
     }
 
@@ -108,17 +110,16 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
     private void renderArmor(
         AzRendererPipelineContext<T> context,
         AzBone bone,
-        ItemStack armorStack,
-        GlStateManager glStateManager
+        ItemStack armorStack
     ) {
         EntityEquipmentSlot slot = getEquipmentSlotForBone(context, bone, armorStack);
         AzArmorRenderer renderer = getRendererForItem(armorStack);
-        LayerArmorBase<?> model = getModelForItem(armorStack, slot);
-        var modelPart = getModelPartForBone(context, model);
+        ModelBiped model = getModelForItem(armorStack, slot);
+        ModelRenderer modelPart = getModelPartForBone(context, model);
 
         if (!modelPart.cubes.isEmpty()) {
-            glStateManager.pushMatrix();
-            glStateManager.scale(-1, -1, 1);
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(-1, -1, 1);
 
             if (renderer != null && context.animatable() instanceof Entity entity) {
                 var boneContext = renderer.rendererPipeline().context().boneContext();
@@ -146,7 +147,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
                 );
             }
 
-            glStateManager.popMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -179,8 +180,8 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      * This is then transformed into position for the final render
      */
     @NotNull
-    protected ModelPart getModelPartForBone(AzRendererPipelineContext<T> context, LayerArmorBase<?> baseModel) {
-        return baseModel.body;
+    protected ModelRenderer getModelPartForBone(AzRendererPipelineContext<T> context, ModelBiped baseModel) {
+        return baseModel.bipedBody;
     }
 
     /**
@@ -199,9 +200,9 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         AzBone bone,
         EntityEquipmentSlot slot,
         ItemStack armorStack,
-        ModelPart modelPart
+        ModelRenderer modelPart
     ) {
-        var material = ((ItemArmor) armorStack.getItem()).getMaterial();
+        ItemArmor.ArmorMaterial material = ((ItemArmor) armorStack.getItem()).getArmorMaterial();
 
         for (var layer : material.value().layers()) {
             var buffer = getVanillaArmorBuffer(
@@ -232,7 +233,6 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
 
         if (armorStack.hasFoil())
             modelPart.render(
-                context.poseStack(),
                 getVanillaArmorBuffer(
                     context,
                     armorStack,
@@ -294,7 +294,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      * Returns a cached instance of a base HumanoidModel that is used for rendering/modelling the provided
      * {@link ItemStack}
      */
-    protected LayerArmorBase<?> getModelForItem(ItemStack stack, EntityEquipmentSlot slot) {
+    protected ModelBiped getModelForItem(ItemStack stack, EntityEquipmentSlot slot) {
         AzArmorRenderer renderer = getRendererForItem(stack);
 
         if (renderer == null) {
@@ -319,7 +319,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         var renderType = SkullBlockRenderer.getRenderType(type, stack.get(DataComponents.PROFILE));
 
         context.poseStack().pushMatrix();
-        RenderUtils.translateAndRotateMatrixForBone(context.poseStack(), bone);
+        RenderUtils.translateAndRotateMatrixForBone(bone);
         context.poseStack().scale(1.1875f, 1.1875f, 1.1875f);
         context.poseStack().translate(-0.5f, 0, -0.5f);
         SkullBlockRenderer.renderSkull(

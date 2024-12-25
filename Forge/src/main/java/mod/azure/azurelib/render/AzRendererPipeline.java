@@ -4,6 +4,7 @@ import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 
 /**
  * Abstract base class for defining a rendering pipeline. The {@code AzRendererPipeline} provides a structured framework
@@ -77,16 +78,15 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
      * consistent handling
      */
     public void render(
-        GlStateManager glStateManager,
         AzBakedModel model,
         T animatable,
         float yaw,
         float partialTick,
         int packedLight
     ) {
-        context.populate(animatable, model, packedLight, partialTick, glStateManager);
+        context.populate(animatable, model, packedLight, partialTick, Tessellator.getInstance().getBuffer());
 
-        glStateManager.pushMatrix();
+        GlStateManager.pushMatrix();
 
         preRender(context, false);
 
@@ -95,7 +95,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         layerRenderer.applyRenderLayers(context);
         postRender(context, false);
 
-        glStateManager.popMatrix();
+        GlStateManager.popMatrix();
 
         renderFinal(context);
         doPostRenderCleanup();
@@ -105,15 +105,13 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
      * Re-renders the provided {@link AzBakedModel}.<br>
      */
     public void reRender(AzRendererPipelineContext<T> context) {
-        GlStateManager poseStack = context.glStateManager();
-
-        poseStack.pushMatrix();
+        GlStateManager.pushMatrix();
 
         preRender(context, true);
         modelRenderer.render(context, true);
         postRender(context, true);
 
-        poseStack.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -143,8 +141,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         boolean isReRender
     ) {
         if (!isReRender && (widthScale != 1 || heightScale != 1)) {
-            GlStateManager poseStack = context.glStateManager();
-            poseStack.scale(widthScale, heightScale, widthScale);
+            GlStateManager.scale(widthScale, heightScale, widthScale);
         }
     }
 

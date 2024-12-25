@@ -11,12 +11,13 @@ import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Quaternion;
+
+import javax.vecmath.Matrix4f;
 
 /**
  * Helper class for various methods and functions useful while rendering
@@ -27,63 +28,63 @@ public final class RenderUtils {
 		return p_265754_ % p_265543_ == 0;
 	}
 
-	public static void translateMatrixToBone(GlStateManager glStateManager, CoreGeoBone bone) {
-		glStateManager.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
+	public static void translateMatrixToBone(CoreGeoBone bone) {
+		GlStateManager.translate(-bone.getPosX() / 16f, bone.getPosY() / 16f, bone.getPosZ() / 16f);
 	}
 
-	public static void rotateMatrixAroundBone(GlStateManager glStateManager, CoreGeoBone bone) {
+	public static void rotateMatrixAroundBone(CoreGeoBone bone) {
 		if (bone.getRotZ() != 0)
-			glStateManager.rotate(Vector3f.ZP.rotation(bone.getRotZ()));
+			GlStateManager.rotate(bone.getRotZ(), 0, 0, 1);
 
 		if (bone.getRotY() != 0)
-			glStateManager.rotate(Vector3f.YP.rotation(bone.getRotY()));
+			GlStateManager.rotate(bone.getRotY(), 0, 1, 0);
 
 		if (bone.getRotX() != 0)
-			glStateManager.rotate(Vector3f.XP.rotation(bone.getRotX()));
+			GlStateManager.rotate(bone.getRotX(), 1, 0, 0);
 	}
 
-	public static void rotateMatrixAroundCube(GlStateManager glStateManager, GeoCube cube) {
+	public static void rotateMatrixAroundCube(GeoCube cube) {
 		Vec3d rotation = cube.rotation();
 
-		glStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, 0));
-		glStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, 0));
-		glStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, 0));
+		GlStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, 0));
+		GlStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, 0));
+		GlStateManager.rotate(new Quaternion((float) rotation.x, 0, 0, 0));
 	}
 
-	public static void scaleMatrixForBone(GlStateManager glStateManager, CoreGeoBone bone) {
-		glStateManager.scale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
+	public static void scaleMatrixForBone(CoreGeoBone bone) {
+		GlStateManager.scale(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
 	}
 
-	public static void translateToPivotPoint(GlStateManager glStateManager, GeoCube cube) {
+	public static void translateToPivotPoint(GeoCube cube) {
 		Vec3d pivot = cube.pivot();
-		glStateManager.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
+		GlStateManager.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
 	}
 
-	public static void translateToPivotPoint(GlStateManager glStateManager, CoreGeoBone bone) {
-		glStateManager.translate(bone.getPivotX() / 16f, bone.getPivotY() / 16f, bone.getPivotZ() / 16f);
+	public static void translateToPivotPoint(CoreGeoBone bone) {
+		GlStateManager.translate(bone.getPivotX() / 16f, bone.getPivotY() / 16f, bone.getPivotZ() / 16f);
 	}
 
-	public static void translateAwayFromPivotPoint(GlStateManager glStateManager, GeoCube cube) {
+	public static void translateAwayFromPivotPoint(GeoCube cube) {
 		Vec3d pivot = cube.pivot();
 
-		glStateManager.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
+		GlStateManager.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
 	}
 
-	public static void translateAwayFromPivotPoint(GlStateManager glStateManager, CoreGeoBone bone) {
-		glStateManager.translate(-bone.getPivotX() / 16f, -bone.getPivotY() / 16f, -bone.getPivotZ() / 16f);
+	public static void translateAwayFromPivotPoint(CoreGeoBone bone) {
+		GlStateManager.translate(-bone.getPivotX() / 16f, -bone.getPivotY() / 16f, -bone.getPivotZ() / 16f);
 	}
 
-	public static void translateAndRotateMatrixForBone(GlStateManager poseStack, CoreGeoBone bone) {
-		translateToPivotPoint(poseStack, bone);
-		rotateMatrixAroundBone(poseStack, bone);
+	public static void translateAndRotateMatrixForBone(CoreGeoBone bone) {
+		translateToPivotPoint(bone);
+		rotateMatrixAroundBone(bone);
 	}
 
-	public static void prepMatrixForBone(GlStateManager poseStack, CoreGeoBone bone) {
-		translateMatrixToBone(poseStack, bone);
-		translateToPivotPoint(poseStack, bone);
-		rotateMatrixAroundBone(poseStack, bone);
-		scaleMatrixForBone(poseStack, bone);
-		translateAwayFromPivotPoint(poseStack, bone);
+	public static void prepMatrixForBone(CoreGeoBone bone) {
+		translateMatrixToBone(bone);
+		translateToPivotPoint(bone);
+		rotateMatrixAroundBone(bone);
+		scaleMatrixForBone(bone);
+		translateAwayFromPivotPoint(bone);
 	}
 
 	public static Matrix4f invertAndMultiplyMatrices(Matrix4f baseMatrix, Matrix4f inputMatrix) {
@@ -99,9 +100,13 @@ public final class RenderUtils {
 	 * Translates the provided {@link GlStateManager} to face towards the given {@link Entity}'s rotation.<br>
 	 * Usually used for rotating projectiles towards their trajectory<br>
 	 */
-	public static void faceRotation(GlStateManager glStateManager, Entity animatable, float partialTick) {
-		glStateManager.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90));
-		glStateManager.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
+	public static void faceRotation(Entity animatable, float partialTick) {
+		GlStateManager.rotate(lerp(partialTick, animatable.prevRotationYaw, animatable.rotationYaw) - 90, 0, 1, 0);
+		GlStateManager.rotate(lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch), 0, 0, 1);
+	}
+
+	public static float lerp(float pct, float start, float end) {
+		return start + pct * (end - start);
 	}
 
 	public static double getCurrentSystemTick() {
@@ -157,6 +162,11 @@ public final class RenderUtils {
 			mul(normal, 1, 1, -1);
 	}
 
+	public static Matrix4f getCurrentMatrix() {
+		MatrixUtils.matrix = null;
+		MatrixUtils.captureMatrix();
+		return MatrixUtils.matrix;
+	}
 	public static void mul(Vec3d normal, float x, float y, float z) {
 		normal = new Vec3d(normal.x * x, normal.y * y, normal.z * z);
 	}

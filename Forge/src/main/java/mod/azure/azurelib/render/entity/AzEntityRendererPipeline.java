@@ -2,10 +2,13 @@ package mod.azure.azurelib.render.entity;
 
 import mod.azure.azurelib.render.textures.AnimatableTexture;
 import mod.azure.azurelib.render.*;
+import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.ResourceLocation;
+
+import javax.vecmath.Matrix4f;
 
 /**
  * Represents a renderer pipeline specifically designed for rendering entities. This pipeline facilitates stages of
@@ -64,8 +67,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
      */
     @Override
     public void preRender(AzRendererPipelineContext<T> context, boolean isReRender) {
-        GlStateManager poseStack = context.glStateManager();
-        this.entityRenderTranslations.set(poseStack.last().pose());
+        this.entityRenderTranslations.set(RenderUtils.getCurrentMatrix());
 
         AzEntityRendererConfig<T> config = entityRenderer.config();
         float scaleWidth = config.scaleWidth();
@@ -87,7 +89,6 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     public void renderFinal(AzRendererPipelineContext<T> context) {
         T entity = context.animatable();
         float partialTick = context.partialTick();
-        GlStateManager poseStack = context.glStateManager();
 
         if (!(entity instanceof EntityMob)) {
             return;
@@ -99,7 +100,7 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
             return;
         }
 
-        AzEntityLeashRenderUtil.renderLeash(entityRenderer, ((EntityMob) entity), partialTick, poseStack, leashHolder);
+        AzEntityLeashRenderUtil.renderLeash(entityRenderer, ((EntityMob) entity), partialTick, leashHolder);
     }
 
     public AzEntityRenderer<T> getRenderer() {

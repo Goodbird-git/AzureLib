@@ -10,7 +10,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 /**
  * AzModelRenderer provides a generic and extensible base class for rendering models by processing hierarchical bone
@@ -52,10 +54,8 @@ public class AzModelRenderer<T> {
      * Renders the provided {@link AzBone} and its associated child bones
      */
     protected void renderRecursively(AzRendererPipelineContext<T> context, AzBone bone, boolean isReRender) {
-        GlStateManager poseStack = context.glStateManager();
-
-        poseStack.pushMatrix();
-        RenderUtils.prepMatrixForBone(poseStack, bone);
+        GlStateManager.pushMatrix();
+        RenderUtils.prepMatrixForBone(bone);
         renderCubesOfBone(context, bone);
 
         if (!isReRender) {
@@ -63,7 +63,7 @@ public class AzModelRenderer<T> {
         }
 
         renderChildBones(context, bone, isReRender);
-        poseStack.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -74,14 +74,12 @@ public class AzModelRenderer<T> {
             return;
         }
 
-        GlStateManager poseStack = context.glStateManager();
-
         for (GeoCube cube : bone.getCubes()) {
-            poseStack.pushMatrix();
+            GlStateManager.pushMatrix();
 
             renderCube(context, cube);
 
-            poseStack.popMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -104,11 +102,10 @@ public class AzModelRenderer<T> {
      * This tends to be called recursively from something like {@link AzModelRenderer#renderCubesOfBone}
      */
     protected void renderCube(AzRendererPipelineContext<T> context, GeoCube cube) {
-        GlStateManager poseStack = context.glStateManager();
 
-        RenderUtils.translateToPivotPoint(poseStack, cube);
-        RenderUtils.rotateMatrixAroundCube(poseStack, cube);
-        RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
+        RenderUtils.translateToPivotPoint(cube);
+        RenderUtils.rotateMatrixAroundCube(cube);
+        RenderUtils.translateAwayFromPivotPoint(cube);
 
         for (GeoQuad quad : cube.quads()) {
             if (quad == null) {
@@ -116,7 +113,7 @@ public class AzModelRenderer<T> {
             }
             Vec3d normal = new Vec3d(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
 
-            poseStack.glNormal3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
+            GlStateManager.glNormal3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
             RenderUtils.fixInvertedFlatCube(cube, normal);
             createVerticesOfQuad(context, quad, normal);
         }
@@ -135,7 +132,7 @@ public class AzModelRenderer<T> {
         for (GeoVertex vertex : quad.getVertices()) {
             Vector3f position = vertex.position();
             poseStateTransformCache.set(position.x(), position.y(), position.z(), 1.0f);
-            var vector4f = poseState.transform(poseStateTransformCache);
+            Vector4f vector4f = poseState.transform(poseStateTransformCache);
 
             buffer.pos(vector4f.x(), vector4f.y(), vector4f.z())
                     .tex(vertex.texU(), vertex.texV()).color()

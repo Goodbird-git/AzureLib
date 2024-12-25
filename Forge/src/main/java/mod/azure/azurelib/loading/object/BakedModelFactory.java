@@ -82,7 +82,10 @@ public interface BakedModelFactory {
 
 		double[] uv = cube.uv().boxUVCoords();
 		double[] uvSize = cube.size();
-		Vector3d uvSizeVec = new Vector3d(Math.floor(uvSize[0]), Math.floor(uvSize[1]), Math.floor(uvSize[2]));
+		Vector3d uvSizeVec = new Vector3d();
+		uvSizeVec.x = Math.floor(uvSize[0]);
+		uvSizeVec.y = Math.floor(uvSize[1]);
+		uvSizeVec.z = Math.floor(uvSize[2]);
 		double[][] uvData = new double[][] {new double[] {0}, new double[] {0}};
 		switch(direction) {
 			case WEST:
@@ -183,9 +186,8 @@ public interface BakedModelFactory {
 			Vec3d rotation = RenderUtils.arrayToVec(cube.rotation());
 			Vec3d pivot = RenderUtils.arrayToVec(cube.pivot());
 			origin = new Vec3d(-(origin.x + size.x) / 16d, origin.y / 16d, origin.z / 16d);
-			Vec3d vertexSize = size.mul(1 / 16d, 1 / 16d, 1 / 16d);
-
-			pivot = pivot.mul(-1, 1, 1);
+			Vec3d vertexSize = size.scale(1 / 16d);
+			pivot = new Vec3d(-pivot.x, pivot.y, pivot.z);
 			rotation = new Vec3d(Math.toRadians(-rotation.x), Math.toRadians(-rotation.y), Math.toRadians(rotation.z));
 			GeoQuad[] quads = buildQuads(cube.uv(), new VertexSet(origin, vertexSize, inflate), cube, (float)properties.textureWidth(), (float)properties.textureHeight(), mirror);
 
