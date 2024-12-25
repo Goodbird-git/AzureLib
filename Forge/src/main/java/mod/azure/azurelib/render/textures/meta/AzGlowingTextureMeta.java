@@ -3,7 +3,6 @@ package mod.azure.azurelib.render.textures.meta;
 import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.render.layer.AzAutoGlowingLayer;
-import mod.azure.azurelib.render.textures.Pixel;
 import mod.azure.azurelib.util.JSONUtils;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSectionSerializer;
