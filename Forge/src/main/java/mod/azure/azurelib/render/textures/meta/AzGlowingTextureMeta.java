@@ -6,64 +6,33 @@ import mod.azure.azurelib.render.layer.AzAutoGlowingLayer;
 import mod.azure.azurelib.util.JSONUtils;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSectionSerializer;
+import net.minecraft.util.Tuple;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Metadata class that stores the data for AzureLib's {@link AzAutoGlowingLayer emissive texture feature} for a given texture
  */
 public class AzGlowingTextureMeta implements IMetadataSection {
-	public static final IMetadataSectionSerializer<AzGlowingTextureMeta> DESERIALIZER = new IMetadataSectionSerializer<AzGlowingTextureMeta>() {
-		@Override
-		public AzGlowingTextureMeta deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-			List<Pixel> pixels = fromSections(JSONUtils.getJsonArray(json, "sections"));
 
-			if (pixels.isEmpty())
-				throw new JsonParseException("Empty glowlayer sections file. Must have at least one glow section!");
+	private List<Tuple<Tuple<Integer, Integer>, Tuple<Integer, Integer>>> glowingSections = new ArrayList<>();
 
-			return new AzGlowingTextureMeta(pixels);
-		}
+	public List<Tuple<Tuple<Integer, Integer>, Tuple<Integer, Integer>>> getGlowingSections() {
+		return this.glowingSections;
+	}
 
-		@Override
-		public String getSectionName() {
-			return "glowsections";
-		}
+	public void addSection(Tuple<Integer, Integer> pos1, Tuple<Integer, Integer> pos2) {
+		Tuple<Tuple<Integer, Integer>, Tuple<Integer, Integer>> entry = new Tuple<>(pos1, pos2);
+		this.glowingSections.add(entry);
+	}
 
-		/**
-		 * Generate a {@link Pixel} collection from the "sections" array of the mcmeta file
-		 */
-		private List<Pixel> fromSections(@Nullable JsonArray sectionsArray) {
-			if (sectionsArray == null)
-				return new ObjectArrayList<>();
-
-			List<Pixel> pixels = new ObjectArrayList<>();
-
-			for (JsonElement element : sectionsArray) {
-				if (!(element instanceof JsonObject))
-					throw new JsonParseException("Invalid glowsections json format, expected a JsonObject, found: " + element.getClass());
-
-				int x1 = JSONUtils.getInt((JsonObject) element, "x1", JSONUtils.getInt((JsonObject) element, "x", 0));
-				int y1 = JSONUtils.getInt((JsonObject) element, "y1", JSONUtils.getInt((JsonObject) element, "y", 0));
-				int x2 = JSONUtils.getInt((JsonObject) element, "x2", JSONUtils.getInt((JsonObject) element, "w", 0) + x1);
-				int y2 = JSONUtils.getInt((JsonObject) element, "y2", JSONUtils.getInt((JsonObject) element, "h", 0) + y1);
-				int alpha = JSONUtils.getInt((JsonObject) element, "alpha", JSONUtils.getInt((JsonObject) element, "a", 0));
-
-				if (x1 + y1 + x2 + y2 == 0)
-					throw new IllegalArgumentException("Invalid glowsections section object, section must be at least one pixel in size");
-
-				for (int x = x1; x <= x2; x++) {
-					for (int y = y1; y <= y2; y++) {
-						pixels.add(new Pixel(x, y, alpha));
-					}
-				}
-			}
-
-			return pixels;
-		}
-	};
+	public boolean isEmpty() {
+		return this.glowingSections.isEmpty();
+	}
 
 	private final List<Pixel> pixels;
 

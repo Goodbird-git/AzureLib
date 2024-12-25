@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.render.textures.meta.AzureAnimationMetadataSection;
+import mod.azure.azurelib.render.textures.utils.Frame;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -25,7 +26,6 @@ import net.minecraft.client.resources.data.TextureMetadataSection;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,26 +40,13 @@ public class AnimatableTexture extends SimpleTexture {
         super(location);
     }
 
-    private static void onRenderThread(IRenderCall renderCall) {
-        if (!RenderSystem.isOnRenderThread()) {
-            RenderSystem.recordRenderCall(renderCall);
-        } else {
-            renderCall.execute();
-        }
-    }
-
     @Override
     public void loadTexture(IResourceManager manager) throws IOException {
-        IResource resource = manager.getResource(this.textureLocation);
+        this.deleteGlTexture();
 
-        NativeImage nativeImage;
-        TextureMetadataSection simpleTextureMeta = new TextureMetadataSection(false, false);
-
-        try (InputStream inputstream = resource.getInputStream()) {
-            nativeImage = NativeImage.read(inputstream);
-        }
-
-        try {
+        try (IResource resource = manager.getResource(this.textureLocation)) {
+            ITextureObject nativeImage = Minecraft.getMinecraft().renderEngine.getTexture(resource.getResourceLocation());
+            TextureMetadataSection simpleTextureMeta = new TextureMetadataSection(false, false);
             if (resource.getMetadata("texture") != null && resource.getMetadata("animation") != null ) {
                 // Retrieve metadata for the texture section
                 TextureMetadataSection textureMeta = resource.getMetadata("texture");
@@ -84,12 +71,10 @@ public class AnimatableTexture extends SimpleTexture {
                     }
                     this.isAnimated = true;
 
-                    onRenderThread(() -> {
-                        TextureUtil.prepareImage(getGlTextureId(), 0, this.animationContents.frameSize.getFirst(),
-                                this.animationContents.frameSize.getSecond());
-                        nativeImage.uploadTextureSub(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(),
-                                this.animationContents.frameSize.getSecond(), false, false);
-                    });
+                    TextureUtil.prepareImage(getGlTextureId(), 0, this.animationContents.frameSize.getFirst(),
+                            this.animationContents.frameSize.getSecond());
+                    nativeImage.uploadTextureSub(0, 0, 0, 0, 0, this.animationContents.frameSize.getFirst(),
+                            this.animationContents.frameSize.getSecond(), false, false);
                 }
             }
         } catch (RuntimeException exception) {
@@ -122,7 +107,7 @@ public class AnimatableTexture extends SimpleTexture {
         private final Pair<Integer, Integer> frameSize;
         private final Texture animatedTexture;
 
-        private AnimationContents(NativeImage image, AzureAnimationMetadataSection animMeta) {
+        private AnimationContents(ITextureObject image, AzureAnimationMetadataSection animMeta) {
             this.frameSize = animMeta.getFrameSize(image.getWidth(), image.getHeight());
             this.animatedTexture = generateAnimatedTexture(image, animMeta);
         }
@@ -177,17 +162,6 @@ public class AnimatableTexture extends SimpleTexture {
 
             return frames.size() <= 1 ? null : new Texture(image, frames.toArray(new Frame[0]), columns,
                     animMeta.isInterpolatedFrames());
-        }
-
-        class Frame {
-            int index;
-            int time;
-
-            public Frame(int index, int time) {
-                this.index = index;
-                this.time = time;
-            }
-
         }
 
         class Texture implements AutoCloseable {
@@ -283,9 +257,9 @@ public class AnimatableTexture extends SimpleTexture {
                         }
                     }
 
-                    TextureUtil.prepareImage(AnimatableTexture.this.getGlTextureId(), 0,
+                    TextureUtil.allocateTexture(AnimatableTexture.this.getGlTextureId(),
                             AnimationContents.this.frameSize.first(), AnimationContents.this.frameSize.second());
-                    this.interpolatedFrame.uploadTextureSub(0, 0, 0, 0, 0, AnimationContents.this.frameSize.first(),
+                    this.baseImage.uploadTextureSub(0, 0, 0, 0, 0, AnimationContents.this.frameSize.first(),
                             AnimationContents.this.frameSize.second(), false, false);
                 }
             }

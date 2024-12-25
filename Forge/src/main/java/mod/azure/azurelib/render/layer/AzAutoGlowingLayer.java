@@ -3,6 +3,9 @@ package mod.azure.azurelib.render.layer;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
+import mod.azure.azurelib.render.textures.AzAutoGlowingTexture;
+import mod.azure.azurelib.render.textures.utils.EmissiveUtil;
+import net.minecraft.client.Minecraft;
 
 public class AzAutoGlowingLayer<T> implements AzRenderLayer<T> {
 
@@ -12,11 +15,11 @@ public class AzAutoGlowingLayer<T> implements AzRenderLayer<T> {
     @Override
     public void render(AzRendererPipelineContext<T> context) {
         AzRendererPipeline<T> renderPipeline = context.rendererPipeline();
-        int prevPackedLight = context.packedLight();
+        EmissiveUtil.preEmissiveTextureRendering();
 
-        context.setPackedLight(0xF00000);
-        renderPipeline.reRender(context);
-        context.setPackedLight(prevPackedLight);
+        Minecraft.getMinecraft().renderEngine.bindTexture(AzAutoGlowingTexture.get(context.rendererPipeline().config().textureLocation(context.animatable())));
+
+        EmissiveUtil.postEmissiveTextureRendering();
     }
 
     @Override
