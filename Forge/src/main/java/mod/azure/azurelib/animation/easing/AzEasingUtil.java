@@ -56,7 +56,7 @@ public class AzEasingUtil {
      * Returns a stepping function that returns 1 for any input value greater than 0, or otherwise returning 0
      */
     public static Function<Double, Double> stepPositive(Function<Double, Double> function) {
-        return n -> n > 0 ? 1 : 0;
+        return n -> (double) (n > 0 ? 1 : 0);
     }
 
     /**
@@ -64,7 +64,7 @@ public class AzEasingUtil {
      * 0
      */
     public static Function<Double, Double> stepNonNegative(Function<Double, Double> function) {
-        return n -> n >= 0 ? 1 : 0;
+        return n -> (double) (n >= 0 ? 1 : 0);
     }
 
     /**

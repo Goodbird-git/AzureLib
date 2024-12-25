@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation.cache;
 
-import com.sun.istack.internal.NotNull;
 import net.minecraft.item.Item;
 
 import java.util.Arrays;
@@ -22,7 +21,7 @@ public class AzIdentityRegistry {
      * @param rest  A varargs array of additional items to register. These items can be null, but null values will not
      *              be added to the identity set.
      */
-    public static void register(@NotNull Item first, Item... rest) {
+    public static void register(Item first, Item... rest) {
         IDENTITY_OF_ITEMS.add(first);
         IDENTITY_OF_ITEMS.addAll(Arrays.asList(rest));
     }

@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.AzureLibException;
 import mod.azure.azurelib.animation.cache.AzBakedAnimationCache;
 import mod.azure.azurelib.animation.cache.AzBoneCache;
@@ -48,7 +47,7 @@ public abstract class AzAnimator<T> {
 
     public abstract void registerControllers(AzAnimationControllerContainer<T> animationControllerContainer);
 
-    public abstract @NotNull ResourceLocation getAnimationLocation(T animatable);
+    public abstract ResourceLocation getAnimationLocation(T animatable);
 
     public void animate(T animatable, float partialTicks) {
         reusableContext.animatable = animatable;

@@ -1,7 +1,5 @@
 package mod.azure.azurelib.animation.easing;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +37,7 @@ public class AzEasingTypeRegistry {
         return register(name, easingType::buildTransformer);
     }
 
-    public static AzEasingType getOrDefault(String name, @NotNull AzEasingType defaultValue) {
+    public static AzEasingType getOrDefault(String name, AzEasingType defaultValue) {
         return EASING_TYPES.getOrDefault(name, defaultValue);
     }
 

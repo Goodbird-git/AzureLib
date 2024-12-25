@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation.property;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.animation.easing.AzEasingType;
 import mod.azure.azurelib.animation.easing.AzEasingTypes;
 
@@ -44,7 +43,7 @@ public class AzAnimationProperties {
         return new AzAnimationProperties(animationSpeed, easingType, transitionLength);
     }
 
-    public AzAnimationProperties withEasingType(@NotNull AzEasingType easingType) {
+    public AzAnimationProperties withEasingType(AzEasingType easingType) {
         return new AzAnimationProperties(animationSpeed, easingType, transitionLength);
     }
 

@@ -7,10 +7,11 @@
  */
 package mod.azure.azurelib.cache.object;
 
+import mod.azure.azurelib.model.AzBone;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Baked cuboid for a {@link GeoBone}
+ * Baked cuboid for a {@link AzBone}
  */
 public class GeoCube {
     private final GeoQuad[] quads;

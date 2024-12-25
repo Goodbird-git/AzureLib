@@ -6,7 +6,6 @@ import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.util.ResourceLocation;
 
 import javax.vecmath.Matrix4f;
 

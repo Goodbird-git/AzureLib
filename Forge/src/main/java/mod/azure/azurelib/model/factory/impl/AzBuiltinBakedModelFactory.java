@@ -64,17 +64,15 @@ public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
     @Override
     public GeoCube constructCube(Cube cube, ModelProperties properties, AzBone bone) {
         boolean mirror = cube.mirror() == Boolean.TRUE;
-        double inflate = cube.inflate() != null
-            ? cube.inflate() / 16f
-            : (bone.getInflate() == null ? 0 : bone.getInflate() / 16f);
+        double inflate = cube.inflate() != null ? cube.inflate() / 16f : (bone.getInflate() == null ? 0 : bone.getInflate() / 16f);
         Vec3d size = RenderUtils.arrayToVec(cube.size());
         Vec3d origin = RenderUtils.arrayToVec(cube.origin());
         Vec3d rotation = RenderUtils.arrayToVec(cube.rotation());
         Vec3d pivot = RenderUtils.arrayToVec(cube.pivot());
         origin = new Vec3d(-(origin.x + size.x) / 16d, origin.y / 16d, origin.z / 16d);
-        Vec3d vertexSize = size.multiply(1 / 16d, 1 / 16d, 1 / 16d);
+        Vec3d vertexSize = new Vec3d(size.x * 1 / 16d, size.y * 1 / 16d, size.z * 1 / 16d);
 
-        pivot = pivot.multiply(-1, 1, 1);
+        pivot = new Vec3d(pivot.x * -1, pivot.y, pivot.z);
         rotation = new Vec3d(Math.toRadians(-rotation.x), Math.toRadians(-rotation.y), Math.toRadians(rotation.z));
         GeoQuad[] quads = buildQuads(
             cube.uv(),

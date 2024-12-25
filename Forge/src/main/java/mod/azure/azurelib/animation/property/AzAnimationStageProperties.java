@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation.property;
 
-import com.sun.istack.internal.NotNull;
 import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.animation.easing.AzEasingType;
 import mod.azure.azurelib.animation.easing.AzEasingTypeRegistry;
@@ -44,11 +43,11 @@ public class AzAnimationStageProperties extends AzAnimationProperties {
     }
 
     @Override
-    public AzAnimationStageProperties withEasingType(@NotNull AzEasingType easingType) {
+    public AzAnimationStageProperties withEasingType(AzEasingType easingType) {
         return new AzAnimationStageProperties(animationSpeed, easingType, loopType, transitionLength);
     }
 
-    public AzAnimationStageProperties withLoopType(@NotNull AzLoopType loopType) {
+    public AzAnimationStageProperties withLoopType(AzLoopType loopType) {
         return new AzAnimationStageProperties(animationSpeed, easingType, loopType, transitionLength);
     }
 

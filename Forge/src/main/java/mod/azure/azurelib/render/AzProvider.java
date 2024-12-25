@@ -1,6 +1,5 @@
 package mod.azure.azurelib.render;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.AzAnimatorAccessor;
 import mod.azure.azurelib.model.AzBakedModel;
@@ -39,7 +38,7 @@ public class AzProvider<T> {
      * @param animatable the animatable object for which the baked model should be retrieved, must not be null
      * @return the baked model associated with the animatable object, or null if no model is found
      */
-    public AzBakedModel provideBakedModel(@NotNull T animatable) {
+    public AzBakedModel provideBakedModel(T animatable) {
         ResourceLocation modelResourceLocation = modelLocationProvider.apply(animatable);
         return AzBakedModelCache.getInstance().getNullable(modelResourceLocation);
     }

@@ -133,7 +133,7 @@ public class AzCommand {
         if (entity.world.isRemote) {
             dispatchFromClient(entity);
         } else {
-            UUID uuid = itemStack.get(AzureLib.AZ_ID.get());
+            UUID uuid = itemStack.serializeNBT().getUniqueId("az_id");
 
             if (uuid == null) {
                 AzureLib.LOGGER.warn(

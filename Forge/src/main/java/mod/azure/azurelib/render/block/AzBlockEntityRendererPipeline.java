@@ -5,7 +5,6 @@ import mod.azure.azurelib.render.*;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 
 import javax.vecmath.Matrix4f;
 

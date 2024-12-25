@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation.controller.keyframe;
 
-import mod.azure.azurelib.core.keyframe.Keyframe;
 import mod.azure.azurelib.core.math.Constant;
 import mod.azure.azurelib.core.math.IValue;
 import mod.azure.azurelib.core.object.Axis;
@@ -52,7 +51,7 @@ public class AzAbstractKeyframeExecutor {
     }
 
     /**
-     * Returns the {@link Keyframe} relevant to the current tick time
+     * Returns the {@link AzKeyframe} relevant to the current tick time
      *
      * @param frames     The list of {@code AzKeyframe} to filter through
      * @param ageInTicks The current tick time

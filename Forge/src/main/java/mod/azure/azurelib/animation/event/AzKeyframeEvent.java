@@ -1,11 +1,11 @@
 package mod.azure.azurelib.animation.event;
 
 import mod.azure.azurelib.animation.controller.AzAnimationController;
-import mod.azure.azurelib.core.keyframe.Keyframe;
+import mod.azure.azurelib.animation.controller.keyframe.AzKeyframe;
 import mod.azure.azurelib.core.keyframe.event.data.KeyFrameData;
 
 /**
- * The base class for {@link Keyframe} events.<br>
+ * The base class for {@link AzKeyframe} events.<br>
  * These will be passed to one of the controllers in {@link AzAnimationController} when encountered during animation.
  *
  * @see AzCustomInstructionKeyframeEvent

@@ -5,11 +5,8 @@ import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzRendererConfig;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
-import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Extends the {@link AzRendererPipeline} to provide a specific implementation for rendering {@link ItemStack} objects.

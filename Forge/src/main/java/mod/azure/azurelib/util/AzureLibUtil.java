@@ -1,6 +1,7 @@
 package mod.azure.azurelib.util;
 
-import mod.azure.azurelib.loading.object.BakedModelFactory;
+import mod.azure.azurelib.model.factory.AzBakedModelFactory;
+import mod.azure.azurelib.model.factory.registry.AzBakedModelFactoryRegistry;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
@@ -21,15 +22,15 @@ public final class AzureLibUtil {
 	}
 
 	/**
-	 * Register a custom {@link BakedModelFactory} with AzureLib, allowing for dynamic handling of geo model
+	 * Register a custom {@link AzBakedModelFactory} with AzureLib, allowing for dynamic handling of geo model
 	 * loading.<br>
 	 * <b><u>MUST be called during mod construct</u></b><br>
 	 *
 	 * @param namespace The namespace (modid) to register the factory for
 	 * @param factory   The factory responsible for model loading under the given namespace
 	 */
-	public static synchronized void addCustomBakedModelFactory(String namespace, BakedModelFactory factory) {
-		BakedModelFactory.register(namespace, factory);
+	public static synchronized void addCustomBakedModelFactory(String namespace, AzBakedModelFactory factory) {
+		AzBakedModelFactoryRegistry.register(namespace, factory);
 	}
 
 	/**

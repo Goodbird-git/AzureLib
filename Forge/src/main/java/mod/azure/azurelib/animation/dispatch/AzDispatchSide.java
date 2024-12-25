@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation.dispatch;
 
-import com.sun.istack.internal.NotNull;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -44,7 +43,7 @@ public enum AzDispatchSide  {
         return Objects.requireNonNull(ID_TO_ENUM_MAP.get((int) buf.readByte()));
     }
 
-    public @NotNull String getSerializedName() {
+    public String getSerializedName() {
         return name();
     }
 }

@@ -1,6 +1,5 @@
 package mod.azure.azurelib.animation.controller.keyframe;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerTimer;
 import mod.azure.azurelib.animation.controller.AzBoneAnimationQueueCache;
@@ -42,7 +41,7 @@ public class AzKeyframeExecutor<T> extends AzAbstractKeyframeExecutor {
      * @param crashWhenCantFindBone Whether the controller should throw an exception when unable to find the required
      *                              bone, or continue with the remaining bones
      */
-    public void execute(@NotNull AzQueuedAnimation currentAnimation, T animatable, boolean crashWhenCantFindBone) {
+    public void execute(AzQueuedAnimation currentAnimation, T animatable, boolean crashWhenCantFindBone) {
         AzKeyframeCallbackHandler<T> keyframeCallbackHandler = animationController.keyframeManager().keyframeCallbackHandler();
         AzAnimationControllerTimer<T> controllerTimer = animationController.controllerTimer();
         double transitionLength = animationController.animationProperties().transitionLength();

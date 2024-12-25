@@ -1,6 +1,5 @@
 package mod.azure.azurelib.network.packet;
 
-import com.sun.istack.internal.NotNull;
 import io.netty.buffer.ByteBuf;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.animation.AzAnimatorAccessor;
