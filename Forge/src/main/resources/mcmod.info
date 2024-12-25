@@ -7,8 +7,8 @@
   "mcversion": "${mcversion}",
   "url": "https://www.curseforge.com/minecraft/mc-mods/azurelib",
   "updateUrl": "",
-  "authorList": ["AzureDoom, Gecko, Eliot, DerToaster, Tslat"],
-  "credits": "AzureDoom, Gecko, Eliot, Chappie, DerToaster, Tslat",
+  "authorList": ["AzureDoom, Boston, Goodbird"],
+  "credits": "AzureDoom, Boston, Goodbird",
   "logoFile": "azurelib.png",
   "screenshots": [],
   "dependencies": []
