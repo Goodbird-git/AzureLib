@@ -23,8 +23,6 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
 
     protected Matrix4f entityRenderTranslations = new Matrix4f();
 
-    protected Matrix4f modelRenderTranslations = new Matrix4f();
-
     public AzArmorRendererPipeline(AzRendererConfig<ItemStack> config, AzArmorRenderer armorRenderer) {
         super(config);
         this.armorModel = new AzArmorModel(this);
@@ -94,18 +92,17 @@ public class AzArmorRendererPipeline extends AzRendererPipeline<ItemStack> {
         EntityEquipmentSlot currentSlot = context.currentSlot();
 
         if (currentSlot == EntityEquipmentSlot.HEAD) {
-            if (baseModel.scaleHead) {
-                float headScale = 1.5f / baseModel.babyHeadScale;
-
+            if (baseModel.isChild) {
+                float headScale = 1.5f / 0.0625F;
                 GlStateManager.scale(headScale, headScale, headScale);
             }
 
-            GlStateManager.translate(0, baseModel.babyYHeadOffset / 16f, baseModel.babyZHeadOffset / 16f);
+            GlStateManager.translate(0, baseModel.bipedHead.offsetY / 16f, baseModel.bipedHead.offsetZ / 16f);
         } else {
-            float bodyScale = 1 / baseModel.babyBodyScale;
+            float bodyScale = 1 / 0.0625F;
 
             GlStateManager.scale(bodyScale, bodyScale, bodyScale);
-            GlStateManager.translate(0, baseModel.bodyYOffset / 16f, 0);
+            GlStateManager.translate(0, baseModel.bipedBody.offsetY / 16f, 0);
         }
     }
 
