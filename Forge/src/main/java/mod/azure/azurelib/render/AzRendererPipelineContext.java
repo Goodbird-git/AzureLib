@@ -2,6 +2,7 @@ package mod.azure.azurelib.render;
 
 import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.AzBakedModel;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -27,6 +28,8 @@ public abstract class AzRendererPipelineContext<T> {
 
     private GlStateManager glStateManager;
 
+    private BufferBuilder vertexConsumer;
+
     private int renderColor;
 
     protected AzRendererPipelineContext(AzRendererPipeline<T> rendererPipeline) {
@@ -49,7 +52,8 @@ public abstract class AzRendererPipelineContext<T> {
         AzBakedModel bakedModel,
         int packedLight,
         float partialTick,
-        GlStateManager glStateManager
+        GlStateManager glStateManager,
+        BufferBuilder vertexConsumer
     ) {
         this.animatable = animatable;
         this.bakedModel = bakedModel;
@@ -57,7 +61,8 @@ public abstract class AzRendererPipelineContext<T> {
         this.packedOverlay = getPackedOverlay(animatable, 0, partialTick);
         this.partialTick = partialTick;
         this.renderColor = getRenderColor(animatable, partialTick, packedLight).getColor();
-
+        this.glStateManager = glStateManager;
+        this.vertexConsumer = vertexConsumer;
 //        if (renderType == null) {
 //            ResourceLocation textureLocation = rendererPipeline.config().textureLocation(animatable);
 //            this.renderType = getDefaultRenderType(animatable, textureLocation, partialTick);
@@ -96,7 +101,11 @@ public abstract class AzRendererPipelineContext<T> {
      * {@link net.minecraft.entity.monster.EntityCreeper} white tint when exploding.
      */
     protected int getPackedOverlay(T animatable, float u, float partialTick) {
-        return OverlayTexture.NO_OVERLAY;
+        return pack(0, 10);
+    }
+
+    private int pack(int u, int v) {
+        return u | v << 16;
     }
 
     public AzRendererPipeline<T> rendererPipeline() {
@@ -123,6 +132,10 @@ public abstract class AzRendererPipelineContext<T> {
         return packedOverlay;
     }
 
+    public void setPackedOverlay(int packedOverlay) {
+        this.packedOverlay = packedOverlay;
+    }
+
     public float partialTick() {
         return partialTick;
     }
@@ -133,5 +146,13 @@ public abstract class AzRendererPipelineContext<T> {
 
     public int renderColor() {
         return renderColor;
+    }
+
+    public void setRenderColor(int renderColor) {
+        this.renderColor = renderColor;
+    }
+
+    public BufferBuilder vertexConsumer() {
+        return vertexConsumer;
     }
 }

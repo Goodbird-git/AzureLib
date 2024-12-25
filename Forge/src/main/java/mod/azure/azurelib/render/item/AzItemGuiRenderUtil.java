@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 public class AzItemGuiRenderUtil {
 
@@ -23,26 +22,11 @@ public class AzItemGuiRenderUtil {
         GlStateManager glStateManager,
         int packedLight
     ) {
-        if (config.useEntityGuiLighting()) {
-            Lighting.setupForEntityInInventory();
-        } else {
-            Lighting.setupForFlatItems();
-        }
-
-        var partialTick = Minecraft.getMinecraft().getTimer().getGameTimeDeltaTicks();
-//        ResourceLocation textureLocation = config.textureLocation(stack);
-//        var renderType = rendererPipeline.context()
-//            .getDefaultRenderType(stack, textureLocation, bSource, partialTick);
-//        var withGlint = currentItemStack != null && currentItemStack.hasFoil();
-//        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, true, withGlint);
+        int partialTick = Minecraft.getMinecraft().getFrameTimer().getIndex();
 
         glStateManager.pushMatrix();
 
         rendererPipeline.render(glStateManager, model, stack, 0, partialTick, packedLight);
-
-        bSource.endBatch();
-        RenderSystem.enableDepthTest();
-        Lighting.setupFor3DItems();
 
         glStateManager.popMatrix();
     }

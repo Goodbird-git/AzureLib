@@ -1,22 +1,18 @@
 package mod.azure.azurelib.animation.easing;
 
 import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import mod.azure.azurelib.animation.controller.keyframe.AzAnimationPoint;
-import mod.azure.azurelib.animation.dispatch.command.sequence.AzAnimationSequence;
-import mod.azure.azurelib.animation.dispatch.command.stage.AzAnimationStage;
 import mod.azure.azurelib.core.utils.Interpolations;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 public interface AzEasingType {
 
     String name();
 
-    Double2DoubleFunction buildTransformer(Double value);
+    Function<Double, Double> buildTransformer(Double value);
 
 
     default double apply(AzAnimationPoint animationPoint) {
@@ -35,7 +31,7 @@ public interface AzEasingType {
         return Interpolations.lerp(
                 animationPoint.animationStartValue(),
                 animationPoint.animationEndValue(),
-                buildTransformer(easingValue).get(lerpValue)
+                buildTransformer(easingValue).apply(lerpValue)
         );
     }
 

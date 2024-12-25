@@ -2,6 +2,7 @@ package mod.azure.azurelib.render.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityMob;
@@ -11,20 +12,16 @@ import java.util.Objects;
 
 public class AzEntityNameRenderUtil {
 
-    public static <T extends Entity> boolean shouldShowName(EntityRenderDispatcher entityRenderDispatcher, T entity) {
+    public static <T extends Entity> boolean shouldShowName(RenderManager renderManager, T entity) {
         double nameRenderDistance = entity.isSneaking() ? 32d : 64d;
 
         if (!(entity instanceof EntityLiving)) {
             return false;
         }
 
-        if (entityRenderDispatcher.distanceToSqr(entity) >= nameRenderDistance * nameRenderDistance) {
-            return false;
-        }
-
         if (
-            entity instanceof EntityMob && (!entity.shouldShowName() && (!entity.hasCustomName()
-                || entity != entityRenderDispatcher.crosshairPickEntity))
+            entity instanceof EntityMob && (!entity.getAlwaysRenderNameTagForRender() && (!entity.hasCustomName()
+                || entity != renderManager.renderViewEntity))
         ) {
             return false;
         }
@@ -36,8 +33,8 @@ public class AzEntityNameRenderUtil {
         Team entityTeam = entity.getTeam();
 
         if (entityTeam == null) {
-            return Minecraft.renderNames() && entity != minecraft.getCameraEntity() && visibleToClient
-                && !entity.isVehicle();
+            return Minecraft.isGuiEnabled() && entity != minecraft.getRenderViewEntity() && visibleToClient
+                && !entity.isBeingRidden();
         }
 
         Team playerTeam = minecraft.player.getTeam();

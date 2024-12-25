@@ -9,11 +9,17 @@ public class AzBoneSnapshot {
 
     private final AzBone bone;
 
-    private final Vec3d offsetPosition;
+    private float scaleValueX;
+    private float scaleValueY;
+    private float scaleValueZ;
 
-    private final Vec3d rotation;
+    private float positionOffsetX;
+    private float positionOffsetY;
+    private float positionOffsetZ;
 
-    private final Vec3d scale;
+    private float rotationValueX;
+    private float rotationValueY;
+    private float rotationValueZ;
 
     private double lastResetRotationTick = 0;
 
@@ -29,17 +35,29 @@ public class AzBoneSnapshot {
 
     public AzBoneSnapshot(AzBone bone) {
         this.bone = bone;
-        this.offsetPosition = new Vec3d(bone.getPosX(), bone.getPosY(), bone.getPosZ());
-        this.rotation = new Vec3d(bone.getRotX(), bone.getRotY(), bone.getRotZ());
-        this.scale = new Vec3d(bone.getScaleX(), bone.getScaleY(), bone.getScaleZ());
+        this.scaleValueX = bone.getScaleX();
+        this.scaleValueY = bone.getScaleY();
+        this.scaleValueZ = bone.getScaleZ();
+        this.positionOffsetX = bone.getPosX();
+        this.positionOffsetY = bone.getPosY();
+        this.positionOffsetZ = bone.getPosZ();
+        this.rotationValueX = bone.getRotX();
+        this.rotationValueY = bone.getRotY();
+        this.rotationValueZ = bone.getRotZ();
     }
 
     public static AzBoneSnapshot copy(AzBoneSnapshot snapshot) {
         AzBoneSnapshot newSnapshot = new AzBoneSnapshot(snapshot.bone);
 
-        newSnapshot.offsetPosition.set(snapshot.offsetPosition);
-        newSnapshot.rotation.set(snapshot.rotation);
-        newSnapshot.scale.set(snapshot.scale);
+        newSnapshot.scaleValueX = snapshot.scaleValueX;
+        newSnapshot.scaleValueY = snapshot.scaleValueY;
+        newSnapshot.scaleValueZ = snapshot.scaleValueZ;
+        newSnapshot.positionOffsetX = snapshot.positionOffsetX;
+        newSnapshot.positionOffsetY = snapshot.positionOffsetY;
+        newSnapshot.positionOffsetZ = snapshot.positionOffsetZ;
+        newSnapshot.rotationValueX = snapshot.rotationValueX;
+        newSnapshot.rotationValueY = snapshot.rotationValueY;
+        newSnapshot.rotationValueZ = snapshot.rotationValueZ;
 
         return newSnapshot;
     }
@@ -49,39 +67,39 @@ public class AzBoneSnapshot {
     }
 
     public float getScaleX() {
-        return (float) this.scale.x;
+        return this.scaleValueX;
     }
 
     public float getScaleY() {
-        return (float) this.scale.y;
+        return this.scaleValueY;
     }
 
     public float getScaleZ() {
-        return (float) this.scale.z;
+        return this.scaleValueZ;
     }
 
     public float getOffsetX() {
-        return (float) this.offsetPosition.x;
+        return this.positionOffsetX;
     }
 
     public float getOffsetY() {
-        return (float) this.offsetPosition.y;
+        return this.positionOffsetY;
     }
 
     public float getOffsetZ() {
-        return (float) this.offsetPosition.z;
+        return this.positionOffsetZ;
     }
 
     public float getRotX() {
-        return (float) this.rotation.x;
+        return this.rotationValueX;
     }
 
     public float getRotY() {
-        return (float) this.rotation.y;
+        return this.rotationValueY;
     }
 
     public float getRotZ() {
-        return (float) this.rotation.z;
+        return this.rotationValueZ;
     }
 
     public double getLastResetRotationTick() {
@@ -112,21 +130,27 @@ public class AzBoneSnapshot {
      * Update the scale state of this snapshot
      */
     public void updateScale(float scaleX, float scaleY, float scaleZ) {
-        scale.set(scaleX, scaleY, scaleZ);
+        this.scaleValueX = scaleX;
+        this.scaleValueY = scaleY;
+        this.scaleValueZ = scaleZ;
     }
 
     /**
      * Update the offset state of this snapshot
      */
     public void updateOffset(float offsetX, float offsetY, float offsetZ) {
-        offsetPosition.set(offsetX, offsetY, offsetZ);
+        this.positionOffsetX = offsetX;
+        this.positionOffsetY = offsetY;
+        this.positionOffsetZ = offsetZ;
     }
 
     /**
      * Update the rotation state of this snapshot
      */
     public void updateRotation(float rotX, float rotY, float rotZ) {
-        rotation.set(rotX, rotY, rotZ);
+        this.rotationValueX = rotX;
+        this.rotationValueY = rotY;
+        this.rotationValueZ = rotZ;
     }
 
     public void startPosAnim() {

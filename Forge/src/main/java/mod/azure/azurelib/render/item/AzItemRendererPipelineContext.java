@@ -16,15 +16,4 @@ public class AzItemRendererPipelineContext extends AzRendererPipelineContext<Ite
     public AzItemRendererPipelineContext(AzRendererPipeline<ItemStack> rendererPipeline) {
         super(rendererPipeline);
     }
-
-    // TODO: This is what Geckolib does, but it feels wrong to have this render type getter for an ITEM...
-//    @Override
-//    public @NotNull RenderType getDefaultRenderType(
-//        ItemStack animatable,
-//        ResourceLocation texture,
-//        @Nullable MultiBufferSource bufferSource,
-//        float partialTick
-//    ) {
-//        return RenderType.entityCutoutNoCull(texture);
-//    }
 }

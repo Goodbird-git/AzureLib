@@ -173,7 +173,7 @@ public class AzEasingTypes {
     );
 
     public static AzEasingType random() {
-        var collection = AzEasingTypeRegistry.getValues();
+        java.util.Collection<AzEasingType> collection = AzEasingTypeRegistry.getValues();
 
         return collection.stream()
                 .skip((int) (collection.size() * Math.random()))

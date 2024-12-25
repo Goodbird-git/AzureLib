@@ -29,9 +29,13 @@ public abstract class AzItemRenderer {
     protected AzItemRenderer(
         AzItemRendererConfig config
     ) {
-        this.rendererPipeline = new AzItemRendererPipeline(config, this);
+        this.rendererPipeline = createPipeline(config);
         this.provider = new AzProvider<>(config::createAnimator, config::modelLocation);
         this.config = config;
+    }
+
+    protected AzItemRendererPipeline createPipeline(AzItemRendererConfig config) {
+        return new AzItemRendererPipeline(config, this);
     }
 
     public void renderByGui(
@@ -52,13 +56,7 @@ public abstract class AzItemRenderer {
         int packedLight
     ) {
         AzBakedModel model = provider.provideBakedModel(stack);
-        var partialTick = Minecraft.getMinecraft().getTimer().getGameTimeDeltaTicks();
-        ResourceLocation textureLocation = config.textureLocation(stack);
-//        RenderType renderType = rendererPipeline.context()
-//            .getDefaultRenderType(stack, textureLocation, source, partialTick);
-        // TODO: Why the null check here?
-        boolean withGlint = stack != null && stack.isItemEnchanted();
-//        var buffer = ItemRenderer.getFoilBufferDirect(source, renderType, false, withGlint);
+        int partialTick = Minecraft.getMinecraft().getFrameTimer().getIndex();
 
         prepareAnimator(stack, model);
 

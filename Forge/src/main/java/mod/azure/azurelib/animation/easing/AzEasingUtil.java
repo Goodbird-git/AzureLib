@@ -3,11 +3,13 @@ package mod.azure.azurelib.animation.easing;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import mod.azure.azurelib.animation.controller.keyframe.AzAnimationPoint;
 
+import java.util.function.Function;
+
 public class AzEasingUtil {
     /**
      * Returns an easing function running linearly. Functionally equivalent to no easing
      */
-    public static Double2DoubleFunction linear(Double2DoubleFunction function) {
+    public static Function<Double, Double> linear(Function<Double, Double> function) {
         return function;
     }
 
@@ -24,7 +26,7 @@ public class AzEasingUtil {
     /**
      * Returns an easing function running forward in time
      */
-    public static Double2DoubleFunction easeIn(Double2DoubleFunction function) {
+    public static Function<Double, Double> easeIn(Function<Double, Double> function) {
         return function;
     }
 
@@ -33,7 +35,7 @@ public class AzEasingUtil {
     /**
      * Returns an easing function running backwards in time
      */
-    public static Double2DoubleFunction easeOut(Double2DoubleFunction function) {
+    public static Function<Double, Double> easeOut(Function<Double, Double> function) {
         return time -> 1 - function.apply(1 - time);
     }
 
@@ -41,7 +43,7 @@ public class AzEasingUtil {
      * Returns an easing function that runs equally both forwards and backwards in time based on the halfway point,
      * generating a symmetrical curve.<br>
      */
-    public static Double2DoubleFunction easeInOut(Double2DoubleFunction function) {
+    public static Function<Double, Double> easeInOut(Function<Double, Double> function) {
         return time -> {
             if (time < 0.5d)
                 return function.apply(time * 2d) / 2d;
@@ -53,7 +55,7 @@ public class AzEasingUtil {
     /**
      * Returns a stepping function that returns 1 for any input value greater than 0, or otherwise returning 0
      */
-    public static Double2DoubleFunction stepPositive(Double2DoubleFunction function) {
+    public static Function<Double, Double> stepPositive(Function<Double, Double> function) {
         return n -> n > 0 ? 1 : 0;
     }
 
@@ -61,7 +63,7 @@ public class AzEasingUtil {
      * Returns a stepping function that returns 1 for any input value greater than or equal to 0, or otherwise returning
      * 0
      */
-    public static Double2DoubleFunction stepNonNegative(Double2DoubleFunction function) {
+    public static Function<Double, Double> stepNonNegative(Function<Double, Double> function) {
         return n -> n >= 0 ? 1 : 0;
     }
 
@@ -128,7 +130,7 @@ public class AzEasingUtil {
      * {@code f(t) = 1 - (cos(t * π) / 2))^3 * cos(t * n * π)}<br>
      * <a href="http://easings.net/#easeInElastic">Easings.net#easeInElastic</a>
      */
-    public static Double2DoubleFunction elastic(Double n) {
+    public static Function<Double, Double> elastic(Double n) {
         double n2 = n == null ? 1 : n;
 
         return t -> 1 - Math.pow(Math.cos(t * Math.PI / 2f), 3) * Math.cos(t * n2 * Math.PI);
@@ -141,13 +143,13 @@ public class AzEasingUtil {
      * cleanup.<br>
      * <a href="http://easings.net/#easeInBounce">Easings.net#easeInBounce</a>
      */
-    public static Double2DoubleFunction bounce(Double n) {
+    public static Function<Double, Double> bounce(Double n) {
         final double n2 = n == null ? 0.5d : n;
 
-        Double2DoubleFunction one = x -> 121f / 16f * x * x;
-        Double2DoubleFunction two = x -> 121f / 4f * n2 * Math.pow(x - 6f / 11f, 2) + 1 - n2;
-        Double2DoubleFunction three = x -> 121 * n2 * n2 * Math.pow(x - 9f / 11f, 2) + 1 - n2 * n2;
-        Double2DoubleFunction four = x -> 484 * n2 * n2 * n2 * Math.pow(x - 10.5f / 11f, 2) + 1 - n2 * n2 * n2;
+        Function<Double, Double> one = x -> 121f / 16f * x * x;
+        Function<Double, Double> two = x -> 121f / 4f * n2 * Math.pow(x - 6f / 11f, 2) + 1 - n2;
+        Function<Double, Double> three = x -> 121 * n2 * n2 * Math.pow(x - 9f / 11f, 2) + 1 - n2 * n2;
+        Function<Double, Double> four = x -> 484 * n2 * n2 * n2 * Math.pow(x - 10.5f / 11f, 2) + 1 - n2 * n2 * n2;
 
         return t -> Math.min(Math.min(one.apply(t), two.apply(t)), Math.min(three.apply(t), four.apply(t)));
     }
@@ -157,7 +159,7 @@ public class AzEasingUtil {
      * <code>f(t) = t^2 * ((n * 1.70158 + 1) * t - n * 1.70158)</code><br>
      * <a href="https://easings.net/#easeInBack">Easings.net#easeInBack</a>
      */
-    public static Double2DoubleFunction back(Double n) {
+    public static Function<Double, Double> back(Double n) {
         final double n2 = n == null ? 1.70158d : n * 1.70158d;
 
         return t -> t * t * ((n2 + 1) * t - n2);
@@ -171,7 +173,7 @@ public class AzEasingUtil {
      *
      * @param n The exponent
      */
-    public static Double2DoubleFunction pow(double n) {
+    public static Function<Double, Double> pow(double n) {
         return t -> Math.pow(t, n);
     }
 
@@ -197,7 +199,7 @@ public class AzEasingUtil {
      * Returns a stepped value based on the nearest step to the input value.<br>
      * The size (grade) of the steps depends on the provided value of {@code n}
      **/
-    public static Double2DoubleFunction step(Double n) {
+    public static Function<Double, Double> step(Double n) {
         double n2 = n == null ? 2 : n;
 
         if (n2 < 2)

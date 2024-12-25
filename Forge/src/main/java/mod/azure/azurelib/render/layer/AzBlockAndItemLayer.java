@@ -142,13 +142,16 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
         context.glStateManager().translate(-0.25f, -0.25f, -0.25f);
         context.glStateManager().scale(0.5f, 0.5f, 0.5f);
 
-        Minecraft.getMinecraft()
-            .getBlockRendererDispatcher()
-            .renderBlock(
-                blockState,
-                context.glStateManager(),
-                context.multiBufferSource()
-            );
+        if (context.animatable() instanceof EntityLiving) {
+            Minecraft.getMinecraft()
+                    .getBlockRendererDispatcher()
+                    .renderBlock(
+                            blockState,
+                            ((EntityLiving)context.animatable()).getPosition(),
+                            ((EntityLiving)context.animatable()).world,
+                            context.vertexConsumer()
+                    );
+        }
 
         context.glStateManager().popMatrix();
     }

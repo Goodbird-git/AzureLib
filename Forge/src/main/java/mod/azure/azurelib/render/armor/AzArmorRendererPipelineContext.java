@@ -1,6 +1,5 @@
 package mod.azure.azurelib.render.armor;
 
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
@@ -9,7 +8,6 @@ import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 public class AzArmorRendererPipelineContext extends AzRendererPipelineContext<ItemStack> {
 

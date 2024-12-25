@@ -6,8 +6,11 @@ import mod.azure.azurelib.cache.object.GeoVertex;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
+
+import javax.vecmath.Vector3f;
 
 /**
  * AzModelRenderer provides a generic and extensible base class for rendering models by processing hierarchical bone
@@ -107,35 +110,24 @@ public class AzModelRenderer<T> {
         RenderUtils.rotateMatrixAroundCube(poseStack, cube);
         RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
 
-        var normalisedPoseState = poseStack.last().normal();
-        var poseState = poseStateCache.set(poseStack.last().pose());
-
         for (GeoQuad quad : cube.quads()) {
             if (quad == null) {
                 continue;
             }
+            Vec3d normal = new Vec3d(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
 
-            normalCache.set(quad.normal());
-            var normal = normalisedPoseState.transform(normalCache);
-
+            poseStack.glNormal3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
             RenderUtils.fixInvertedFlatCube(cube, normal);
-            createVerticesOfQuad(context, quad, poseState, normal);
+            createVerticesOfQuad(context, quad, normal);
         }
     }
 
-    private final Vector4f poseStateTransformCache = new Vector4f();
-
-    /**
-     * Applies the {@link GeoQuad Quad's} {@link GeoVertex vertices} to the given {@link VertexConsumer buffer} for
-     * rendering
-     */
     protected void createVerticesOfQuad(
         AzRendererPipelineContext<T> context,
         GeoQuad quad,
-        Matrix4f poseState,
-        Vector3f normal
+        Vec3d normal
     ) {
-        VertexConsumer buffer = context.vertexConsumer();
+        BufferBuilder buffer = context.vertexConsumer();
         int color = context.renderColor();
         int packedOverlay = context.packedOverlay();
         int packedLight = context.packedLight();
@@ -145,19 +137,9 @@ public class AzModelRenderer<T> {
             poseStateTransformCache.set(position.x(), position.y(), position.z(), 1.0f);
             var vector4f = poseState.transform(poseStateTransformCache);
 
-            buffer.addVertex(
-                vector4f.x(),
-                vector4f.y(),
-                vector4f.z(),
-                color,
-                vertex.texU(),
-                vertex.texV(),
-                packedOverlay,
-                packedLight,
-                normal.x(),
-                normal.y(),
-                normal.z()
-            );
+            buffer.pos(vector4f.x(), vector4f.y(), vector4f.z())
+                    .tex(vertex.texU(), vertex.texV()).color()
+                    .normal(normal.x(), normal.y(), normal.z()).endVertex();
         }
     }
 }

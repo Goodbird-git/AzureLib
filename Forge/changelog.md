@@ -1,12 +1,8 @@
 v3.0.0
 
 TODO: 
-- mod.azure.azurelib.animation.easing.AzEasingTypes
-- mod.azure.azurelib.animation.easing.AzEasingUtil
 - mod.azure.azurelib.cache.AzResourceCache
 - mod.azure.azurelib.loading.object.BakedModelFactory
-- mod.azure.azurelib.model.AzBone
-- mod.azure.azurelib.model.AzBoneSnapshot
 - mod.azure.azurelib.render.armor.bone.AzArmorBoneContext
 - mod.azure.azurelib.render.armor.AzArmorModel
 - mod.azure.azurelib.render.armor.AzArmorModelRenderer
@@ -17,22 +13,9 @@ TODO:
 - mod.azure.azurelib.render.AzBlockEntityRendererPipeline
 - mod.azure.azurelib.render.AzBlockEntityRendererPipelineContext
 - mod.azure.azurelib.render.entity.AzEntityLeashRenderUtil
-- mod.azure.azurelib.render.entity.AzEntityModelRenderer
-- mod.azure.azurelib.render.entity.AzEntityNameRenderUtil
-- mod.azure.azurelib.render.entity.AzEntityRenderer
-- mod.azure.azurelib.render.entity.AzEntityRendererPipelineContext
 - mod.azure.azurelib.render.entity.AzEntityRendererPipeline
-- mod.azure.azurelib.render.item.AzItemGuiRenderUtil
-- mod.azure.azurelib.render.item.AzItemModelRenderer
-- mod.azure.azurelib.render.item.AzItemRenderer
-- mod.azure.azurelib.render.item.AzItemRendererPipeline
-- mod.azure.azurelib.render.item.AzItemRendererPipelineContext
 - mod.azure.azurelib.render.layer.AzArmorLayer
-- mod.azure.azurelib.render.layer.AzBlockAndItemLayer
-- mod.azure.azurelib.render.layer.AzAutoGlowingLayer
 - mod.azure.azurelib.render.textures.AnimatableTexture
-- mod.azure.azurelib.render.textures.AzAutoGlowingTexture
 - mod.azure.azurelib.render.textures.AzAbstractTexture
 - mod.azure.azurelib.render.AzModelRenderer
-- mod.azure.azurelib.render.AzRendererPipelineContext
 - mod.azure.azurelib.util.RenderUtils

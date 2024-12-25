@@ -1,7 +1,6 @@
 package mod.azure.azurelib.animation.easing;
 
 import com.sun.istack.internal.NotNull;
-import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +20,7 @@ public class AzEasingTypeRegistry {
      * @param transformer The {@code Double2DoubleFunction} to associate with the given name
      * @return The {@code EasingType} you registered
      */
-    public static AzEasingType register(String name, Function<Double, Double2DoubleFunction> transformer) {
+    public static AzEasingType register(String name, Function<Double, Function<Double, Double>> transformer) {
         return EASING_TYPES.computeIfAbsent(name, ($) -> new AzEasingType() {
 
             @Override
@@ -30,7 +29,7 @@ public class AzEasingTypeRegistry {
             }
 
             @Override
-            public Double2DoubleFunction buildTransformer(Double value) {
+            public Function<Double, Double> buildTransformer(Double value) {
                 return transformer.apply(value);
             }
         });

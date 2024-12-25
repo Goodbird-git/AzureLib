@@ -19,7 +19,11 @@ public class AzArmorRenderer {
 
     public AzArmorRenderer(AzRendererConfig<ItemStack> config) {
         this.provider = new AzProvider<>(config::createAnimator, config::modelLocation);
-        this.rendererPipeline = new AzArmorRendererPipeline(config, this);
+        this.rendererPipeline = createPipeline(config);
+    }
+
+    protected AzArmorRendererPipeline createPipeline(AzRendererConfig config) {
+        return new AzArmorRendererPipeline(config, this);
     }
 
     /**

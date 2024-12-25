@@ -20,10 +20,6 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
 
     private final AzItemRenderer itemRenderer;
 
-    protected Matrix4f itemRenderTranslations = new Matrix4f();
-
-    protected Matrix4f modelRenderTranslations = new Matrix4f();
-
     public AzItemRendererPipeline(AzItemRendererConfig config, AzItemRenderer itemRenderer) {
         super(config);
         this.itemRenderer = itemRenderer;
@@ -52,7 +48,6 @@ public class AzItemRendererPipeline extends AzRendererPipeline<ItemStack> {
     @Override
     public void preRender(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
         GlStateManager poseStack = context.glStateManager();
-        this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
 
         AzItemRendererConfig config = itemRenderer.config();
         float scaleWidth = config.scaleWidth();

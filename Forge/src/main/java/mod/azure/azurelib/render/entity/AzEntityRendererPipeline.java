@@ -86,11 +86,8 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     @Override
     public void renderFinal(AzRendererPipelineContext<T> context) {
         T entity = context.animatable();
-        int packedLight = context.packedLight();
         float partialTick = context.partialTick();
         GlStateManager poseStack = context.glStateManager();
-
-        entityRenderer.superRender(entity, 0, partialTick, poseStack, packedLight);
 
         if (!(entity instanceof EntityMob)) {
             return;

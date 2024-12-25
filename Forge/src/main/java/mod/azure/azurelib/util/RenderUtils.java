@@ -7,24 +7,16 @@
  */
 package mod.azure.azurelib.util;
 
-import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Quaternion;
-
-import javax.annotation.Nullable;
 
 /**
  * Helper class for various methods and functions useful while rendering
@@ -112,43 +104,6 @@ public final class RenderUtils {
 		glStateManager.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, animatable.prevRotationPitch, animatable.rotationPitch)));
 	}
 
-	/**
-	 * Gets the actual dimensions of a texture resource from a given path.<br>
-	 * Not performance-efficient, and should not be relied upon
-	 *
-	 * @param texture The path of the texture resource to check
-	 * @return The dimensions (width x height) of the texture, or null if unable to find or read the file
-	 */
-	@Nullable
-	public static Tuple<Integer, Integer> getTextureDimensions(ResourceLocation texture) {
-		if (texture == null)
-			return null;
-
-		ITextureObject originalTexture = null;
-		Minecraft mc = Minecraft.getMinecraft();
-
-		try {
-			originalTexture = mc.supplyAsync(() -> mc.getTextureManager().getTexture(texture)).get();
-		} catch (Exception e) {
-			AzureLib.LOGGER.warn("Failed to load image for id {}", texture);
-			e.printStackTrace();
-		}
-
-		if (originalTexture == null)
-			return null;
-
-		NativeImage image = null;
-
-		try {
-			image = originalTexture instanceof DynamicTexture ? ((DynamicTexture) originalTexture).getTextureData() : NativeImage.read(mc.getResourceManager().getResource(texture).getInputStream());
-		} catch (Exception e) {
-			AzureLib.LOGGER.error("Failed to read image for id {}", texture);
-			e.printStackTrace();
-		}
-
-		return image == null ? null : new Tuple<Integer, Integer>(image.getWidth(), image.getHeight());
-	}
-
 	public static double getCurrentSystemTick() {
 		return System.nanoTime() / 1E6 / 50d;
 	}
@@ -193,13 +148,17 @@ public final class RenderUtils {
 	 */
 	public static void fixInvertedFlatCube(GeoCube cube, Vec3d normal) {
 		if (normal.x < 0 && (cube.size().y == 0 || cube.size().z == 0))
-			normal.mul(-1, 1, 1);
+			mul(normal, -1, 1, 1);
 
 		if (normal.y < 0 && (cube.size().x == 0 || cube.size().z == 0))
-			normal.mul(1, -1, 1);
+			mul(normal, 1, -1, 1);
 
 		if (normal.z < 0 && (cube.size().x == 0 || cube.size().y == 0))
-			normal.mul(1, 1, -1);
+			mul(normal, 1, 1, -1);
+	}
+
+	public static void mul(Vec3d normal, float x, float y, float z) {
+		normal = new Vec3d(normal.x * x, normal.y * y, normal.z * z);
 	}
 
 	/**
