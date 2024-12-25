@@ -10,6 +10,7 @@ public class DoomHunter extends EntityMob {
     public DoomHunter(World level) {
         super(level);
         this.animationDispatcher = new DoomHunterAnimationDispatcher(this);
+        this.setSize(3.0F, 7.0F);
     }
 
     @Override
