@@ -1,5 +1,6 @@
 package mod.azure.azurelib.render.layer;
 
+import com.mojang.authlib.GameProfile;
 import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.model.AzBone;
@@ -7,22 +8,29 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.render.armor.AzArmorRendererRegistry;
 import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
-import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Builtin class for handling dynamic armor rendering on AzureLib entities.<br>
@@ -31,13 +39,9 @@ import net.minecraft.item.ItemStack;
  */
 public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
 
-    protected static final ModelBiped INNER_ARMOR_MODEL = new ModelBiped(
-        Minecraft.getMinecraft().getEntityModels().bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)
-    );
-
-    protected static final ModelBiped OUTER_ARMOR_MODEL = new ModelBiped(
-        Minecraft.getMinecraft().getEntityModels().bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)
-    );
+    protected static final ModelBiped INNER_ARMOR_MODEL = new ModelBiped(0.5F); // Inner armor uses a smaller model
+    protected static final ModelBiped OUTER_ARMOR_MODEL = new ModelBiped(1.0F); // Outer armor uses the full-sized model
+    protected static final ResourceLocation ENCHANTED_ITEM_GLINT_RES = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
     protected ItemStack mainHandStack;
 
@@ -123,7 +127,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
             GlStateManager.pushMatrix();
             GlStateManager.scale(-1, -1, 1);
 
-            if (renderer != null && context.animatable() instanceof Entity) {
+            if (renderer != null && context.animatable() != null) {
                 AzArmorBoneContext boneContext = renderer.rendererPipeline().context().boneContext();
 
                 prepModelPartForRender(context, bone, modelPart);
@@ -132,15 +136,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
                 /**
                  * TODO
                  */
-                model.render(
-                    poseStack,
-                    null,
-                    context.packedLight(),
-                    context.packedOverlay(),
-                    armorStack.is(
-                        ItemTags.DYEABLE
-                    ) ? FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(armorStack, -6265536)) : -1
-                );
+                model.render(context.animatable(), 0F, 0F, 1, 1, 1, 1);
             } else if (armorStack.getItem() instanceof ItemArmor) {
                 prepModelPartForRender(context, bone, modelPart);
                 renderVanillaArmorPiece(
@@ -207,65 +203,53 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
         ItemStack armorStack,
         ModelRenderer modelPart
     ) {
-        ItemArmor.ArmorMaterial material = ((ItemArmor) armorStack.getItem()).getArmorMaterial();
+        GlStateManager.translate(0.0F, -0.25F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.scale(0.625F, -0.625F, -0.625F);
 
-        for (var layer : material.value().layers()) {
-            var buffer = getVanillaArmorBuffer(
-                context,
-                armorStack,
-                slot,
-                bone,
-                layer,
-                false
-            );
-
-            modelPart.render(context.poseStack(), buffer, context.packedLight(), context.packedOverlay());
+        boolean flag = context.animatable() instanceof EntityVillager || context.animatable() instanceof EntityZombieVillager;
+        if (flag) {
+            GlStateManager.translate(0.0F, 0.1875F, 0.0F);
         }
 
-        if (armorStack.hasFoil())
-            modelPart.render(
-                getVanillaArmorBuffer(
-                    context,
-                    armorStack,
-                    slot,
-                    bone,
-                    null,
-                    true
-                ),
-                context.packedLight(),
-                context.packedOverlay(),
-                1
-            );
+        Minecraft.getMinecraft().getItemRenderer().renderItem(context.animatable(), armorStack, ItemCameraTransforms.TransformType.HEAD);
+
+        if (armorStack.isItemEnchanted()) {
+            renderEnchantedGlint(context.animatable(), modelPart, context.partialTick());
+        }
     }
 
-    /**
-     * Retrieves a {@link BufferBuilder} for rendering vanilla-styled armor. The method determines whether the armor
-     * should apply a glint effect or not and selects the appropriate render type accordingly.
-     *
-     * @param context  The rendering context providing necessary data for rendering, including the animatable instance
-     *                 and the buffer source.
-     * @param stack    The armor {@link ItemStack} being rendered.
-     * @param slot     The {@link EntityEquipmentSlot} the armor piece occupies.
-     * @param bone     The model bone associated with the armor piece.
-     * @param layer    The optional {@link ItemArmor.ArmorMaterial} providing texture resources for rendering the armor.
-     * @param forGlint A flag indicating whether the armor piece should render with a glint effect.
-     * @return The {@link BufferBuilder} used to render the designated armor piece with the appropriate style and
-     *         effect.
-     */
-    protected BufferBuilder getVanillaArmorBuffer(
-        AzRendererPipelineContext<T> context,
-        ItemStack stack,
-        EntityEquipmentSlot slot,
-        AzBone bone,
-        ItemArmor.ArmorMaterial layer,
-        boolean forGlint
-    ) {
-        if (forGlint) {
-            return context.multiBufferSource().getBuffer(RenderType.armorEntityGlint());
+    public static void renderEnchantedGlint(EntityLivingBase animatable, ModelRenderer modelPart, float partialTick) {
+        float ticks = animatable.ticksExisted + partialTick;
+        Minecraft.getMinecraft().renderEngine.bindTexture(ENCHANTED_ITEM_GLINT_RES);
+        Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+        GlStateManager.enableBlend();
+        GlStateManager.depthFunc(514);
+        GlStateManager.depthMask(false);
+        GlStateManager.color(0.5F, 0.5F, 0.5F, 1.0F);
+
+        for (int i = 0; i < 2; ++i) {
+            GlStateManager.disableLighting();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
+            GlStateManager.color(0.38F, 0.19F, 0.608F, 1.0F);
+            GlStateManager.matrixMode(5890);
+            GlStateManager.loadIdentity();
+            GlStateManager.scale(0.33333334F, 0.33333334F, 0.33333334F);
+            GlStateManager.rotate(30.0F - (float)i * 60.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(0.0F, ticks * (0.001F + i * 0.003F) * 20.0F, 0.0F);
+            GlStateManager.matrixMode(5888);
+            modelPart.render(1);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         }
 
-        return context.multiBufferSource()
-            .getBuffer(RenderType.armorCutoutNoCull(layer.texture(slot == EquipmentSlot.LEGS)));
+        GlStateManager.matrixMode(5890);
+        GlStateManager.loadIdentity();
+        GlStateManager.matrixMode(5888);
+        GlStateManager.enableLighting();
+        GlStateManager.depthMask(true);
+        GlStateManager.depthFunc(515);
+        GlStateManager.disableBlend();
+        Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
     }
 
     /**
@@ -301,61 +285,66 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
     protected void renderSkullAsArmor(
         AzRendererPipelineContext<T> context,
         AzBone bone,
-        ItemStack stack,
+        ItemStack itemstack,
         BlockSkull skullBlock
     ) {
-        var type = skullBlock.getType();
-        var model = SkullBlockRenderer.createSkullRenderers(Minecraft.getInstance().getEntityModels())
-            .get(type);
-        var renderType = SkullBlockRenderer.getRenderType(type, stack.get(DataComponents.PROFILE));
+        GlStateManager.scale(1.1875F, -1.1875F, -1.1875F);
 
-        context.poseStack().pushMatrix();
-        RenderUtils.translateAndRotateMatrixForBone(bone);
-        context.poseStack().scale(1.1875f, 1.1875f, 1.1875f);
-        context.poseStack().translate(-0.5f, 0, -0.5f);
-        SkullBlockRenderer.renderSkull(
-            null,
-            0,
-            0,
-            context.poseStack(),
-            context.multiBufferSource(),
-            context.packedLight(),
-            model,
-            renderType
-        );
-        context.poseStack().popMatrix();
+        boolean flag = context.animatable() instanceof EntityVillager || context.animatable() instanceof EntityZombieVillager;
+
+        if (flag) {
+            GlStateManager.translate(0.0F, 0.0625F, 0.0F);
+        }
+
+        GameProfile gameprofile = null;
+
+        if (itemstack.hasTagCompound()) {
+            NBTTagCompound nbttagcompound = itemstack.getTagCompound();
+
+            if (nbttagcompound != null && nbttagcompound.hasKey("SkullOwner", 10)) {
+                gameprofile = NBTUtil.readGameProfileFromNBT(nbttagcompound.getCompoundTag("SkullOwner"));
+            }
+            else if (nbttagcompound != null && nbttagcompound.hasKey("SkullOwner", 8)) {
+                String s = nbttagcompound.getString("SkullOwner");
+
+                if (!StringUtils.isBlank(s)) {
+                    gameprofile = TileEntitySkull.updateGameprofile(new GameProfile(null, s));
+                    nbttagcompound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameprofile));
+                }
+            }
+        }
+        TileEntitySkullRenderer.instance.renderSkull(-0.5F, 0.0F, -0.5F, EnumFacing.UP, 180.0F, itemstack.getMetadata(), gameprofile, -1, 0);
     }
 
     /**
      * Prepares the given {@link ModelRenderer} for render by setting its translation, position, and rotation values based
      * on the provided {@link AzBone}
      *
-     * @param context
      * @param bone       The AzBone to base the translations on
      * @param sourcePart The ModelPart to translate
      */
     protected void prepModelPartForRender(AzRendererPipelineContext<T> context, AzBone bone, ModelRenderer sourcePart) {
         GeoCube firstCube = bone.getCubes().get(0);
-        ModelRenderer armorCube = sourcePart.childModels.get(0);
+        ModelBox armorCube = sourcePart.cubeList.get(0);
         double armorBoneSizeX = firstCube.size().x;
         double armorBoneSizeY = firstCube.size().y;
         double armorBoneSizeZ = firstCube.size().z;
-        var actualArmorSizeX = Math.abs(armorCube.maxX - armorCube.minX);
-        var actualArmorSizeY = Math.abs(armorCube.maxY - armorCube.minY);
-        var actualArmorSizeZ = Math.abs(armorCube.maxZ - armorCube.minZ);
+        float actualArmorSizeX = Math.abs(armorCube.posX2 - armorCube.posX1);
+        float actualArmorSizeY = Math.abs(armorCube.posY2 - armorCube.posY1);
+        float actualArmorSizeZ = Math.abs(armorCube.posZ2 - armorCube.posZ1);
         float scaleX = (float) (armorBoneSizeX / actualArmorSizeX);
         float scaleY = (float) (armorBoneSizeY / actualArmorSizeY);
         float scaleZ = (float) (armorBoneSizeZ / actualArmorSizeZ);
 
-        sourcePart.setPos(
+        sourcePart.setRotationPoint(
             -(bone.getPivotX() - ((bone.getPivotX() * scaleX) - bone.getPivotX()) / scaleX),
             -(bone.getPivotY() - ((bone.getPivotY() * scaleY) - bone.getPivotY()) / scaleY),
             (bone.getPivotZ() - ((bone.getPivotZ() * scaleZ) - bone.getPivotZ()) / scaleZ)
         );
 
-        sourcePart.xRot = -bone.getRotX();
-        sourcePart.yRot = -bone.getRotY();
-        sourcePart.zRot = bone.getRotZ();
+        sourcePart.rotateAngleX = -bone.getRotX();
+        sourcePart.rotateAngleY = -bone.getRotY();
+        sourcePart.rotateAngleZ = bone.getRotZ();
 
         GlStateManager.scale(scaleX, scaleY, scaleZ);
     }
