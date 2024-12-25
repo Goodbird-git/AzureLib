@@ -1,4 +1,4 @@
-package mod.azure.azurelib.render.textures;
+package mod.azure.azurelib.render.textures.meta;
 
 public class Pixel {
 	public int x;
