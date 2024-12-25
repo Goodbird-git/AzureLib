@@ -40,19 +40,17 @@ public abstract class AzItemRenderer {
 
     public void renderByGui(
         ItemStack stack,
-        GlStateManager glStateManager,
         int packedLight
     ) {
         AzBakedModel model = provider.provideBakedModel(stack);
 
         prepareAnimator(stack, model);
 
-        AzItemGuiRenderUtil.renderInGui(config, rendererPipeline, stack, model, stack, glStateManager, packedLight);
+        AzItemGuiRenderUtil.renderInGui(config, rendererPipeline, stack, model, stack, packedLight);
     }
 
     public void renderByItem(
         ItemStack stack,
-        GlStateManager glStateManager,
         int packedLight
     ) {
         AzBakedModel model = provider.provideBakedModel(stack);
@@ -60,7 +58,7 @@ public abstract class AzItemRenderer {
 
         prepareAnimator(stack, model);
 
-        rendererPipeline.render(glStateManager, model, stack, 0, partialTick, packedLight);
+        rendererPipeline.render(model, stack, 0, partialTick, packedLight);
     }
 
     private void prepareAnimator(ItemStack stack, AzBakedModel model) {

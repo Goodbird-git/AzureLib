@@ -4,6 +4,7 @@ import mod.azure.azurelib.animation.impl.AzBlockAnimator;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.AzProvider;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -13,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
  *
  * @param <T> The specific type of {@link TileEntity} that this renderer processes.
  */
-public abstract class AzBlockEntityRenderer<T extends TileEntity> implements TileEntityRenderer<T> {
+public abstract class AzBlockEntityRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
 
     private final AzProvider<T> provider;
 
@@ -31,13 +32,7 @@ public abstract class AzBlockEntityRenderer<T extends TileEntity> implements Til
     }
 
     @Override
-    public void render(
-        T entity,
-        float partialTick,
-        GlStateManager glStateManager,
-        int packedLight,
-        int packedOverlay
-    ) {
+    public void render(T entity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         AzBlockAnimator<T> cachedEntityAnimator = (AzBlockAnimator<T>) provider.provideAnimator(entity);
         AzBakedModel model = provider.provideBakedModel(entity);
 
@@ -49,7 +44,7 @@ public abstract class AzBlockEntityRenderer<T extends TileEntity> implements Til
         reusedAzBlockAnimator = cachedEntityAnimator;
 
         // Execute the render pipeline.
-        rendererPipeline.render(glStateManager, model, entity, 0, partialTick, packedLight);
+        rendererPipeline.render(model, entity, 0, partialTicks, entity.getWorld().getCombinedLight(entity.getPos(), 0));
     }
 
     public AzBlockAnimator<T> getAnimator() {

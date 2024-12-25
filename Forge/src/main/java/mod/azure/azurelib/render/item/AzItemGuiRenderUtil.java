@@ -19,15 +19,14 @@ public class AzItemGuiRenderUtil {
         ItemStack stack,
         AzBakedModel model,
         ItemStack currentItemStack,
-        GlStateManager glStateManager,
         int packedLight
     ) {
         int partialTick = Minecraft.getMinecraft().getFrameTimer().getIndex();
 
-        glStateManager.pushMatrix();
+        GlStateManager.pushMatrix();
 
-        rendererPipeline.render(glStateManager, model, stack, 0, partialTick, packedLight);
+        rendererPipeline.render(model, stack, 0, partialTick, packedLight);
 
-        glStateManager.popMatrix();
+        GlStateManager.popMatrix();
     }
 }

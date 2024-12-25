@@ -1,5 +1,6 @@
 package mod.azure.azurelib.render.entity;
 
+import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
@@ -18,16 +19,15 @@ public class AzEntityLeashRenderUtil {
         AzEntityRenderer<T> azEntityRenderer,
         M mob,
         float partialTick,
-        GlStateManager glStateManager,
         E leashHolder
     ) {
-        double lerpBodyAngle = (Mth.lerp(partialTick, mob.yBodyRotO, mob.yBodyRot) * Mth.DEG_TO_RAD) + Mth.HALF_PI;
+        double lerpBodyAngle = (RenderUtils.lerp(partialTick, mob.yBodyRotO, mob.yBodyRot) * Mth.DEG_TO_RAD) + Mth.HALF_PI;
         Vec3 leashOffset = mob.getLeashOffset();
         double xAngleOffset = Math.cos(lerpBodyAngle) * leashOffset.z + Math.sin(lerpBodyAngle) * leashOffset.x;
         double zAngleOffset = Math.sin(lerpBodyAngle) * leashOffset.z - Math.cos(lerpBodyAngle) * leashOffset.x;
-        double lerpOriginX = Mth.lerp(partialTick, mob.xo, mob.getX()) + xAngleOffset;
-        double lerpOriginY = Mth.lerp(partialTick, mob.yo, mob.getY()) + leashOffset.y;
-        double lerpOriginZ = Mth.lerp(partialTick, mob.zo, mob.getZ()) + zAngleOffset;
+        double lerpOriginX = RenderUtils.lerp(partialTick, mob.xo, mob.getX()) + xAngleOffset;
+        double lerpOriginY = RenderUtils.lerp(partialTick, mob.yo, mob.getY()) + leashOffset.y;
+        double lerpOriginZ = RenderUtils.lerp(partialTick, mob.zo, mob.getZ()) + zAngleOffset;
         Vec3 ropeGripPosition = leashHolder.getRopeHoldPosition(partialTick);
         float xDif = (float) (ropeGripPosition.x - lerpOriginX);
         float yDif = (float) (ropeGripPosition.y - lerpOriginY);
@@ -49,8 +49,8 @@ public class AzEntityLeashRenderUtil {
         int entitySkyLight = mob.level().getBrightness(LightLayer.SKY, entityEyePos);
         int holderSkyLight = mob.level().getBrightness(LightLayer.SKY, holderEyePos);
 
-        glStateManager.pushMatrix();
-        glStateManager.translate(xAngleOffset, leashOffset.y, zAngleOffset);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(xAngleOffset, leashOffset.y, zAngleOffset);
 
         Matrix4f posMatrix = new Matrix4f(glStateManager.last().pose());
 
@@ -90,7 +90,7 @@ public class AzEntityLeashRenderUtil {
             );
         }
 
-        glStateManager.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -112,8 +112,8 @@ public class AzEntityLeashRenderUtil {
         boolean isLeashKnot
     ) {
         float piecePosPercent = segment / 24f;
-        var lerpBlockLight = (int) Math.lerp(piecePosPercent, entityBlockLight, holderBlockLight);
-        var lerpSkyLight = (int) Mth.lerp(piecePosPercent, entitySkyLight, holderSkyLight);
+        var lerpBlockLight = (int) RenderUtils.lerp(piecePosPercent, entityBlockLight, holderBlockLight);
+        var lerpSkyLight = (int) RenderUtils.lerp(piecePosPercent, entitySkyLight, holderSkyLight);
         var packedLight = LightTexture.pack(lerpBlockLight, lerpSkyLight);
         float knotColourMod = segment % 2 == (isLeashKnot ? 1 : 0) ? 0.7f : 1f;
         float red = 0.5f * knotColourMod;

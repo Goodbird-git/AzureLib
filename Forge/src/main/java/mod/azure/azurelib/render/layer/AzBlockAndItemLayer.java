@@ -6,6 +6,7 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
@@ -62,8 +63,8 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
         if (stack == null && blockState == null)
             return;
 
-        context.glStateManager().pushMatrix();
-        RenderUtils.translateAndRotateMatrixForBone(context.glStateManager(), bone);
+        GlStateManager.pushMatrix();
+        RenderUtils.translateAndRotateMatrixForBone(bone);
 
         if (stack != null)
             renderItemForBone(context, bone, stack);
@@ -71,7 +72,7 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
         if (blockState != null)
             renderBlockForBone(context, bone, blockState);
 
-        context.glStateManager().popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -137,10 +138,10 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
      * @param blockState the {@link IBlockState} to render
      */
     protected void renderBlockForBone(AzRendererPipelineContext<T> context, AzBone bone, IBlockState blockState) {
-        context.glStateManager().pushMatrix();
+        GlStateManager.pushMatrix();
 
-        context.glStateManager().translate(-0.25f, -0.25f, -0.25f);
-        context.glStateManager().scale(0.5f, 0.5f, 0.5f);
+        GlStateManager.translate(-0.25f, -0.25f, -0.25f);
+        GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
         if (context.animatable() instanceof EntityLiving) {
             Minecraft.getMinecraft()
@@ -153,7 +154,7 @@ public class AzBlockAndItemLayer<T> implements AzRenderLayer<T> {
                     );
         }
 
-        context.glStateManager().popMatrix();
+        GlStateManager.popMatrix();
     }
 
 }

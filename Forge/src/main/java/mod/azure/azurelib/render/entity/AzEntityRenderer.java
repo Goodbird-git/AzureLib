@@ -48,7 +48,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends Render<T> {
 
     @Override
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTick) {
-        GlStateManager glStateManager = new GlStateManager();
         AzEntityAnimator<T> cachedEntityAnimator = (AzEntityAnimator<T>) provider.provideAnimator(entity);
         AzBakedModel azBakedModel = provider.provideBakedModel(entity);
 
@@ -61,7 +60,6 @@ public abstract class AzEntityRenderer<T extends Entity> extends Render<T> {
 
         // Execute the render pipeline.
         rendererPipeline.render(
-                glStateManager,
                 azBakedModel,
                 entity,
                 entityYaw,

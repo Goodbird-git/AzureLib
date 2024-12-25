@@ -10,6 +10,8 @@ import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
+import javax.vecmath.Matrix4f;
+
 public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
 
     private final AzArmorRendererPipeline armorRendererPipeline;
@@ -29,10 +31,9 @@ public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
      */
     @Override
     public void render(AzRendererPipelineContext<ItemStack> context, boolean isReRender) {
-        GlStateManager poseStack = context.glStateManager();
-        poseStack.pushMatrix();
-        poseStack.translate(0, 24 / 16f, 0);
-        poseStack.scale(-1, -1, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 24 / 16f, 0);
+        GlStateManager.scale(-1, -1, 1);
 
         if (!isReRender) {
             ItemStack animatable = context.animatable();
@@ -43,10 +44,10 @@ public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
             }
         }
 
-        armorRendererPipeline.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
+        armorRendererPipeline.modelRenderTranslations = new Matrix4f(RenderUtils.getCurrentMatrix());
 
         super.render(context, isReRender);
-        poseStack.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -54,7 +55,6 @@ public class AzArmorModelRenderer extends AzModelRenderer<ItemStack> {
      */
     @Override
     public void renderRecursively(AzRendererPipelineContext<ItemStack> context, AzBone bone, boolean isReRender) {
-        GlStateManager poseStack = context.glStateManager();
         // TODO: This is dangerous.
         AzArmorRendererPipelineContext ctx = armorRendererPipeline.context();
 
