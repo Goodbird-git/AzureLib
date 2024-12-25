@@ -1,7 +1,6 @@
 package mod.azure.azurelib.render.layer;
 
 import com.mojang.authlib.GameProfile;
-import com.sun.istack.internal.NotNull;
 import mod.azure.azurelib.cache.object.GeoCube;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
@@ -156,7 +155,7 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      * Return an EquipmentSlot for a given {@link ItemStack} and animatable instance.<br>
      * This is what determines the base model to use for rendering a particular stack
      */
-    protected @NotNull EntityEquipmentSlot getEquipmentSlotForBone(
+    protected EntityEquipmentSlot getEquipmentSlotForBone(
         AzRendererPipelineContext<T> context,
         AzBone bone,
         ItemStack stack
@@ -180,7 +179,6 @@ public class AzArmorLayer<T extends EntityLiving> implements AzRenderLayer<T> {
      * Return a ModelPart for a given {@link AzBone}.<br>
      * This is then transformed into position for the final render
      */
-    @NotNull
     protected ModelRenderer getModelPartForBone(AzRendererPipelineContext<T> context, ModelBiped baseModel) {
         return baseModel.bipedBody;
     }

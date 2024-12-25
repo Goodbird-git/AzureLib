@@ -17,7 +17,7 @@ import java.util.concurrent.FutureTask;
  */
 public class AzureLib {
 	public static Logger LOGGER = LogManager.getLogger();
-	public static final String MOD_ID = "assets/azurelib";
+	public static final String MOD_ID = "azurelib";
 	public static final String NAME = "AzureLib";
 	public static final String VERSION = "3.0.0";
 	public static volatile boolean hasInitialized;
@@ -35,6 +35,6 @@ public class AzureLib {
 	}
 
 	public static ResourceLocation modResource(String name) {
-		return new ResourceLocation(MOD_ID, name);
+		return new ResourceLocation("azurelib", name);
 	}
 }

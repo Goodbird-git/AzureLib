@@ -3,8 +3,6 @@ package mod.azure.azurelib.render.textures;
 import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.render.textures.meta.AzGlowingTextureMeta;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.IResource;
@@ -13,7 +11,6 @@ import net.minecraft.client.resources.data.TextureMetadataSection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
