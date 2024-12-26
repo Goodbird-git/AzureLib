@@ -24,8 +24,7 @@ sourceSets.all {
 }
 
 mixin {
-    add sourceSets.main, "azurelib.refmap.json"
-    config "azurelib.mixins.json"
+    add sourceSets.main, 'azurelib.refmap.json'
 }
 
 minecraft {
@@ -44,16 +43,23 @@ minecraft {
         client {
             workingDirectory project.file('run')
             property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            jvmArg "-Dfml.coreMods.load=mod.azure.azurelib.util.LoadingPlugin"
+            property 'mixin.debug.export', 'true'
+            property 'mixin.hotSwap', 'true'
+            property 'mixin.checks.interfaces', 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
+            args "-mixin.config=azurelib.mixins.json"
         }
 
         server {
             workingDirectory project.file('runServer')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            jvmArg "-Dfml.coreMods.load=mod.azure.azurelib.util.LoadingPlugin"
+            singleInstance true
             args '--nogui'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.debug.export', 'true'
+            property 'mixin.hotSwap', 'true'
+            property 'mixin.checks.interfaces', 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
+            args "-mixin.config=azurelib.mixins.json"
         }
     }
 }
@@ -66,13 +72,18 @@ configurations {
 }
 
 repositories {
-    maven { url 'https://maven.cleanroommc.com' }
+    maven {
+        url = uri('https://www.cursemaven.com')
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${loader_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation 'org.spongepowered:mixin:0.8.5'
+    implementation(fg.deobf("curse.maven:mixin-booter-419286:${project.mixinbooter_version}"))
+    annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
 }
 
 tasks.named('jar', Jar).configure {
@@ -84,7 +95,8 @@ tasks.named('jar', Jar).configure {
                 'Implementation-Title'    : project.name,
                 'Implementation-Version'  : project.jar.archiveVersion,
                 'Implementation-Vendor'   : "AzureDoom",
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'ForceLoadAsMod': true
         ])
     }
 }
