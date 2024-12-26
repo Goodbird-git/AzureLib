@@ -19,6 +19,10 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
+sourceSets.all {
+    it.output.resourcesDir = it.output.classesDirs.getFiles().iterator().next()
+}
+
 mixin {
     add sourceSets.main, "azurelib.refmap.json"
     config "azurelib.mixins.json"
@@ -35,21 +39,31 @@ minecraft {
                     source sourceSets.main
                 }
             }
-            jvmArg "-Dfml.coreMods.load=mod.azure.azurelib.util.LoadingPlugin"
         }
 
         client {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            jvmArg "-Dfml.coreMods.load=mod.azure.azurelib.util.LoadingPlugin"
         }
 
         server {
             workingDirectory project.file('runServer')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            jvmArg "-Dfml.coreMods.load=mod.azure.azurelib.util.LoadingPlugin"
             args '--nogui'
         }
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
 
 repositories {
     maven { url 'https://maven.cleanroommc.com' }
