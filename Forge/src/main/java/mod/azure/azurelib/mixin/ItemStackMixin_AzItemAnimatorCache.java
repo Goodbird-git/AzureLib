@@ -7,9 +7,6 @@ import mod.azure.azurelib.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-
-import java.lang.ref.WeakReference;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin_AzItemAnimatorCache implements AzAnimatorAccessor<ItemStack> {
