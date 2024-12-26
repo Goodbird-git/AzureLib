@@ -5,6 +5,7 @@ import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.*;
 import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;

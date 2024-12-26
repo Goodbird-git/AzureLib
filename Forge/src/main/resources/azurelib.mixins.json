@@ -13,6 +13,8 @@
     "ItemStackMixin_AzItemAnimatorCache"
   ],
   "client": [
+    "MixinHumanoidArmorLayer",
+    "MixinItemRenderer",
     "TextureManagerMixin"
   ]
 }
