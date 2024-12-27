@@ -7,20 +7,18 @@ import mod.azure.azurelib.model.cache.AzBakedModelCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.resource.IResourceType;
-import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * AzResourceCache is an abstract base class designed for managing and loading mod resources asynchronously. This class
  * provides helper functions for loading and processing resource files of a specific type and storing them in a cache.
  */
-public class AzResourceCache implements ISelectiveResourceReloadListener {
+public class AzResourceCache implements IResourceManagerReloadListener {
 
     public static void registerReloadListener() {
         Minecraft mc = Minecraft.getMinecraft();
@@ -35,7 +33,7 @@ public class AzResourceCache implements ISelectiveResourceReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, @Nonnull Predicate<IResourceType> resourcePredicate) {
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
         List<IResourcePack> packs = FileZipLoading.getPacks();
         if (packs == null) {
             return;
@@ -45,6 +43,7 @@ public class AzResourceCache implements ISelectiveResourceReloadListener {
             for (ResourceLocation resourceLocation : FileZipLoading.getLocations(pack, "animations",
                     fileName -> fileName.endsWith(".json"))) {
                 try {
+                    AzureLib.LOGGER.debug("Found animation file: {}", resourceLocation);
                     AzBakedAnimationCache.getInstance().loadAnimations(resourceLocation, resourceManager);
                 } catch (Exception exception) {
                     AzureLib.LOGGER.error("Error loading animation file {}!", resourceLocation, exception);
