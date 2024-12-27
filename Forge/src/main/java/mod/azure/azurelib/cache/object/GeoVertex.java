@@ -11,9 +11,9 @@ package mod.azure.azurelib.cache.object;
 import javax.vecmath.Vector3f;
 
 public class GeoVertex {
-    private final Vector3f position;
-    private final float texU;
-    private final float texV;
+    private Vector3f position;
+    private float texU;
+    private float texV;
 
     /**
      * Vertex data holder
@@ -40,7 +40,7 @@ public class GeoVertex {
     }
 
 	public GeoVertex(double x, double y, double z) {
-		this(new Vector3f((float)x, (float)y, (float)z), 0, 0);
+        this.position = new Vector3f((float) x, (float) y, (float) z);
 	}
 
 	public GeoVertex withUVs(float texU, float texV) {
