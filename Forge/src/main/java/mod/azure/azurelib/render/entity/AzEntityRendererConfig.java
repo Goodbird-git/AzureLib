@@ -6,6 +6,7 @@ import mod.azure.azurelib.render.layer.AzRenderLayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -38,8 +39,8 @@ public class AzEntityRendererConfig<T extends Entity> extends AzRendererConfig<T
     }
 
     public static <T extends Entity> Builder<T> builder(
-        ResourceLocation modelLocation,
-        ResourceLocation textureLocation
+        @Nonnull ResourceLocation modelLocation,
+        @Nonnull ResourceLocation textureLocation
     ) {
         return new Builder<>($ -> modelLocation, $ -> textureLocation);
     }

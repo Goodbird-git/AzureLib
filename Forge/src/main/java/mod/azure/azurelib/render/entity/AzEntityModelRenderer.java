@@ -123,7 +123,6 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
         RenderUtils.translateToPivotPoint(bone);
         RenderUtils.rotateMatrixAroundBone(bone);
         RenderUtils.scaleMatrixForBone(bone);
-
         RenderUtils.translateAwayFromPivotPoint(bone);
 
         renderCubesOfBone(context, bone);
