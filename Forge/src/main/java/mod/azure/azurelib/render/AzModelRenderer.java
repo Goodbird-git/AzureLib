@@ -46,12 +46,22 @@ public class AzModelRenderer<T> {
     protected void render(AzRendererPipelineContext<T> context, boolean isReRender) {
         T animatable = context.animatable();
         AzBakedModel model = context.bakedModel();
+        GlStateManager.disableCull();
+        GlStateManager.enableRescaleNormal();
+        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        context.setVertexConsumer(builder);
 
         rendererPipeline.updateAnimatedTextureFrame(animatable);
 
         for (AzBone bone : model.getTopLevelBones()) {
             renderRecursively(context, bone, isReRender);
         }
+
+        Tessellator.getInstance().draw();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.enableCull();
     }
 
     /**
@@ -135,10 +145,7 @@ public class AzModelRenderer<T> {
 
             MatrixUtils.getCameraMatrix().transform(vector4f);
 
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
-
-            buffer.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
+            context.vertexConsumer().pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
                     .tex(vertex.texU(), vertex.texV())
                     .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
                     .normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();

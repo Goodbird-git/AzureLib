@@ -4,6 +4,7 @@ import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.AzBakedModel;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 
 /**
  * An abstract base class representing the rendering context for a custom rendering pipeline. This class provides
@@ -48,8 +49,7 @@ public abstract class AzRendererPipelineContext<T> {
         T animatable,
         AzBakedModel bakedModel,
         int packedLight,
-        float partialTick,
-        BufferBuilder vertexConsumer
+        float partialTick
     ) {
         this.animatable = animatable;
         this.bakedModel = bakedModel;
@@ -57,7 +57,6 @@ public abstract class AzRendererPipelineContext<T> {
         this.packedOverlay = getPackedOverlay(animatable, 0, partialTick);
         this.partialTick = partialTick;
         this.renderColor = getRenderColor(animatable, partialTick, packedLight).getColor();
-        this.vertexConsumer = vertexConsumer;
     }
 
     /**
@@ -123,5 +122,9 @@ public abstract class AzRendererPipelineContext<T> {
 
     public BufferBuilder vertexConsumer() {
         return vertexConsumer;
+    }
+
+    public void setVertexConsumer(BufferBuilder vertexConsumer) {
+        this.vertexConsumer = vertexConsumer;
     }
 }

@@ -84,7 +84,7 @@ public abstract class AzRendererPipeline<T> implements AzPhasedRenderer<T> {
         float partialTick,
         int packedLight
     ) {
-        context.populate(animatable, model, packedLight, partialTick, Tessellator.getInstance().getBuffer());
+        context.populate(animatable, model, packedLight, partialTick);
 
         GlStateManager.pushMatrix();
 
