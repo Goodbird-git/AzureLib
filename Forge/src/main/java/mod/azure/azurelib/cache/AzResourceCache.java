@@ -1,17 +1,19 @@
 package mod.azure.azurelib.cache;
 
+import mod.azure.azurelib.AzureLib;
 import mod.azure.azurelib.AzureLibException;
 import mod.azure.azurelib.animation.cache.AzBakedAnimationCache;
 import mod.azure.azurelib.model.cache.AzBakedModelCache;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.*;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -24,7 +26,7 @@ public class AzResourceCache implements ISelectiveResourceReloadListener {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (!(mc.getResourceManager() instanceof IReloadableResourceManager)) {
-            throw new RuntimeException("AzureLib was initialized too early!");
+            throw new AzureLibException("AzureLib was initialized too early!");
         }
 
         IReloadableResourceManager reloadable = (IReloadableResourceManager) Minecraft.getMinecraft()
@@ -33,26 +35,29 @@ public class AzResourceCache implements ISelectiveResourceReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
-        AzBakedAnimationCache.getInstance().loadAnimations(resourceManager);
-        AzBakedModelCache.getInstance().loadModels(resourceManager);
-    }
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, @Nonnull Predicate<IResourceType> resourcePredicate) {
+        List<IResourcePack> packs = FileZipLoading.getPacks();
+        if (packs == null) {
+            return;
+        }
 
-    protected final Collection<ResourceLocation> loadResources(
-            IResourceManager resourceManager,
-            String type
-    ) {
-        Collection<ResourceLocation> resources = new ArrayList<>();
-        for (String domain : resourceManager.getResourceDomains()) { // Iterate over all namespaces
-            try {
-                ResourceLocation resourceLocation = new ResourceLocation(domain, type);
-                if (type.endsWith(".json") && resourceManager.getResource(resourceLocation) != null) {
-                    resources.add(resourceLocation);
+        for (IResourcePack pack : packs) {
+            for (ResourceLocation resourceLocation : FileZipLoading.getLocations(pack, "animations",
+                    fileName -> fileName.endsWith(".json"))) {
+                try {
+                    AzBakedAnimationCache.getInstance().loadAnimations(resourceLocation, resourceManager);
+                } catch (Exception exception) {
+                    AzureLib.LOGGER.error("Error loading animation file {}!", resourceLocation, exception);
                 }
-            } catch (IOException e) {
-                throw new AzureLibException("Resource not found");
+            }
+
+            for (ResourceLocation resourceLocation : FileZipLoading.getLocations(pack, "geo", fileName -> fileName.endsWith(".json"))) {
+                try {
+                    AzBakedModelCache.getInstance().loadModels(resourceLocation, resourceManager);
+                } catch (Exception exception) {
+                    AzureLib.LOGGER.error("Error loading model file {}!", resourceLocation, exception);
+                }
             }
         }
-        return resources;
     }
 }

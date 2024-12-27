@@ -3,6 +3,7 @@ package mod.azure.azurelib.animation.cache;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mod.azure.azurelib.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.cache.AzResourceCache;
+import mod.azure.azurelib.loading.FileLoader;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -22,8 +23,8 @@ public class AzBakedAnimationCache extends AzResourceCache {
         this.bakedAnimations = new Object2ObjectOpenHashMap<>();
     }
 
-    public void loadAnimations(IResourceManager resourceManager) {
-        loadResources(resourceManager, "animations");
+    public void loadAnimations(ResourceLocation resourceLocation, IResourceManager resourceManager) {
+        bakedAnimations.put(resourceLocation, FileLoader.loadAzAnimationsFile(resourceLocation, resourceManager));
     }
 
     public AzBakedAnimations getNullable(ResourceLocation resourceLocation) {
