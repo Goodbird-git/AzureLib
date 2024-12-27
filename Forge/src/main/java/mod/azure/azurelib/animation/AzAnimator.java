@@ -97,7 +97,7 @@ public abstract class AzAnimator<T> {
      * This method is called once per render frame for each {@link T animatable} being rendered.<br>
      * Override to set custom animations (such as head rotation, etc).
      *
-     * @param animatable The {@code GeoAnimatable} instance currently being rendered
+     * @param animatable The {@code Animatable} instance currently being rendered
      */
     public void setCustomAnimations(T animatable, float partialTicks) {}
 
