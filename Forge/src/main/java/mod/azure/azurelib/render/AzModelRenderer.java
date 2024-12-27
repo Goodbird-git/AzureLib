@@ -8,8 +8,11 @@ import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.util.MatrixUtils;
 import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -132,7 +135,10 @@ public class AzModelRenderer<T> {
 
             MatrixUtils.getCameraMatrix().transform(vector4f);
 
-            Tessellator.getInstance().getBuffer().pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+
+            buffer.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
                     .tex(vertex.texU(), vertex.texV())
                     .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
                     .normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
