@@ -17,7 +17,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AzureLibMod {
 
     public AzureLibMod() {
-        AzureLib.initialize();
         MinecraftForge.EVENT_BUS.register(new CommonExampleListener());
     }
 
