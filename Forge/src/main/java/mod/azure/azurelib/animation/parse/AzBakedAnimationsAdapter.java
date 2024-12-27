@@ -15,21 +15,25 @@ import mod.azure.azurelib.animation.primitive.AzBakedAnimation;
 import mod.azure.azurelib.animation.primitive.AzBakedAnimations;
 import mod.azure.azurelib.animation.primitive.AzKeyframes;
 import mod.azure.azurelib.animation.primitive.AzLoopType;
-import mod.azure.azurelib.core.math.Constant;
-import mod.azure.azurelib.core.math.IValue;
-import mod.azure.azurelib.core.molang.MolangException;
-import mod.azure.azurelib.core.molang.MolangParser;
-import mod.azure.azurelib.core.molang.expressions.MolangValue;
 import mod.azure.azurelib.util.JSONUtils;
 import mod.azure.azurelib.util.JsonUtil;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import mod.azure.azurelib.core.math.Constant;
+import mod.azure.azurelib.core.math.IValue;
+import mod.azure.azurelib.core.molang.MolangException;
+import mod.azure.azurelib.core.molang.MolangParser;
+import mod.azure.azurelib.core.molang.expressions.MolangValue;
 
 /**
- * {@link Gson} {@link JsonDeserializer} for {@link AzBakedAnimations}.<br>
+ * {@link com.google.gson.Gson} {@link JsonDeserializer} for {@link AzBakedAnimations}.<br>
  * Acts as the deserialization interface for {@code BakedAnimations}
  */
 public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimations> {
@@ -49,7 +53,7 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
      */
     private static List<Pair<String, JsonElement>> getTripletObj(JsonElement element) {
         if (element == null)
-            return new ArrayList<>();
+            return Collections.emptyList();
 
         if (element instanceof JsonPrimitive) {
             JsonArray array = new JsonArray();
@@ -61,8 +65,11 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
             element = array;
         }
 
-        if (element instanceof JsonArray)
-            return Collections.singletonList(Pair.of("0", element));
+        if (element instanceof JsonArray) {
+            ObjectArrayList<Pair<String, JsonElement>> list = new ObjectArrayList<>();
+            list.add(Pair.of("0", element)); // Add the pair to the list
+            return list;
+        }
 
         if (element instanceof JsonObject) {
             List<Pair<String, JsonElement>> list = new ObjectArrayList<>();
@@ -103,13 +110,13 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         if (keyframe.has("pre")) {
             JsonElement pre = keyframe.get("pre");
             keyframeValues = pre.isJsonArray()
-                ? pre.getAsJsonArray()
-                : JSONUtils.getJsonArray(pre.getAsJsonObject(), "vector");
+                    ? pre.getAsJsonArray()
+                    : JSONUtils.getJsonArray(pre.getAsJsonObject(), "vector");
         } else if (keyframe.has("post")) {
             JsonElement post = keyframe.get("post");
             keyframeValues = post.isJsonArray()
-                ? post.getAsJsonArray()
-                : JSONUtils.getJsonArray(post.getAsJsonObject(), "vector");
+                    ? post.getAsJsonArray()
+                    : JSONUtils.getJsonArray(post.getAsJsonObject(), "vector");
         }
 
         if (keyframeValues != null)
@@ -155,9 +162,9 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
      */
     @Override
     public AzBakedAnimations deserialize(
-        JsonElement json,
-        Type type,
-        JsonDeserializationContext context
+            JsonElement json,
+            Type type,
+            JsonDeserializationContext context
     ) throws JsonParseException {
         JsonObject jsonObj = json.getAsJsonObject();
 
@@ -165,18 +172,31 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         JsonArray includeListJSONObj = jsonObj.getAsJsonArray("includes");
         Map<String, ResourceLocation> includes = null;
         if (includeListJSONObj != null) {
+            List<JsonElement> jsonElements = new ArrayList<>();
+            if (includeListJSONObj.isJsonArray()) {
+                JsonArray jsonArray = includeListJSONObj.getAsJsonArray();
+                for (JsonElement element : jsonArray) {
+                    jsonElements.add(element);
+                }
+            } else if (includeListJSONObj.isJsonObject()) {
+                JsonObject jsonObject = includeListJSONObj.getAsJsonObject();
+                for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                    jsonElements.add(entry.getValue()); // Add just values if needed
+                }
+            }
             includes = new Object2ObjectOpenHashMap<>(includeListJSONObj.size());
-            for (JsonElement entry : includeListJSONObj) {
+
+            for (JsonElement entry : jsonElements) {
                 JsonObject obj = entry.getAsJsonObject();
                 ResourceLocation fileId = new ResourceLocation(obj.get("file_id").getAsString());
                 for (JsonElement animName : obj.getAsJsonArray("animations")) {
                     String ani = animName.getAsString();
                     if (includes.containsKey(ani)) {
                         AzureLib.LOGGER.warn(
-                            "Animation {} is already included! File already including: {}  File trying to include from again: {}",
-                            ani,
-                            includes.get(ani),
-                            fileId
+                                "Animation {} is already included! File already including: {}  File trying to include from again: {}",
+                                ani,
+                                includes.get(ani),
+                                fileId
                         );
                     } else {
                         includes.put(ani, fileId);
@@ -190,12 +210,11 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         for (Map.Entry<String, JsonElement> entry : animationJsonList.entrySet()) {
             try {
                 animations.put(
-                    entry.getKey(),
-                    bakeAnimation(entry.getKey(), entry.getValue().getAsJsonObject(), context)
+                        entry.getKey(),
+                        bakeAnimation(entry.getKey(), entry.getValue().getAsJsonObject(), context)
                 );
             } catch (MolangException ex) {
                 AzureLib.LOGGER.error("Unable to parse animation: {}", entry.getKey());
-                ex.printStackTrace();
             }
         }
 
@@ -216,16 +235,17 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
      *                         language during animation creation.
      */
     private AzBakedAnimation bakeAnimation(
-        String name,
-        JsonObject animationObj,
-        JsonDeserializationContext context
+            String name,
+            JsonObject animationObj,
+            JsonDeserializationContext context
     ) throws MolangException {
         double length = animationObj.has("animation_length")
-            ? JsonUtil.getOptionalDouble(animationObj, "animation_length") * 20d
-            : -1;
+                ? JSONUtils.getAsDouble(animationObj, "animation_length") * 20d
+                : -1;
         AzLoopType loopType = AzLoopType.fromJson(animationObj.get("loop"));
-        AzBoneAnimation[] boneAnimations = bakeBoneAnimations(JSONUtils.getJsonObject(animationObj, "bones", new JsonObject()));
-
+        AzBoneAnimation[] boneAnimations = bakeBoneAnimations(
+                JSONUtils.getJsonObject(animationObj, "bones", new JsonObject())
+        );
         AzKeyframes keyframes = context.deserialize(animationObj, AzKeyframes.class);
 
         if (length == -1)
@@ -250,16 +270,16 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
         for (Map.Entry<String, JsonElement> entry : bonesObj.entrySet()) {
             JsonObject entryObj = entry.getValue().getAsJsonObject();
             AzKeyframeStack<AzKeyframe<IValue>> scaleFrames = buildKeyframeStack(
-                getTripletObj(entryObj.get("scale")),
-                false
+                    getTripletObj(entryObj.get("scale")),
+                    false
             );
             AzKeyframeStack<AzKeyframe<IValue>> positionFrames = buildKeyframeStack(
-                getTripletObj(entryObj.get("position")),
-                false
+                    getTripletObj(entryObj.get("position")),
+                    false
             );
             AzKeyframeStack<AzKeyframe<IValue>> rotationFrames = buildKeyframeStack(
-                getTripletObj(entryObj.get("rotation")),
-                true
+                    getTripletObj(entryObj.get("rotation")),
+                    true
             );
 
             animations[index] = new AzBoneAnimation(entry.getKey(), rotationFrames, positionFrames, scaleFrames);
@@ -286,8 +306,8 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
      *                         keyframe data.
      */
     private AzKeyframeStack<AzKeyframe<IValue>> buildKeyframeStack(
-        List<Pair<String, JsonElement>> entries,
-        boolean isForRotation
+            List<Pair<String, JsonElement>> entries,
+            boolean isForRotation
     ) throws MolangException {
         if (entries.isEmpty())
             return new AzKeyframeStack<>();
@@ -309,44 +329,44 @@ public class AzBakedAnimationsAdapter implements JsonDeserializer<AzBakedAnimati
                 continue;
 
             double prevTime = prevEntry != null ? Double.parseDouble(prevEntry.first()) : 0;
-            double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(String.valueOf(entry.second())) : 0;
+            double curTime = NumberUtils.isCreatable(key) ? Double.parseDouble(entry.first()) : 0;
             double timeDelta = curTime - prevTime;
 
             JsonArray keyframeVector = element instanceof JsonArray
-                ? (JsonArray) element
-                : JSONUtils.getJsonArray(element.getAsJsonObject(), "vector");
+                    ? ((JsonArray) element)
+                    : JSONUtils.getJsonArray(element.getAsJsonObject(), "vector");
             MolangValue rawXValue = MolangParser.parseJson(keyframeVector.get(0));
             MolangValue rawYValue = MolangParser.parseJson(keyframeVector.get(1));
             MolangValue rawZValue = MolangParser.parseJson(keyframeVector.get(2));
             IValue xValue = isForRotation && rawXValue.isConstant()
-                ? new Constant(Math.toRadians(-rawXValue.get()))
-                : rawXValue;
+                    ? new Constant(Math.toRadians(-rawXValue.get()))
+                    : rawXValue;
             IValue yValue = isForRotation && rawYValue.isConstant()
-                ? new Constant(Math.toRadians(-rawYValue.get()))
-                : rawYValue;
+                    ? new Constant(Math.toRadians(-rawYValue.get()))
+                    : rawYValue;
             IValue zValue = isForRotation && rawZValue.isConstant()
-                ? new Constant(Math.toRadians(rawZValue.get()))
-                : rawZValue;
+                    ? new Constant(Math.toRadians(rawZValue.get()))
+                    : rawZValue;
 
-            JsonObject entryObj = element instanceof JsonObject ? (JsonObject) element : null;
+            JsonObject entryObj = element instanceof JsonObject ? ((JsonObject) element) : null;
             AzEasingType easingType = entryObj != null && entryObj.has("easing")
-                ? AzEasingTypeLoader.fromJson(entryObj.get("easing"))
-                : AzEasingTypes.LINEAR;
+                    ? AzEasingTypeLoader.fromJson(entryObj.get("easing"))
+                    : AzEasingTypes.LINEAR;
             List<IValue> easingArgs = entryObj != null && entryObj.has("easingArgs")
-                ? JsonUtil.jsonArrayToList(
+                    ? JsonUtil.jsonArrayToList(
                     JSONUtils.getJsonArray(entryObj, "easingArgs"),
                     ele -> new Constant(ele.getAsDouble())
-                )
-                : new ObjectArrayList<>();
+            )
+                    : new ObjectArrayList<>();
 
             xFrames.add(
-                new AzKeyframe<>(timeDelta * 20, prevEntry == null ? xValue : xPrev, xValue, easingType, easingArgs)
+                    new AzKeyframe<>(timeDelta * 20, prevEntry == null ? xValue : xPrev, xValue, easingType, easingArgs)
             );
             yFrames.add(
-                new AzKeyframe<>(timeDelta * 20, prevEntry == null ? yValue : yPrev, yValue, easingType, easingArgs)
+                    new AzKeyframe<>(timeDelta * 20, prevEntry == null ? yValue : yPrev, yValue, easingType, easingArgs)
             );
             zFrames.add(
-                new AzKeyframe<>(timeDelta * 20, prevEntry == null ? zValue : zPrev, zValue, easingType, easingArgs)
+                    new AzKeyframe<>(timeDelta * 20, prevEntry == null ? zValue : zPrev, zValue, easingType, easingArgs)
             );
 
             xPrev = xValue;

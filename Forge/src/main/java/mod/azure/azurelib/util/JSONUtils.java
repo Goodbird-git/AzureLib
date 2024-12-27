@@ -130,6 +130,26 @@ public class JSONUtils {
         return json.has(memberName) ? getBoolean(json.get(memberName), memberName) : fallback;
     }
 
+    public static double convertToDouble(JsonElement json, String memberName) {
+        if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber()) {
+            return json.getAsDouble();
+        } else {
+            throw new JsonSyntaxException("Expected " + memberName + " to be a Double, was " + toString(json));
+        }
+    }
+
+    public static double getAsDouble(JsonObject json, String memberName) {
+        if (json.has(memberName)) {
+            return convertToDouble(json.get(memberName), memberName);
+        } else {
+            throw new JsonSyntaxException("Missing " + memberName + ", expected to find a Double");
+        }
+    }
+
+    public static double getAsDouble(JsonObject json, String memberName, double fallback) {
+        return json.has(memberName) ? convertToDouble(json.get(memberName), memberName) : fallback;
+    }
+
     /**
      * Gets the float value of the given JsonElement.  Expects the second parameter to be the name of the element's field
      * if an error message needs to be thrown.
