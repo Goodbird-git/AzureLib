@@ -9,6 +9,7 @@ package mod.azure.azurelib.cache.object;
 
 import mod.azure.azurelib.loading.json.raw.FaceUV;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3i;
 
 import javax.vecmath.Vector3f;
 
@@ -18,10 +19,10 @@ import javax.vecmath.Vector3f;
 public class GeoQuad {
 
 	private GeoVertex[] vertices;
-	private Vector3f normal;
+	private Vec3i normal;
 	private EnumFacing direction;
 
-	public GeoQuad(GeoVertex[] vertices, Vector3f normal, EnumFacing direction) {
+	public GeoQuad(GeoVertex[] vertices, Vec3i normal, EnumFacing direction) {
 		this.vertices = vertices;
 		this.normal = normal;
 		this.direction = direction;
@@ -31,7 +32,7 @@ public class GeoQuad {
 		return vertices;
 	}
 
-	public Vector3f getNormal() {
+	public Vec3i getNormal() {
 		return normal;
 	}
 
@@ -59,7 +60,8 @@ public class GeoQuad {
 				texWidth,
 				texHeight,
 				mirror,
-				direction
+				direction,
+				direction.getDirectionVec()
 		);
 	}
 
@@ -73,20 +75,21 @@ public class GeoQuad {
 			float texWidth,
 			float texHeight,
 			boolean mirror,
-			EnumFacing direction
+			EnumFacing direction,
+			Vec3i normal
 	) {
 		float uWidth = (u + uSize) / texWidth;
 		float vHeight = (v + vSize) / texHeight;
 		u /= texWidth;
 		v /= texHeight;
-		Vector3f normal = new Vector3f(direction.getFrontOffsetX(), direction.getFrontOffsetY(), direction.getFrontOffsetZ());;
 
 		if (!mirror) {
 			float tempWidth = uWidth;
 			uWidth = u;
 			u = tempWidth;
 		} else {
-			normal.x *= -1;
+			int x = normal.getX();
+			x *= -1;
 		}
 
 		float[] uvs = uvRotation.rotateUvs(u, v, uWidth, vHeight);
