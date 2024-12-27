@@ -8,8 +8,8 @@ import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.util.MatrixUtils;
 import mod.azure.azurelib.util.RenderUtils;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -114,8 +114,6 @@ public class AzModelRenderer<T> {
             }
             Vector3f normal = new Vector3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
 
-            normalCache.set(quad.getNormal());
-            GlStateManager.glNormal3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
             RenderUtils.fixInvertedFlatCube(cube, normal);
             createVerticesOfQuad(context, quad, normal);
         }
@@ -126,9 +124,6 @@ public class AzModelRenderer<T> {
         GeoQuad quad,
         Vector3f normal
     ) {
-        BufferBuilder buffer = context.vertexConsumer();
-        int packedOverlay = context.packedOverlay();
-        int packedLight = context.packedLight();
         Color color = context.getRenderColor(context.animatable(), context.partialTick(), context.packedLight());
 
         for (GeoVertex vertex : quad.getVertices()) {
@@ -137,7 +132,7 @@ public class AzModelRenderer<T> {
 
             MatrixUtils.getCameraMatrix().transform(vector4f);
 
-            buffer.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
+            Tessellator.getInstance().getBuffer().pos(vector4f.getX(), vector4f.getY(), vector4f.getZ())
                     .tex(vertex.texU(), vertex.texV())
                     .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
                     .normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
