@@ -6,6 +6,7 @@ import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.util.ResourceLocation;
 
 import javax.vecmath.Matrix4f;
 
@@ -86,6 +87,8 @@ public class AzEntityRendererPipeline<T extends Entity> extends AzRendererPipeli
     public void renderFinal(AzRendererPipelineContext<T> context) {
         T entity = context.animatable();
         float partialTick = context.partialTick();
+
+        entityRenderer.superRender(entity,0, partialTick);
 
         if (!(entity instanceof EntityMob)) {
             return;

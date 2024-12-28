@@ -3,6 +3,7 @@ package mod.azure.azurelib.render.entity;
 import mod.azure.azurelib.animation.impl.AzEntityAnimator;
 import mod.azure.azurelib.model.AzBakedModel;
 import mod.azure.azurelib.render.AzProvider;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -46,11 +47,20 @@ public abstract class AzEntityRenderer<T extends Entity> extends Render<T> {
         return config.textureLocation(animatable);
     }
 
+    public void superRender(
+            T entity,
+            float entityYaw,
+            float partialTick
+    ) {
+        super.doRender(entity, entity.posX, entity.posY, entity.posZ, entityYaw, partialTick);
+    }
+
     @Override
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTick) {
         AzEntityAnimator<T> cachedEntityAnimator = (AzEntityAnimator<T>) provider.provideAnimator(entity);
         AzBakedModel azBakedModel = provider.provideBakedModel(entity);
 
+        GlStateManager.pushMatrix();
         if (cachedEntityAnimator != null && azBakedModel != null) {
             cachedEntityAnimator.setActiveModel(azBakedModel);
         }
@@ -58,6 +68,8 @@ public abstract class AzEntityRenderer<T extends Entity> extends Render<T> {
         // Point the renderer's current animator reference to the cached entity animator before rendering.
         reusedAzEntityAnimator = cachedEntityAnimator;
 
+        GlStateManager.pushMatrix();
+        Minecraft.getMinecraft().renderEngine.bindTexture(getEntityTexture(entity));
         // Execute the render pipeline.
         rendererPipeline.render(
                 azBakedModel,
@@ -66,6 +78,8 @@ public abstract class AzEntityRenderer<T extends Entity> extends Render<T> {
                 partialTick,
                 -1
         );
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     /**

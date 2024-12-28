@@ -36,9 +36,9 @@ public class MatrixUtils
     private static final double[] doubles = new double[16];
     private static final Matrix4d camera = new Matrix4d();
 
-    public static Matrix4d getCameraMatrix()
+    public static Matrix4f getCameraMatrix()
     {
-        return new Matrix4d(camera);
+        return new Matrix4f();
     }
 
     /**

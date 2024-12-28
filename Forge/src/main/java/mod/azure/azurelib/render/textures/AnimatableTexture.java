@@ -95,7 +95,7 @@ public class AnimatableTexture extends SimpleTexture {
     public static void setAndUpdate(ResourceLocation texturePath, int frameTick) {
         ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(texturePath);
 
-        if (texture instanceof ITextureObject)
+        if (texture instanceof AnimatableTexture)
             ((AnimatableTexture) texture).setAnimationFrame(frameTick);
     }
 

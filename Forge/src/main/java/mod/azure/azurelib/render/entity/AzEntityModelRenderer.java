@@ -103,7 +103,6 @@ public class AzEntityModelRenderer<T extends Entity> extends AzModelRenderer<T> 
                 animator.animate(animatable, context.partialTick());
             }
         }
-
         if (!animatable.isInvisibleToPlayer(Minecraft.getMinecraft().player)) {
             super.render(context, isReRender);
         }

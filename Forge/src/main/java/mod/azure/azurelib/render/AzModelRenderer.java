@@ -127,6 +127,8 @@ public class AzModelRenderer<T> {
             }
             Vector3f normal = new Vector3f(quad.getNormal().getX(), quad.getNormal().getY(), quad.getNormal().getZ());
 
+            MatrixUtils.getCameraMatrix().transform(normal);
+
             RenderUtils.fixInvertedFlatCube(cube, normal);
             createVerticesOfQuad(context, quad, normal);
         }
