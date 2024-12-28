@@ -17,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Quaternion;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 /**
@@ -46,7 +47,7 @@ public final class RenderUtils {
 	}
 
 	public static void rotateMatrixAroundCube(GeoCube cube) {
-		Vec3d rotation = cube.rotation();
+		Vector3f rotation = cube.rotation();
 
 		GlStateManager.rotate(new Quaternion(0, 0, (float) rotation.z, 0));
 		GlStateManager.rotate(new Quaternion(0, (float) rotation.y, 0, 0));
@@ -58,7 +59,7 @@ public final class RenderUtils {
 	}
 
 	public static void translateToPivotPoint(GeoCube cube) {
-		Vec3d pivot = cube.pivot();
+		Vector3f pivot = cube.pivot();
 		GlStateManager.translate(pivot.x / 16f, pivot.y / 16f, pivot.z / 16f);
 	}
 
@@ -67,7 +68,7 @@ public final class RenderUtils {
 	}
 
 	public static void translateAwayFromPivotPoint(GeoCube cube) {
-		Vec3d pivot = cube.pivot();
+		Vector3f pivot = cube.pivot();
 
 		GlStateManager.translate(-pivot.x / 16f, -pivot.y / 16f, -pivot.z / 16f);
 	}
@@ -137,8 +138,12 @@ public final class RenderUtils {
 	/**
 	 * Converts a given double array to its {@link Vec3d} equivalent
 	 */
-	public static Vec3d arrayToVec(double[] array) {
-		return new Vec3d(array[0], array[1], array[2]);
+	public static Vector3d arrayToVec(double[] array) {
+		return new Vector3d(array[0], array[1], array[2]);
+	}
+
+	public static Vector3f convertDoubleToFloat(Vector3d vector) {
+		return new Vector3f((float) vector.x, (float) vector.y, (float) vector.z);
 	}
 
 	/**

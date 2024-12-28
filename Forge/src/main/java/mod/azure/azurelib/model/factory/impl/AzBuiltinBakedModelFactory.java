@@ -15,6 +15,9 @@ import mod.azure.azurelib.model.factory.primitive.VertexSet;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.util.math.Vec3d;
 
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
+
 /**
  * A concrete implementation of the {@link AzBakedModelFactory} that constructs
  * baked models, bones, and cubes from raw geometry data. It is tailored to
@@ -39,8 +42,8 @@ public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
         mod.azure.azurelib.loading.json.raw.Bone bone = boneStructure.self();
         AzBoneMetadata boneMetadata = new AzBoneMetadata(bone, parent);
         AzBone newBone = new AzBone(boneMetadata);
-        Vec3d rotation = RenderUtils.arrayToVec(bone.rotation());
-        Vec3d pivot = RenderUtils.arrayToVec(bone.pivot());
+        Vector3d rotation = RenderUtils.arrayToVec(bone.rotation());
+        Vector3d pivot = RenderUtils.arrayToVec(bone.pivot());
 
         newBone.updateRotation(
             (float) Math.toRadians(-rotation.x),
@@ -65,15 +68,15 @@ public final class AzBuiltinBakedModelFactory extends AzBakedModelFactory {
     public GeoCube constructCube(Cube cube, ModelProperties properties, AzBone bone) {
         boolean mirror = cube.mirror() == Boolean.TRUE;
         double inflate = cube.inflate() != null ? cube.inflate() / 16f : (bone.getInflate() == null ? 0 : bone.getInflate() / 16f);
-        Vec3d size = RenderUtils.arrayToVec(cube.size());
-        Vec3d origin = RenderUtils.arrayToVec(cube.origin());
-        Vec3d rotation = RenderUtils.arrayToVec(cube.rotation());
-        Vec3d pivot = RenderUtils.arrayToVec(cube.pivot());
-        origin = new Vec3d(-(origin.x + size.x) / 16d, origin.y / 16d, origin.z / 16d);
-        Vec3d vertexSize = new Vec3d(size.x * 1 / 16d, size.y * 1 / 16d, size.z * 1 / 16d);
+        Vector3d size = RenderUtils.arrayToVec(cube.size());
+        Vector3d origin = RenderUtils.arrayToVec(cube.origin());
+        Vector3f rotation = RenderUtils.convertDoubleToFloat(RenderUtils.arrayToVec(cube.rotation()));
+        Vector3f pivot = RenderUtils.convertDoubleToFloat(RenderUtils.arrayToVec(cube.pivot()));
+        origin = new Vector3d(-(origin.x + size.x) / 16d, origin.y / 16d, origin.z / 16d);
+        Vector3d vertexSize = new Vector3d(size.x * 1 / 16d, size.y * 1 / 16d, size.z * 1 / 16d);
 
-        pivot = new Vec3d(pivot.x * -1, pivot.y, pivot.z);
-        rotation = new Vec3d(Math.toRadians(-rotation.x), Math.toRadians(-rotation.y), Math.toRadians(rotation.z));
+        pivot = new Vector3f(pivot.x * -1, pivot.y, pivot.z);
+        rotation = RenderUtils.convertDoubleToFloat(new Vector3d(Math.toRadians(-rotation.x), Math.toRadians(-rotation.y), Math.toRadians(rotation.z)));
         GeoQuad[] quads = buildQuads(
             cube.uv(),
             new VertexSet(origin, vertexSize, inflate),

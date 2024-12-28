@@ -4,6 +4,8 @@ import mod.azure.azurelib.cache.object.GeoVertex;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 
+import javax.vecmath.Vector3d;
+
 /**
  * Holder class to make it easier to store and refer to vertices for a given cube
  */
@@ -39,7 +41,7 @@ public class VertexSet {
     }
 
     // Convenience constructor
-    public VertexSet(Vec3d origin, Vec3d vertexSize, double inflation) {
+    public VertexSet(Vector3d origin, Vector3d vertexSize, double inflation) {
         this(
                 new GeoVertex(origin.x - inflation, origin.y - inflation, origin.z - inflation),
                 new GeoVertex(origin.x - inflation, origin.y - inflation, origin.z + vertexSize.z + inflation),

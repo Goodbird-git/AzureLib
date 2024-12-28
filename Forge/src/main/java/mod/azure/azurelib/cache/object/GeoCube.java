@@ -10,18 +10,21 @@ package mod.azure.azurelib.cache.object;
 import mod.azure.azurelib.model.AzBone;
 import net.minecraft.util.math.Vec3d;
 
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
+
 /**
  * Baked cuboid for a {@link AzBone}
  */
 public class GeoCube {
     private final GeoQuad[] quads;
-    private final Vec3d pivot;
-    private final Vec3d rotation;
-    private final Vec3d size;
+    private final Vector3f pivot;
+    private final Vector3f rotation;
+    private final Vector3d size;
     private final double inflate;
     private final boolean mirror;
 
-    public GeoCube(GeoQuad[] quads, Vec3d pivot, Vec3d rotation, Vec3d size, double inflate, boolean mirror) {
+    public GeoCube(GeoQuad[] quads, Vector3f pivot, Vector3f rotation, Vector3d size, double inflate, boolean mirror) {
         this.quads = quads;
         this.pivot = pivot;
         this.rotation = rotation;
@@ -34,15 +37,15 @@ public class GeoCube {
         return quads;
     }
 
-    public Vec3d pivot() {
+    public Vector3f pivot() {
         return pivot;
     }
 
-    public Vec3d rotation() {
+    public Vector3f rotation() {
         return rotation;
     }
 
-    public Vec3d size() {
+    public Vector3d size() {
         return size;
     }
 
